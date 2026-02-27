@@ -26,7 +26,7 @@
 |-------|---------|
 | `proofread` | 7-category LaTeX proofreading scorecard (report only) |
 
-### Presentation (5)
+### Presentation (8)
 
 | Skill | Purpose |
 |-------|---------|
@@ -35,8 +35,11 @@
 | `quarto-course` | Quarto course websites with slides and exercises |
 | `project-deck` | Status decks for supervisor meetings and handoffs |
 | `insights-deck` | Claude Code usage insights as a Beamer presentation |
+| `latex-posters` | Research posters in LaTeX (beamerposter, tikzposter, baposter) |
+| `translate-to-quarto` | Translate Beamer LaTeX slides to Quarto RevealJS |
+| `pptx` | Create, read, edit, or manipulate PowerPoint files |
 
-### LaTeX & Bibliography (5)
+### LaTeX & Bibliography (6)
 
 | Skill | Purpose |
 |-------|---------|
@@ -45,6 +48,7 @@
 | `latex-health-check` | Compile all projects, auto-fix, check cross-project consistency |
 | `audit-template-compliance` | Compare preamble against working paper template (report + apply) |
 | `validate-bib` | Cross-reference \cite{} keys against .bib files (report only) |
+| `latex-scaffold` | Convert Markdown draft into buildable LaTeX project (md→tex) |
 
 ### Submission (5)
 
@@ -101,6 +105,14 @@
 | `sync-council-app` | Sync Topic Finder + council package docs |
 | `full-commit` | Commit and push all 6 global repos |
 
+### Document Formats (3)
+
+| Skill | Purpose |
+|-------|---------|
+| `docx` | Create, read, edit, or manipulate Word documents |
+| `pdf` | Read, extract, combine, split, rotate, watermark PDF files |
+| `xlsx` | Create, read, edit spreadsheets (.xlsx, .csv, .tsv) |
+
 ---
 
-**Total: 55 skills across 9 categories.**
+**Total: 62 skills across 10 categories.**
