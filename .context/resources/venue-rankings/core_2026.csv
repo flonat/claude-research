@@ -1,0 +1,801 @@
+name,acronym,rank,source
+National Conference of the American Association for Artificial Intelligence,AAAI,A*,ICORE2026
+Association for Computational Linguistics,ACL,A*,ICORE2026
+ACM Multimedia,ACMMM,A*,ICORE2026
+Automated Software Engineering Conference,ASE,A*,ICORE2026
+Architectural Support for Programming Languages and Operating Systems,ASPLOS,A*,ICORE2026
+Computer Aided Verification,CAV,A*,ICORE2026
+ACM Conference on Computer and Communications Security,CCS,A*,ICORE2026
+International Conference on Human Factors in Computing Systems,CHI,A*,ICORE2026
+Conference on Learning Theory,COLT,A*,ICORE2026
+Advances in Cryptology,CRYPTO,A*,ICORE2026
+IEEE Conference on Computer Vision and Pattern Recognition,CVPR,A*,ICORE2026
+Design Automation Conf,DAC,A*,ICORE2026
+ACM Conference on Economics and Computation,EC,A*,ICORE2026
+European Conference on Computer Vision,ECCV,A*,ICORE2026
+Empirical Methods in Natural Language Processing,EMNLP,A*,ICORE2026
+International Conference on the Theory and Application of Cryptographic Techniques,EuroCrypt,A*,ICORE2026
+IEEE Symposium on Foundations of Computer Science,FOCS,A*,ICORE2026
+"ACM International Conference on the Foundations of Software Engineering (was ESEC/FSE, changed 2024; duplicate previously listed as ESEC, removed from DB)",FSE,A*,ICORE2026
+International Symposium on High Performance Computer Architecture,HPCA,A*,ICORE2026
+ACM/IEEE International Conference on Human-Robot Interaction,HRI,A*,ICORE2026
+International Colloquium on Automata Languages and Programming,ICALP,A*,ICORE2026
+International Conference on Automated Planning and Scheduling,ICAPS,A*,ICORE2026
+IEEE International Conference on Computer Vision,ICCV,A*,ICORE2026
+International Conference on Data Engineering,ICDE,A*,ICORE2026
+IEEE International Conference on Data Mining,ICDM,A*,ICORE2026
+International Conference on Learning Representations,ICLR,A*,ICORE2026
+International Conference on Machine Learning,ICML,A*,ICORE2026
+IEEE International Conference on Robotics and Automation,ICRA,A*,ICORE2026
+International Conference on Software Engineering,ICSE,A*,ICORE2026
+International Joint Conference on Artificial Intelligence,IJCAI,A*,ICORE2026
+IEEE International Conference on Computer Communications,INFOCOM,A*,ICORE2026
+ACM International Symposium on Computer Architecture,ISCA,A*,ICORE2026
+IEEE/ACM International Symposium on Mixed and Augmented Reality,ISMAR,A*,ICORE2026
+ACM International Conference on Knowledge Discovery and Data Mining,KDD,A*,ICORE2026
+International Conference on the Principles of Knowledge Representation and Reasoning,KR,A*,ICORE2026
+IEEE Symposium on Logic in Computer Science,LICS,A*,ICORE2026
+International Symposium on Microarchitecture,MICRO,A*,ICORE2026
+ACM International Conference on Mobile Computing and Networking,MOBICOM,A*,ICORE2026
+Usenix Network and Distributed System Security Symposium,NDSS,A*,ICORE2026
+Advances in Neural Information Processing Systems (was NIPS),NeurIPS,A*,ICORE2026
+Usenix Symposium on Operating Systems Design and Implementation,OSDI,A*,ICORE2026
+IEEE International Conference on Pervasive Computing and Communications,PERCOM,A*,ICORE2026
+ACM-SIGPLAN Conference on Programming Language Design and Implementation,PLDI,A*,ICORE2026
+ACM Symposium on Principles of Distributed Computing,PODC,A*,ICORE2026
+ACM SIGMOD-SIGACT-SIGART Conference on Principles of Database Systems,PODS,A*,ICORE2026
+ACM-SIGACT Symposium on Principles of Programming Languages,POPL,A*,ICORE2026
+"ACM Conference on Applications, Technologies, Architectures, and Protocols for Computer Communication",SIGCOMM,A*,ICORE2026
+ACM SIG International Conference on Computer Graphics and Interactive Techniques,SIGGRAPH,A*,ICORE2026
+SIGGRAPH Asia,SiggraphA,A*,ICORE2026
+ACM International Conference on Research and Development in Information Retrieval,SIGIR,A*,ICORE2026
+Measurement and Modeling of Computer Systems,SIGMETRICS,A*,ICORE2026
+ACM Special Interest Group on Management of Data Conference,SIGMOD,A*,ICORE2026
+International Symposium on Computational Geometry,SoCG,A*,ICORE2026
+ACM/SIAM Symposium on Discrete Algorithms,SODA,A*,ICORE2026
+ACM SIGOPS Symposium on Operating Systems Principles,SOSP,A*,ICORE2026
+IEEE Symposium on Security and Privacy,SP,A*,ICORE2026
+ACM Symposium on Theory of Computing,STOC,A*,ICORE2026
+ACM Symposium on User Interface Software and Technology,UIST,A*,ICORE2026
+Usenix Security Symposium,USENIX-Security,A*,ICORE2026
+International Conference on Very Large Databases,VLDB,A*,ICORE2026
+IEEE Conference on Virtual Reality and 3D User Interfaces,VR,A*,ICORE2026
+International World Wide Web Conference,WWW,A*,ICORE2026
+Parallel Problem Solving from Nature,PPSN,A,ICORE2026
+"The International Symposium on Research in Attacks, Intrusions and Defenses (was International Symposium on Recent Advances in Intrusion Detection)",RAID,A,ICORE2026
+IEEE International Requirements Engineering Conference,RE,A,ICORE2026
+ACM International Conference on Recommender Systems,RecSys,A,ICORE2026
+IEEE Real-Time and Embedded Technology and Applications Symposium,RTAS,A,ICORE2026
+"IEEE International Conference on Software Analysis, Evolution and Reengineering",SANER,A,ICORE2026
+International Conference on Theory and Applications of Satisfiability Testing,SAT,A,ICORE2026
+"International Conference for High Performance Computing, Networking, Storage and Analysis (was Supercomputing Conference)",SC,A,ICORE2026
+SIAM International Conference on Data Mining,SDM,A,ICORE2026
+International Symposium on Software Engineering for Adaptive and Self-Managing Systems,SEAMS,A,ICORE2026
+ACM Special Interest Group on Computer Science Education Conference,SIGCSE,A,ICORE2026
+ACM International Conference on Advances in Geographic Information Systems,SIGSPATIAL,A,ICORE2026
+Tools and Algorithms for Construction and Analysis of Systems,TACAS,A,ICORE2026
+Conference in Uncertainty in Artificial Intelligence,UAI,A,ICORE2026
+Usenix Annual Technical Conference,USENIX,A,ICORE2026
+IEEE Workshop on Applications of Computer Vision,WACV,A,ICORE2026
+ACM International Conference on Web Search and Data Mining,WSDM,A,ICORE2026
+IEEE International Conference on Multimedia and Expo,ICME,A,ICORE2026
+"IEEE International Conference on Program Comprehension (previously IWPC, changed in 2006)",ICPC,A,ICORE2026
+ACM International Conference on Supercomputing,ICS,A,ICORE2026
+International Conference on Software Architecture (was previously WICSA),ICSA,A,ICORE2026
+"IEEE International Conference on Software Maintenance and Evolution (prior to 2014 was ICSM, IEEE International Conference on Software Maintenance)",ICSME,A,ICORE2026
+International Conference on Service Oriented Computing,ICSOC,A,ICORE2026
+"International Conference on Software Testing, Verification and Validation",ICST,A,ICORE2026
+International Conference on Web and Social Media,ICWSM,A,ICORE2026
+International Joint Conference on Automated Reasoning,IJCAR,A,ICORE2026
+Internet Measurement Conference,IMC,A,ICORE2026
+Interspeech (combined EuroSpeech and ICSLP in 2000),Interspeech,A,ICORE2026
+IEEE International Parallel and Distributed Processing Symposium (was IPPS and SPDP),IPDPS,A,ICORE2026
+IEEE/RSJ International Conference on Intelligent Robots and Systems,IROS,A,ICORE2026
+International Symposium on Software Reliability Engineering,ISSRE,A,ICORE2026
+International Symposium on Software Testing and Analysis,ISSTA,A,ICORE2026
+International Semantic Web Conference,ISWC,A,ICORE2026
+International Conference on Intelligent User Interfaces,IUI,A,ICORE2026
+International Conference on Learning Analytics and Knowledge,LAK,A,ICORE2026
+Medical Image Computing and Computer-Assisted Intervention,MICCAI,A,ICORE2026
+ACM/IFIP/USENIX International Middleware Conference,Middleware,A,ICORE2026
+"ACM SIGMOBILE International Conference on Mobile Systems, Applications and Services",Mobisys,A,ICORE2026
+"International Conference on Model Driven Engineering Languages and Systems (Previously UML, changed in 2005)",MODELS,A,ICORE2026
+IEEE International Working Conference on Mining Software Repositories,MSR,A,ICORE2026
+"ACM/IEEE International Conference on Modelling, Analysis and Simulation of Wireless and Mobile Systems",MSWIM,A,ICORE2026
+North American Association for Computational Linguistics,NAACL,A,ICORE2026
+ACM Conference on Object Oriented Programming Systems Languages and Applications,OOPSLA,A,ICORE2026
+Privacy Enhancing Technologies Symposium (was International Workshop of Privacy Enhancing Technologies),PETS,A,ICORE2026
+IEEE Conference on Computational Complexity,CCC,A,ICORE2026
+IEEE Computer Security Foundations Symposium (was CSFW),CSF,A,ICORE2026
+IEEE/ACM International Symposium on Low Power Electronics and Design,ISLPED,A,ICORE2026
+"International Joint Conference on Autonomous Agents and Multiagent Systems (previously the International Conference on Multiagent Systems, ICMAS, changed in 2000)",AAMAS,A,ICORE2026
+IEEE International Conference on Web Services,ICWS,A,ICORE2026
+Intelligent Systems in Molecular Biology,ISMB,A,ICORE2026
+ACM Multimedia Systems Conference,MMSys,A,ICORE2026
+IEEE/IFIP International Conference on Dependable Systems and Networks,DSN,A,ICORE2026
+"Design, Automation and Test in Europe Conference",DATE,A,ICORE2026
+Real Time Systems Symposium,RTSS,A,ICORE2026
+IEEE International Test Conference,ITC,A,ICORE2026
+IEEE/ACM International Conference on Computer-Aided Design,ICCAD,A,ICORE2026
+European Symposium on Algorithms,ESA,A,ICORE2026
+International Symposium on Theoretical Aspects of Computer Science,STACS,A,ICORE2026
+Graph Drawing,GD,A,ICORE2026
+International Workshop on Approximation Algorithms for Combinatorial Optimization Problems and International Conference on Randomization and Computation,APPROX/RANDOM,A,ICORE2026
+"International Conference on User Modelling, Adaptation, and Personalization (was AH and UM)",UMAP,A,ICORE2026
+ACM Int'l Symposium on Field Programmable Gate Arrays,FPGA,A,ICORE2026
+IEEE Visualization,IEEE VIS,A,ICORE2026
+Eurosys Conference,EuroSys,A,ICORE2026
+Symposium On Usable Privacy and Security,SOUPS,A,ICORE2026
+Workshop on Algorithm Engineering and Experiments,ALENEX,A,ICORE2026
+Innovations in Theoretical Computer Science,ITCS,A,ICORE2026
+Annual Computer Security Applications Conference,ACSAC,A,ICORE2026
+International Conference on Artificial Intelligence in Education,AIED,A,ICORE2026
+International Conference on Artificial Intelligence and Statistics,AISTATS,A,ICORE2026
+"Asia Conference on Information, Computer and Communications Security",AsiaCCS,A,ICORE2026
+International Conference on the Theory and Application of Cryptology and Information Security,ASIACRYPT,A,ICORE2026
+International ACM SIGACCESS Conference on Computers and Accessibility,ASSETS,A,ICORE2026
+British Machine Vision Conference,BMVC,A,ICORE2026
+International Conference in Business Process Management,BPM,A,ICORE2026
+International Conference on Automated Deduction,CADE,A,ICORE2026
+International Conference on Advanced Information Systems Engineering,CaiSE,A,ICORE2026
+International Symposium on Code Generation and Optimization,CGO,A,ICORE2026
+Workshop on Cryptographic Hardware and Embedded Systems,CHES,A,ICORE2026
+Conference on Innovative Data Systems Research,CIDR,A,ICORE2026
+ACM International Conference on Information and Knowledge Management,CIKM,A,ICORE2026
+ACM International Conference on Emerging Networking Experiments and Technologies,CoNEXT,A,ICORE2026
+International Conference on Principles and Practice of Constraint Programming,CP,A,ICORE2026
+ACM Conference on Computer Supported Cooperative Work,CSCW,A,ICORE2026
+Designing Interactive Systems,DIS,A,ICORE2026
+International Symposium on Distributed Computing (was WDAG),DISC,A,ICORE2026
+European Association for Computational Linguistics,EACL,A,ICORE2026
+International Conference on Evaluation and Assessment in Software Engineering,EASE,A,ICORE2026
+European Conference on Artificial Intelligence,ECAI,A,ICORE2026
+European Conference on Information Retrieval,ECIR,A,ICORE2026
+European Conference on Machine Learning and Principles and Practice of Knowledge Discovery in Database (PKDD and ECML combined from 2008),ECML PKDD,A,ICORE2026
+European Conference on Object-Oriented Programming,ECOOP,A,ICORE2026
+International Conference on Conceptual Modelling,ER,A,ICORE2026
+International Symposium on Empirical Software Engineering and Measurement,ESEM,A,ICORE2026
+European Symposium on Programming,ESOP,A,ICORE2026
+European Symposium On Research In Computer Security,ESORICS,A,ICORE2026
+IEEE European Symposium on Security and Privacy,EuroS&P,A,ICORE2026
+Conference on File and Storage Technologies,FAST,A,ICORE2026
+Financial Cryptography and Data Security Conference,FC,A,ICORE2026
+Foundations of Genetic Algorithms,FOGA,A,ICORE2026
+Genetic and Evolutionary Computations,GECCO,A,ICORE2026
+USENIX Workshop on Hot Topics in Operating Systems,HotOS,A,ICORE2026
+ACM International Symposium on High Performance Distributed Computing,HPDC,A,ICORE2026
+IEEE International Conference on Document Analysis and Recognition,ICDAR,A,ICORE2026
+International Conference on Distributed Computing Systems,ICDCS,A,ICORE2026
+International Conference on Database Theory,ICDT,A,ICORE2026
+International Computing Education Research Workshop,ICER,A,ICORE2026
+International Conference on Functional Programming,ICFP,A,ICORE2026
+International Conference on Multimodal Interaction (was International Conference on Multimodal Interfaces),ICMI,B,ICORE2026
+International Conference on Multimedia Retrieval (previously MIR),ICMR,B,ICORE2026
+International Conference on Network Protocols,ICNP,B,ICORE2026
+International Conference on Neural Information Processing,ICONIP,B,ICORE2026
+International Conference on Parallel and Distributed Systems,ICPADS,B,ICORE2026
+ACM/SPEC International Conference on Performance Engineering,ICPE,B,ICORE2026
+International Conference on Process Mining,ICPM,B,ICORE2026
+International Conference on Parallel Processing,ICPP,B,ICORE2026
+International Conference on Pattern Recognition,ICPR,B,ICORE2026
+International Conference on Software Reuse,ICSR,B,ICORE2026
+International Conference on Software and System Processes (was ICSP prior to 2011),ICSSP,B,ICORE2026
+International Conference on Tools with Artificial Intelligence,ICTAI,B,ICORE2026
+International Conference on Web Engineering,ICWE,B,ICORE2026
+Intelligent Data Analysis,IDA,B,ICORE2026
+Interaction Design and Children (ACM),IDC,B,ICORE2026
+The International Conference on Intelligent Environments,IE,B,ICORE2026
+IEEE Consumer Communications and Networking Conference,IEEE CCNC,B,ICORE2026
+IEEE International Conference on Software Services Engineering (previously IEEE International Conference on Services Computing SCC),IEEE SSE,B,ICORE2026
+Intelligent Vehicles Conference,IEEE-IV,B,ICORE2026
+IFIP Information Security & Privacy Conference,IFIP SEC,B,ICORE2026
+Integrated Formal Methods,IFM,B,ICORE2026
+International Joint Conference on Biometrics,IJCB,B,ICORE2026
+International Joint Conference on Natural Language Processing,IJCNLP,B,ICORE2026
+IEEE International Joint Conference on Neural Networks,IJCNN,B,ICORE2026
+Inductive Logic Programming,ILP,B,ICORE2026
+IFIP/IEEE International Symposium on Integrated Management (even years sharing with NOMS),IM,B,ICORE2026
+International Natural Language Generation Conference,INLG,B,ICORE2026
+IFIP TC13 Conference on Human-Computer Interaction,Interact,B,ICORE2026
+International Symposium on Parameterized and Exact Computation (was IWPEC pre 2004),IPEC,B,ICORE2026
+IEEE International Symposium on Information Theory,ISIT,B,ICORE2026
+International Conference on Intelligent Tutoring Systems,ITS,B,ICORE2026
+Information Theory Workshop,ITW,B,ICORE2026
+Intelligent Virtual Agents,IVA,B,ICORE2026
+ACM International Wireless Communications and Mobile Computing Conference,IWCMC,B,ICORE2026
+IEEE International Workshop on Quality of Service,IWQoS,B,ICORE2026
+Knowledge capture,K-CAP,B,ICORE2026
+International Conference on Knowledge-Based and Intelligent Information and Engineering Systems,KES,B,ICORE2026
+International Symposium on Latin American Theoretical Informatics,LATIN,B,ICORE2026
+IEEE Conference on Local Computer Networks,LCN,B,ICORE2026
+"ACM SIGPLAN Conference on Languages, Compilers and Tools for Embedded Systems",LCTES,B,ICORE2026
+Logic Programming and Automated Reasoning,LPAR,B,ICORE2026
+International Conference on Logic Programming and Non-monotonic Reasoning,LPNMR,B,ICORE2026
+Language Resources and Evaluation Conference,LREC,B,ICORE2026
+Symposium Model Analysis and Simulation of Computer and Telecommunications Systems,MASCOTS,B,ICORE2026
+IEEE International Conference on Mobile Ad-hoc and Sensor Systems,MASS,B,ICORE2026
+International Conference on Modelling Decisions for Artificial Intelligence,MDAI,B,ICORE2026
+International Conference on Mobile Data Management,MDM,B,ICORE2026
+International Conference on Mathematical Foundations of Programming Semantics,MFPS,B,ICORE2026
+International Conference on Multimedia Modelling,MMM,B,ICORE2026
+International Conference on Human-Computer Interaction with Mobile Devices and Services,MobileHCI,B,ICORE2026
+Mathematics of Program Construction,MPC,B,ICORE2026
+Mobile and Ubiquitous Multimedia (ACM),MUM,B,ICORE2026
+IEEE International Symposium on Network Computing and Applications,NCA,B,ICORE2026
+International Conference on Network Softwarization,NetSoft,B,ICORE2026
+IFIP International Conference on Networking,Networking,B,ICORE2026
+IEEE Network Operations and Management Symposium,NOMS,B,ICORE2026
+Network and Operating System Support for Digital Audio and Video,NOSSDAV,B,ICORE2026
+International Conference on network and System Security,NSS,B,ICORE2026
+International Conference on Principles of Distributed Systems,OPODIS,B,ICORE2026
+International Conference on Parallel Architecture and Compilation Techniques,PACT,B,ICORE2026
+ACM SIGSIM Conference on Principles of Advanced Discrete Simulation (was Parallel and Distributed Simulation),PADS,B,ICORE2026
+Pacific-Asia Conference on Knowledge Discovery and Data Mining,PAKDD,B,ICORE2026
+Passive and Active Measurement Conference,PAM,B,ICORE2026
+International Conference on the Application and Theory of Petri Nets and Concurrency,Petri Nets,B,ICORE2026
+IEEE International Symposium on Personal and Indoor Mobile Radio Conference,PIMRC,B,ICORE2026
+IEEE International Conference on Cloud Computing,CLOUD,B,ICORE2026
+International Conference on Network and Service Management (amalgamation of DSOM and related workshops from 2010),CNSM,B,ICORE2026
+Annual Meeting of the Cognitive Science Society,CogSci,B,ICORE2026
+International Conference on Computational Linguistics,COLING,B,ICORE2026
+International Computer Software and Applications Conference,COMPSAC,B,ICORE2026
+Conference on Computational Natural Language Learning,CoNLL,B,ICORE2026
+International Conference on Cooperative Information Systems,CoopIS,B,ICORE2026
+International Conference on Integration of Artificial Intelligence and Operations Research Techniques in Constraint Programming for Combinatorial Optimization Problems,CPAIOR,B,ICORE2026
+Combinatorial Pattern Matching,CPM,B,ICORE2026
+International Conference on Computer Supported Education,CSEDU,B,ICORE2026
+Annual Conference on Computer Science Logic,CSL,B,ICORE2026
+Cryptographers Track at RSA Conference,CT-RSA,B,ICORE2026
+International Workshop on Document Analysis Systems,DAS,B,ICORE2026
+Data Warehousing and Knowledge Discovery,DaWaK,B,ICORE2026
+IFIP WG 11.3 Working Conference on Data and Applications Security (also known as DBSEC),DBSEC,B,ICORE2026
+Data Compression Conference,DCC,B,ICORE2026
+IEEE International Conference on Distributed Computing in Sensor Systems,DCOSS,B,ICORE2026
+DNA Computing and Molecular Programming,DNA,B,ICORE2026
+ACM Symposium on Document Engineering,DocEng,B,ICORE2026
+Discovery Science,DS,B,ICORE2026
+IEEE International Conference on Data Science and Advanced Analytics,DSAA,B,ICORE2026
+IEEE International Conference on e-Science and Grid Computing,e-Science,B,ICORE2026
+European Conference on Technology Enhanced Learning,EC-TEL,B,ICORE2026
+European Conference on Modelling Foundations and Applications,ECMFA,B,ICORE2026
+European Conference on Computer Supported Cooperative Work,ECSCW,B,ICORE2026
+Educational Data Mining,EDM,B,ICORE2026
+IEEE International Enterprise Distributed Object Computing Conference,EDOC,B,ICORE2026
+International Conference on Knowledge Engineering and Knowledge Management,EKAW,B,ICORE2026
+"EMAS (merger of DALT, AOSE and PROMAS)",EMAS,B,ICORE2026
+International Conference on Evaluation of Novel Approaches to Software Engineering,ENASE,B,ICORE2026
+European Symposium on Artificial Neural Networks,ESANN,B,ICORE2026
+Eye Tracking Research and Applications,ETRA,B,ICORE2026
+European Conference on Genetic Programming,EUROGP,B,ICORE2026
+International European Conference on Parallel and Distributed Computing (was International Conference on Parallel Processing),EuroPar,B,ICORE2026
+European SPI,EuroSPI,B,ICORE2026
+Eurographics/IEEE Symposium on Visualization,EuroVis,B,ICORE2026
+International Conference on Applications of Evolutionary Computation,EvoApplications,B,ICORE2026
+European Conference on Evolutionary Computation in Combinatorial Optimisation,EvoCOP,B,ICORE2026
+International Conference on Embedded Wireless Systems and Networks (wasEuropean Conference on Wireless Sensor Networks),EWSN,B,ICORE2026
+Fundamental Approaches to Software Engineering,FASE,B,ICORE2026
+International Symposium on Fundamentals of Computation Theory,FCT,B,ICORE2026
+IEEE International Conference on Automatic Face and Gesture Recognition,FG,B,ICORE2026
+Formal Methods in Computer-Aided Design,FMCAD,B,ICORE2026
+International Conference on Formal Structures for Computation and Deduction,FSCD,B,ICORE2026
+IEEE International Conference on Fuzzy Systems,FUZZ-IEEE,B,ICORE2026
+Graphics Interface,GI,B,ICORE2026
+IEEE Global Telecommunications Conference,GLOBECOM,B,ICORE2026
+International Conference on Generative Programming and Component Engineering,GPCE,B,ICORE2026
+ACM Special Interest Group on Supporting Group Work (was SIGGRoup),Group,B,ICORE2026
+Human-Agent Interaction,HAI,B,ICORE2026
+ACM-SIGRAPH Interactive 3D Graphics and Games,I3DG,B,ICORE2026
+International Conference on Agents and Artificial Intelligence,ICAART,B,ICORE2026
+IEEE International Conference on Advanced Learning Technologies,ICALT,B,ICORE2026
+International Conference on Computational Collective Intelligence,ICCCI,B,ICORE2026
+International Conference on Computer Communication and Networks,ICCCN,B,ICORE2026
+IEEE International Conference on Engineering of Complex Computer Systems,ICECCS,B,ICORE2026
+International Conference on Frontiers of Handwriting Recognition,ICFHR,B,ICORE2026
+International Conference on Graph Transformations,ICGT,B,ICORE2026
+IEEE International Conference on Image Processing,ICIP,B,ICORE2026
+European Conference on Software Architecture,ECSA,B,ICORE2026
+International Symposium on Algorithms and Computation,ISAAC,B,ICORE2026
+International Conference on Logic Programming,ICLP,B,ICORE2026
+Extending Database Technology,EDBT,B,ICORE2026
+Advances in Financial Technologies,AFT,B,ICORE2026
+Euromicro Conference on Real-Time Systems,ECRTS,B,ICORE2026
+Extended Semantic Web Conference (was European Semantic Web Conference),ESWC,B,ICORE2026
+International Conference on Cloud Engineering,IC2E,B,ICORE2026
+International Workshop on Graph-Theoretic Concepts in Computer Science,WG,B,ICORE2026
+International Symposium on Mathematical Foundations of Computer Science,MFCS,B,ICORE2026
+ACM SIGIR Conference on Human Information Interaction And Retrieval,CHIIR,B,ICORE2026
+Foundations of Software Science and Computational Structures,FOSSACS,B,ICORE2026
+International Conference on AI Engineering – Software Engineering for AI,CAIN,B,ICORE2026
+IEEE International Symposium on Performance Analysis of Systems and Software,ISPASS,B,ICORE2026
+IEEE European Test Symposium,ETS,B,ICORE2026
+International Symposium on Formal Methods (was Formal Methods Europe FME),FM,B,ICORE2026
+"IEEE International Symposium on Cluster, Cloud and Grid Computing",CCGRID,B,ICORE2026
+International Symposium on Symbolic and Algebraic Computation,ISSAC,B,ICORE2026
+IEEE International Conference on Smart Computing,SmartComp,B,ICORE2026
+"GI International Conference on Detection of Intrusions and Malware, and Vulnerability Assessment",DIMVA,B,ICORE2026
+Conference on Agile Software Development,XP,B,ICORE2026
+Certified Programs and Proofs,CPP,B,ICORE2026
+"Logics in Artificial Intelligence, European Conference",JELIA,B,ICORE2026
+International Conference on Database Systems for Advanced Applications,DASFAA,B,ICORE2026
+"Conference on Interactive Theorem Proving (previously TPHOLs, changed in 2009)",ITP,B,ICORE2026
+IEEE International Conference on Computational Photography,ICCP,B,ICORE2026
+ACM SIGGRAPH/Eurographics Symposium on Computer Animation,SCA,B,ICORE2026
+International Workshop on Fast Software Encryption,FSE,B,ICORE2026
+The Symposium of Combinatorial Search,SoCS,B,ICORE2026
+International Conference on Affective Computing and Intelligent,ACII,B,ICORE2026
+ACM Virtual Reality Software and Technology,VRST,B,ICORE2026
+IEEE International Conference on Robot and Human Interactive Communication,RO-MAN,B,ICORE2026
+AAAI Conference on Human Computation and Crowdsourcing,HCOMP,B,ICORE2026
+Creativity and Cognition,C&C,B,ICORE2026
+International Conference on Concurrency Theory,CONCUR,B,ICORE2026
+International Conference on Applied Cryptography and Network Security,ACNS,B,ICORE2026
+International Conference on Cooperative and Human Aspects of Software Engineering,CHASE,B,ICORE2026
+Annual Conference on Innovation and Technology in Computer Science Education,ITiCSE,B,ICORE2026
+International ACM Conference on Automotive User Interfaces and Interactive Vehicular Applications,Automotive_UI,B,ICORE2026
+International Conference on Persuasive Technology,Persuasive,B,ICORE2026
+IEEE Pacific Visualization Symposium (was APVIS),PacificVis,B,ICORE2026
+IEEE International Symposium on Computer-Based Medical Systems,CBMS,B,ICORE2026
+Asia and South Pacific Design Automation Conference,ASPDAC,B,ICORE2026
+Field Programmable Logic and Applications,FPL,B,ICORE2026
+ACM Symposium on Applied Perception,SAP,B,ICORE2026
+ACM Conference on Learning @ Scale,L@S,B,ICORE2026
+Algorithmic Learning Theory,ALT,B,ICORE2026
+Conference on Integer Programming and Combinatorial Optimization,IPCO,B,ICORE2026
+Theoretical Aspects of Rationality and Knowledge,TARK,B,ICORE2026
+Theory of Cryptography Conference,TCC,B,ICORE2026
+ACM Symposium on Mobile Ad Hoc Networking and Computing,MOBIHOC,B,ICORE2026
+Asian Conference on Computer Vision,ACCV,B,ICORE2026
+Asian Conference on Intelligent Information and Database Systems,ACIIDS,B,ICORE2026
+Advanced Concepts for Intelligent Vision Systems,ACIVS,B,ICORE2026
+ACM Conference on Security and Privacy in Wireless and Mobile Networks,ACM_WiSec,B,ICORE2026
+International Conference on Artificial Intelligence in Medicine,AIME,B,ICORE2026
+Advances in Modal Logic,AiML,B,ICORE2026
+International Conference on Advanced Information Networking and Applications (was ICOIN),AINA,B,ICORE2026
+Asia-Pacific Bioinformatics Conference,APBC,B,ICORE2026
+ASIAN Symposium on Programming Languages and Systems,APLAS,B,ICORE2026
+"International Conference on Availability, Reliability and Security",ARES,B,ICORE2026
+IEEE/ACM International Conference on Advances in Social Networks Analysis and Mining,ASONAM,B,ICORE2026
+International Symposium on Automated Technology for Verification and Analysis,ATVA,B,ICORE2026
+Advanced Visual Interfaces,AVI,B,ICORE2026
+IEEE International Conference on Advanced Video and Signal Based Surveillance,AVSS,B,ICORE2026
+IEEE International Conference on Big Data,BigData,B,ICORE2026
+Conference on Algebra and Coalgebra in Computer Science,CALCO,B,ICORE2026
+International Conference on Cryptology and Network Security,CANS,B,ICORE2026
+Computer Algebra in Scientific Computing,CASC,B,ICORE2026
+International Conference on Compiler Construction,CC,B,ICORE2026
+IEEE Congress on Evolutionary Computation,CEC,B,ICORE2026
+International Conference on Practice and Theory in Public Key Cryptography,PKC,B,ICORE2026
+Principles and Practice of Parallel Programming,PPoPP,B,ICORE2026
+Pacific Rim International Conference on Artificial Intelligence,PRICAI,B,ICORE2026
+International Conference on Principles of Practice in Multi-Agent Systems (prior to 2009 was Pacific Rim International Workshop on Multi-Agents),PRIMA,B,ICORE2026
+Product Focused Software Process Improvement,PROFES,B,ICORE2026
+International Conference on Quality of Multimedia Experience,QoMEX,B,ICORE2026
+International Conference on Research Challenges in Information Science,RCIS,B,ICORE2026
+International Conference on Computational Molecular Biology,RECOMB,B,ICORE2026
+International Workshop on Requirements Engineering: Foundation for Software Quality,REFSQ,B,ICORE2026
+International Conference on Embedded and Real Time Computing Systems and Applications,RTCSA,B,ICORE2026
+International Joint Conference on Rules and Reasoning,RuleML+RR,B,ICORE2026
+International Conference on Runtime Verification (was workshop pre 2010),RV,B,ICORE2026
+Selected Areas in Cryptography,SAC,B,ICORE2026
+"International Conference on Computer Safety, Reliability and Security",SAFECOMP,B,ICORE2026
+International Symposium on Algorithmic Game Theory,SAGT,B,ICORE2026
+Static Analysis Symposium,SAS,B,ICORE2026
+International Symposium on Experimental Algorithms,SEA,B,ICORE2026
+Euromicro Conference on Software Engineering and Advanced Applications,SEAA,B,ICORE2026
+"IEEE International Conference on Sensing, Communication and Networking",SECON,B,ICORE2026
+International Conference on Software Engineering and Formal Methods,SEFM,B,ICORE2026
+IEEE Congress on Services,SERVICES,B,ICORE2026
+Symposium on Geometry Processing,SGP,B,ICORE2026
+Annual Meeting of the Special Interest Group on Discourse and Dialog,SIGdial,B,ICORE2026
+International Colloquium on Structural Information and Communication Complexity,SIROCCO,B,ICORE2026
+International Conference on Similarity Search and Applications,SISAP,B,ICORE2026
+International Conference on Software Language Engineering,SLE,B,ICORE2026
+"IEEE Conference on Systems, Man and Cybernetics",SMC,B,ICORE2026
+Current Trends in Theory and Practice of Computer Science,SOFSEM,B,ICORE2026
+Symposium on Parallelism in Algorithms and Architectures,SPAA,B,ICORE2026
+Software Product Lines Conference,SPLC,B,ICORE2026
+Symposium on Reliable Distributed Systems,SRDS,B,ICORE2026
+International Symposium on Search Based Software Engineering,SSBSE,B,ICORE2026
+International Conference on Scientific and Statistical Data Base Management,SSDBM,B,ICORE2026
+Structural and Syntactical Pattern Recognition,SSPR,B,ICORE2026
+International Symposium on Spatial and Temporal Databases,SSTD,B,ICORE2026
+International Conference on Theorem Proving with Analytic Tableaux and Related Methods,TABLEAUX,B,ICORE2026
+International Conference on Technical Debt,TechDebt,B,ICORE2026
+"Tangible, Embedded, and Embodied Interaction",TEI,B,ICORE2026
+International Conference on Theory and Practice of Digital Libraries (was ECDL until 2010),TPDL,B,ICORE2026
+"International Conference on Trust, Privacy and Security in Digital Business",TrustBus,B,ICORE2026
+"International Conference on Trust, Security and Privacy in Computing and Communications",TrustCom,B,ICORE2026
+International Conference on Virtual Execution Environments,VEE,B,ICORE2026
+IEEE International Working Conference on Software Visualisation,VISSOFT,B,ICORE2026
+IEEE Symposium on Visual Languages and Human-Centric Computing (was VL),VL/HCC,B,ICORE2026
+"Verification, Model Checking and Abstract Interpretation",VMCAI,B,ICORE2026
+IEEE Vehicular Technology Conference,VTC,B,ICORE2026
+Algorithms and Data Structures Symposium (was Workshop on Algorithms and Data Structures),WADS,B,ICORE2026
+International Conference and Workshops on Algorithms and Computation,WALCOM,B,ICORE2026
+Workshop on Approximation and Online Algorithms,WAOA,B,ICORE2026
+IEEE Wireless Communications and Networking Conference,WCNC,B,ICORE2026
+IEEE/WIC/ACM International Conference on Web Intelligence (previously joint with Intelligent Agent Technology WI-IAT),WI,B,ICORE2026
+"IEEE International Conference on Wireless and Mobile Computing, Networking and Communications",WiMob,B,ICORE2026
+"International Symposium on Modelling and Optimization in Mobile, Ad Hoc, and Wireless Networks",WiOpt,B,ICORE2026
+International Conference on Web Information Systems Engineering,WISE,B,ICORE2026
+Pacific Rim Knowledge Acquisition Workshop,PKAW,C,ICORE2026
+Pattern Languages of Programs,PLOP,C,ICORE2026
+Workshop on Programming Languages and Operating Systems,PLOS,C,ICORE2026
+International Conference on Principles and Practice of Declarative Programming,PPDP,C,ICORE2026
+International Workshop on Post-Quantum Cryptography,PQCrypto,C,ICORE2026
+Pacific Rim International Symposium on Dependable Computing,PRDC,C,ICORE2026
+IFIP Working Conferences on Virtual Enterprises,PRO-VE,C,ICORE2026
+International Conference on Provable Security,ProvSec,C,ICORE2026
+Privacy in Statistical Databases,PSD,C,ICORE2026
+Pacific-Rim Symposium on Image and Video Technology,PSIVT,C,ICORE2026
+"Annual Conference on Privacy, Security and Trust",PST,C,ICORE2026
+"International Conference on Heterogeneous Networking for Quality, Reliability, Security and Robustness (was International Conference on Quality of Service in Heterogeneous Wired/Wireless Networks)",Qshine,C,ICORE2026
+International Conference on Relational and AlgebraicMethods in Computer Science (was International Conference on Relational Methods in Computer Science RelMiCS),RAMiCS,C,ICORE2026
+International Conference on Reversible Computation,RC,C,ICORE2026
+Robot Soccer World Cup,RoboCup,C,ICORE2026
+IEEE International Symposium on Rapid System Prototyping (was IEEE Symposium on Rapid Prototyping),RSP,C,ICORE2026
+"ACM Symposium on Access Control Models and Technologies (previously ACM Workshop on Role-Based Access Control, RBAC, changed in 2000)",SACMAT,C,ICORE2026
+"IFAC Symposium on Fault Detection, Supervision and Safety of Technical Processes",SAFEProcess,C,ICORE2026
+Simulation and Synthesis in Medical Imaging,SASHIMI,C,ICORE2026
+International Symposium on Computer Architecture and High Performance Computing,SBAC-PAD,C,ICORE2026
+International Workshop on Software and Compilers for Embedded Systems,SCOPES,C,ICORE2026
+International Symposium on Spatial Data Handling,SDH,C,ICORE2026
+International Conference on Information Security and Cryptography,SECRYPT,C,ICORE2026
+International Conference on Software Engineering and Knowledge Engineering,SEKE,C,ICORE2026
+"ACIS Conference on Software Engineering Research, Management and Applications",SERA,C,ICORE2026
+International Conference on Sequences and their Applications,SETA,C,ICORE2026
+IEEE Software Engineering Workshop,SEW,C,ICORE2026
+International Conference on Security of Information and Networks,SIN,C,ICORE2026
+"International Conference on Software Engineering, Artificial Intelligence, Networking and Parallel/Distributed Computing",SNPD,C,ICORE2026
+"International Conference on Intelligent Software Methodologies, Tools, and Techniques (was International Conference on Software Methods and Tools)",SoMeT,C,ICORE2026
+Software Process Improvement and Capability Determination,SPICE,C,ICORE2026
+International Symposium on String Processing and Information Retrieval,SPIRE,C,ICORE2026
+ACM Symposium on Solid and Physical Modelling,SPM,C,ICORE2026
+International Conference on Software Quality Management,SQM,C,ICORE2026
+"Symposium on Stabilization, Safety, and Security of Distributed Systems",SSS,C,ICORE2026
+IFAC Conference on System Structure and Control,SSSC,C,ICORE2026
+Conference on Theory and Applications of Models of Computation,TAMC,C,ICORE2026
+International Conference on Tests and Proofs,TAP,C,ICORE2026
+IEEE Region 10 Conference,Tencon,C,ICORE2026
+International Symposium on Temporal Representation and Reasoning,TIME,C,ICORE2026
+"International Conference on Mobile Ubiquitous Computing, Systems, Services and Technologies",UBICOMM,C,ICORE2026
+International Conference on Unconventional Computation and Natural Computation (was International Conference on Unconventional Computation),UC,C,ICORE2026
+International Conference on Ubiquitous Intelligence and Computing,UIC,C,ICORE2026
+IEEE International Conference on Visual Communications and Image Processing (was SPIE ... pre 2011),VCIP,C,ICORE2026
+The International Conference on Verification and Evaluation of Computer and Communication Systems,VECoS,C,ICORE2026
+International Conference on Vehicle Technology and Intelligent Transport Systems,VEHITS,C,ICORE2026
+Visual Information Communication and Interaction,VINCI,C,ICORE2026
+International Workshop on Visualization for Cyber Security,VizSec,C,ICORE2026
+International Workshop on Web and Wireless Geographical Information Systems,W2GIS,C,ICORE2026
+Workshop on Algorithms in Bioinformatics,WABI,C,ICORE2026
+International Workshop on the Algorithmic Foundations of Robotics,WAFR,C,ICORE2026
+Workshop on the Arithmetic of Finite Fields,WAIFI,C,ICORE2026
+Workshop on Algorithms And Models For The Web Graph,WAW,C,ICORE2026
+Workshop on Computational Optimization,WCO,C,ICORE2026
+International Workshops on Enabling Technologies: Infrastructures for Collaborative Enterprises,WETICE,C,ICORE2026
+Workshop in Information Security Theory and Practices,WISTP,C,ICORE2026
+"Workshop on Logic, Language, Information and Computation",WoLLIC,C,ICORE2026
+World Conference on Information Systems and Technologies,WorldCIST,C,ICORE2026
+IEEE International Conference on Emerging Technologies and Factory Automation,ETFA,C,ICORE2026
+IberoAmerican Congress on Pattern Recognition,CIARP,C,ICORE2026
+IEEE Symposium on Computational Intelligence in Bioinformatics and Computational Biology,CIBCB,C,ICORE2026
+International Conference on Intelligent Text Processing and Computational Linguistics,CICLING,C,ICORE2026
+Conference on Intelligent Computer Mathematics,CICM,C,ICORE2026
+IEEE Symposium on Computational Intelligence and Data Mining,CIDM,C,ICORE2026
+Computability in Europe: Logic and Theory of Algorithms,CiE,C,ICORE2026
+International Workshop on Combinations of Intelligent Methods and Applications,CIMA,C,ICORE2026
+IEEE International Conference on Cybernetics and Intelligent Systems,CIS,C,ICORE2026
+"International Conference on Complex, Intelligent and Software Intensive Systems",CISIS,C,ICORE2026
+IEEE International Conference on Computer and Information Technology,CIT,C,ICORE2026
+Latin American Conference on Informatics,CLEI,C,ICORE2026
+International Conference on Cloud Computing and Services Science,CLOSER,C,ICORE2026
+IEEE International Conference on Cloud Computing Technology and Science (International Conference on Cloud Computing pre 2010),CloudCom,C,ICORE2026
+Conference on Combinatorial Optimization and Applications,COCOA,C,ICORE2026
+"International Conference on Control, Decision and Information Technologies",CoDIT,C,ICORE2026
+"International Workshop on Coordination, Organizations, Institutions, Norms and Ethics for Governance of Multi-Agent Systems (Ethics added 2020)",COINE,C,ICORE2026
+"International Conference on Complexity, Future Information Systems and Risk",COMPLEXIS,C,ICORE2026
+International Conference on Coordination Models and Languages,Coordination,C,ICORE2026
+Workshop on Constraint Satisfaction for Planning and Scheduling,COPLAS,C,ICORE2026
+International Conference on Risks and Security of Internet and Systems,CRiSIS,C,ICORE2026
+International Workshop on Critical Information Infrastructures Security,CRITIS,C,ICORE2026
+International Conference on Computer Supported Cooperative Work in Design,CSCWD,C,ICORE2026
+"Conference on Software Engineering Education and Training (previously Conference is Software Engineering Education, CSEE, changed in 1997)",CSEET,C,ICORE2026
+Cologne-Twente Workshop on Graphs and Combinatorial Optimization,CTW,C,ICORE2026
+International Conference on Cyberworlds (was International Symposium on Cyberworlds),CW,C,ICORE2026
+Digital Audio Effects Conference,DAFX,C,ICORE2026
+IFIP International Conference on Distributed Applications and Interoperable Systems,DAIS,C,ICORE2026
+International Workshop on Data Management on New Hardware,DaMoN,C,ICORE2026
+"International Conference on Dependable, Autonomic and Secure Computing",DASC,C,ICORE2026
+International Conference on Dublin Core and Metadata Applications,DC,C,ICORE2026
+Developments in eSystems Engineering,DeSE,C,ICORE2026
+International Conference on Database and Expert Systems Applications,DEXA,C,ICORE2026
+The Theory and Application of Diagrams,DIAGRAMS,C,ICORE2026
+Digital Games Research Conference,DIGRA,C,ICORE2026
+Dynamic Languages Symposium,DLS,C,ICORE2026
+Developments in Language Theory,DLT,C,ICORE2026
+SIAM Conference on Discrete Mathematics,DM,C,ICORE2026
+International Symposium on Distributed Simulation and Real Time Applications,DS-RT,C,ICORE2026
+Workshop on Domain Specific Modelling,DSM,C,ICORE2026
+International Workshop on Principles of Diagnosis,DX,C,ICORE2026
+Conference of the European Association for Machine Translation,EAMT,C,ICORE2026
+International Conference on Engineering Applications of Neural Networks,EANN,C,ICORE2026
+EURO AMERICAN CONFERENCE ON TELEMATICS AND INFORMATION SYSTEMS,EATIS,C,ICORE2026
+European Conference on Computational Biology,ECCB,C,ICORE2026
+European Chapter on Combinatorial Optimization,ECCO,C,ICORE2026
+European Conference on Digital Government (was European Conference on e-Government ECEG),ECDG,C,ICORE2026
+"World Conference on Educational Multimedia, Hypermedia and Telecommunications",ED-MEDIA,C,ICORE2026
+Eurographics Symposium on Parallel Graphics and Visualization,EGPGV,C,ICORE2026
+International Conference on Artificial Reality and Telexistance & Eurographics Symposium on Virtual Environments,EGVE,C,ICORE2026
+European-Japanese Conference on Information Modelling and Knowledge Bases,EJC,C,ICORE2026
+Exploring Modelling Methods in Systems Analysis and Design,EMMSAD,C,ICORE2026
+International Conference on Information and Communication Technologies in Tourism,ENTER,C,ICORE2026
+International Workshop on Enterprise and Organizational Modelling and Simulation,EOMAS,C,ICORE2026
+ETHICOMP Conference,ETHICOMP,C,ICORE2026
+IEEE/IFIP International Conference on Embedded and Ubiquitous Computing,EUC,C,ICORE2026
+European Conference on Multi-Agent Systems,EUMAS,C,ICORE2026
+European Conference on Operations Research,EURO,C,ICORE2026
+European Workshop on Computational Geometry,EuroCG,C,ICORE2026
+"EuroConference on Combinatorics, Graph Theory and Applications",EUroComb,C,ICORE2026
+European MPI Users' Group Conference,EuroMPI,C,ICORE2026
+Visual Analytics,EuroVA,C,ICORE2026
+Conference of the European Society for Fuzzy Logic and Technologies,EUSFLAT,C,ICORE2026
+International Conference on the Foundations of Digital Games,FDG,C,ICORE2026
+Forum on Specification and Design Languages,FDL,C,ICORE2026
+Workshop on Fault Diagnosis and Tolerance in Cryptography,FDTC,C,ICORE2026
+Frontiers in Education,FIE,C,ICORE2026
+International FLINS Conference on Robotics and Artificial Intelligence (was International Fuzzy Logic and Intelligent technologies in Nuclear Science Conference),FLINS,C,ICORE2026
+Int. Workshop on Formal Methods for Industrial Critical Systems,FMICS,C,ICORE2026
+International Workshop on Formal Methods for interactive Systems,FMIS,C,ICORE2026
+"IFIP Joint International Conference on Formal Description Techniques and Protocol Specification, Testing, And Verification",FORTE,C,ICORE2026
+Flexible Query-Answering Systems,FQAS,C,ICORE2026
+Workshop on Formal Techniques for Java-like Programs,FTfJP,C,ICORE2026
+International Conference on Information Fusion,FUSION,C,ICORE2026
+IEEE Global Internet Symposium,GI,C,ICORE2026
+Geometry Modeling and Processing,GMP,C,ICORE2026
+"International Conference on Green, Pervasive and Cloud Computing (was Grid and Pervasive Computing)",GPC,C,ICORE2026
+Workshop on Applications of Graph Theory in Wireless Ad hoc Networks and Sensor Networks,Graph-hoc,C,ICORE2026
+International Wordnet Conference (Global Wordnet Conference),GWC,C,ICORE2026
+Haskell Workshop,HASKELL,C,ICORE2026
+Heterogeneity in Computing Workshop,HCW,C,ICORE2026
+IEEE international conference on ehealth networking applications and services (was International Workshop on Enterprise Networking and Computing in Health Care Industry; changed 2006),HealthCom,C,ICORE2026
+International Workshop on High-Level Parallel Programming Models and Supportive Environments,HIPS,C,ICORE2026
+International Conference on Hybrid Intelligent Systems,HIS,C,ICORE2026
+International workshop on High-Level Parallel Programming and Applications,HLPP,C,ICORE2026
+Symposium on High Performance Chips,HOTCHIPS (HCS),C,ICORE2026
+International Conference and Exhibition on High Performance Computing in the Asia-Pacific Region,HPC Asia,C,ICORE2026
+IEEE International Conference on High Performance Computing and Communications,HPCC,C,ICORE2026
+IEEE Workshop on High Performance Switching and Routing,HPSR,C,ICORE2026
+Human System Interaction,HSI,C,ICORE2026
+International Conference on Innovations for Community Services (was Innovative Internet Computer Systems IICS until 2014),I4CS,C,ICORE2026
+Innovative Applications in AI,IAAI,C,ICORE2026
+IADIS International Conference Applied Computing,IADIS AC,C,ICORE2026
+International Symposium on Information Assurance and Security,IAS,C,ICORE2026
+"International Joint Conference on Knowledge Discovery, Knowledge Engineering and Knowledge Management",IC3K,C,ICORE2026
+International Conference on Algorithms and Architectures for Parallel Processing,ICA3PP,C,ICORE2026
+International Conference on Artificial Intelligence and Law,ICAIL,C,ICORE2026
+"International Conference on Control, Automation, Robotics and Vision",ICARCV,C,ICORE2026
+IEEE International Conference on Blockchain and Cryptocurrency,ICBC,C,ICORE2026
+International Congress on Computational and Applied Mathematics,ICCAM,C,ICORE2026
+International Conference on Case-Based Reasoning,ICCBR,C,ICORE2026
+International Conference on Computational Creativity,ICCC,C,ICORE2026
+International Conference on Computers Helping People with Special Needs,ICCHP,C,ICORE2026
+IEEE International Conference on Cognitive Informatics,ICCI,C,ICORE2026
+International Conference on Communication Systems and Applications,ICCSA,C,ICORE2026
+International Conference on Computational Science and its Applications,ICCSA,C,ICORE2026
+International Conference on Digital Society,ICDS,C,ICORE2026
+International Conference on Electronic Commerce,ICEC,C,ICORE2026
+International Conference on Entertainment Computing,ICEC,C,ICORE2026
+International Conference Formal Concept Analysis Conference,ICFCA,C,ICORE2026
+IEEE International Conference on Fog and Edge Computing,ICFEC,C,ICORE2026
+International Conference on Formal Engineering Methods,ICFEM,C,ICORE2026
+IEEE International Conference on Global Software Engineering,ICGSE,C,ICORE2026
+International Conference on Information and Communications Security,ICICS,C,ICORE2026
+International Conference on Internet Computing in Science and Engineering,ICICSE,C,ICORE2026
+International Conference on Internet Monitoring and Protection,ICIMP,C,ICORE2026
+IEEE/ACIS International Conference on Computer and Information Science,ICIS,C,ICORE2026
+International Conference on Image and Signal Processing,ICISP,C,ICORE2026
+International Conference on Internet and Web Applications and Services,ICIW,C,ICORE2026
+International Conference on Machine Learning and Applications,ICMLA,C,ICORE2026
+International Conference on Machine Vision,ICMV,C,ICORE2026
+International Conference on Computing and Informatics,ICOCI,C,ICORE2026
+International Conference on Operations Research and Enterprise Systems,ICORES,C,ICORE2026
+International Conference on Smart homes and health Telematics,ICOST,C,ICORE2026
+International Conference on Optimization: Techniques And Applications,ICOTA,C,ICORE2026
+International Conference on Pattern Recognition Applications and Methods,ICPRAM,C,ICORE2026
+International Conference on Software Engineering Advances,ICSEA,C,ICORE2026
+International Conference on Systems Engineering,ICSEng,C,ICORE2026
+International Conference on Information and Communication Technologies for Ageing Well and e-Health,ICT4AWE,C,ICORE2026
+International Colloquium on Theoretical Aspects of Computing,ICTAC,C,ICORE2026
+International Conference on Information and Communication Technologies and Development,ICTD,C,ICORE2026
+International Conference on Testing Software and Systems,ICTSS,C,ICORE2026
+International Conference on Computer Vision Systems,ICVS,C,ICORE2026
+International Conference on Intelligent Data Engineering and Automated Learning,IDEAL,C,ICORE2026
+International Database Engineering and Applications Symposium,IDEAS,C,ICORE2026
+International Conference on Industrial and Engineering Applications of Artificial Intelligence and Expert Systems,IEA/AIE,C,ICORE2026
+IEEE International Symposium on Adaptive Dynamic Programming and Reinforcement Learning,IEEE ADPRL,C,ICORE2026
+IEEE International Symposium on Artificial Life,IEEE Alife,C,ICORE2026
+IEEE Symposium on Computational Intelligence in Control and Automation,IEEE CICA,C,ICORE2026
+IEEE Symposium on Computational Intelligence in Cyber Security,IEEE CICS,C,ICORE2026
+IEEE Symposium on Computational Intelligence for Financial Engineering,IEEE CIFEr,C,ICORE2026
+IEEE Symposium on Computational intelligence for Multimedia Signal and Vision Processing,IEEE CIMSIVP,C,ICORE2026
+IEEE Symposium on Computational Intelligence for Security and Defence Applications,IEEE CISDA,C,ICORE2026
+IEEE International Conference on Intelligent Systems,IEEE IS,C,ICORE2026
+IEEE Swarm Intelligence Symposium,IEEE SIS,C,ICORE2026
+Intenational Environmental Modelling and Software Society,iEMSs,C,ICORE2026
+Asia Pacific Symposium on Intelligent and Evolutionary Systems (was Australia-Japan Joint Workshop on  Intelligent and Evolutionary Systems),IES,C,ICORE2026
+IFSA World Congress,IFSA,C,ICORE2026
+IEEE International Geoscience and Remote Sensing Symposium,IGARSS,C,ICORE2026
+Information Hiding and Multimedia Security Workshop,IH&MMSec,C,ICORE2026
+International Joint Conference on Computational Intelligence,IJCCI,C,ICORE2026
+IMA International Conference on Cryptography and Coding,IMACC,C,ICORE2026
+Information Visualisation Theory and Practice,InfVis,C,ICORE2026
+International Symposium on Innovations in Intelligent Systems and Applications,INISTA,C,ICORE2026
+International Network Optimization Conference,INOC,C,ICORE2026
+Informing Science and Information Technology Education,InSITE,C,ICORE2026
+"International Conference on Internet of Things, Big Data and Security",IoTBDS,C,ICORE2026
+IEEE International Performance Computing and Communications Conference,IPCCC,C,ICORE2026
+International Conference on Information Processing and Management of Uncertainty,IPMU,C,ICORE2026
+International Symposium on Autonomous Decentralized Systems,ISADS,C,ICORE2026
+Conference for the International Simulation and Gaming Association,ISAGA,C,ICORE2026
+International Symposium on Automation and Robotics in Construction,ISARC,C,ICORE2026
+Industrial Simulation Conference,ISC,C,ICORE2026
+Information Security Conference,ISC,C,ICORE2026
+IEEE Symposium on Computers and Communications,ISCC,C,ICORE2026
+International Symposium on Combinatorial Optimisation,ISCO,C,ICORE2026
+International Conference on Intelligent Systems Designs and Applications,ISDA,C,ICORE2026
+International Symposium on Grids and Clouds (was International Symposium on Grid Computing),ISGC,C,ICORE2026
+IEEE International Conference on Intelligence and Security Informatics,ISI,C,ICORE2026
+International Symposium on Information Theory and Its Applications,ISITA,C,ICORE2026
+IEEE International Symposium on Multimedia,ISM,C,ICORE2026
+International Symposium on Foundations of Intelligent Systems,ISMIS,C,ICORE2026
+International Symposium on Memory Management,ISMM,C,ICORE2026
+"International Symposium on Networks, Computers and Communications",ISNCC,C,ICORE2026
+International Symposium on Neural Networks,ISNN,C,ICORE2026
+"International Symposium on Leveraging Applications of Formal Methods, Verification and Validation",ISoLA,C,ICORE2026
+IEEE International Symposium on Real-Time Distributed Computing,ISORC,C,ICORE2026
+IEEE International Symposium on Parallel and Distributed Processing with Applications,ISPA,C,ICORE2026
+International Symposium on Parallel and Distributed Computing,ISPDC,C,ICORE2026
+Information Security Practice and Experience Conference,ISPEC,C,ICORE2026
+Annual International Workshop on Presence,ISPR,C,ICORE2026
+International Symposium on Robotics Research,ISRR,C,ICORE2026
+International Symposium on Spatial Data Quality,ISSDQ,C,ICORE2026
+International Symposium on Technology and Society,ISTAS,C,ICORE2026
+International Conference on Information Visualisation,IV,C,ICORE2026
+Applications of Information Visualization,IV-App,C,ICORE2026
+Information Visualization in Biomedical Informatics,IVBI,C,ICORE2026
+International Workshop on Combinatorial Image Analysis: Theory and Applications,IWCIA,C,ICORE2026
+International Workshop on Digital Watermarking,IWDW,C,ICORE2026
+International Workshop on Combinatorial Algorithm,IWOCA,C,ICORE2026
+Joint Conference of the International Workshop on Software Measurement and the International Conference on Software Process and Product Measurement (IWSM and Mensura combined from 2007),IWSM Mensura,C,ICORE2026
+International Conference on the Statistical Analysis of Textual Data,JADT,C,ICORE2026
+International Conference on Legal Knowledge and Information Systems,JURIX,C,ICORE2026
+International Conference on Knowledge Engineering and Ontology Development,KEOD,C,ICORE2026
+International KES Conference on Agents and Multiagent systems - Technologies and Applications,KES AMSTA,C,ICORE2026
+KES International Symposium on Intelligent Decision Technologies,KES IDT,C,ICORE2026
+"International Conference on Knowledge Science, Engineering and Management",KSEM,C,ICORE2026
+Knowledge Visualization and Visual Thinking,KV,C,ICORE2026
+"Latin-American Algorithms, Graphs and Optimization Symposium",LAGOS,C,ICORE2026
+IEEE LAN/MAN Workshop,LANMAN,C,ICORE2026
+International Conference on Language and Automata Theory and Applications,LATA,C,ICORE2026
+"Language, Data and Knowledge",LDK,C,ICORE2026
+International Symposium on Logic-based Program Synthesis and Transformation,LOPSTR,C,ICORE2026
+International Workshop on MultiAgent Based Simulation,MABS,C,ICORE2026
+"Machines, Computations and Universality (was Universal Machines and Computations)",MCU,C,ICORE2026
+International Conference on Management of Digital EcoSystems,MEDES,C,ICORE2026
+International Conference on Model and Data Engineering,MEDI,C,ICORE2026
+International Conference on Formal Methods and Models for Co-Design,MEMOCODE,C,ICORE2026
+International Workshop on Modelling in Software Engineering,MISE,C,ICORE2026
+International Workshop on Multimedia Signal Processing,MMSP,C,ICORE2026
+International Conference on Managed Programming Languages and Runtimes (was ManLang and previously Principles and Practice of Programming in Java: PPPJ),MPLR,C,ICORE2026
+Machine Translation Summit,MT SUMMIT,C,ICORE2026
+International Symposium on the Mathematical Theory of Networks and Systems,MTNS,C,ICORE2026
+Applications of Natural Language to Data Bases,NLDB,C,ICORE2026
+IFIP International Conference on Network and Parallel Computing,NPC,C,ICORE2026
+New Security Paradigms Workshop,NSPW,C,ICORE2026
+"International Symposium on New Ideas, New Paradigms, and Reflections on Programming and Software",Onward,C,ICORE2026
+SIAM Conference on Optimization,OP,C,ICORE2026
+International Symposium on Open Collaboration (was International Symposiums on Wikis),OPENSYM,C,ICORE2026
+"Pacific Asia Conference on Language, Information and Computation",PACLIC,C,ICORE2026
+Practical Aspects of Declarative Languages,PADL,C,ICORE2026
+International Conference on Pairing-based Cryptography,Pairing,C,ICORE2026
+Practice and Theory of Automated Timetabling,PATAT,C,ICORE2026
+International Picture Coding Symposium,PCS,C,ICORE2026
+"International Conference on Parallel and Distributed Computing, Applications and Technologies",PDCAT,C,ICORE2026
+"Euromicro International Conference on Parallel, Distributed and Network Based Processing",PDP,C,ICORE2026
+ACM SIGPLAN Workshop on Partial Evaluation and Program Manipulation,PEPM,C,ICORE2026
+International Conference on Informatics & Data-Driven Medicine,IDDM,C,ICORE2026
+CONFERENCE ON COMPUTER SCIENCE AND INTELLIGENCE SYSTEMS,FedCSIS,C,ICORE2026
+International Conference on Computational Models of Argument,COMMA,C,ICORE2026
+European Conference on Symbolic and Quantitative Approaches to Reasoning with Uncertainty,ECSQARU,C,ICORE2026
+ACM SIGGRAPH conference on Motion Interaction and Games,MIG,C,ICORE2026
+IFIP/IEEE International Conference on Performance Evaluation and Modeling in Wired and Wireless Networks,PEMWN,C,ICORE2026
+International Conference on Factory Communication Systems,WFCS,C,ICORE2026
+Information Integration and Web-based Applications and Services,IIWAS,C,ICORE2026
+International Conference on Mobile and Ubiquitous Systems: Networks and Services,Mobiquitous,C,ICORE2026
+International Symposium on Design and Diagnostics of Electronic Circuits and Systems,DDECS,C,ICORE2026
+"International Conference on Data Science, Technology and Applications",DATA,C,ICORE2026
+International Conference on Advances in Mobile Computing and Multimedia,MOMM,C,ICORE2026
+International Conference on Image Processing Applications and Systems,IPAS,C,ICORE2026
+International Conference on Modelling and Simulation,ECMS,C,ICORE2026
+Euromicro Conference Series on Digital System Design,DSD,C,ICORE2026
+International Workshop on Data Warehousing and OLAP,DOLAP,C,ICORE2026
+IEEE International Working Conference on Source Code Analysis and Manipulation,SCAM,C,ICORE2026
+Symposium on Advances in DB and Information Systems,ADBIS,C,ICORE2026
+International Conference on Security and Privacy for Communication Networks,SecureComm,C,ICORE2026
+International Conference on Information Systems Security and Privacy,ICISSP,C,ICORE2026
+"ArtsIT, Interactivity & Game Creation (was International Conference on Arts and Technology)",ArtsIT,C,ICORE2026
+"International Conference on Collaborative Computing: Networks, Applications and Worksharing",CollaborateCom,C,ICORE2026
+International Conference on Model-Driven Engineering and Software Development,MODELSWARD,C,ICORE2026
+International Conference on Software and Data Technologies,ICSoft,C,ICORE2026
+International Conference on Web Information Systems and Technologies,WEBIST,C,ICORE2026
+International Conference on Artificial Neural Networks,ICANN,C,ICORE2026
+ACM International Conference on Multimedia in Asia,MM_Asia,C,ICORE2026
+Asian Conference on Machine Learning,ACML,C,ICORE2026
+"International Conference on Simulation and Modeling Methodologies, Technologies and Applications",SIMULTECH,C,ICORE2026
+IEEE International Conference on Cluster Computing,CLUSTER,C,ICORE2026
+IEEE International Symposium on Circuits and Systems,ISCAS,C,ICORE2026
+"International Conference on Artificial Intelligence in Music, Sound, Art and Design",EvoMUSART,C,ICORE2026
+International Conference on Formal Ontology in Information Systems,FOIS,C,ICORE2026
+On-Line Testing and Robust System Design,IOLTS,C,ICORE2026
+International Conference on Wireless Networks and Mobile Communications,WINCOM,C,ICORE2026
+International Conference on Neurosymbolic Learning and Reasoning,NeSy,C,ICORE2026
+IEEE International Conference on Content-Based Multimedia Indexing,CBMI,C,ICORE2026
+IEEE Industrial Electronics Society,IECON,C,ICORE2026
+IEEE International Conference on Computer Design,ICCD,C,ICORE2026
+International Conference on Computers in Education,ICCE,C,ICORE2026
+International Conference on Evolutionary Multi-Criterion Optimization,EMO,C,ICORE2026
+Euro XR International Conference (was Euro VR),Euro XR,C,ICORE2026
+IEEE Global Engineering Education Conference,EDUCON,C,ICORE2026
+Conference on Games (was Computational Intelligence and Games CIG),COG,C,ICORE2026
+International Conference of the Immersive Learning Research Network,iLRN,C,ICORE2026
+International Conference on the Simulation and Synthesis of Living Systems,ALIFE,C,ICORE2026
+International Conference on Interactive Digital Storytelling (2008 merger of 'ICVS International Conference on Virtual Storytelling' and 'TIDSE Technology for Interactive Digital Storytelling'),ICIDS,C,ICORE2026
+"IEEE International Symposium on a World of Wireless, Mobile and Multimedia Networks",WoWMoM,C,ICORE2026
+"Software Quality, Reliability, and Security (was International Conference on Quality Software, QSIC, that merged with SERE 2015)",QRS,C,ICORE2026
+International Conference on Indoor Positioning and Indoor Navigation,IPIN,C,ICORE2026
+ACM International Conference on Interactive Media Experiences,IMX,C,ICORE2026
+"International Conference on Informatics in Control, Automation and Robotics",ICINCO,C,ICORE2026
+The ACM SIGCAS/SIGCHI Conference on Computing and Sustainable Societies,COMPASS,C,ICORE2026
+Workshop on Job Scheduling Strategies for Parallel Processing,JSSPP,C,ICORE2026
+IEEE International Conference on Industrial Informatics,INDIN,C,ICORE2026
+"AAAI/ACM Conference on AI, Ethics, and Society",AIES,C,ICORE2026
+International Joint Conference on Rough Sets (2014 International Conference on Rough Sets and Current Trends in Computing joined with 3 others),IJCRS (was RSCTC),C,ICORE2026
+IEEE/IFIP International Conference on Very Large Scale Integration of System-on-Chip,VLSI-SOC,C,ICORE2026
+Symposium of Asian Association for Algorithms and Computation,AAAC,C,ICORE2026
+Conference on Algorithmic Aspects in Information and Management,AAIM,C,ICORE2026
+"International Conference Abstract State Machines, Alloy, B, TLA, VDM, and Z (Previously International Conference of B and Z Users, ZB, changed in 2008)",ABZ,C,ICORE2026
+Applied Computing Conference,ACC,C,ICORE2026
+"ACM International Conference on Advances in Computer Entertainment (merged with DIMEA, Digital Interactive Media in Entertainment and Arts, in 2009)",ACE,C,ICORE2026
+International Conference on Advances in Computer-Human Interactions,ACHI,C,ICORE2026
+International Conference on Advanced Data Mining and Applications,ADMA,C,ICORE2026
+ACS/IEEE International Conference on Computer Systems and Applications,AICCSA,C,ICORE2026
+International Symposium on Algorithms and Experiments for  Wireless Networks,Algosensors,C,ICORE2026
+"International Conference on Probabilistic, Combinatorial, and Asymptotic Methods in the Analysis of Algorithms (was Conference on Analysis of Algorithms)",AofA,C,ICORE2026
+Asia Pacific Conference on Communications,APCC,C,ICORE2026
+Asia-Pacific Network Operations and Management Symposium,APNOMS,C,ICORE2026
+Conference of the Association of Asian-Pacific Operational Research Societies,APORS,C,ICORE2026
+Asia-Pacific Services Computing Conference,APSCC,C,ICORE2026
+Asia-Pacific Software Engineering Conference,APSEC,C,ICORE2026
+Web and Big Data,APWEB,C,ICORE2026
+IEEE Symposium on Computer Arithmetic,ARITH,C,ICORE2026
+International Symposium on Artificial Life and Robotics,AROB,C,ICORE2026
+IEEE Automatic Speech Recognition and Understanding Workshop,ASRU,C,ICORE2026
+Automation of Software Test,AST,C,ICORE2026
+International Conference on Advanced and Trusted Computing (was International Conference on Autonomic and Trusted Computing),ATC,C,ICORE2026
+"Workshop on Algorithmic Approaches for Transportation Modelling, Optimization, and Systems",ATMOS,C,ICORE2026
+"IEEE/ACM International Conference on Big Data Computing, Applications and Technologies",BDCAT,C,ICORE2026
+IEEE Bioinformatics and Bioengineering,BIBE,C,ICORE2026
+"International Conference on Broadband Communications, Networks and Systems",Broadnets,C,ICORE2026
+Body Sensor Networks,BSN,C,ICORE2026
+Association for Computer-Aided Architectural Design Research in Asia (CAADRIA) annual conference,CAADRIA,C,ICORE2026
+ISCA International Conference on Computer Applications in Industry and Engineering,CAINE,C,ICORE2026
+International Conference on Computer Analysis of Images and Patterns,CAIP,C,ICORE2026
+"Computer Animation, Information Visualisation, and Digital Effects",CAivDE,C,ICORE2026
+Smart Card Research and Advanced Application Conference,CARDIS,C,ICORE2026
+International Conference on Computability and Complexity in Analysis,CCA,C,ICORE2026
+International Cross-Domain Conference for Machine Learning and Knowledge Extraction,CD-MAKE,C,ICORE2026
+"Cooperative Design, Visualization, and Engineering",CDVE,C,ICORE2026
+Computer Graphics International,CGI,C,ICORE2026
+International Conference on Computer-Human Interaction Research and Applications,CHIRA,C,ICORE2026
+International Conference on Implementation and Application of Automata,CIAA,C,ICORE2026
+International Conference on Algorithms and Complexity (was Italian Conference ),CIAC,C,ICORE2026

@@ -1,0 +1,445 @@
+#!/usr/bin/env python3
+"""
+Conference tracking CLI.
+
+Usage:
+    conf                    # show upcoming deadlines
+    conf --search           # open search links in browser
+    conf --add              # add a new conference
+    conf --deadlines        # show all deadlines
+    conf --remind           # weekly reminder check
+"""
+
+import argparse
+import json
+import os
+import sys
+import webbrowser
+import urllib.request
+import urllib.error
+import urllib.parse
+from datetime import datetime, timedelta
+from pathlib import Path
+
+
+NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
+DATABASE_ID = "YOUR-CONFERENCES-DATABASE-ID-HERE"
+BASE_DIR = Path(__file__).resolve().parent.parent
+CONTEXT_PATH = BASE_DIR / ".context" / "conferences.md"
+
+# Search keywords derived from research topics
+SEARCH_KEYWORDS = [
+    # Add your research topic keywords for Google CFP searches
+    "your research topic 1",
+    "your research topic 2",
+]
+
+TOPICS = [
+    # Conference topic tags — match your Notion "Topics" multi-select options
+    "Topic A",
+    "Topic B",
+]
+
+
+def query_conferences(filter_obj=None):
+    """Query conferences from Notion."""
+    if not NOTION_TOKEN:
+        print("❌ NOTION_TOKEN not set")
+        sys.exit(1)
+
+    data = {}
+    if filter_obj:
+        data["filter"] = filter_obj
+
+    data["sorts"] = [{"property": "Deadline", "direction": "ascending"}]
+
+    req = urllib.request.Request(
+        f"https://api.notion.com/v1/databases/{DATABASE_ID}/query",
+        data=json.dumps(data).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {NOTION_TOKEN}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2022-06-28",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        error_body = json.loads(e.read().decode("utf-8"))
+        print(f"❌ Error: {e.code}")
+        print(error_body.get("message", str(error_body)))
+        sys.exit(1)
+
+
+def get_property(page, prop_name, prop_type):
+    """Extract property value from a Notion page."""
+    prop = page.get("properties", {}).get(prop_name, {})
+
+    if prop_type == "title":
+        title_list = prop.get("title", [])
+        return title_list[0].get("plain_text", "") if title_list else ""
+    elif prop_type == "select":
+        select = prop.get("select")
+        return select.get("name", "") if select else ""
+    elif prop_type == "multi_select":
+        items = prop.get("multi_select", [])
+        return [item.get("name", "") for item in items]
+    elif prop_type == "date":
+        date = prop.get("date")
+        return date.get("start", "") if date else ""
+    elif prop_type == "url":
+        return prop.get("url", "")
+    elif prop_type == "rich_text":
+        text_list = prop.get("rich_text", [])
+        return text_list[0].get("plain_text", "") if text_list else ""
+    return ""
+
+
+def add_conference(name, deadline=None, conf_date=None, topics=None, location=None, url=None, status="Tracking"):
+    """Add a conference to Notion."""
+    if not NOTION_TOKEN:
+        print("❌ NOTION_TOKEN not set")
+        sys.exit(1)
+
+    properties = {
+        "Conference": {"title": [{"text": {"content": name}}]},
+        "Status": {"select": {"name": status}},
+    }
+
+    if deadline:
+        properties["Deadline"] = {"date": {"start": deadline}}
+
+    if conf_date:
+        properties["Conference Date"] = {"date": {"start": conf_date}}
+
+    if topics:
+        properties["Topics"] = {"multi_select": [{"name": t} for t in topics]}
+
+    if location:
+        properties["Location"] = {"rich_text": [{"text": {"content": location}}]}
+
+    if url:
+        properties["URL"] = {"url": url}
+
+    data = {
+        "parent": {"database_id": DATABASE_ID},
+        "properties": properties,
+    }
+
+    req = urllib.request.Request(
+        "https://api.notion.com/v1/pages",
+        data=json.dumps(data).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {NOTION_TOKEN}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2022-06-28",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            result = json.loads(response.read().decode("utf-8"))
+            print(f"✅ Added: {name}")
+            if deadline:
+                print(f"   Deadline: {deadline}")
+            print(f"   {result.get('url', '')}")
+            return True
+    except urllib.error.HTTPError as e:
+        error_body = json.loads(e.read().decode("utf-8"))
+        print(f"❌ Error: {e.code}")
+        print(error_body.get("message", str(error_body)))
+        return False
+
+
+def show_deadlines(upcoming_only=True):
+    """Show conference deadlines."""
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    filter_obj = None
+    if upcoming_only:
+        filter_obj = {
+            "and": [
+                {"property": "Deadline", "date": {"on_or_after": today}},
+                {"property": "Status", "select": {"does_not_equal": "Passed"}}
+            ]
+        }
+
+    result = query_conferences(filter_obj)
+    pages = result.get("results", [])
+
+    if not pages:
+        print("No upcoming conference deadlines.")
+        return
+
+    print("📅 Conference Deadlines")
+    print("=" * 60)
+
+    for page in pages:
+        name = get_property(page, "Conference", "title")
+        deadline = get_property(page, "Deadline", "date")
+        status = get_property(page, "Status", "select")
+        topics = get_property(page, "Topics", "multi_select")
+        url = get_property(page, "URL", "url") or get_property(page, "userDefined:URL", "url")
+
+        # Calculate days until deadline
+        if deadline:
+            deadline_date = datetime.strptime(deadline, "%Y-%m-%d")
+            days_left = (deadline_date - datetime.now()).days
+
+            if days_left < 0:
+                urgency = "⚠️  PASSED"
+            elif days_left <= 7:
+                urgency = "🔴"
+            elif days_left <= 30:
+                urgency = "🟡"
+            else:
+                urgency = "🟢"
+
+            days_str = f"{days_left}d" if days_left >= 0 else "passed"
+        else:
+            urgency = "⚪"
+            days_str = "no date"
+
+        print(f"\n{urgency} {name}")
+        print(f"   Deadline: {deadline or 'TBD'} ({days_str})")
+        if topics:
+            print(f"   Topics: {', '.join(topics)}")
+        if status and status != "Tracking":
+            print(f"   Status: {status}")
+        if url:
+            print(f"   {url}")
+
+
+def load_search_keywords():
+    """Load search keywords from context file."""
+    keywords = []
+    try:
+        with open(CONTEXT_PATH, "r") as f:
+            content = f.read()
+
+        # Extract keywords from the code block under "## Search Keywords"
+        if "## Search Keywords" in content:
+            section = content.split("## Search Keywords")[1]
+            if "```" in section:
+                code_block = section.split("```")[1]
+                # Remove language identifier if present (e.g., 'python', 'text')
+                lines = code_block.strip().split("\n")
+                for line in lines:
+                    line = line.strip()
+                    if line and not line.startswith("#"):
+                        keywords.append(line)
+    except FileNotFoundError:
+        pass
+
+    return keywords if keywords else [
+        "human-AI collaboration",
+        "multi-criteria decision",
+        "behavioural operations research",
+    ]
+
+
+def open_search_links():
+    """Open Google CFP searches in browser."""
+    print("🔍 Opening Google CFP searches...")
+    print()
+
+    keywords = load_search_keywords()
+    google_base = "https://www.google.com/search"
+    year = datetime.now().year
+
+    # Open first 5 keywords (to not overwhelm)
+    for keyword in keywords[:5]:
+        query = f'"call for papers" "{keyword}" {year}'
+        encoded = urllib.parse.quote(query)
+        url = f"{google_base}?q={encoded}"
+        print(f"  Opening: {keyword}")
+        webbrowser.open(url)
+
+    if len(keywords) > 5:
+        print()
+        print(f"📝 {len(keywords) - 5} more keywords in context file:")
+        for keyword in keywords[5:]:
+            print(f"     {keyword}")
+
+    print()
+    print(f"💡 Edit keywords: {CONTEXT_PATH}")
+    print("💡 Add conferences: conf --add")
+
+
+def weekly_reminder():
+    """Show weekly reminder."""
+    today = datetime.now()
+    week_ahead = (today + timedelta(days=7)).strftime("%Y-%m-%d")
+    month_ahead = (today + timedelta(days=30)).strftime("%Y-%m-%d")
+
+    print("📆 Weekly Conference Check")
+    print("=" * 50)
+    print(f"Today: {today.strftime('%A, %d %B %Y')}")
+    print()
+
+    # Get upcoming deadlines
+    result = query_conferences({
+        "and": [
+            {"property": "Deadline", "date": {"on_or_after": today.strftime("%Y-%m-%d")}},
+            {"property": "Deadline", "date": {"on_or_before": month_ahead}},
+        ]
+    })
+    pages = result.get("results", [])
+
+    urgent = [p for p in pages if get_property(p, "Deadline", "date") <= week_ahead]
+    upcoming = [p for p in pages if get_property(p, "Deadline", "date") > week_ahead]
+
+    if urgent:
+        print(f"🔴 THIS WEEK ({len(urgent)}):")
+        for page in urgent:
+            name = get_property(page, "Conference", "title")
+            deadline = get_property(page, "Deadline", "date")
+            print(f"   • {name} — {deadline}")
+
+    if upcoming:
+        print(f"\n🟡 NEXT 30 DAYS ({len(upcoming)}):")
+        for page in upcoming:
+            name = get_property(page, "Conference", "title")
+            deadline = get_property(page, "Deadline", "date")
+            print(f"   • {name} — {deadline}")
+
+    if not urgent and not upcoming:
+        print("No deadlines in the next 30 days.")
+
+    print()
+    print("📋 Weekly checklist:")
+    print("   [ ] Run 'conf --search' to find new CFPs")
+    print("   [ ] Add new conferences with 'conf --add'")
+    print("   [ ] Review papers ready for submission")
+
+
+def validate_date(date_str):
+    """Validate date format (YYYY-MM-DD). Returns True if valid or empty."""
+    if not date_str:
+        return True
+    try:
+        datetime.strptime(date_str, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
+
+
+def get_input(prompt, allow_empty=True, validate_fn=None, error_msg=None):
+    """Get input with exit/cancel support and optional validation."""
+    while True:
+        value = input(prompt).strip()
+
+        # Allow exit at any point
+        if value.lower() in ("exit", "cancel", "q", "quit"):
+            print("❌ Cancelled.")
+            return None
+
+        # Check if empty is allowed
+        if not value:
+            if allow_empty:
+                return ""
+            print("This field is required. Type 'exit' to cancel.")
+            continue
+
+        # Run validation if provided
+        if validate_fn and not validate_fn(value):
+            print(error_msg or "Invalid input. Try again or type 'exit' to cancel.")
+            continue
+
+        return value
+
+
+def interactive_add():
+    """Interactively add a conference."""
+    print("➕ Add Conference")
+    print("-" * 30)
+    print("(Type 'exit' at any prompt to cancel)\n")
+
+    name = get_input("Conference name: ", allow_empty=False)
+    if name is None:
+        return
+
+    deadline = get_input(
+        "Deadline (YYYY-MM-DD, or press Enter to skip): ",
+        validate_fn=validate_date,
+        error_msg="Invalid date format. Use YYYY-MM-DD (e.g., 2026-03-15)"
+    )
+    if deadline is None:
+        return
+
+    conf_date = get_input(
+        "Conference date (YYYY-MM-DD, or press Enter to skip): ",
+        validate_fn=validate_date,
+        error_msg="Invalid date format. Use YYYY-MM-DD (e.g., 2026-06-20)"
+    )
+    if conf_date is None:
+        return
+
+    location = get_input("Location (or press Enter to skip): ")
+    if location is None:
+        return
+
+    url = get_input("URL (or press Enter to skip): ")
+    if url is None:
+        return
+
+    print("\nAvailable topics:")
+    for i, topic in enumerate(TOPICS, 1):
+        print(f"  {i}. {topic}")
+
+    topic_input = get_input("Topics (comma-separated numbers, or press Enter to skip): ")
+    if topic_input is None:
+        return
+
+    topics = []
+    if topic_input:
+        try:
+            indices = [int(x.strip()) - 1 for x in topic_input.split(",")]
+            topics = [TOPICS[i] for i in indices if 0 <= i < len(TOPICS)]
+        except (ValueError, IndexError):
+            print("⚠️  Invalid topic selection, skipping topics.")
+
+    add_conference(
+        name=name,
+        deadline=deadline or None,
+        conf_date=conf_date or None,
+        topics=topics or None,
+        location=location or None,
+        url=url or None,
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Conference tracking")
+    parser.add_argument("--search", action="store_true", help="Open search links in browser")
+    parser.add_argument("--add", action="store_true", help="Add a new conference")
+    parser.add_argument("--deadlines", action="store_true", help="Show all deadlines")
+    parser.add_argument("--all", action="store_true", help="Include past conferences")
+    parser.add_argument("--remind", action="store_true", help="Weekly reminder")
+    parser.add_argument("--topics", action="store_true", help="List available topics")
+
+    args = parser.parse_args()
+
+    if args.search:
+        open_search_links()
+    elif args.add:
+        interactive_add()
+    elif args.deadlines or args.all:
+        show_deadlines(upcoming_only=not args.all)
+    elif args.remind:
+        weekly_reminder()
+    elif args.topics:
+        print("Available topics:")
+        for topic in TOPICS:
+            print(f"  • {topic}")
+    else:
+        # Default: show upcoming deadlines
+        show_deadlines(upcoming_only=True)
+
+
+if __name__ == "__main__":
+    main()

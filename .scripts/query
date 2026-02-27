@@ -1,0 +1,223 @@
+#!/usr/bin/env python3
+"""
+Query your task management system from the terminal.
+
+Usage:
+    query "game theory"           # search across files and Notion
+    query --files "keyword"          # search only local context files
+    query --notion "topic"       # search only Notion
+    query --papers "collaboration" # search Research Pipeline
+    query --tasks "meeting"       # search Tasks Tracker
+"""
+
+import argparse
+import json
+import os
+import sys
+import urllib.request
+import urllib.error
+from pathlib import Path
+
+NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
+BASE_DIR = Path(__file__).resolve().parent.parent
+CONTEXT_PATH = BASE_DIR / ".context"
+
+# Database IDs
+TASKS_DB = "f8e5b15d28db4e2bb430b5fbc580f7eb"
+PAPERS_DB = "YOUR-PIPELINE-DATABASE-ID-HERE"
+CONFERENCES_DB = "YOUR-CONFERENCES-DATABASE-ID-HERE"
+
+
+def search_files(query):
+    """Search local context files for a query."""
+    results = []
+    query_lower = query.lower()
+
+    if not CONTEXT_PATH.exists():
+        return results
+
+    for file_path in CONTEXT_PATH.rglob("*.md"):
+        try:
+            content = file_path.read_text()
+            if query_lower in content.lower():
+                # Find matching lines
+                lines = content.split("\n")
+                matches = []
+                for i, line in enumerate(lines):
+                    if query_lower in line.lower():
+                        matches.append((i + 1, line.strip()))
+
+                results.append({
+                    "file": str(file_path.relative_to(CONTEXT_PATH)),
+                    "matches": matches[:5]  # Limit to 5 matches per file
+                })
+        except Exception:
+            pass
+
+    return results
+
+
+def search_notion(query, database_id=None):
+    """Search Notion for a query."""
+    if not NOTION_TOKEN:
+        return {"error": "NOTION_TOKEN not set"}
+
+    # Use Notion search API
+    data = {
+        "query": query,
+        "page_size": 10
+    }
+
+    if database_id:
+        data["filter"] = {"property": "object", "value": "page"}
+
+    req = urllib.request.Request(
+        "https://api.notion.com/v1/search",
+        data=json.dumps(data).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {NOTION_TOKEN}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2022-06-28",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            result = json.loads(response.read().decode("utf-8"))
+            pages = []
+            for page in result.get("results", []):
+                title = ""
+                props = page.get("properties", {})
+
+                # Try to find title property
+                for prop_name, prop_value in props.items():
+                    if prop_value.get("type") == "title":
+                        title_list = prop_value.get("title", [])
+                        if title_list:
+                            title = title_list[0].get("plain_text", "")
+                        break
+
+                if not title:
+                    title = page.get("url", "Untitled")
+
+                pages.append({
+                    "title": title,
+                    "url": page.get("url", ""),
+                    "type": page.get("object", "page"),
+                    "parent": page.get("parent", {}).get("type", "")
+                })
+
+            return {"pages": pages}
+    except urllib.error.HTTPError as e:
+        return {"error": f"Notion API error: {e.code}"}
+
+
+def query_database(database_id, title_property="Name"):
+    """Query a specific Notion database."""
+    if not NOTION_TOKEN:
+        return {"error": "NOTION_TOKEN not set"}
+
+    req = urllib.request.Request(
+        f"https://api.notion.com/v1/databases/{database_id}/query",
+        data=json.dumps({"page_size": 100}).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {NOTION_TOKEN}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2022-06-28",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        return {"error": f"Notion API error: {e.code}"}
+
+
+def print_file_results(results, query):
+    """Print file search results."""
+    if not results:
+        print(f"  No matches in context files")
+        return
+
+    for result in results:
+        print(f"\n  📄 {result['file']}")
+        for line_num, line in result['matches']:
+            # Highlight the query in the line
+            print(f"     L{line_num}: {line[:80]}{'...' if len(line) > 80 else ''}")
+
+
+def print_notion_results(results):
+    """Print Notion search results."""
+    if "error" in results:
+        print(f"  ❌ {results['error']}")
+        return
+
+    pages = results.get("pages", [])
+    if not pages:
+        print(f"  No matches in Notion")
+        return
+
+    for page in pages:
+        print(f"\n  📝 {page['title']}")
+        print(f"     {page['url']}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Query your task management system")
+    parser.add_argument("query", nargs="?", help="Search query")
+    parser.add_argument("--files", action="store_true", help="Search only local files")
+    parser.add_argument("--notion", action="store_true", help="Search only Notion")
+    parser.add_argument("--papers", action="store_true", help="Search Research Pipeline")
+    parser.add_argument("--tasks", action="store_true", help="Search Tasks Tracker")
+    parser.add_argument("--conferences", action="store_true", help="Search Conferences")
+
+    args = parser.parse_args()
+
+    if not args.query:
+        parser.print_help()
+        return
+
+    query = args.query
+    print(f"🔍 Searching for: \"{query}\"")
+    print("=" * 50)
+
+    # Determine what to search
+    search_all = not (args.files or args.notion or args.papers or args.tasks or args.conferences)
+
+    # Search local files
+    if args.files or search_all:
+        print("\n📁 Context Files:")
+        file_results = search_files(query)
+        print_file_results(file_results, query)
+
+    # Search Notion
+    if args.notion or search_all:
+        print("\n☁️  Notion:")
+        notion_results = search_notion(query)
+        print_notion_results(notion_results)
+
+    # Search specific databases
+    if args.papers:
+        print("\n📚 Research Pipeline:")
+        notion_results = search_notion(query)
+        # Filter to only show papers
+        print_notion_results(notion_results)
+
+    if args.tasks:
+        print("\n✅ Tasks:")
+        notion_results = search_notion(query)
+        print_notion_results(notion_results)
+
+    if args.conferences:
+        print("\n📅 Conferences:")
+        notion_results = search_notion(query)
+        print_notion_results(notion_results)
+
+    print()
+
+
+if __name__ == "__main__":
+    main()
