@@ -1,0 +1,213 @@
+#!/usr/bin/env python3
+"""
+Quick task entry for Notion Tasks Tracker.
+
+Creates tasks with "Inbox" status by default (GTD-style capture).
+Requires "Inbox" status option to exist in Notion Tasks tracker.
+
+Usage:
+    task "Task description"
+    task "Task description" --project "Journal Revision" --priority high
+    task "Task description" -p "[Project]" -d tomorrow
+    task "Read paper" --area Research
+"""
+
+import argparse
+import json
+import os
+import sys
+import urllib.request
+import urllib.error
+from datetime import datetime, timedelta
+
+
+# Configuration
+NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
+DATABASE_ID = "YOUR-TASKS-DATABASE-ID-HERE"
+
+PROJECTS = [
+    "Journal Revision",
+    "[Project] Theory",
+    "Objective-Architecture",
+    "[Project]",
+    "AI Mental Health",
+    "API Transparency",
+    "[Project] Research",
+    "Teaching",
+    "Personal Admin",
+]
+
+PRIORITIES = ["High", "Medium", "Low"]
+
+AREAS = ["Research", "Teaching", "Career", "Personal", "Health", "Learning"]
+
+SOURCES = [
+    "Meeting",
+    "Email",
+    "Supervisor request",
+    "Self-initiated",
+    "Deadline/calendar",
+    "Idea capture",
+]
+
+
+def parse_date(date_str: str) -> str:
+    """Parse natural language dates."""
+    today = datetime.now()
+    date_lower = date_str.lower()
+
+    if date_lower == "today":
+        return today.strftime("%Y-%m-%d")
+    elif date_lower == "tomorrow":
+        return (today + timedelta(days=1)).strftime("%Y-%m-%d")
+    elif date_lower in ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]:
+        days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        target = days.index(date_lower)
+        current = today.weekday()
+        diff = target - current
+        if diff <= 0:
+            diff += 7
+        return (today + timedelta(days=diff)).strftime("%Y-%m-%d")
+    else:
+        # Try to parse as YYYY-MM-DD or DD/MM/YYYY
+        for fmt in ["%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y"]:
+            try:
+                return datetime.strptime(date_str, fmt).strftime("%Y-%m-%d")
+            except ValueError:
+                continue
+        return date_str
+
+
+def create_task(
+    name: str,
+    project: str = None,
+    priority: str = "Medium",
+    due_date: str = None,
+    source: str = "Self-initiated",
+    area: str = None,
+    description: str = None,
+):
+    """Create a task in Notion."""
+
+    if not NOTION_TOKEN:
+        print("❌ NOTION_TOKEN not set. Run:")
+        print('   export NOTION_TOKEN="your-token-here"')
+        print("\nGet a token at: https://www.notion.so/my-integrations")
+        sys.exit(1)
+
+    # Build properties
+    properties = {
+        "Task name": {
+            "title": [{"text": {"content": name}}]
+        },
+        "Status": {
+            "status": {"name": "Inbox"}
+        },
+        "Priority": {
+            "select": {"name": priority}
+        },
+        "Source": {
+            "select": {"name": source}
+        },
+    }
+
+    if project:
+        properties["Project"] = {"select": {"name": project}}
+
+    if area:
+        properties["Area"] = {"select": {"name": area}}
+
+    if due_date:
+        properties["Due date"] = {"date": {"start": parse_date(due_date)}}
+
+    if description:
+        properties["Description"] = {
+            "rich_text": [{"text": {"content": description}}]
+        }
+
+    data = {
+        "parent": {"database_id": DATABASE_ID},
+        "properties": properties,
+    }
+
+    # Make request using urllib (built-in)
+    req = urllib.request.Request(
+        "https://api.notion.com/v1/pages",
+        data=json.dumps(data).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {NOTION_TOKEN}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2022-06-28",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            result = json.loads(response.read().decode("utf-8"))
+            url = result.get("url", "")
+            print(f"✅ Created: {name}")
+            if project:
+                print(f"   Project: {project}")
+            if due_date:
+                print(f"   Due: {parse_date(due_date)}")
+            print(f"   {url}")
+    except urllib.error.HTTPError as e:
+        error_body = json.loads(e.read().decode("utf-8"))
+        print(f"❌ Error: {e.code}")
+        print(error_body.get("message", str(error_body)))
+
+
+def list_projects():
+    """List available projects."""
+    print("Available projects:")
+    for p in PROJECTS:
+        print(f"  - {p}")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Quick task entry for Notion",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  task "Review [Journal] feedback"
+  task "Email [Supervisor] about results" -p "Journal Revision" --priority high
+  task "Read Smith 2024 paper" -p "[Project]" -d friday
+  task "Submit expenses" -p "Personal Admin" -d tomorrow
+        """,
+    )
+
+    parser.add_argument("name", nargs="?", help="Task description")
+    parser.add_argument("-p", "--project", help="Project name")
+    parser.add_argument("--priority", choices=["high", "medium", "low"], default="medium")
+    parser.add_argument("-d", "--due", help="Due date (today, tomorrow, friday, 2024-01-15)")
+    parser.add_argument("-s", "--source", default="Self-initiated")
+    parser.add_argument("-a", "--area", choices=["research", "teaching", "career", "personal", "health", "learning"],
+                        help="Area of responsibility")
+    parser.add_argument("--desc", help="Additional description")
+    parser.add_argument("--list-projects", action="store_true", help="List available projects")
+
+    args = parser.parse_args()
+
+    if args.list_projects:
+        list_projects()
+        return
+
+    if not args.name:
+        parser.print_help()
+        return
+
+    create_task(
+        name=args.name,
+        project=args.project,
+        priority=args.priority.capitalize(),
+        due_date=args.due,
+        source=args.source,
+        area=args.area.capitalize() if args.area else None,
+        description=args.desc,
+    )
+
+
+if __name__ == "__main__":
+    main()

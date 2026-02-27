@@ -1,0 +1,194 @@
+#!/usr/bin/env python3
+"""
+Show tasks without due dates (inbox review).
+
+Usage:
+    inbox               # Show all inbox tasks
+    inbox --assign      # Interactively assign due dates
+"""
+
+import argparse
+import json
+import os
+import sys
+import urllib.request
+import urllib.error
+from datetime import datetime, timedelta
+
+
+NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
+DATABASE_ID = "YOUR-TASKS-DATABASE-ID-HERE"
+
+
+def query_inbox():
+    """Query tasks without due dates."""
+    if not NOTION_TOKEN:
+        print("❌ NOTION_TOKEN not set")
+        sys.exit(1)
+
+    data = {
+        "filter": {
+            "and": [
+                {"property": "Status", "status": {"does_not_equal": "Done"}},
+                {"property": "Due date", "date": {"is_empty": True}}
+            ]
+        },
+        "sorts": [
+            {"property": "Priority", "direction": "ascending"},
+            {"timestamp": "created_time", "direction": "descending"}
+        ]
+    }
+
+    req = urllib.request.Request(
+        f"https://api.notion.com/v1/databases/{DATABASE_ID}/query",
+        data=json.dumps(data).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {NOTION_TOKEN}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2022-06-28",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        error_body = json.loads(e.read().decode("utf-8"))
+        print(f"❌ Error: {e.code}")
+        print(error_body.get("message", str(error_body)))
+        sys.exit(1)
+
+
+def get_property(page, prop_name, prop_type):
+    """Extract property value from a Notion page."""
+    prop = page.get("properties", {}).get(prop_name, {})
+
+    if prop_type == "title":
+        title_list = prop.get("title", [])
+        return title_list[0].get("plain_text", "") if title_list else ""
+    elif prop_type == "select":
+        select = prop.get("select")
+        return select.get("name", "") if select else ""
+    elif prop_type == "status":
+        status = prop.get("status")
+        return status.get("name", "") if status else ""
+    return ""
+
+
+def set_due_date(page_id, date_str):
+    """Set due date for a task."""
+    data = {
+        "properties": {
+            "Due date": {"date": {"start": date_str}}
+        }
+    }
+
+    req = urllib.request.Request(
+        f"https://api.notion.com/v1/pages/{page_id}",
+        data=json.dumps(data).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {NOTION_TOKEN}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2022-06-28",
+        },
+        method="PATCH",
+    )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            return True
+    except urllib.error.HTTPError as e:
+        return False
+
+
+def parse_date(date_str):
+    """Parse date input."""
+    today = datetime.now()
+    date_lower = date_str.lower().strip()
+
+    if date_lower in ["t", "today"]:
+        return today.strftime("%Y-%m-%d")
+    elif date_lower in ["tm", "tomorrow"]:
+        return (today + timedelta(days=1)).strftime("%Y-%m-%d")
+    elif date_lower in ["w", "week"]:
+        return (today + timedelta(days=7)).strftime("%Y-%m-%d")
+    elif date_lower in ["m", "month"]:
+        return (today + timedelta(days=30)).strftime("%Y-%m-%d")
+    elif date_lower in ["mon", "monday"]:
+        days = (7 - today.weekday()) % 7 or 7
+        return (today + timedelta(days=days)).strftime("%Y-%m-%d")
+    elif date_lower in ["fri", "friday"]:
+        days = (4 - today.weekday()) % 7 or 7
+        return (today + timedelta(days=days)).strftime("%Y-%m-%d")
+    else:
+        return date_str
+
+
+def format_task(page, index=None):
+    """Format a task for display."""
+    title = get_property(page, "Task name", "title")
+    priority = get_property(page, "Priority", "select")
+    project = get_property(page, "Project", "select")
+
+    priority_emoji = {"High": "🔴", "Medium": "🟡", "Low": "🟢"}.get(priority, "⚪")
+
+    if index is not None:
+        line = f"{index:2}. {priority_emoji} {title}"
+    else:
+        line = f"{priority_emoji} {title}"
+
+    if project:
+        line += f" [{project}]"
+
+    return line
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Inbox review - tasks without due dates")
+    parser.add_argument("--assign", action="store_true", help="Interactively assign due dates")
+
+    args = parser.parse_args()
+
+    result = query_inbox()
+    pages = result.get("results", [])
+
+    if not pages:
+        print("📥 Inbox empty! All tasks have due dates.")
+        return
+
+    print(f"📥 Inbox ({len(pages)} tasks without due dates)")
+    print("-" * 50)
+
+    if args.assign:
+        print("Shortcuts: t=today, tm=tomorrow, w=week, m=month, fri=friday, s=skip, q=quit\n")
+
+        for i, page in enumerate(pages, 1):
+            print(format_task(page, i))
+            try:
+                date_input = input("   Due date: ").strip()
+
+                if date_input.lower() == 'q':
+                    print("Done.")
+                    break
+                elif date_input.lower() == 's' or not date_input:
+                    continue
+                else:
+                    date_str = parse_date(date_input)
+                    if set_due_date(page["id"], date_str):
+                        print(f"   ✅ Set to {date_str}\n")
+                    else:
+                        print(f"   ❌ Failed to set date\n")
+            except KeyboardInterrupt:
+                print("\nDone.")
+                break
+    else:
+        for page in pages:
+            print(format_task(page))
+
+        print()
+        print("Run 'inbox --assign' to set due dates interactively.")
+
+
+if __name__ == "__main__":
+    main()

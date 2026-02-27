@@ -1,0 +1,21 @@
+timestamp,tool,file_path,action,details
+2026-02-27 18:55:25,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && echo ""Public skills: $(ls -d skills/*/SKILL.md 2>/dev/null | wc -l | tr -d ' ')"" && echo ""Public a"
+2026-02-27 18:58:08,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && git add -A && git commit -m ""$(cat <<'EOF'
+Sync from private: skill updates, venue-rankings, anony"
+2026-02-27 18:58:14,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && git push origin main"
+2026-02-27 18:59:04,Edit,/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo/.context/resources/venue-rankings.md,modified,
+2026-02-27 18:59:09,Edit,/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo/.context/resources/venue-rankings.md,modified,
+2026-02-27 18:59:14,Edit,/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo/.context/resources/venue-rankings.md,modified,
+2026-02-27 18:59:34,Edit,/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/scripts/sync-to-public.sh,modified,
+2026-02-27 18:59:43,Edit,/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/scripts/sync-to-public.sh,modified,
+2026-02-27 19:16:10,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo""
+git add -A && git status --short"
+2026-02-27 19:16:16,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo""
+git commit -m ""$(cat <<'EOF'
+Sync from private: leanness fixes, remove CABS xlsx + WBS rankings
+
+- sy"
+2026-02-27 19:17:48,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo""
+git log --oneline | head -20"
+2026-02-27 19:17:51,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && git log --oneline | head -30"
+2026-02-27 19:18:06,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && git log --oneline --all | grep -iE ""humanizer|paper-writing|ai.writ|research-ideation|topic-finder"

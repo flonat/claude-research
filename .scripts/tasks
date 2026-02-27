@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""
+Query and list tasks from Notion Tasks Tracker.
+
+Usage:
+    tasks                     # Show all active tasks
+    tasks --overdue           # Show overdue tasks
+    tasks --today             # Show tasks due today
+    tasks -p "Journal Revision"  # Filter by project
+    tasks --priority high     # Filter by priority
+"""
+
+import argparse
+import json
+import os
+import sys
+import urllib.request
+import urllib.error
+from datetime import datetime
+
+
+NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
+DATABASE_ID = "YOUR-TASKS-DATABASE-ID-HERE"
+
+
+def query_tasks(filter_obj=None, sorts=None):
+    """Query tasks from Notion."""
+    if not NOTION_TOKEN:
+        print("❌ NOTION_TOKEN not set")
+        sys.exit(1)
+
+    data = {}
+    if filter_obj:
+        data["filter"] = filter_obj
+    if sorts:
+        data["sorts"] = sorts
+
+    req = urllib.request.Request(
+        f"https://api.notion.com/v1/databases/{DATABASE_ID}/query",
+        data=json.dumps(data).encode("utf-8") if data else b"{}",
+        headers={
+            "Authorization": f"Bearer {NOTION_TOKEN}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2022-06-28",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        error_body = json.loads(e.read().decode("utf-8"))
+        print(f"❌ Error: {e.code}")
+        print(error_body.get("message", str(error_body)))
+        sys.exit(1)
+
+
+def get_property(page, prop_name, prop_type):
+    """Extract property value from a Notion page."""
+    prop = page.get("properties", {}).get(prop_name, {})
+
+    if prop_type == "title":
+        title_list = prop.get("title", [])
+        return title_list[0].get("plain_text", "") if title_list else ""
+    elif prop_type == "select":
+        select = prop.get("select")
+        return select.get("name", "") if select else ""
+    elif prop_type == "status":
+        status = prop.get("status")
+        return status.get("name", "") if status else ""
+    elif prop_type == "date":
+        date = prop.get("date")
+        return date.get("start", "") if date else ""
+    elif prop_type == "rich_text":
+        text_list = prop.get("rich_text", [])
+        return text_list[0].get("plain_text", "") if text_list else ""
+    return ""
+
+
+def format_task(page):
+    """Format a task for display."""
+    name = get_property(page, "Task name", "title")
+    status = get_property(page, "Status", "status")
+    priority = get_property(page, "Priority", "select")
+    project = get_property(page, "Project", "select")
+    due = get_property(page, "Due date", "date")
+
+    priority_emoji = {"High": "🔴", "Medium": "🟡", "Low": "🟢"}.get(priority, "⚪")
+    status_emoji = {"Done": "✅", "In progress": "🔄", "Waiting": "⏳", "Not started": "⬜"}.get(status, "⬜")
+
+    line = f"{status_emoji} {priority_emoji} {name}"
+    if project:
+        line += f" [{project}]"
+    if due:
+        line += f" (due: {due})"
+
+    return line
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Query tasks from Notion")
+    parser.add_argument("--overdue", action="store_true", help="Show overdue tasks")
+    parser.add_argument("--today", action="store_true", help="Show tasks due today")
+    parser.add_argument("--week", action="store_true", help="Show tasks due this week")
+    parser.add_argument("-p", "--project", help="Filter by project")
+    parser.add_argument("--priority", choices=["high", "medium", "low"], help="Filter by priority")
+    parser.add_argument("--status", help="Filter by status")
+    parser.add_argument("--all", action="store_true", help="Include completed tasks")
+    parser.add_argument("--limit", type=int, default=20, help="Max results (default: 20)")
+
+    args = parser.parse_args()
+
+    # Build filter
+    filters = []
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    # Exclude done unless --all
+    if not args.all:
+        filters.append({
+            "property": "Status",
+            "status": {"does_not_equal": "Done"}
+        })
+
+    if args.overdue:
+        filters.append({
+            "property": "Due date",
+            "date": {"before": today}
+        })
+
+    if args.today:
+        filters.append({
+            "property": "Due date",
+            "date": {"equals": today}
+        })
+
+    if args.project:
+        filters.append({
+            "property": "Project",
+            "select": {"equals": args.project}
+        })
+
+    if args.priority:
+        filters.append({
+            "property": "Priority",
+            "select": {"equals": args.priority.capitalize()}
+        })
+
+    if args.status:
+        filters.append({
+            "property": "Status",
+            "status": {"equals": args.status}
+        })
+
+    filter_obj = None
+    if len(filters) == 1:
+        filter_obj = filters[0]
+    elif len(filters) > 1:
+        filter_obj = {"and": filters}
+
+    # Sort by due date, then priority
+    sorts = [
+        {"property": "Due date", "direction": "ascending"},
+        {"property": "Priority", "direction": "ascending"},
+    ]
+
+    result = query_tasks(filter_obj, sorts)
+    pages = result.get("results", [])[:args.limit]
+
+    if not pages:
+        print("No tasks found.")
+        return
+
+    # Print header
+    if args.overdue:
+        print(f"⚠️  Overdue Tasks ({len(pages)})")
+    elif args.today:
+        print(f"📅 Due Today ({len(pages)})")
+    elif args.project:
+        print(f"📁 {args.project} ({len(pages)})")
+    else:
+        print(f"📋 Tasks ({len(pages)})")
+    print("-" * 40)
+
+    for page in pages:
+        print(format_task(page))
+
+
+if __name__ == "__main__":
+    main()

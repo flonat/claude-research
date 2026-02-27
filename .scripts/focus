@@ -1,0 +1,176 @@
+#!/usr/bin/env python3
+"""
+Quick update to current-focus.md
+
+Usage:
+    focus "Working on [Journal] section 4"       # Update what you're working on
+    focus --left-off "Finished draft"       # Update where you left off
+    focus --next "Review with [Supervisor]"      # Add next step
+    focus --show                            # Show current focus
+"""
+
+import argparse
+import os
+from datetime import datetime
+from pathlib import Path
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+CONTEXT_DIR = BASE_DIR / ".context"
+FOCUS_FILE = CONTEXT_DIR / "current-focus.md"
+
+
+def read_focus():
+    """Read current focus file."""
+    if FOCUS_FILE.exists():
+        return FOCUS_FILE.read_text()
+    return ""
+
+
+def write_focus(content):
+    """Write focus file."""
+    FOCUS_FILE.write_text(content)
+
+
+def update_section(content, section_name, new_value):
+    """Update a specific section in the markdown."""
+    lines = content.split("\n")
+    new_lines = []
+    in_section = False
+    section_updated = False
+
+    for i, line in enumerate(lines):
+        if line.startswith(f"## {section_name}"):
+            in_section = True
+            new_lines.append(line)
+            new_lines.append(new_value)
+            section_updated = True
+            continue
+        elif line.startswith("## ") and in_section:
+            in_section = False
+
+        if not in_section:
+            new_lines.append(line)
+        elif not line.strip():
+            new_lines.append(line)
+
+    if not section_updated:
+        # Add section at end
+        new_lines.append(f"\n## {section_name}")
+        new_lines.append(new_value)
+
+    return "\n".join(new_lines)
+
+
+def create_default_template():
+    """Create default focus template."""
+    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    return f"""# Current Focus
+
+Last updated: {now}
+
+## What I'm Working On
+
+
+## Where I Left Off
+
+
+## Next Steps
+-
+
+## Open Questions
+-
+
+## Notes
+
+"""
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Update current focus")
+    parser.add_argument("working_on", nargs="?", help="What you're working on")
+    parser.add_argument("--left-off", dest="left_off", help="Where you left off")
+    parser.add_argument("--next", dest="next_step", help="Next step to add")
+    parser.add_argument("--question", help="Open question to add")
+    parser.add_argument("--note", help="Note to add")
+    parser.add_argument("--show", action="store_true", help="Show current focus")
+    parser.add_argument("--clear", action="store_true", help="Clear and start fresh")
+
+    args = parser.parse_args()
+
+    # Show current focus
+    if args.show:
+        content = read_focus()
+        if content:
+            print(content)
+        else:
+            print("No current focus set.")
+        return
+
+    # Clear and start fresh
+    if args.clear:
+        write_focus(create_default_template())
+        print("✅ Focus cleared")
+        return
+
+    # Read existing or create new
+    content = read_focus()
+    if not content:
+        content = create_default_template()
+
+    # Update timestamp
+    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    if "Last updated:" in content:
+        lines = content.split("\n")
+        for i, line in enumerate(lines):
+            if line.startswith("Last updated:"):
+                lines[i] = f"Last updated: {now}"
+                break
+        content = "\n".join(lines)
+
+    updated = False
+
+    # Update what working on
+    if args.working_on:
+        content = update_section(content, "What I'm Working On", args.working_on)
+        updated = True
+        print(f"✅ Working on: {args.working_on}")
+
+    # Update where left off
+    if args.left_off:
+        content = update_section(content, "Where I Left Off", args.left_off)
+        updated = True
+        print(f"✅ Left off: {args.left_off}")
+
+    # Add next step
+    if args.next_step:
+        section = "Next Steps"
+        if f"## {section}" in content:
+            content = content.replace(f"## {section}\n", f"## {section}\n- {args.next_step}\n")
+        updated = True
+        print(f"✅ Next: {args.next_step}")
+
+    # Add question
+    if args.question:
+        section = "Open Questions"
+        if f"## {section}" in content:
+            content = content.replace(f"## {section}\n", f"## {section}\n- {args.question}\n")
+        updated = True
+        print(f"✅ Question: {args.question}")
+
+    # Add note
+    if args.note:
+        section = "Notes"
+        if f"## {section}" in content:
+            content = content.replace(f"## {section}\n", f"## {section}\n{args.note}\n")
+        updated = True
+        print(f"✅ Note added")
+
+    if updated:
+        write_focus(content)
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()
