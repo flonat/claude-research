@@ -1,3 +1,5 @@
+<!-- Governed by: skills/shared/project-documentation.md -->
+
 # Getting Started
 
 ## Claude Code vs Claude Desktop

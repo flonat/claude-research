@@ -1,3 +1,5 @@
+<!-- Governed by: skills/shared/project-documentation.md -->
+
 # Council Mode
 
 Two multi-model council backends run the same 3-stage protocol: independent assessments from 3 different LLM providers, anonymised cross-review, then chairman synthesis. Used by the `paper-critic` agent and optionally by `/proofread`, `/devils-advocate`, `/code-review`, and `/multi-perspective`.

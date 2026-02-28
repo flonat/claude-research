@@ -1,3 +1,5 @@
+<!-- Governed by: skills/shared/project-documentation.md -->
+
 # Biblio MCP Server Setup
 
 The Biblio MCP server (`.mcp-server-biblio/`) provides scholarly search across up to 3 sources. OpenAlex is always available (free, no key required). Scopus and Web of Science are optional — add API keys to unlock them.

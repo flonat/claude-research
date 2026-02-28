@@ -1,3 +1,5 @@
+<!-- Governed by: skills/shared/project-documentation.md -->
+
 # Notion Integration Setup
 
 The task management system uses **two Notion databases** to track your work:

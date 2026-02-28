@@ -1,3 +1,5 @@
+<!-- Governed by: skills/shared/project-documentation.md -->
+
 # Claude Code for an Academic Researcher
 
 Made by a humble PhD student. A complete Claude Code infrastructure for researchers — skills, agents, hooks, and rules for academic workflows. Built for researchers who write papers in LaTeX, manage bibliographies, run experiments, and want AI assistance that understands academic conventions.
