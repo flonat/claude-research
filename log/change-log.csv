@@ -25,3 +25,11 @@ Initial release: C"
 2026-02-27 19:23:54,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && git log --oneline"
 2026-02-27 19:24:10,Edit,/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/.claude/rules/public-repo-sync.md,modified,
 2026-02-27 19:30:52,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && echo ""Skills:"" && ls -d skills/*/SKILL.md 2>/dev/null | wc -l && echo ""Agents:"" && ls -d .claude/a"
+2026-02-27 19:36:00,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && git add -A && git commit -m ""$(cat <<'EOF'
+Sync from private: update skill-index catalogue
+EOF
+)"""
+2026-02-27 19:36:06,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && git push origin main"
+2026-02-28 09:10:16,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && git status -u && echo ""---REMOTE---"" && git remote -v"
+2026-02-28 09:10:29,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && git add README.md docs/getting-started.md docs/council-mode.md docs/biblio-setup.md docs/notion-se"
+2026-02-28 09:10:37,Bash,-,executed,"cd ""/Users/florianburnat/Library/CloudStorage/Dropbox-Personal/Task Management/public/public-repo"" && git push origin main"
