@@ -106,6 +106,8 @@ See [`docs/hooks.md`](docs/hooks.md) for full documentation.
 
 **Biblio MCP** — Multi-source scholarly search server (OpenAlex + optional Scopus & Web of Science). See [`docs/biblio-setup.md`](docs/biblio-setup.md).
 
+**Flonat-Papers MCP** — Zotero library management server (search, PDF extraction, semantic retrieval, BibTeX export). Lives in `packages/flonat-papers/` with bundled `bib-validate` and `bib-parse` skills.
+
 **Council Mode** — Multi-model deliberation with 3 LLM providers, anonymised cross-review, and chairman synthesis. See [`docs/council-mode.md`](docs/council-mode.md).
 
 ## Workflows
@@ -165,8 +167,9 @@ claude-code-flonat/
 ├── .scripts/                    # CLI tools for Notion task management
 ├── .mcp-server-biblio/          # Multi-source scholarly search (OpenAlex + Scopus + WoS)
 ├── packages/
-│   ├── cli-council/             # Multi-model council via local CLI tools
-│   └── llm-council/             # Multi-model council via OpenRouter API
+│   ├── [cli-council](https://github.com/flonat/claude-cli-council)/   # Multi-model council via local CLI tools
+│   ├── flonat-papers/           # Zotero MCP server + bib skills (symlinked)
+│   └── [llm-council](https://github.com/flonat/claude-llm-council)/  # Multi-model council via OpenRouter API
 ├── docs/                        # Component documentation
 ├── log/                         # Session logs (auto-created)
 └── scripts/

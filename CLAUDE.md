@@ -187,6 +187,7 @@ This helps me (Claude) pick up where we left off next time.
 | `.scripts/` | CLI tools for Notion task management |
 | `packages/cli-council/` | Multi-model council via local CLI tools |
 | `packages/llm-council/` | Multi-model council via OpenRouter API |
+| `packages/flonat-papers/` | Zotero MCP server + `bib-validate`, `bib-parse` skills |
 | `log/` | Session logs |
 | `docs/` | Documentation |
 <!-- FILE-STRUCTURE:END -->
