@@ -1,6 +1,6 @@
 ---
 name: project-deck
-description: "Create presentation decks to communicate project status. For supervisor meetings, coauthor handoffs, or documenting progress."
+description: "Create presentation decks to communicate project status. For supervisor meetings, coauthor handoffs, or documenting progress. Triggers: 'make slides about my project', 'supervisor meeting presentation'. Not for academic talks — use /beamer-deck."
 allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(mkdir*), Read, Write, Edit
 argument-hint: [project-name-or-path]
 ---

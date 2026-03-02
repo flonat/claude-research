@@ -1,8 +1,6 @@
 """Generic OpenRouter LLM client.
 
-Extracted from claude-topic-finder's services/llm.py — only the generic
-OpenRouter wrapper, JSON parsing, and error handling. No workflow-specific
-prompts or methods.
+OpenRouter wrapper with JSON parsing, retry logic, and error handling.
 """
 
 from __future__ import annotations

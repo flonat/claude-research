@@ -1,6 +1,6 @@
 ---
 name: pipeline-manifest
-description: "Build a pipeline manifest mapping scripts to inputs, outputs, and paper figures/tables. Optionally add structured headers to scripts."
+description: "Build a pipeline manifest mapping scripts to inputs, outputs, and paper figures/tables. Optionally add structured headers to scripts. Triggers: 'map my code to paper outputs', 'which script makes which figure'. Not for running pipelines — this documents them."
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion
 argument-hint: [project-path]
 ---

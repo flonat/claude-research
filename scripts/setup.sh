@@ -2,12 +2,20 @@
 # setup.sh — Set up Claude Code for Academic Research
 #
 # Creates symlinks so Claude Code can find skills, agents, hooks, and rules
-# from any project directory. Run this once after cloning.
+# from any project directory.
+#
+# Usage:
+#   ./scripts/setup.sh            # first-time setup
+#   ./scripts/setup.sh --update   # re-link without overwriting settings
 
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 CLAUDE_DIR="$HOME/.claude"
+VERSION="$(grep '"version"' "$REPO_DIR/package.json" 2>/dev/null | head -1 | sed 's/.*: *"\(.*\)".*/\1/' || echo "unknown")"
+UPDATE_MODE=false
+
+[[ "${1:-}" == "--update" ]] && UPDATE_MODE=true
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'; CYAN='\033[0;36m'; NC='\033[0m'
 info()  { echo -e "${CYAN}[setup]${NC} $*"; }
@@ -18,9 +26,42 @@ err()   { echo -e "${RED}[setup]${NC} $*" >&2; }
 echo ""
 echo "========================================="
 echo "  Claude Code for Academic Research"
-echo "  Initial Setup"
+if $UPDATE_MODE; then
+  echo "  Update (v$VERSION)"
+else
+  echo "  Initial Setup (v$VERSION)"
+fi
 echo "========================================="
 echo ""
+
+# ---------- helper: create or verify symlink ----------
+link_component() {
+  local name="$1"
+  local source="$2"
+  local target="$3"
+
+  if [[ -L "$target" ]]; then
+    existing="$(readlink "$target")"
+    if [[ "$existing" == "$source" ]]; then
+      ok "$name symlink already correct"
+    else
+      if $UPDATE_MODE; then
+        rm "$target"
+        ln -s "$source" "$target"
+        ok "$name symlink updated → $source"
+      else
+        warn "$name symlink exists but points to: $existing"
+        warn "Remove it manually if you want to update: rm $target"
+      fi
+    fi
+  elif [[ -e "$target" ]]; then
+    warn "$target is a real directory/file (not a symlink)"
+    warn "Back it up and remove it if you want to use this repo's $name"
+  else
+    ln -s "$source" "$target"
+    ok "Linked $name → $source"
+  fi
+}
 
 # ---------- 1. Create ~/.claude if needed ----------
 if [[ ! -d "$CLAUDE_DIR" ]]; then
@@ -29,76 +70,16 @@ if [[ ! -d "$CLAUDE_DIR" ]]; then
   ok "Created $CLAUDE_DIR"
 fi
 
-# ---------- 2. Symlink skills ----------
-if [[ -L "$CLAUDE_DIR/skills" ]]; then
-  existing="$(readlink "$CLAUDE_DIR/skills")"
-  if [[ "$existing" == "$REPO_DIR/skills" ]]; then
-    ok "Skills symlink already correct"
-  else
-    warn "Skills symlink exists but points to: $existing"
-    warn "Remove it manually if you want to update: rm $CLAUDE_DIR/skills"
-  fi
-elif [[ -d "$CLAUDE_DIR/skills" ]]; then
-  warn "~/.claude/skills/ is a real directory (not a symlink)"
-  warn "Back it up and remove it if you want to use this repo's skills"
-else
-  ln -s "$REPO_DIR/skills" "$CLAUDE_DIR/skills"
-  ok "Linked skills → $REPO_DIR/skills"
-fi
+# ---------- 2. Symlink components ----------
+link_component "skills" "$REPO_DIR/skills" "$CLAUDE_DIR/skills"
+link_component "agents" "$REPO_DIR/.claude/agents" "$CLAUDE_DIR/agents"
+link_component "rules"  "$REPO_DIR/.claude/rules"  "$CLAUDE_DIR/rules"
+link_component "hooks"  "$REPO_DIR/hooks"  "$CLAUDE_DIR/hooks"
 
-# ---------- 3. Symlink agents ----------
-if [[ -L "$CLAUDE_DIR/agents" ]]; then
-  existing="$(readlink "$CLAUDE_DIR/agents")"
-  if [[ "$existing" == "$REPO_DIR/.claude/agents" ]]; then
-    ok "Agents symlink already correct"
-  else
-    warn "Agents symlink exists but points to: $existing"
-    warn "Remove it manually if you want to update: rm $CLAUDE_DIR/agents"
-  fi
-elif [[ -d "$CLAUDE_DIR/agents" ]]; then
-  warn "~/.claude/agents/ is a real directory (not a symlink)"
-  warn "Back it up and remove it if you want to use this repo's agents"
-else
-  ln -s "$REPO_DIR/.claude/agents" "$CLAUDE_DIR/agents"
-  ok "Linked agents → $REPO_DIR/.claude/agents"
-fi
-
-# ---------- 4. Symlink rules ----------
-if [[ -L "$CLAUDE_DIR/rules" ]]; then
-  existing="$(readlink "$CLAUDE_DIR/rules")"
-  if [[ "$existing" == "$REPO_DIR/.claude/rules" ]]; then
-    ok "Rules symlink already correct"
-  else
-    warn "Rules symlink exists but points to: $existing"
-    warn "Remove it manually if you want to update: rm $CLAUDE_DIR/rules"
-  fi
-elif [[ -d "$CLAUDE_DIR/rules" ]]; then
-  warn "~/.claude/rules/ is a real directory (not a symlink)"
-  warn "Back it up and remove it if you want to use this repo's rules"
-else
-  ln -s "$REPO_DIR/.claude/rules" "$CLAUDE_DIR/rules"
-  ok "Linked rules → $REPO_DIR/.claude/rules"
-fi
-
-# ---------- 5. Symlink hooks ----------
-if [[ -L "$CLAUDE_DIR/hooks" ]]; then
-  existing="$(readlink "$CLAUDE_DIR/hooks")"
-  if [[ "$existing" == "$REPO_DIR/hooks" ]]; then
-    ok "Hooks symlink already correct"
-  else
-    warn "Hooks symlink exists but points to: $existing"
-    warn "Remove it manually if you want to update: rm $CLAUDE_DIR/hooks"
-  fi
-elif [[ -d "$CLAUDE_DIR/hooks" ]]; then
-  warn "~/.claude/hooks/ is a real directory (not a symlink)"
-  warn "Back it up and remove it if you want to use this repo's hooks"
-else
-  ln -s "$REPO_DIR/hooks" "$CLAUDE_DIR/hooks"
-  ok "Linked hooks → $REPO_DIR/hooks"
-fi
-
-# ---------- 6. Copy settings (if none exist) ----------
-if [[ -f "$CLAUDE_DIR/settings.json" ]]; then
+# ---------- 3. Copy settings (skip in update mode) ----------
+if $UPDATE_MODE; then
+  info "Update mode — skipping settings.json (preserving your config)"
+elif [[ -f "$CLAUDE_DIR/settings.json" ]]; then
   warn "~/.claude/settings.json already exists — not overwriting"
   warn "Compare with $REPO_DIR/.claude/settings.json and merge manually"
 else
@@ -106,21 +87,57 @@ else
   ok "Copied settings.json → $CLAUDE_DIR/settings.json"
 fi
 
-# ---------- 7. Create log directory ----------
+# ---------- 4. Create log directory ----------
 mkdir -p "$REPO_DIR/log/plans"
 ok "Ensured log/ and log/plans/ directories exist"
+
+# ---------- 5. Check Python dependencies ----------
+info "Checking Python dependencies..."
+
+if command -v uv &>/dev/null; then
+  ok "uv found: $(uv --version)"
+else
+  warn "uv not found — required for Python hooks and MCP server"
+  warn "Install: curl -LsSf https://astral.sh/uv/install.sh | sh"
+fi
+
+if command -v python3 &>/dev/null; then
+  ok "python3 found: $(python3 --version 2>&1)"
+else
+  warn "python3 not found — some hooks require Python 3.11+"
+fi
+
+if command -v latexmk &>/dev/null; then
+  ok "latexmk found (LaTeX compilation available)"
+else
+  info "latexmk not found — install a TeX distribution for LaTeX skills"
+fi
+
+# ---------- 6. MCP bibliography server ----------
+if [[ -d "$REPO_DIR/.mcp-server-biblio" ]]; then
+  info "Bibliography MCP server found at .mcp-server-biblio/"
+  info "To configure it, see docs/bibliography-setup.md"
+else
+  info "No .mcp-server-biblio/ directory — bibliography search not available"
+fi
 
 # ---------- Done ----------
 echo ""
 echo "========================================="
-echo "  Setup complete!"
+echo "  Setup complete! (v$VERSION)"
 echo "========================================="
 echo ""
-echo "Next steps:"
-echo "  1. Edit .context/profile.md with your details"
-echo "  2. Edit .context/current-focus.md with your current work"
-echo "  3. Edit .context/projects/_index.md with your projects"
-echo "  4. Edit CLAUDE.md to customise conventions"
-echo "  5. Review ~/.claude/settings.json for permissions and hooks"
-echo ""
-echo "Then open any project directory and run 'claude' to start!"
+if ! $UPDATE_MODE; then
+  echo "Next steps:"
+  echo "  1. Edit .context/profile.md with your details"
+  echo "  2. Edit .context/current-focus.md with your current work"
+  echo "  3. Edit .context/projects/_index.md with your projects"
+  echo "  4. Edit CLAUDE.md to customise conventions"
+  echo "  5. Review ~/.claude/settings.json for permissions and hooks"
+  echo ""
+  echo "Then open any project directory and run 'claude' to start!"
+else
+  echo "Symlinks updated. Your settings.json was preserved."
+  echo ""
+  echo "Check docs/getting-started.md if you need to merge new settings."
+fi

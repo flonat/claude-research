@@ -29,6 +29,24 @@ Append to `MEMORY.md` in the project root, under the matching category section.
 
 If `MEMORY.md` does not exist, create it using the Knowledge Base template below. To choose the right variant: check the project's `CLAUDE.md` for keywords like "course", "workshop", or "teaching" → use the **teaching** template. Otherwise → use the **research** template (default).
 
+## Tier Routing
+
+Learnings are routed to one of two files based on portability:
+
+| Tier | File | Committed? | Examples |
+|------|------|-----------|----------|
+| Generic | `MEMORY.md` (project root) | Yes | Notation conventions, method corrections, citation fixes, design decisions |
+| Machine-specific | `.claude/state/personal-memory.md` | No (gitignored) | Local path workarounds, tool version quirks, machine-specific build flags |
+
+**Decision rule:** "Would this help a collaborator on a different machine?" Yes → Generic. No → Machine-specific. **Default: Generic** (~95% of entries).
+
+Machine-specific examples:
+- `[LEARN:code] On this Mac, latexmk needs /Library/TeX path explicitly`
+- `[LEARN:code] uv 0.5.x on ARM has slow lock resolution — use --frozen`
+- `[LEARN:code] Zotero DB at ~/.local/share/user-papers/ not default path`
+
+If `.claude/state/personal-memory.md` does not exist, create it on first machine-specific entry (see `init-project-research` templates for the seed format). Create the directory too: `mkdir -p .claude/state`.
+
 ## Examples
 
 ```

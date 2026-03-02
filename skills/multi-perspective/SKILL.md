@@ -1,6 +1,6 @@
 ---
 name: multi-perspective
-description: "Explore a research question from multiple independent perspectives with diverse epistemic priors. Spawns parallel agents with distinct disciplinary lenses, then synthesises findings."
+description: "Explore a research question from multiple independent perspectives with diverse epistemic priors. Spawns parallel agents with distinct disciplinary lenses, then synthesises findings. Triggers: 'look at this from different angles', 'get diverse perspectives'."
 allowed-tools: Read, Write, Edit, Glob, Grep, Task, AskUserQuestion
 argument-hint: "[research question, hypothesis, or design choice]"
 ---
@@ -275,3 +275,4 @@ See `skills/shared/council-protocol.md` for the full orchestration protocol.
 | `/literature` | Find the papers that perspectives reference |
 | `/interview-me` | Develop the research idea through structured conversation |
 | Referee 2 agent | Formal paper audit with code verification |
+| `references/computational-many-analysts.md` | When combining qualitative perspectives with quantitative many-analysts |

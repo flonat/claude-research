@@ -181,6 +181,21 @@ Alternatives:
 3. If different use case, explain how this differs
 ```
 
+## Post-Match Action Table
+
+When overlap IS found, use this table to decide the specific action:
+
+| Situation | Action |
+|-----------|--------|
+| Nothing related found | Create new artifact |
+| Same trigger + same fix as existing | Update existing (bump version, improve docs) |
+| Same trigger, different root cause | Create new + add cross-links in both |
+| Partial overlap (same domain, different trigger) | Add variant subsection to existing |
+| Same domain, different problem | Create new + add "See also" references |
+| Existing is stale or wrong | Mark deprecated + create replacement |
+
+This complements the PROCEED/EXTEND/COMPOSE/ITERATE/BLOCK recommendation above. The recommendation decides *whether* to create; this table decides *how* to handle the relationship with existing artifacts.
+
 ## Self-Check Questions
 
 Before creating ANY new artifact, ask:

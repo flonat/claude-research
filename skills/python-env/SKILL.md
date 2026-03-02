@@ -1,6 +1,6 @@
 ---
 name: python-env
-description: "Python environment management with uv. ALWAYS use uv for package management, never pip directly."
+description: "Python environment management with uv. ALWAYS use uv for package management, never pip directly. Triggers: 'install package', 'create venv', 'set up Python'. Not for running scripts — just use `uv run python`."
 allowed-tools: Bash(uv*), Bash(python*), Bash(mkdir*), Bash(ls*)
 ---
 

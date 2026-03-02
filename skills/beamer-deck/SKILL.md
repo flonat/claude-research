@@ -1,6 +1,6 @@
 ---
 name: beamer-deck
-description: "Generate academic Beamer presentations with multi-agent review. Builds original themes, applies rhetoric principles, iterates until zero warnings."
+description: "Generate academic Beamer presentations with multi-agent review. Builds original themes, applies rhetoric principles, iterates until zero warnings. Triggers: 'make slides', 'create a presentation', 'build a talk'. For web-shareable HTML slides, use /quarto-deck instead."
 allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(biber*), Bash(bibtex*), Bash(mkdir*), Bash(ls*), Bash(R*), Bash(Rscript*), Bash(python*), Read, Write, Edit, Task
 argument-hint: [topic, content-path, or project-name]
 ---
@@ -34,7 +34,7 @@ Create polished, zero-warning Beamer decks for academic contexts: seminars, conf
 4. **One idea per slide.** Not a guideline. A law. If a slide has two ideas, split it.
 5. **Original themes only.** Never use default Beamer themes (Warsaw, Madrid, etc.) as-is. Define colours and templates inline in the `.tex` file — no separate `.sty` files.
 6. **Code-first figures.** Generate figures via R or Python scripts before inserting. Never use placeholder images. **Always save the script alongside the figures** — never generate a figure without preserving the code that created it.
-7. **If a `.bib` file is used, validate it.** Cross-reference all `\cite{}` keys against the bibliography file. See `/validate-bib` for the full protocol.
+7. **If a `.bib` file is used, validate it.** Cross-reference all `\cite{}` keys against the bibliography file. See `/bib-validate` for the full protocol.
 
 ---
 
@@ -102,7 +102,7 @@ Present the outline to the user for approval before building.
 3. **Use 16:9 aspect ratio** (`\documentclass[aspectratio=169,11pt]{beamer}`)
 4. **Create `.latexmkrc`** if not present (`$out_dir = 'out'` + `END {}` block to copy PDF back)
 5. **Compile using `/latex-autofix`** — this handles missing packages, font conflicts, citation key mismatches, and stale cache automatically
-6. **If using citations**: add `\addbibresource{paperpile.bib}` or `\bibliography{}` as appropriate
+6. **If using citations**: add `\addbibresource{references.bib}` or `\bibliography{}` as appropriate
 
 ### Phase 4: Fix All Warnings (Direct)
 
@@ -136,7 +136,7 @@ Full prompt template: [`references/review-prompts.md`](references/review-prompts
 2. Incorporate feedback — prioritise Critical and Needs Work items
 3. Recompile
 4. Verify zero warnings in the log
-5. **If using a `.bib` file**: validate all `\cite{}` keys resolve correctly (check log for `Citation .* undefined`). See `/validate-bib` for the full cross-referencing protocol.
+5. **If using a `.bib` file**: validate all `\cite{}` keys resolve correctly (check log for `Citation .* undefined`). See `/bib-validate` for the full cross-referencing protocol.
 6. If significant changes were made, loop back to Phase 5 for another review round
 7. **Compute quality score** — read `references/quality-rubric.md`, log all issues from Phases 4-6, compute score and verdict
 8. Confirm final PDF is in the source directory (copied from `out/` by `.latexmkrc`)
@@ -167,7 +167,7 @@ project/
 ├── scripts/              # R/Python scripts that generated figures (if any)
 │   ├── figure_1.R
 │   └── ...
-└── paperpile.bib         # Bibliography (if citations used)
+└── references.bib        # Bibliography (if citations used)
 ```
 
 - [ ] PDF compiles with zero warnings
@@ -176,7 +176,7 @@ project/
 - [ ] Narrative arc: Problem → Investigation → Resolution
 - [ ] Rhetoric review completed (Phase 5)
 - [ ] Graphics review completed (Phase 6)
-- [ ] If `.bib` used: all `\cite{}` keys validated (see `/validate-bib`)
+- [ ] If `.bib` used: all `\cite{}` keys validated (see `/bib-validate`)
 - [ ] Quality score computed and reported
 
 ---
@@ -189,7 +189,7 @@ project/
 | `/latex-autofix` | **Default compiler** — used in Phase 3 for error resolution and citation audit |
 | `/latex` | For manual compilation config details, `.latexmkrc` setup, engine selection |
 | `/proofread` | For post-hoc review of text quality in the deck |
-| `/validate-bib` | For thorough bibliography cross-referencing when citations are used |
+| `/bib-validate` | For thorough bibliography cross-referencing when citations are used |
 | `/literature` | For finding and verifying citations to include |
 | `/quarto-deck` | For HTML presentations (teaching, informal talks) instead of PDF |
 | `/quarto-course` | For full course websites with multiple lectures, exercises, and navigation |

@@ -39,7 +39,7 @@ Start at 100, deduct per issue found, apply verdict. Include the Score Block in 
 3. **Never silently swallow errors.** Every fix must be reported: what was wrong, what was changed, and which file was edited.
 4. **Preserve user intent.** Auto-fixes should be minimal and conservative. Add packages or overrides — never remove user content.
 5. **Citation audit requires clean compilation.** Only run the `\cite{}` vs `.bib` cross-check after zero errors.
-6. **Run `/validate-bib` when new citations were added.** The Phase 4 citation audit only checks key cross-references. When `.bib` entries were added or modified since the last validation, also run `/validate-bib` for full metadata quality checks (preprint staleness, DOI presence, required fields, author formatting). This is mandatory — do not skip it.
+6. **Run `/bib-validate` when new citations were added.** The Phase 4 citation audit only checks key cross-references. When `.bib` entries were added or modified since the last validation, also run `/bib-validate` for full metadata quality checks (preprint staleness, DOI presence, required fields, author formatting). This is mandatory — do not skip it.
 
 ---
 
@@ -181,7 +181,7 @@ After all phases complete, compute the quality score:
 |-----------|-------------|
 | Need to find or verify a bibliography entry | `/literature` |
 | Full academic proofreading after clean compilation | `/proofread` |
-| Detailed `.bib` validation beyond cite-key matching | `/validate-bib` |
+| Detailed `.bib` validation beyond cite-key matching | `/bib-validate` |
 | Beamer presentations specifically | `/beamer-deck` (which uses this skill internally for compilation) |
 
 ---

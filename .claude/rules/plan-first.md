@@ -10,7 +10,7 @@
 ## When to Skip
 
 - Single-file fixes (typos, one-line bugs)
-- Running existing skills (`/proofread`, `/validate-bib`, etc.)
+- Running existing skills (`/proofread`, `/bib-validate`, etc.)
 - Informational questions ("What does this function do?")
 - Updating context files (`.context/current-focus.md`)
 
@@ -33,7 +33,7 @@ Then **wait for confirmation**. One word from the user ("yes", "go", thumbs up) 
 
 **Examples of assumptions worth stating:**
 - "I'll write output to `paper/figures/`, not `output/`"
-- "I'll use Paperpile-format keys from the existing .bib"
+- "I'll use BBT-format keys from the existing .bib"
 - "I'll compile with Beamer, not reveal-md"
 - "I'll edit only the 3 lines you mentioned, not the surrounding block"
 - "I'll put the report in the current project directory, not the Research Projects root"
@@ -104,6 +104,49 @@ When a plan spans 2+ distinct activities (e.g., code + experiments + writing), s
 4. Do NOT start the next phase without the user's go-ahead
 
 Signs a plan needs phases: 5+ implementation steps, multiple distinct tool chains (Python + LaTeX), or estimated context usage that could hit compression.
+
+### Dependency Notation
+
+Phases declare `depends_on:` rather than relying on sequential numbering. This makes mid-pipeline entry and parallel work explicit:
+
+```markdown
+### Phase A: Literature Review
+depends_on: none
+### Phase B: Research Design
+depends_on: Phase A (partial — needs key papers identified)
+### Phase C: Data Collection
+depends_on: Phase B
+### Phase D: Code Pipeline
+depends_on: Phase B, Phase C
+### Phase E: Paper Draft
+depends_on: Phase D (results), Phase A (lit review complete)
+```
+
+### Mid-Pipeline Entry
+
+When resuming a project or starting mid-way through an existing plan:
+
+1. Read existing outputs to determine which phases are "satisfied"
+2. Mark satisfied phases as `[DONE]` in the plan
+3. Start from the first phase whose dependencies are all satisfied
+4. State explicitly: "Entering at Phase X — Phases A, B already satisfied because [evidence]"
+
+### Parallel Activation
+
+Phases with independent dependency chains can run concurrently. Flag these for the user:
+
+> "Phases C and D have independent dependencies — both can start now. Want to run them in parallel?"
+
+Do not auto-parallelise — let the user decide.
+
+### Re-Entry and Invalidation
+
+If a phase's output becomes invalid (e.g., data changes, design revision):
+
+1. Mark it `[INVALIDATED]` in the plan
+2. Cascade to all dependent phases — mark them `[INVALIDATED]` too
+3. State which phases need re-running and why
+4. Wait for the user's go-ahead before re-executing
 
 ## Session Recovery
 

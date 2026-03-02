@@ -1,6 +1,6 @@
 ---
 name: process-reviews
-description: "Process referee comments from a reviews PDF into standardised tracking files: comment tracker, review analysis, and LaTeX verbatim transcription."
+description: "Process referee comments from a reviews PDF into standardised tracking files: comment tracker, review analysis, and LaTeX verbatim transcription. Triggers: 'got referee comments', 'process reviewer feedback', 'R&R response'. Not for writing the response — this extracts and organises the comments."
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(mkdir*), Bash(cp*), Bash(ls*), Bash(latexmk*), AskUserQuestion, Task
 argument-hint: "[path-to-reviews-pdf or no arguments for guided setup]"
 ---
@@ -168,6 +168,6 @@ Located in `templates/referee-comments/`:
 ## Cross-References
 
 - `/proofread` — for proofreading the response letter before submission
-- `/validate-bib` — run after revision to check bibliography
+- `/bib-validate` — run after revision to check bibliography
 - `/pre-submission-report` — full quality check before resubmission
 - `paper-critic` agent — for self-review of the revised paper

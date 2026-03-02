@@ -2,7 +2,7 @@
 
 Local multi-model council deliberation using CLI tools. Runs Gemini CLI, Codex CLI, and Claude Code in parallel to get diverse AI perspectives on any question — using your existing subscriptions, not per-token API costs.
 
-Part of [claude-code](https://github.com/user/claude-code-public) infrastructure.
+Part of [claude-research](https://github.com/user/claude-research) infrastructure.
 
 ## How It Works
 
@@ -83,9 +83,9 @@ Returns a `CouncilResult` with:
 - `peer_reviews` — List of Stage 2 peer reviews with rankings
 - `meta` — Timing, backends used, errors
 
-## Relationship to claude-llm-council
+## Relationship to llm-council
 
-| | cli-council | [claude-llm-council](https://github.com/user/claude-llm-council) |
+| | cli-council | [llm-council](https://github.com/user/llm-council) |
 |---|---|---|
 | **Transport** | Local CLI subprocesses | OpenRouter API |
 | **Cost** | Subscription-included | Per-token |
@@ -93,7 +93,7 @@ Returns a `CouncilResult` with:
 | **Best for** | Ad-hoc reviews, research, quick opinions | Automated pipelines, structured reports |
 | **Models** | Whatever your CLIs support | Full OpenRouter catalogue |
 
-Both implement the same 3-stage protocol. Use cli-council for interactive work, claude-llm-council for programmatic integration.
+Both implement the same 3-stage protocol. Use cli-council for interactive work, llm-council for programmatic integration.
 
 ## License
 

@@ -1,6 +1,6 @@
 ---
 name: latex
-description: "LaTeX document compilation and management. When Claude needs to compile LaTeX documents (.tex files) for papers, presentations, or other academic content."
+description: "LaTeX document compilation and management. When Claude needs to compile LaTeX documents (.tex files) for papers, presentations, or other academic content. Triggers: 'compile this tex file', 'build my paper'. Prefer /latex-autofix for error-resilient compilation."
 allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(biber*), Bash(bibtex*), Bash(mkdir*), Bash(ls*), Read, Write, Edit
 argument-hint: [tex-file-path]
 ---
@@ -49,8 +49,8 @@ The template contains:
 |------|---------|
 | `main.tex` | Document entry point with structure |
 | `your-template.sty` | Packages, layout, formatting, math environments |
-| `your-bib-template.sty` | Bibliography config (biblatex, Paperpile cleanup, Harvard style) |
-| `paperpile.bib` | Bibliography file (initially empty) |
+| `your-bib-template.sty` | Bibliography config (biblatex, source cleanup, Harvard style) |
+| `references.bib` | Bibliography file (initially empty) |
 | `out/` | Compilation output directory |
 
 **To create a new working paper:**
@@ -58,7 +58,7 @@ The template contains:
 1. Copy the template files to your new project folder
 2. Rename as needed
 3. Update `main.tex` with your title, author, abstract
-4. Add references to `paperpile.bib`
+4. Add references to `references.bib`
 5. Compile with `latexmk main.tex`
 
 ### Citation Style Toggle
@@ -80,20 +80,20 @@ In `main.tex`, control the style via package option:
 
 ### Bibliography File Naming
 
-**Always name the bibliography file `paperpile.bib`** — for any paper, whether using the working paper template or not. This is the standard naming convention across all projects (Paperpile exports use this name).
+**Always name the bibliography file `references.bib`** — for any paper, whether using the working paper template or not. This is the standard naming convention across all projects.
 
 ### Bibliography Commands
 
 The template uses biblatex. In `main.tex`:
 
 ```latex
-\printbibliography  % (not \bibliography{paperpile})
+\printbibliography  % (not \bibliography{references})
 ```
 
 If you need natbib instead, do not load `your-bib-template` and use:
 ```latex
 \bibliographystyle{agsm}
-\bibliography{paperpile}
+\bibliography{references}
 ```
 
 **Note:** This template is for working papers only. Other document types (presentations, theses, etc.) may require different templates.

@@ -1,6 +1,6 @@
 ---
 name: session-recap
-description: "End-of-session checklist. Checks for uncommitted changes, offers to update focus, project docs, context, and session log. Replaces the old stop hook."
+description: "End-of-session checklist. Checks for uncommitted changes, offers to update focus, project docs, context, and session log. Replaces the old stop hook. Triggers: 'wrap up', 'end session', 'what did we do today'. Not for mid-session logging — use /session-log."
 allowed-tools: Bash(git*), Read, Write, Edit, Glob, Grep, Skill, AskUserQuestion, Task
 argument-hint: (no arguments)
 ---

@@ -58,6 +58,28 @@ Package: `packages/cli-council/`
 - When the user explicitly requests "council mode", "council review", or "thorough review"
 - Never the default — standard single-reviewer mode remains the default for all consumers
 
+## Parallel Independent Review
+
+Beyond multi-model council mode, review agents can also be launched **in parallel** within a single Claude Code session for maximum coverage from different perspectives:
+
+1. **Pre-flight:** Launch `fatal-error-check` first (haiku model, ~15-30 seconds). If it returns FAIL, fix the fatal errors before proceeding.
+2. **Parallel launch:** If the pre-flight passes, launch all three review agents simultaneously in a **single message** with three Agent tool calls:
+   - `paper-critic` — adversarial LaTeX audit (grammar, notation, citation, tone, LaTeX, TikZ)
+   - `domain-reviewer` — substantive correctness (assumptions, derivations, citations, code-theory, backward logic)
+   - `referee2-reviewer` — full Reviewer 2 audit (identification, methods, robustness, presentation, scholarly rigour)
+3. **Synthesise:** Once all three agents return, run `/synthesise-reviews` to cross-reference issues, apply consensus escalation, and produce a unified `REVISION-PLAN.md`.
+
+This pattern maximises coverage by combining complementary review perspectives. Each agent has different check dimensions and catches different classes of issues. Parallel launch saves time compared to sequential runs.
+
+**When to use parallel review vs council mode:**
+
+| Scenario | Use |
+|----------|-----|
+| Maximum coverage from different review perspectives | Parallel independent review |
+| Model diversity (different LLM architectures finding different issues) | Council mode |
+| Both perspectives AND model diversity | Parallel review first, then council mode on the most Critical workstream |
+| Quick pre-submission check | Fatal-error-check only |
+
 ## Prerequisites for a Consumer
 
 An agent or skill that supports council mode must provide:
@@ -233,4 +255,4 @@ Current approach: the same system prompt goes to all models. Personas are docume
 | `devils-advocate` | Supported | — | Round 1/2/3 played by different models for genuine adversarial tension |
 | `proofread` | Supported | — | Lower value — most useful for notation consistency and citation voice balance |
 | `code-review` | Supported | — | Most valuable for domain correctness and cross-language verification |
-| `validate-bib` | Supported | — | Different models have different bibliographic knowledge — catches metadata mismatches |
+| `bib-validate` | Supported | — | Different models have different bibliographic knowledge — catches metadata mismatches |

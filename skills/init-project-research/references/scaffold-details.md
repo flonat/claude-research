@@ -71,11 +71,11 @@ For **conference venues**, seed a `submission-checklist.md` inside the venue fol
 ## Pre-Submission
 - [ ] Page count within limit
 - [ ] Correct LaTeX template used
-- [ ] Anonymisation applied (if required) — use `/export-project-anon`
+- [ ] Anonymisation applied (if required) — use `/replication-package` Blind mode
 - [ ] All figures render correctly
-- [ ] Bibliography complete — run `/validate-bib`
+- [ ] Bibliography complete — run `/bib-validate`
 - [ ] Proofread — run `/proofread`
-- [ ] AI traces removed — run `/export-project-clean`
+- [ ] AI traces removed — use `/replication-package` Assemble mode
 
 ## Submission
 - [ ] Paper uploaded to submission system

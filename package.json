@@ -1,0 +1,51 @@
+{
+  "name": "@user/claude-research",
+  "version": "1.0.0",
+  "description": "Claude Code infrastructure for academic research — skills, agents, hooks, and rules for LaTeX, bibliography, proofreading, and project management workflows.",
+  "author": "the user",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/user/claude-research.git"
+  },
+  "homepage": "https://github.com/user/claude-research",
+  "keywords": [
+    "claude-code",
+    "academic",
+    "research",
+    "latex",
+    "bibliography",
+    "proofreading",
+    "phd",
+    "skills",
+    "agents",
+    "hooks"
+  ],
+  "bin": {
+    "claude-research-setup": "scripts/setup.sh"
+  },
+  "scripts": {
+    "postinstall": "echo '\\nRun: npx claude-research-setup\\nto create symlinks for skills, agents, hooks, and rules.\\n'",
+    "setup": "bash scripts/setup.sh"
+  },
+  "files": [
+    "skills/",
+    "hooks/",
+    ".claude/agents/",
+    ".claude/rules/",
+    ".claude/settings.json",
+    ".context/",
+    ".scripts/",
+    ".mcp-server-biblio/",
+    "packages/",
+    "docs/",
+    "scripts/setup.sh",
+    "CLAUDE.md",
+    "MEMORY.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

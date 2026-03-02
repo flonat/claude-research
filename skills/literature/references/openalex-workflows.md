@@ -110,7 +110,7 @@ citing = requests.get(
 
 ### 7. Batch DOI Lookup
 
-For verifying multiple papers at once — useful for feeding into `/validate-bib`:
+For verifying multiple papers at once — useful for feeding into `/bib-validate`:
 
 ```python
 dois = [
@@ -222,7 +222,7 @@ Always use the polite pool.
 
 ## MCP Server (Preferred Over Python Client)
 
-**Always prefer MCP tools when available.** The biblio MCP server (`.mcp-server-biblio/`) exposes all OpenAlex functionality plus cross-source search — no Python boilerplate needed.
+**Always prefer MCP tools when available.** The bibliography MCP server (`.mcp-server-bibliography/`) exposes all OpenAlex functionality plus cross-source search — no Python boilerplate needed.
 
 | Task | MCP tool (preferred) | Python client (fallback) |
 |------|---------------------|-------------------------|
@@ -237,12 +237,12 @@ Always use the polite pool.
 | Forward citations | `openalex_citing_works` | Manual `cited_by_api_url` fetch |
 | Check active sources | `scholarly_source_status` | N/A |
 
-Use the Python client below only for workflows not yet exposed via MCP (custom filter combinations, batch entity lookups by non-DOI IDs). See [`docs/mcp-server.md`](../../../docs/mcp-server.md) for full MCP documentation.
+Use the Python client below only for workflows not yet exposed via MCP (custom filter combinations, batch entity lookups by non-DOI IDs). See [`docs/mcp-servers.md`](../../../docs/mcp-servers.md) for full MCP documentation.
 
 ---
 
 ## Complementary Skills
 
 - **`/literature`** (parent skill) — OpenAlex serves as Phase 2 Agent 3 alongside Google Scholar and Semantic Scholar. Its API returns structured metadata that web scraping often misses.
-- **`/validate-bib`** — Use batch DOI lookup (Workflow 7) to verify metadata for flagged entries.
+- **`/bib-validate`** — Use batch DOI lookup (Workflow 7) to verify metadata for flagged entries.
 - **`/split-pdf`** — Use OA discovery (Workflow 5) to find downloadable PDFs before split-reading.

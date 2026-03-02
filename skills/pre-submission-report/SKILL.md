@@ -1,6 +1,6 @@
 ---
 name: pre-submission-report
-description: "Run all quality checks and produce a single dated report before submission or sharing."
+description: "Run all quality checks and produce a single dated report before submission or sharing. Triggers: 'ready to submit', 'final check before sending'. Not for early drafts — use /proofread for quick checks."
 allowed-tools: Bash(latexmk*, mkdir*, ls*, wc*), Read, Write, Edit, Glob, Grep, Task, Skill
 argument-hint: "[path/to/main.tex or no arguments to auto-detect]"
 ---
@@ -37,12 +37,12 @@ If no argument provided, search for the main `.tex` file:
 Run these sequentially (each depends on a clean state):
 
 1. **Compilation** — invoke `/latex-autofix` on the main `.tex` file. Record pass/fail and any remaining warnings.
-2. **Citation audit** — invoke `/validate-bib`. Record missing, unused, and suspect keys.
+2. **Citation audit** — invoke `/bib-validate`. Record missing, unused, and suspect keys.
 3. **Adversarial review** — launch `paper-critic` agent (via Task tool). Capture the CRITIC-REPORT.md score and findings.
 
 ### 3. Aggregate Report
 
-Save to `log/quality-reports/YYYY-MM-DD_<project-name>.md`:
+Save to `audits/quality-reports/YYYY-MM-DD_<project-name>.md`:
 
 ```markdown
 # Pre-Submission Quality Report
@@ -116,6 +116,6 @@ Display the report path and the summary table to the user. If the recommendation
 | Skill/Agent | Role in this workflow |
 |-------------|---------------------|
 | `/latex-autofix` | Compilation + auto-fix |
-| `/validate-bib` | Citation cross-reference |
+| `/bib-validate` | Citation cross-reference |
 | `paper-critic` agent | Adversarial content review |
 | `quality-scoring.md` | Verdict thresholds |

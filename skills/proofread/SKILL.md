@@ -20,7 +20,7 @@ argument-hint: [project-path or tex-file]
 
 - **Formal audits** — use the Referee 2 agent for systematic verification
 - **Argument quality** — use `/devils-advocate` for logical scrutiny
-- **Citation completeness** — use `/validate-bib` for bibliography cross-referencing (though this skill flags obvious citation format issues)
+- **Citation completeness** — use `/bib-validate` for bibliography cross-referencing (though this skill flags obvious citation format issues)
 
 ## Workflow
 
@@ -199,7 +199,7 @@ See `skills/shared/council-protocol.md` for the full orchestration protocol.
 
 ## Cross-References
 
-- **`/validate-bib`** — For thorough bibliography cross-referencing
+- **`/bib-validate`** — For thorough bibliography cross-referencing
 - **`/latex-autofix`** — For compilation and error resolution (run before proofreading to ensure the document compiles cleanly)
 - **Referee 2 agent** — For formal code + paper auditing
 - **`/devils-advocate`** — For argument quality and logical scrutiny

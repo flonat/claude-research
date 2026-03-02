@@ -119,6 +119,51 @@ The body varies by pattern, but always includes these elements:
 - `## Examples` — concrete before/after or good/bad snippets
 - `## Notes` — edge cases, limitations
 
+### Solution Pattern (for debugging/workaround skills)
+
+When the skill captures a fix, workaround, or debugging procedure, use this body structure:
+
+```markdown
+# {Skill Name}: {Short Description}
+
+## Problem
+[Specific error message or symptom. Quote the exact text users would see.]
+
+## Context / Triggers
+[When this occurs — tool versions, file types, OS, configurations]
+
+## Solution
+[Step-by-step fix. Imperative form.]
+
+## Verification
+[How to confirm the fix worked]
+
+## Example
+[Concrete before/after or input/output]
+
+## Notes
+[Edge cases, alternative approaches, when this does NOT apply]
+```
+
+### Description Optimization
+
+The `description:` field in frontmatter is what triggers skill discovery. Write it to match how a user would describe their problem:
+
+- **Include specific error messages or symptoms** — "Fix `Package biblatex Error: File 'references.bib' not found`"
+- **Include context markers** — file types, tools, situations where this applies
+- **Include negative cases** — "Not for general proofreading (use /proofread instead)"
+- **Use natural trigger phrases** — the exact words a user would type
+
+### Extraction Checklist
+
+During skill creation, mentally verify each point before finalising:
+
+1. **Trigger coverage** — would a user find this skill from 3 different phrasings of the same problem?
+2. **Self-contained** — can the skill be followed without reading other files (except `references/`)?
+3. **Anti-patterns present** — at least 2 "don't do this" entries to prevent common mistakes?
+4. **Verification step** — does the skill tell you how to confirm it worked?
+5. **Scope bounded** — is it clear what this skill does NOT do?
+
 ### Writing Rules
 
 - **Imperative form.** "Parse the input" not "You should parse the input."
