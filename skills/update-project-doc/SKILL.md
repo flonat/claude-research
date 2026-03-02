@@ -185,6 +185,6 @@ Updated project docs:
 ## Cross-References
 
 - `/session-recap` — offers to run this skill at Step 3.5
-- `/sync-global-doc` — Task Management-specific superset: propagates counts across all TM docs including LaTeX files. Run after this skill when in the TM project.
+- `/sync-private-doc` — Task Management-specific superset: propagates counts across all private TM docs including LaTeX files. Run after this skill when in the TM project.
 - `/sync-notion` — syncs state to the central context library (complementary; run after this)
 - `/update-focus` — updates `current-focus.md` (different purpose: session state, not doc accuracy)

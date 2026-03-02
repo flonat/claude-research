@@ -9,7 +9,7 @@ argument-hint: [topic-or-paper-query]
 
 **CRITICAL RULE: Every citation must be verified to exist before inclusion.** Never include a paper you cannot find via web search. Hallucinated citations are worse than no citations.
 
-**PAPERPILE KEY RULE: ALWAYS use Paperpile-format keys (e.g., `Author2016-xx`).** When merging into an existing `.bib`, match existing Paperpile keys. Never generate custom keys (`AuthorYear`, `AuthorKamenica2017`, etc.) or retain non-Paperpile keys unless the user explicitly says otherwise.
+**CITATION KEY RULE: ALWAYS use Better BibTeX-format keys (e.g., `Author2016-xx`).** When merging into an existing `.bib`, match existing keys. Never generate custom keys (`AuthorYear`, `AuthorKamenica2017`, etc.) or retain non-standard keys unless the user explicitly says otherwise.
 
 **Python:** Always use `uv run python`. Never bare `python`, `python3`, `pip`, or `pip3`.
 
@@ -40,6 +40,7 @@ You (orchestrator)
 ├── Phase 4: Parallel verification (general-purpose agents, batches of 5)
 ├── Phase 5: Parallel PDF download (Bash agents)
 ├── Phase 6: Assemble .bib (direct — no sub-agent)
+├── Phase 6c: Sync to Zotero (direct — refpile MCP)
 └── Phase 7: Synthesize narrative (direct, or cli-council for multi-model synthesis)
 ```
 
@@ -62,7 +63,8 @@ Check for existing `.bib` files in project root, `/references`, `/bib`, `/biblio
 1. Parse existing entries to avoid duplicates and understand context
 2. Identify gaps — note if bibliography skews toward certain years/methods
 3. Compile list of existing citation keys to pass to sub-agents
-4. **Check source availability** — call `scholarly_source_status` (biblio MCP) to see which sources are active (OpenAlex always; Scopus and WoS if API keys are set). Report this so search agents know what coverage to expect.
+4. **Check Zotero library** — call `search_library` (refpile MCP) for the search topic. This finds papers the user already has, preventing re-discovery of known work. Mark these as **ALREADY IN LIBRARY** and skip them in Phase 2. If refpile MCP is unavailable, log a warning and continue.
+5. **Check source availability** — call `scholarly_source_status` (bibliography MCP) to see which sources are active (OpenAlex always; Scopus and WoS if API keys are set). Report this so search agents know what coverage to expect.
 
 ---
 
@@ -72,11 +74,11 @@ Spawn **2-3 Explore agents in parallel** in a single message, one per source. Re
 
 Available search agents:
 1. **Google Scholar** — broad academic search via web
-2. **Cross-Source via biblio MCP** (recommended) — call `scholarly_search` to query all enabled sources (OpenAlex + Scopus + WoS) with automatic DOI-based deduplication. Returns structured metadata, citation counts, and DOIs — reducing Phase 4 verification work significantly
+2. **Cross-Source via bibliography MCP** (recommended) — call `scholarly_search` to query all enabled sources (OpenAlex + Scopus + WoS) with automatic DOI-based deduplication. Returns structured metadata, citation counts, and DOIs — reducing Phase 4 verification work significantly
 3. **Semantic Scholar / arXiv** (optional) — CS/ML focused, useful when topic has strong CS overlap
 4. **Domain-specific** (optional) — SSRN, NBER, specific journals
 
-**Prefer the biblio MCP `scholarly_search` tool over the raw Python client** — it queries all configured sources in one call and deduplicates automatically. Use it as Agent 2 alongside Google Scholar for maximum coverage.
+**Prefer the bibliography MCP `scholarly_search` tool over the raw Python client** — it queries all configured sources in one call and deduplicates automatically. Use it as Agent 2 alongside Google Scholar for maximum coverage.
 
 ---
 
@@ -100,7 +102,7 @@ Multi-model literature search via `cli-council` — runs the same query through 
 
 ## Phase 4: Parallel Verification (Sub-Agents)
 
-**Step 1 — Batch DOI pre-verification via MCP:** Collect all DOIs from Phase 3 candidates and call `scholarly_verify_dois` (biblio MCP). This checks each DOI against all enabled sources (OpenAlex, Scopus, WoS). Papers marked VERIFIED (2+ sources confirm) can skip web-based verification. Only SINGLE_SOURCE and NOT_FOUND papers need full manual verification below.
+**Step 1 — Batch DOI pre-verification via MCP:** Collect all DOIs from Phase 3 candidates and call `scholarly_verify_dois` (bibliography MCP). This checks each DOI against all enabled sources (OpenAlex, Scopus, WoS). Papers marked VERIFIED (2+ sources confirm) can skip web-based verification. Only SINGLE_SOURCE and NOT_FOUND papers need full manual verification below.
 
 **Step 2 — Manual verification for remaining papers:** Spawn **multiple general-purpose agents in parallel**, each verifying ~5 papers. Read the full verification template from [references/agent-templates.md](references/agent-templates.md#phase-4-verification-agent-template).
 
@@ -125,7 +127,7 @@ Spawn Bash agents in parallel, 3-5 papers each. Read template from [references/a
 **Two outputs required:**
 
 1. **`docs/literature-review/literature_summary.bib`** — always created, standalone, self-contained
-2. **Project canonical bib** (e.g. `paper/paperpile.bib`) — merge into it if it exists
+2. **Project canonical bib** (e.g. `paper/references.bib`) — merge into it if it exists
 
 ### BibTeX Format
 
@@ -143,7 +145,7 @@ Spawn Bash agents in parallel, 3-5 papers each. Read template from [references/a
 ```
 
 Rules:
-- Citation keys: use **Paperpile-format keys** (e.g., `Author2016-xx`). If merging into an existing `.bib`, match the key format already in use. Never generate `AuthorYear` keys.
+- Citation keys: use **Better BibTeX-format keys** (e.g., `Author2016-xx`). If merging into an existing `.bib`, match the key format already in use. Never generate `AuthorYear` keys.
 - Only VERIFIED papers — no METADATA MISMATCH entries
 - **List ALL authors explicitly** — never "et al." in BibTeX
 - Include abstracts when available
@@ -152,7 +154,7 @@ Rules:
 
 ## Phase 6b: Validate Bibliography (Mandatory)
 
-**After assembling the `.bib`, always run `/validate-bib`.** The Phase 4 verification checks that papers exist, but `/validate-bib` catches a different class of issues:
+**After assembling the `.bib`, always run `/bib-validate`.** The Phase 4 verification checks that papers exist, but `/bib-validate` catches a different class of issues:
 
 - Missing required BibTeX fields (journal, volume, pages)
 - Preprint staleness (arXiv paper now published in a journal)
@@ -161,6 +163,20 @@ Rules:
 - Unused entries and possible typos
 
 This is **not optional** — every time new entries are added to a `.bib` file, run the validation before considering the bibliography complete.
+
+---
+
+## Phase 6c: Sync to Zotero
+
+After assembling and validating the `.bib`, sync new references to the user's Zotero library via the refpile MCP.
+
+For each new entry in the assembled `.bib` that isn't already in Zotero (not marked **ALREADY IN LIBRARY** from Phase 1):
+
+1. **Auto-add to Zotero** — call `add_item` (refpile MCP) for each new reference with full metadata (title, authors, year, journal, DOI).
+2. **Tag for review** — call `add_to_collection` with the `_Needs Review` collection so the user can verify entries in the Zotero app.
+3. **Report results** — show a summary table of what was added and remind the user to check `_Needs Review` in Zotero.
+
+**Graceful degradation:** If refpile MCP is unavailable (Zotero not running), skip this phase with a warning. The `.bib` file on disk is still the primary output.
 
 ---
 
@@ -203,7 +219,7 @@ project/
 │       ├── Smith2024.pdf              # Downloaded PDFs
 │       └── ...
 └── paper/
-    └── paperpile.bib                  # Canonical bib (merge if exists)
+    └── references.bib                  # Canonical bib (merge if exists)
 ```
 
 ---
@@ -223,7 +239,7 @@ project/
 
 ## Bibliometric API Structured Queries
 
-Three bibliometric sources are available. The **biblio MCP server** (`.mcp-server-biblio/`) is the preferred interface — `scholarly_search` queries all enabled sources in one call with automatic DOI-based dedup; `scholarly_verify_dois` batch-verifies DOIs across all sources. Use the Python clients only for source-specific workflows not yet exposed via MCP (e.g., citation networks, institution analysis).
+Three bibliometric sources are available. The **bibliography MCP server** (`.mcp-server-bibliography/`) is the preferred interface — `scholarly_search` queries all enabled sources in one call with automatic DOI-based dedup; `scholarly_verify_dois` batch-verifies DOIs across all sources. Use the Python clients only for source-specific workflows not yet exposed via MCP (e.g., citation networks, institution analysis).
 
 ### OpenAlex (always available)
 
@@ -268,6 +284,7 @@ Download arXiv LaTeX source for full-text reading (equations, methodology, exact
 | Skill / Package | When to use instead/alongside |
 |-------|-------------------------------|
 | `/interview-me` | Develop a specific idea before searching |
-| `/validate-bib` | **Mandatory** after assembling `.bib` (Phase 6b) — metadata quality, preprint staleness, DOI checks |
+| `/bib-validate` | **Mandatory** after assembling `.bib` (Phase 6b) — metadata quality, preprint staleness, DOI checks |
 | `/split-pdf` | Deep-read a paper found during search |
 | `cli-council` | Multi-model search (Phase 2b) and synthesis (Phase 7) — `packages/cli-council/` |
+| `refpile` MCP | Search personal Zotero library, extract PDF text/annotations, export BibTeX. Use in Phase 1 to check what's already in the library before searching externally |

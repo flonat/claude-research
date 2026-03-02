@@ -1,6 +1,6 @@
 ---
 name: interview-me
-description: "Interactive interview to formalise a research idea into a structured specification with hypotheses and empirical strategy. Conversational — asks questions one at a time."
+description: "Interactive interview to formalise a research idea into a structured specification with hypotheses and empirical strategy. Conversational — asks questions one at a time. Triggers: 'help me formalise this idea', 'develop my research question'. Not for literature search — use /literature."
 disable-model-invocation: true
 argument-hint: "[brief topic or 'start fresh']"
 allowed-tools: Read, Write, Edit
@@ -64,6 +64,24 @@ If the research is non-quantitative (conceptual, design science, qualitative), a
 
 ---
 
+### Phase 7: Field Calibration (optional, auto-triggered)
+
+**Auto-triggers when:** the project has no `.context/field-calibration.md`, or it exists but still contains `<placeholders>`.
+
+**Skip when:** the file already exists with populated content, unless the user explicitly asks to update it.
+
+Ask 2–3 targeted questions:
+
+- "Which journals or conferences are you targeting? I can cross-reference venue rankings." (Use `.context/resources/venue-rankings.md` to validate and suggest alternatives.)
+- "Which seminal papers would a reviewer in this subfield expect to see cited?"
+- "What's the typical identification strategy in this subfield — and what do reviewers most often attack?"
+
+After the interview, populate `.context/field-calibration.md` from answers combined with Research Spec content. Use the template at `skills/init-project-research/templates/field-calibration.md`.
+
+If field-calibration already exists with content: ask the user whether to update specific sections or keep as-is.
+
+---
+
 ## After the Interview
 
 Once you have enough information (typically 5–8 exchanges), produce a **Research Specification Document**:
@@ -115,6 +133,8 @@ Once you have enough information (typically 5–8 exchanges), produce a **Resear
 
 **Save to:** the project root or `docs/` if inside a research project, or present to the user for placement.
 
+**Also produces** (if Phase 7 triggered): `.context/field-calibration.md` — the per-project domain profile that agents use to calibrate reviews.
+
 ---
 
 ## Interview Style
@@ -133,4 +153,4 @@ Once you have enough information (typically 5–8 exchanges), produce a **Resear
 |-------|-------------------------------|
 | `/devils-advocate` | After the spec is written — stress-test the idea |
 | `/literature` | To find related work mentioned during the interview |
-| `/init-project-research` | To scaffold a project once the spec is approved |
+| `/init-project-research` | To scaffold a project once the spec is approved (seeds empty field-calibration) |

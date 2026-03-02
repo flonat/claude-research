@@ -1,6 +1,6 @@
 ---
 name: init-project-light
-description: "Bootstrap a lightweight project: scan existing files, brief interview, create CLAUDE.md, and suggest basic organisation. No git, no Overleaf, no Notion pipeline."
+description: "Bootstrap a lightweight project: scan existing files, brief interview, create CLAUDE.md, and suggest basic organisation. No git, no Overleaf, no Notion pipeline. Triggers: 'quick project setup', 'simple project'. Not for research projects with Overleaf/Notion — use /init-project-research."
 allowed-tools: Bash(mkdir*), Bash(ls*), Bash(touch*), Read, Write, Edit, Glob, Grep, AskUserQuestion
 argument-hint: "[no arguments — runs in current directory]"
 ---

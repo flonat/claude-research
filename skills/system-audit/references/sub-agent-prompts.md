@@ -43,7 +43,7 @@ Audit the Task Management system inventory. Check:
 7. **Undocumented items:** Any skills/hooks/agents/rules that exist on disk but aren't listed in their respective docs file (docs/skills.md, docs/hooks.md, docs/agents.md, docs/rules.md).
 8. **MCP server alignment:** Compare MCP servers between Claude Code (.mcp.json in project root) and Claude Desktop (~/Library/Application Support/Claude/claude_desktop_config.json). Check:
    - Servers present in both configs use the same name for the same service
-   - Servers that should be in both are not missing from either (biblio, context7)
+   - Servers that should be in both are not missing from either (bibliography, context7)
    - Desktop-only servers (filesystem, skills-server) are documented
    - No stale/removed servers remain in either config
    - Report a side-by-side table: Server | Code | Desktop | Status
@@ -61,19 +61,19 @@ Quick scan of bibliography files and project health across the user's research p
    $HOME/Library/CloudStorage/YOUR-CLOUD/Research/
    Categories: Category A, Category B, Category C, Category D, Category E, Category F, Category G.
    Search each project directory and its paper/ subdirectory (2 levels deep from category).
-   Skip ZZ Topic Finder and ZZ Topic Inventory (these are tooling, not research projects).
+   Skip research/topic-finder/ (tooling, not a research project — now lives in Task Management).
 
 2. For each .bib file found:
    - Count entries (grep for @article, @inproceedings, @book, @misc, etc.)
-   - Check naming convention (should be paperpile.bib or <project>.bib)
-   - Spot-check 3 keys for Paperpile format (AuthorYYYY-xx pattern)
+   - Check naming convention (should be references.bib or <project>.bib)
+   - Spot-check 3 keys for BBT format (AuthorYYYY-xx pattern)
    - Flag any obvious issues (empty files, very large files >500 entries)
 
 3. **MEMORY.md presence:** For each project, check if a MEMORY.md exists in the project root. Projects that have been actively worked on should have one.
 
 4. **Summary table:** Project | Category | Bib file | Entry count | Naming OK | MEMORY.md
 
-Do NOT do a full validation — that's what /validate-bib is for. Just flag projects that should be audited in detail.
+Do NOT do a full validation — that's what /bib-validate is for. Just flag projects that should be audited in detail.
 ```
 
 ## Sub-Agent 3: Convention Compliance
@@ -83,7 +83,7 @@ Do NOT do a full validation — that's what /validate-bib is for. Just flag proj
 Check convention compliance across the user's research projects. Scan each project directory under:
 $HOME/Library/CloudStorage/YOUR-CLOUD/Research/
 Categories: Category A, Category B, Category C, Category D, Category E, Category F, Category G.
-Skip ZZ Topic Finder and ZZ Topic Inventory.
+Skip research/topic-finder/ (tooling, not a research project).
 
 For each project, check:
 
@@ -154,7 +154,7 @@ Run these 4 checks:
    Flag: CRITICAL if a referenced server is not configured anywhere (phantom tool).
    Flag: WARNING if a server is configured but also in disabledMcpServers.
    Known aliases: "claude_ai_Notion" is a Claude.ai managed integration (not in local config — OK).
-   Known servers: biblio, context7, claude_ai_Notion, claude_ai_Gamma.
+   Known servers: bibliography, context7, claude_ai_Notion, claude_ai_Gamma.
 
 2. **Staleness detection:** Find components not modified in 90+ days across ALL types:
    find skills/ -name "SKILL.md" -not -path "*/shared/*" -mtime +90 -type f

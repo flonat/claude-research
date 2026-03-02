@@ -23,7 +23,7 @@ In `.mcp.json` (project root) or `~/.claude.json` (global access):
   "mcpServers": {
     "biblio": {
       "command": "/opt/homebrew/bin/uv",
-      "args": ["run", "--frozen", "--directory", "/path/to/claude-code-flonat/.mcp-server-biblio", "python", "server.py"],
+      "args": ["run", "--frozen", "--directory", "/path/to/claude-research/.mcp-server-biblio", "python", "server.py"],
       "env": {}
     }
   }

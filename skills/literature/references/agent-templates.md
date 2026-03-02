@@ -61,7 +61,7 @@ subagent_type: Explore
 prompt: |
   Search for academic papers on: [TOPIC]
 
-  Use the biblio MCP tools (these are available as MCP tools, call them directly):
+  Use the bibliography MCP tools (these are available as MCP tools, call them directly):
 
   1. Call `scholarly_search` with:
      - query: "[TOPIC]"
@@ -106,7 +106,7 @@ prompt: |
 
 ### Step 1: Batch DOI Pre-Verification via MCP (Direct — No Sub-Agent)
 
-Before spawning verification agents, collect all DOIs from Phase 3 candidates and call the biblio MCP tool directly:
+Before spawning verification agents, collect all DOIs from Phase 3 candidates and call the bibliography MCP tool directly:
 
 ```
 Call `scholarly_verify_dois` with:

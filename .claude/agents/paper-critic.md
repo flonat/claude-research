@@ -29,6 +29,7 @@ When launched, gather context in this order:
 4. **Read all `.tex` files** in the project. For large papers, start with the main file, then read included files (`\input{}`, `\include{}`).
 5. **Read the `.bib` file(s)** if they exist in the project.
 6. **Check for page limits:** Read the project's `CLAUDE.md` or `docs/` for any stated page/word limits.
+7. **Read field calibration:** If `.context/field-calibration.md` exists at the project root, read it. Use it to calibrate venue expectations, notation conventions, seminal references, typical referee concerns, and quality thresholds for this specific field.
 
 ---
 
@@ -262,6 +263,12 @@ This builds institutional knowledge across reviews of the same project.
 - If no PDF exists: report BLOCKED, list the gate failure, skip the detailed review
 - If you cannot find `.tex` files: report BLOCKED, explain what you looked for
 - If rubric files cannot be read: proceed with the tier definitions from this document as fallback, note the missing rubric in the report
+
+---
+
+## Parallel Independent Review
+
+For maximum coverage, launch this agent alongside `domain-reviewer` and `referee2-reviewer` in parallel (3 Agent tool calls in one message). Each agent checks different dimensions — paper-critic handles grammar, notation, citation, tone, LaTeX, and TikZ. Run `fatal-error-check` first as a pre-flight gate, then launch all three in parallel. After all return, run `/synthesise-reviews` to produce a unified `REVISION-PLAN.md`. See `skills/shared/council-protocol.md` for the full pattern.
 
 ---
 

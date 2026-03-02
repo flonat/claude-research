@@ -39,7 +39,7 @@
 | `translate-to-quarto` | Translate Beamer LaTeX slides to Quarto RevealJS |
 | `pptx` | Create, read, edit, or manipulate PowerPoint files |
 
-### LaTeX & Bibliography (6)
+### LaTeX & Bibliography (7)
 
 | Skill | Purpose |
 |-------|---------|
@@ -47,18 +47,18 @@
 | `latex-autofix` | **Default compiler** — auto-fixes errors, citation audit on success |
 | `latex-health-check` | Compile all projects, auto-fix, check cross-project consistency |
 | `audit-template-compliance` | Compare preamble against working paper template (report + apply) |
-| `validate-bib` | Cross-reference \cite{} keys against .bib files (report only) |
+| `bib-validate` | Cross-reference \cite{} keys against .bib files (report only) |
+| `bib-parse` | Extract citations from a PDF and generate a validated `.bib` file |
 | `latex-scaffold` | Convert Markdown draft into buildable LaTeX project (md→tex) |
 
-### Submission (5)
+### Submission (4)
 
 | Skill | Purpose |
 |-------|---------|
 | `pre-submission-report` | All quality checks in one dated report |
-| `export-project-clean` | Remove AI/Claude traces for sharing |
-| `export-project-anon` | Anonymize for double-blind submission |
 | `retarget-journal` | Switch paper to different journal (rename, reformat, rekey) |
 | `process-reviews` | Referee comments PDF into tracking files |
+| `synthesise-reviews` | Synthesise parallel review reports into a prioritised revision plan |
 
 ### Project Setup & Session (14)
 
@@ -79,7 +79,7 @@
 | `update-project-doc` | Update a project's own docs to reflect current state |
 | `sync-notion` | Sync project state to context library and Notion |
 
-### Code & Analysis (6)
+### Code & Analysis (8)
 
 | Skill | Purpose |
 |-------|---------|
@@ -89,8 +89,21 @@
 | `python-env` | Python environment management (enforces uv) |
 | `audit-project-structure` | Audit project against init-project-research template |
 | `audit-project-course` | Audit course folder against init-project-course template |
+| `webapp-testing` | Playwright-based web app testing with server lifecycle management. *From Anthropic.* |
+| `frontend-design` | Distinctive, production-grade frontend interfaces. *From Anthropic.* |
 
-### Infrastructure (10)
+### Experimental & Data (6)
+
+| Skill | Purpose |
+|-------|---------|
+| `data-analysis` | End-to-end analysis pipeline (EDA, estimation, publication output) across R/Python/Stata/Julia |
+| `computational-experiments` | Scaffold, run, and publish computational research experiments (algorithm skeletons, config-driven sweeps, seed-deterministic runners, publication figures) |
+| `experiment-design` | Experimental and survey design: power analysis, PAP, QSF parsing, survey construction |
+| `causal-design` | Identification strategy design and audit (DiD/IV/RDD/SC/event study) |
+| `synthetic-data` | Generate structurally realistic synthetic datasets for pilot testing and power analysis |
+| `replication-package` | Replication package assembly, anonymization, and audit (replaces export-project-clean/anon) |
+
+### Infrastructure (20)
 
 | Skill | Purpose |
 |-------|---------|
@@ -99,11 +112,21 @@
 | `lessons-learned` | Structured post-mortem for incidents and stuck sessions |
 | `system-audit` | Parallel audits across skills, hooks, agents, rules, docs |
 | `audit-research-projects` | Full audit of all topics across 4 systems |
-| `sync-global-doc` | Propagate counts across all Task Management docs |
+| `sync-private-doc` | Propagate counts across all private Task Management docs |
+| `sync-public-doc` | Sync private infrastructure to the public repo (claude-research) |
+| `sync-refpile-doc` | Sync RefPile docs with actual codebases (extension, dashboard, MCP) |
 | `sync-resources` | Pull latest from cloned resource repos |
 | `sync-permissions` | Sync global permissions into projects |
-| `sync-council-app` | Sync Topic Finder + council package docs |
-| `full-commit` | Commit and push all 6 global repos |
+| `sync-topic-finder-doc` | Sync Topic Finder + council package docs |
+| `full-commit` | Commit and push all 8 global repos with leak guard |
+| `publish` | Full publication pipeline: sync, bump, commit, tag, publish |
+| `skill-creator` | Create, iterate, and benchmark skills with eval viewer. *From Anthropic.* |
+| `mcp-builder` | Guide for creating MCP servers (Python/FastMCP or TypeScript). *From Anthropic.* |
+| `codex-private-audit` | Qualitative architecture audit of Task Management infrastructure via Codex CLI (GPT-5) |
+| `codex-public-audit` | Qualitative audit of public repo (claude-research) and sync script via Codex CLI |
+| `codex-refpile-audit` | Qualitative architecture audit of RefPile monorepo via Codex CLI |
+| `codex-topic-finder-audit` | Qualitative architecture audit of Topic Finder app via Codex CLI |
+| `refpile-development` | Update and manage RefPile development topic documents |
 
 ### Document Formats (3)
 
@@ -115,4 +138,4 @@
 
 ---
 
-**Total: 62 skills across 10 categories.**
+**Total: 80 skills across 11 categories.**

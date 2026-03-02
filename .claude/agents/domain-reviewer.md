@@ -25,6 +25,7 @@ When launched, gather context in this order:
 4. **Check for code:** Glob for `code/**/*`, `src/**/*`, `*.py`, `*.R`, `*.jl` in the project.
 5. **Read project MEMORY.md** (if it exists) — check the Notation Registry for established conventions.
 6. **Read the project's CLAUDE.md** for research context, variable definitions, and methodology notes.
+7. **Read field calibration:** If `.context/field-calibration.md` exists, read it. Use it to calibrate venue expectations, notation conventions, seminal references, typical referee concerns, and quality thresholds for this specific field.
 
 ---
 
@@ -252,6 +253,12 @@ Every issue MUST have:
 - If you cannot find `.tex` files: report what you looked for and stop
 - If a lens is not applicable (e.g., no code for Lens 4): report N/A and continue with other lenses
 - If the paper is very early-stage (few formal results): adapt — focus on the lenses that apply and note which were skipped
+
+---
+
+## Parallel Independent Review
+
+For maximum coverage, launch this agent alongside `paper-critic` and `referee2-reviewer` in parallel (3 Agent tool calls in one message). Each agent checks different dimensions — domain-reviewer handles assumptions, derivations, citation fidelity, code-theory alignment, and backward logic. Run `fatal-error-check` first as a pre-flight gate, then launch all three in parallel. After all return, run `/synthesise-reviews` to produce a unified `REVISION-PLAN.md`. See `skills/shared/council-protocol.md` for the full pattern.
 
 ---
 

@@ -35,8 +35,8 @@ Then install these tools:
 ## Installation
 
 ```bash
-git clone https://github.com/flonat/claude-code-flonat.git
-cd claude-code-flonat
+git clone https://github.com/flonat/claude-research.git
+cd claude-research
 ./scripts/setup.sh
 ```
 

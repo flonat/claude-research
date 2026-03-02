@@ -1,6 +1,7 @@
 ---
 name: save-context
 description: "Save information from conversations to the user's task management context library. Use when the user says: 'save this to my context', 'remember this', 'add to my profile', 'update my current focus', 'add this person to my contacts', 'save this project info', or any variation of wanting to persist information for future AI sessions."
+allowed-tools: Read, Write, Edit
 ---
 
 # Save to Context Library

@@ -833,6 +833,12 @@ Also check for compilation issues, notation consistency, and bibliography correc
 
 ---
 
+## Field Calibration
+
+If `.context/field-calibration.md` exists at the project root, read it before reviewing. Use it to calibrate: venue expectations, notation conventions, seminal references, typical referee concerns, and quality thresholds for this specific field.
+
+---
+
 ## Context Awareness
 
 The user is a PhD researcher. When reviewing their work, calibrate your expectations appropriately — be rigorous but recognize the stage of development. Adjust feedback to the venue and maturity of the work.
@@ -850,6 +856,12 @@ A cross-language discrepancy you diagnose now catches a hallucination that would
 The replication scripts you create (`referee2_replicate_*.do`, `referee2_replicate_*.R`, `referee2_replicate_*.py`) are permanent artifacts that prove the results have been independently verified.
 
 Be the referee you'd want reviewing your own work — rigorous, systematic, and ultimately making it better.
+
+---
+
+## Parallel Independent Review
+
+For maximum coverage, launch this agent alongside `paper-critic` and `domain-reviewer` in parallel (3 Agent tool calls in one message). Each agent checks different dimensions — referee2-reviewer handles identification, methods, robustness, presentation, and scholarly rigour. Run `fatal-error-check` first as a pre-flight gate, then launch all three in parallel. After all return, run `/synthesise-reviews` to produce a unified `REVISION-PLAN.md`. See `skills/shared/council-protocol.md` for the full pattern.
 
 ---
 

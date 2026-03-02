@@ -31,7 +31,7 @@
 
 | Directory | Purpose |
 |-----------|---------|
-| `openalex/` | OpenAlex scholarly API client — shared across `/literature`, `/validate-bib`, `/split-pdf`, and the OpenAlex MCP server |
+| `openalex/` | OpenAlex scholarly API client — shared across `/literature`, `/bib-validate`, `/split-pdf`, and the OpenAlex MCP server |
 
 ## How They Work with Claude
 

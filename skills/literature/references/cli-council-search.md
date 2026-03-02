@@ -50,7 +50,7 @@ Skip these already-known papers: [LIST OF EXISTING CITATION KEYS]
 2. Extract paper lists from each backend's response (Gemini often finds more recent papers via web search; Codex and Claude recall different foundational works)
 3. Feed ALL discovered papers into Phase 3 alongside the Phase 2 results for deduplication
 
-**When to skip:** Small requests (< 10 papers), narrow/well-defined topics, or when Phase 2 already returns sufficient coverage. The standard Phase 2 agents (Scholar + biblio MCP) remain the primary search mechanism; Phase 2b supplements with model-diversity recall.
+**When to skip:** Small requests (< 10 papers), narrow/well-defined topics, or when Phase 2 already returns sufficient coverage. The standard Phase 2 agents (Scholar + bibliography MCP) remain the primary search mechanism; Phase 2b supplements with model-diversity recall.
 
 ---
 

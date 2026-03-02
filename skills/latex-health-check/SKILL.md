@@ -157,5 +157,5 @@ Print to stdout. If `--save` flag or 10+ projects scanned, also write to `log/la
 | `/latex-autofix` | Single-project deep fix (5 iterations). This skill runs a lighter version (3 iterations) at fleet scale. For ERROR projects, recommend running `/latex-autofix` directly. |
 | `/latex` | Manual compilation config and `.latexmkrc` reference — health-check creates `.latexmkrc` files using the conventions defined there. |
 | `/audit-project-structure` | Checks project structure (directories, files). This skill checks build health. |
-| `/validate-bib` | Validates bibliography entries. This skill checks if citations compile. |
+| `/bib-validate` | Validates bibliography entries. This skill checks if citations compile. |
 | `/audit-template-compliance` | Checks preamble alignment with the working paper template. Complementary: run after health-check to ensure preamble consistency. |

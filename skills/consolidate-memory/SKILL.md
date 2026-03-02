@@ -1,6 +1,6 @@
 ---
 name: consolidate-memory
-description: "Consolidate MEMORY.md files: prune duplicates, merge overlapping entries, generate abstractions, and remove stale knowledge. Inspired by npcsh sleep/dream cycles."
+description: "Consolidate MEMORY.md files: prune duplicates, merge overlapping entries, generate abstractions, and remove stale knowledge. Triggers: 'clean up MEMORY.md', 'prune stale knowledge'. Inspired by npcsh sleep/dream cycles."
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion
 argument-hint: "[project-path or 'all' for global consolidation]"
 ---
@@ -31,14 +31,14 @@ Ask the user which mode to run:
 
 | Mode | Scope | What it does |
 |------|-------|-------------|
-| **Project** (default) | Single project's `MEMORY.md` | Consolidate one file |
-| **Global** | All `MEMORY.md` files across projects + Task Management | Consolidate all, cross-pollinate shared patterns |
+| **Project** (default) | Single project's `MEMORY.md` + `.claude/state/personal-memory.md` | Consolidate both tiers |
+| **Global** | All `MEMORY.md` + personal-memory files across projects + Task Management | Consolidate all, cross-pollinate shared patterns |
 
 ## Workflow
 
 ### Phase 1: Sleep (Consolidation)
 
-Read the target `MEMORY.md` file(s) and perform:
+Read the target `MEMORY.md` file(s) and `.claude/state/personal-memory.md` (if it exists) and perform:
 
 #### 1.1 Duplicate Detection
 
@@ -73,7 +73,22 @@ Find entries that are no longer relevant.
 
 **Action:** Mark as `[STALE?]` and present to user for confirmation before removing. Never auto-delete.
 
-#### 1.4 Strengthening
+#### 1.4 Tier Routing Check
+
+Check whether entries are in the correct tier (see `learn-tags` rule for the two-tier system).
+
+**Promotion candidates** (personal-memory → MEMORY.md):
+- Entries in `.claude/state/personal-memory.md` that would help a collaborator on a different machine
+- Local workarounds that turned out to be general conventions
+- Tool quirks that apply to all machines (not just this one)
+
+**Demotion candidates** (MEMORY.md → personal-memory):
+- Entries in `MEMORY.md` that reference local paths, machine-specific tool versions, or environment quirks
+- Workarounds that only apply to this specific setup
+
+**Action:** Present promotion/demotion suggestions to the user. Move entries only after explicit approval.
+
+#### 1.5 Strengthening
 
 Entries that have been independently confirmed multiple times are high-confidence knowledge.
 
@@ -129,6 +144,8 @@ Rewrite `MEMORY.md` with:
 3. **Regular entries** in their standard sections (Notation Registry, Citations, Key Decisions, Anti-Patterns, Code Pitfalls)
 4. **Stale entries removed** (only those confirmed by user)
 
+If `.claude/state/personal-memory.md` exists, also rewrite it with consolidated machine-specific entries. Apply any user-approved promotions (move to MEMORY.md) and demotions (move from MEMORY.md to personal-memory).
+
 #### 3.2 Diff Report
 
 Before writing, show a summary:
@@ -144,6 +161,8 @@ Before writing, show a summary:
 | Stale entries removed | X (user-confirmed) |
 | Entries strengthened | X |
 | Abstractions generated | X |
+| Tier promotions (personal → generic) | X |
+| Tier demotions (generic → personal) | X |
 | Cross-project promotions | X (global mode) |
 
 ### Entries Before: XX

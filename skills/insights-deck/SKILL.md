@@ -1,6 +1,6 @@
 ---
 name: insights-deck
-description: "Generate timestamped Claude Code insights report and Beamer presentation. Runs /insights, archives HTML, then builds a rhetoric-driven deck from the findings."
+description: "Generate timestamped Claude Code insights report and Beamer presentation. Runs /insights, archives HTML, then builds a rhetoric-driven deck from the findings. Triggers: 'generate insights report', 'how is my Claude Code doing'."
 allowed-tools: Bash(latexmk*), Bash(pdflatex*), Bash(xelatex*), Bash(mkdir*), Bash(ls*), Bash(cp*), Read, Write, Edit, Glob, Grep, Task
 argument-hint: (no arguments)
 ---

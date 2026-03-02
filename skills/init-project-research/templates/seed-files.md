@@ -65,8 +65,8 @@
 ## Conventions
 - Compile LaTeX: build artifacts to `out/`, PDF copied back to source directory via `.latexmkrc`
 - Use `uv` for Python, never bare `pip` or `python`
-- Canonical bibliography: `paper/paperpile.bib`
-- Citation keys: Paperpile format (e.g., `AuthorYYYY-xx`)
+- Canonical bibliography: `paper/references.bib`
+- Citation keys: Better BibTeX format (e.g., `AuthorYYYY-xx`)
 - **Overleaf separation:** `paper/` is LaTeX source ONLY — no code, data, or scripts. All code goes in `code/` or `src/`, all data in `data/`. Only exported figures/tables go into `paper/`.
 
 ## Session Continuity
@@ -125,6 +125,9 @@ log/
 
 # Unsorted inbox
 to-sort/
+
+# Machine-specific memory (gitignored, never synced)
+.claude/state/
 
 # Python
 __pycache__/
@@ -225,6 +228,31 @@ Seed MEMORY.md at project root based on project type. Use the **research** templ
 |-----|--------|-----|
 | | | |
 ```
+
+## .claude/state/personal-memory.md (optional)
+
+Not created during init — only created on first machine-specific `[LEARN]` tag. Seed template for reference:
+
+```markdown
+# Personal Memory — Machine-Specific
+
+> Gitignored. Machine-specific workarounds and local paths.
+> Generic learnings go in MEMORY.md (committed).
+
+## Local Environment
+
+| Issue | Workaround |
+|-------|-----------|
+
+## Tool Quirks
+
+| Tool | Version | Gotcha |
+|------|---------|--------|
+```
+
+## .context/field-calibration.md
+
+Copy the template from `skills/init-project-research/templates/field-calibration.md`, replacing `<Working Title>` with the project title. All other placeholders remain — `/interview-me` Phase 7 populates them.
 
 ## .context/current-focus.md
 

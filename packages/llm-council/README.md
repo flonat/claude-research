@@ -399,4 +399,4 @@ A council run with 3 models costs approximately **6-7x** a single-model call:
 
 ## Related
 
-- [Claude Topic Finder](https://github.com/user/claude-topic-finder) — research topic discovery app that uses this package for multi-model council deliberation
+- Used by downstream applications for multi-model council deliberation

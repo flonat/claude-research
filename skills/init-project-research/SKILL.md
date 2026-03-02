@@ -1,6 +1,6 @@
 ---
 name: init-project-research
-description: "Bootstrap a research project: interview for details, scaffold directory, create Overleaf symlink, init git, and sync with context library and Notion."
+description: "Bootstrap a research project: interview for details, scaffold directory, create Overleaf symlink, init git, and sync with context library and Notion. Triggers: 'new research project', 'start a new paper'. Not for lightweight setups — use /init-project-light instead."
 allowed-tools: Bash(mkdir*), Bash(ln*), Bash(ls*), Bash(git*), Bash(touch*), Bash(jq*), Read, Write, Edit, Glob, Grep, Task, AskUserQuestion, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page
 argument-hint: "[project-name or no arguments for guided setup]"
 ---
@@ -106,6 +106,7 @@ If the directory doesn't exist, create it and proceed.
 ├── .gitignore
 ├── .context/
 │   ├── current-focus.md
+│   ├── field-calibration.md
 │   └── project-recap.md
 ├── .claude/
 │   ├── hooks/
@@ -144,6 +145,7 @@ If the directory doesn't exist, create it and proceed.
 ```bash
 mkdir -p <dir> && touch <dir>/.gitkeep  # Create all directories
 mkdir -p .claude/hooks                   # Create hook, chmod +x
+mkdir -p .claude/state                   # Machine-specific memory (gitignored)
 ```
 
 ---
@@ -168,6 +170,7 @@ Full templates: [`templates/seed-files.md`](templates/seed-files.md)
 | `.gitignore` | Standard ignores: OS, IDE, data, paper, Python, R, LaTeX |
 | `MEMORY.md` | Knowledge base: notation, estimands, decisions, pitfalls |
 | `.context/current-focus.md` | Initial "just initialised" state |
+| `.context/field-calibration.md` | Per-project domain profile for agents (placeholder template — `/interview-me` Phase 7 populates it) |
 | `.context/project-recap.md` | Research design notes |
 | `.claude/hooks/copy-paper-pdf.sh` | PDF copy hook |
 | `log/YYYY-MM-DD-HHMM-setup.md` | Initial setup log: project name, creation date, scaffold type, next steps |

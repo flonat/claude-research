@@ -48,7 +48,7 @@ Just say these naturally:
 | "Find references on [topic]" | Academic search with verified citations |
 | "What did I accomplish this week?" | Summarises completed tasks |
 | "Proofread my paper" | Runs 7-category check on LaTeX paper, produces report |
-| "Validate my bibliography" | Cross-references `\cite{}` keys against `paperpile.bib` |
+| "Validate my bibliography" | Cross-references `\cite{}` keys against `references.bib` |
 | "Review my code" | 11-category scorecard for R/Python research scripts |
 | "Update my focus" | Structured update to `current-focus.md` with session rotation and open loops |
 | "New project" | Interview-driven setup: scaffold directory, Overleaf symlink, git init, context + Notion sync |
@@ -104,6 +104,8 @@ Before running any experiment sweep or simulation batch:
 | Research Pipeline | `YOUR-PIPELINE-DATABASE-ID-HERE` |
 | Modules — Student | `YOUR-MODULES-STUDENT-DATABASE-ID-HERE` (data source) |
 | Modules — Instructor | `YOUR-MODULES-INSTRUCTOR-DATABASE-ID-HERE` (data source) |
+| Research Themes | `2e8baef4-3e2e-4ea5-b25a-18a71ed47690` (data source) |
+| Topic Inventory | `0a227f82-60f4-451a-a163-bff2ce8fa9c3` (data source) |
 
 Always fetch the database schema first to get correct property names before any create/update calls.
 <!-- NOTION-DATABASES:END -->
@@ -122,7 +124,7 @@ Detailed instructions in `.context/workflows/`:
 <!-- COMPONENTS:START -->
 ## Skills Available
 
-38 skills in `skills/` folder. See [`docs/skills.md`](docs/skills.md) for the full catalogue.
+39 skills in `skills/` folder. See [`docs/skills.md`](docs/skills.md) for the full catalogue.
 
 ## Agents
 
@@ -181,13 +183,12 @@ This helps me (Claude) pick up where we left off next time.
 | `.context/` | AI context library (profile, focus, projects, workflows, preferences) |
 | `.claude/agents/` | Agent definitions (6 agents) |
 | `.claude/rules/` | Auto-loaded rules (9 rules) |
-| `skills/` | 38 skill definitions |
+| `skills/` | 39 skill definitions |
 | `hooks/` | 8 hook scripts |
 | `.mcp-server-biblio/` | Multi-source scholarly search MCP server (OpenAlex + Scopus + WoS) |
 | `.scripts/` | CLI tools for Notion task management |
 | `packages/cli-council/` | Multi-model council via local CLI tools |
 | `packages/llm-council/` | Multi-model council via OpenRouter API |
-| `packages/flonat-papers/` | Zotero MCP server + `bib-validate`, `bib-parse` skills |
 | `log/` | Session logs |
 | `docs/` | Documentation |
 <!-- FILE-STRUCTURE:END -->

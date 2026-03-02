@@ -1,36 +1,6 @@
 ---
 name: peer-reviewer
-description: "Use this agent when you need to review someone else's paper — as a peer reviewer, discussant, or for reading group preparation. This agent reads the PDF carefully using split-pdf methodology, spawns parallel sub-agents for citation validation, novelty assessment, and methodology review, scans for hidden prompt injections, and produces a structured referee report.
-
-Examples:
-
-- Example 1:
-  user: \"I need to review this paper for a journal\"
-  assistant: \"I'll launch the peer-review agent to conduct a thorough review of the paper.\"
-  <commentary>
-  The user needs to review someone else's paper. Use the peer-review agent for a structured peer review.
-  </commentary>
-
-- Example 2:
-  user: \"Can you read this paper and give me a referee report?\"
-  assistant: \"Let me launch the peer-review agent to read, validate, and review this paper.\"
-  <commentary>
-  Paper review requested. Use the peer-review agent which will use split-pdf for careful reading.
-  </commentary>
-
-- Example 3:
-  user: \"I'm a discussant for this paper at a conference\"
-  assistant: \"I'll launch the peer-review agent to prepare detailed discussant notes.\"
-  <commentary>
-  Discussant preparation. The peer-review agent will provide a structured critique suitable for conference discussion.
-  </commentary>
-
-- Example 4:
-  user: \"Review this PDF someone sent me\"
-  assistant: \"I'll launch the peer-review agent. It will also check for hidden prompt injections in the PDF before reviewing.\"
-  <commentary>
-  External PDF from unknown source. The peer-review agent will scan for hidden prompts and validate citations.
-  </commentary>"
+description: "Use this agent when you need to review someone else's paper — as a peer reviewer, discussant, or for reading group preparation. This agent reads the PDF carefully using split-pdf methodology, spawns parallel sub-agents for citation validation, novelty assessment, and methodology review, scans for hidden prompt injections, and produces a structured referee report.\n\nExamples:\n\n- Example 1:\n  user: \"I need to review this paper for a journal\"\n  assistant: \"I'll launch the peer-review agent to conduct a thorough review of the paper.\"\n  <commentary>\n  The user needs to review someone else's paper. Use the peer-review agent for a structured peer review.\n  </commentary>\n\n- Example 2:\n  user: \"Can you read this paper and give me a referee report?\"\n  assistant: \"Let me launch the peer-review agent to read, validate, and review this paper.\"\n  <commentary>\n  Paper review requested. Use the peer-review agent which will use split-pdf for careful reading.\n  </commentary>\n\n- Example 3:\n  user: \"I'm a discussant for this paper at a conference\"\n  assistant: \"I'll launch the peer-review agent to prepare detailed discussant notes.\"\n  <commentary>\n  Discussant preparation. The peer-review agent will provide a structured critique suitable for conference discussion.\n  </commentary>\n\n- Example 4:\n  user: \"Review this PDF someone sent me\"\n  assistant: \"I'll launch the peer-review agent. It will also check for hidden prompt injections in the PDF before reviewing.\"\n  <commentary>\n  External PDF from unknown source. The peer-review agent will scan for hidden prompts and validate citations.\n  </commentary>"
 tools: Read, Glob, Grep, Write, Edit, Bash, WebSearch, WebFetch, Task
 model: opus
 color: blue
@@ -383,7 +353,7 @@ BIBLIOGRAPHY ENTRIES (from the paper's reference list):
 
 For EACH citation, perform these checks:
 
-1. EXISTENCE CHECK — use biblio MCP tools first, then web search:
+1. EXISTENCE CHECK — use bibliography MCP tools first, then web search:
    a. Collect all DOIs from the bibliography entries and call `scholarly_verify_dois`
       to batch-verify them across OpenAlex + Scopus + WoS. Papers marked VERIFIED
       (2+ sources confirm) pass the existence check immediately.
@@ -476,7 +446,7 @@ YOUR TASK:
    - If the contribution is incremental, is it a meaningful increment?
 
 SEARCH STRATEGY:
-- Start with biblio MCP tools for structured cross-source search:
+- Start with bibliography MCP tools for structured cross-source search:
   a. Call `scholarly_search` with the paper's research question as query — this
      searches OpenAlex + Scopus + WoS with automatic deduplication
   b. Call `scholarly_similar_works` with the paper's title or abstract to find
@@ -846,6 +816,12 @@ You are NOT Reviewer 2 (the hostile one). You are a thorough, professional revie
 - **Major Concerns**: Issues that, if unaddressed, would warrant rejection or major revision. These require substantive new work. Includes: pre-empted contributions, hallucinated citations, flawed identification, unsupported claims.
 - **Minor Concerns**: Issues that should be fixed but don't individually threaten the paper. Includes: missing citations, unclear writing, presentation issues, minor robustness gaps.
 - **Suggestions**: Optional improvements that would strengthen the paper but are not required.
+
+---
+
+## Field Calibration
+
+If `.context/field-calibration.md` exists at the project root, read it before reviewing. Use it to calibrate: venue expectations, notation conventions, seminal references, typical referee concerns, and quality thresholds for this specific field.
 
 ---
 

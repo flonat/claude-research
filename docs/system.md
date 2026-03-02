@@ -5,7 +5,7 @@
 ## Directory Structure
 
 ```
-claude-code-flonat/
+claude-research/
 ├── CLAUDE.md                         # Main instruction file
 ├── README.md                         # Setup guide
 ├── MEMORY.md                         # Accumulated knowledge

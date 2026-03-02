@@ -30,7 +30,7 @@ The user wants you to read, review, or summarize an academic paper. The input is
 
 **If a search query or paper title is provided:**
 1. Use WebSearch to find the paper
-2. If WebSearch doesn't yield a direct PDF link, try the biblio MCP `scholarly_search` tool first (cross-source search). Fallback to Python OpenAlex client:
+2. If WebSearch doesn't yield a direct PDF link, try the bibliography MCP `scholarly_search` tool first (cross-source search). Fallback to Python OpenAlex client:
    ```python
    import sys
    sys.path.insert(0, ".scripts/openalex")

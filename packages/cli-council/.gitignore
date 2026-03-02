@@ -5,3 +5,9 @@ dist/
 build/
 .venv/
 out/
+
+# Session logs — contain absolute paths and private references
+log/
+
+# Memory files — contain session-specific context
+MEMORY.md
