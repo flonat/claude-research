@@ -30,6 +30,7 @@ argument-hint: (no arguments)
 | **Update focus** | `.context/current-focus.md` | Session summary (rotated history), open loops, mental state, weekly goals |
 | **Refresh project docs** | Project's own `CLAUDE.md`, `README.md`, `docs/*.md` | Stale file trees, outdated counts, next steps |
 | **Sync project state** | `.context/projects/_index.md` + Notion Research Pipeline | Project stage, target journal, co-authors, status |
+| **Update planning state** | `.planning/state.md` | Phase progress, component status, decisions made this session |
 | **Archive session log** | `log/YYYY-MM-DD-HHMM.md` (new file) | Detailed timestamped record of the full session |
 | **Memory** (automatic) | Auto memory (`~/.claude/projects/<hash>/memory/MEMORY.md`) + project-root `MEMORY.md` | Infrastructure learnings → auto memory; domain knowledge (notation, decisions, citations) → project memory |
 | **Save to context** (only if needed) | Any file in `.context/` (profile, people, workflows) | New collaborators, preferences, workflow changes — facts to persist beyond this session |
@@ -53,6 +54,7 @@ Silently detect what's applicable. Do these checks in parallel:
 7. **Memory health** — count entries in both MEMORY.md files (auto + project). Flag if either exceeds ~80 entries.
 8. **Session incidents** — check if the session had stuck moments, wrong-approach events, incidents, or non-obvious multi-step discoveries
 9. **Working directory validation** — resolve CWD to its project name. Print: `Session closing for: <project-name> (<full-path>)`. This becomes the anchor for all file writes in Phase 3.
+10. **Has planning state?** — check for `.planning/state.md` in CWD (or project root via `git rev-parse --show-toplevel`)
 
 ### Phase 2: Interview (one interaction)
 
@@ -69,6 +71,7 @@ AskUserQuestion with multiSelect: true
 | **Update focus** | Always | Rotate session history in `.context/current-focus.md` — captures where you left off, manages open loops, updates weekly goals |
 | **Refresh project docs** | Only if CWD has `CLAUDE.md` or `README.md` | Update the project's own `CLAUDE.md`/`README.md` — fixes stale file trees, counts, and next steps |
 | **Sync project state** | Only if CWD has `CLAUDE.md` | Propagate stage/journal/status to `.context/projects/_index.md` and Notion Research Pipeline |
+| **Update planning state** | Only if `.planning/state.md` exists | Update phase progress, component status, and decisions in `.planning/state.md` |
 | **Archive session log** | Always | Create timestamped `log/YYYY-MM-DD-HHMM.md` — permanent detailed record of this session |
 
 Pre-select recommended options by listing them first with "(Recommended)" suffix. Typically: Update focus + Archive session log.
@@ -90,6 +93,7 @@ Confirm all output paths are within the Task Management directory or the current
 - `log/YYYY-MM-DD-HHMM.md` → Task Management
 - `CLAUDE.md`, `README.md` → CWD (must be a project directory, not a parent)
 - `MEMORY.md` → CWD or auto-memory path
+- `.planning/state.md` → CWD or project root
 
 If CWD is a parent directory (e.g., Research Projects root instead of a specific project), warn: *"CWD appears to be a parent directory, not a project. Session log and focus update will proceed, but project docs refresh is skipped."* Do NOT write project-specific files to parent directories.
 
@@ -100,6 +104,7 @@ Launch **parallel Task agents** (subagent_type: "general-purpose") for all selec
 | Focus agent | `.context/current-focus.md` — session rotation, open loops, weekly goals |
 | Project docs agent | Project `CLAUDE.md`, `README.md` — stale trees, counts, next steps |
 | Project state agent | `.context/projects/_index.md` + Notion Research Pipeline — stage, journal, status |
+| Planning state agent | `.planning/state.md` — phase progress, component status, decisions |
 | Session log agent | `log/YYYY-MM-DD-HHMM.md` — timestamped session archive |
 
 **Memory update** runs in the main context (it's fast — just appending to MEMORY.md files) while agents execute.
@@ -150,13 +155,14 @@ After all phases, print a summary:
 
 ```
 Session closed:
-  Focus:        updated / skipped
-  Project docs: refreshed / skipped / n/a
-  Notion sync:  synced / skipped / n/a
-  Memory:       updated [N items] / nothing to save
-  Context:      saved [what] / skipped
-  Session log:  created / skipped
-  Git:          committed & pushed (abc1234) / committed (abc1234) / skipped / not a repo
+  Focus:          updated / skipped
+  Project docs:   refreshed / skipped / n/a
+  Notion sync:    synced / skipped / n/a
+  Planning state: updated / skipped / n/a
+  Memory:         updated [N items] / nothing to save
+  Context:        saved [what] / skipped
+  Session log:    created / skipped
+  Git:            committed & pushed (abc1234) / committed (abc1234) / skipped / not a repo
 ```
 
 ---

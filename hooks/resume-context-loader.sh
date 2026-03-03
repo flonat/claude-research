@@ -15,6 +15,16 @@ if [ -f "$FOCUS_FILE" ]; then
   CONTEXT="## Current Focus\n$FOCUS"
 fi
 
+# Load project planning state (if in a project with orchestration)
+CWD="$(pwd)"
+if [ "$CWD" != "$TASK_MGMT" ]; then
+  PROJECT_ROOT=$(git -C "$CWD" rev-parse --show-toplevel 2>/dev/null || echo "$CWD")
+  if [ -f "$PROJECT_ROOT/.planning/state.md" ]; then
+    STATE=$(head -30 "$PROJECT_ROOT/.planning/state.md")
+    CONTEXT="$CONTEXT\n\n## Project Planning State\n$STATE"
+  fi
+fi
+
 # Find latest session log (not plans, not compact saves)
 if [ -d "$LOG_DIR" ]; then
   LATEST_LOG=$(find "$LOG_DIR" -maxdepth 1 -name "*.md" -type f | sort -r | head -1)

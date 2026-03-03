@@ -60,7 +60,7 @@
 | `process-reviews` | Referee comments PDF into tracking files |
 | `synthesise-reviews` | Synthesise parallel review reports into a prioritised revision plan |
 
-### Project Setup & Session (14)
+### Project Setup & Session (15)
 
 | Skill | Purpose |
 |-------|---------|
@@ -78,6 +78,7 @@
 | `consolidate-memory` | Prune, merge, and abstract MEMORY.md entries |
 | `update-project-doc` | Update a project's own docs to reflect current state |
 | `sync-notion` | Sync project state to context library and Notion |
+| `init-project-orchestration` | Add project agents, commands, and planning to a research project |
 
 ### Code & Analysis (8)
 
@@ -117,15 +118,15 @@
 | `sync-refpile-doc` | Sync RefPile docs with actual codebases (extension, dashboard, MCP) |
 | `sync-resources` | Pull latest from cloned resource repos |
 | `sync-permissions` | Sync global permissions into projects |
-| `sync-topic-finder-doc` | Sync Topic Finder + council package docs |
+| `sync-scout-doc` | Sync Scout + council package docs |
 | `full-commit` | Commit and push all 8 global repos with leak guard |
 | `publish` | Full publication pipeline: sync, bump, commit, tag, publish |
 | `skill-creator` | Create, iterate, and benchmark skills with eval viewer. *From Anthropic.* |
 | `mcp-builder` | Guide for creating MCP servers (Python/FastMCP or TypeScript). *From Anthropic.* |
-| `codex-private-audit` | Qualitative architecture audit of Task Management infrastructure via Codex CLI (GPT-5) |
-| `codex-public-audit` | Qualitative audit of public repo (claude-research) and sync script via Codex CLI |
-| `codex-refpile-audit` | Qualitative architecture audit of RefPile monorepo via Codex CLI |
-| `codex-topic-finder-audit` | Qualitative architecture audit of Topic Finder app via Codex CLI |
+| `gemini-private-audit` | Qualitative architecture audit of Task Management infrastructure via Gemini CLI |
+| `gemini-public-audit` | Qualitative audit of public repo (claude-research) and sync script via Gemini CLI |
+| `gemini-refpile-audit` | Qualitative architecture audit of RefPile monorepo via Gemini CLI |
+| `gemini-scout-audit` | Qualitative architecture and security audit of Scout app via Gemini CLI |
 | `refpile-development` | Update and manage RefPile development topic documents |
 
 ### Document Formats (3)
@@ -138,4 +139,4 @@
 
 ---
 
-**Total: 80 skills across 11 categories.**
+**Total: 81 skills across 11 categories.**

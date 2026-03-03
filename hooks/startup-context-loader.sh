@@ -31,20 +31,28 @@ add_section "Current Focus" "$TASK_MGMT/.context/current-focus.md" 25
 # --- Project index (Task Management context) ---
 add_section "Project Index" "$TASK_MGMT/.context/projects/_index.md" 40
 
+# --- Resolve project root (handles subdirectory CWDs) ---
+if [ "$CWD" != "$TASK_MGMT" ]; then
+  PROJECT_ROOT=$(git -C "$CWD" rev-parse --show-toplevel 2>/dev/null || echo "$CWD")
+fi
+
 # --- MEMORY.md (structured knowledge tables and [LEARN] corrections) ---
 if [ "$CWD" = "$TASK_MGMT" ]; then
   add_section "MEMORY.md" "$TASK_MGMT/MEMORY.md" 30
 else
-  # For other projects, load project-level MEMORY.md
-  add_section "Project MEMORY" "$CWD/MEMORY.md" 30
+  add_section "Project MEMORY" "$PROJECT_ROOT/MEMORY.md" 30
 fi
 
 # --- Project-specific docs (if not in Task Management itself) ---
 if [ "$CWD" != "$TASK_MGMT" ]; then
-  add_section "Project README" "$CWD/README.md" 40
+
+  add_section "Project README" "$PROJECT_ROOT/README.md" 40
 
   # Check for project-specific context files
-  add_section "Project Focus" "$CWD/.context/current-focus.md" 25
+  add_section "Project Focus" "$PROJECT_ROOT/.context/current-focus.md" 25
+
+  # Check for project planning state
+  add_section "Project Planning State" "$PROJECT_ROOT/.planning/state.md" 30
 fi
 
 # --- Latest session log ---

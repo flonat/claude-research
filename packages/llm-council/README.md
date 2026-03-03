@@ -236,15 +236,19 @@ class CouncilMeta(BaseModel):
 
 ## Configuration Module
 
-The `config` module provides model registry management and pricing.
+The `config` module provides model registry management, user defaults, and pricing.
 
 ```python
 from llm_council.config import (
-    AVAILABLE_MODELS,          # Default model list (18 models)
+    AVAILABLE_MODELS,          # Default model list (17 models)
     ALLOWED_PROVIDERS,         # {"anthropic", "openai", "google"}
-    COUNCIL_DEFAULT_MODELS,    # Default 3 council members
-    COUNCIL_DEFAULT_CHAIRMAN,  # Default chairman model
+    COUNCIL_DEFAULT_MODELS,    # Default 3 council members (resolves user config)
+    COUNCIL_DEFAULT_CHAIRMAN,  # Default chairman model (resolves user config)
     model_display_name,        # model_id -> human name
+    get_council_defaults,      # Get council models (user config > built-in)
+    get_chairman_default,      # Get chairman model (user config > built-in)
+    set_council_defaults,      # Persist council defaults to ~/.config/llm-council/
+    reset_council_defaults,    # Revert to built-in defaults
     fetch_model_pricing,       # Enrich models with live OpenRouter pricing
     fetch_all_provider_models, # Discover all models from allowed providers
     load_models,               # Load saved model list from JSON file
@@ -252,13 +256,37 @@ from llm_council.config import (
 )
 ```
 
-### Default Models (18 total)
+### User Defaults
+
+Council defaults are resolved in order: **user config** > **built-in defaults**.
+
+```python
+# Get current defaults (resolves user config automatically)
+models = get_council_defaults()    # e.g., ["anthropic/claude-sonnet-4.6", ...]
+chairman = get_chairman_default()  # e.g., "anthropic/claude-opus-4.5"
+
+# Set and persist defaults
+set_council_defaults(
+    models=["anthropic/claude-sonnet-4.6", "openai/gpt-5", "google/gemini-3-pro-preview"],
+    chairman="anthropic/claude-opus-4.5",
+)
+# Saved to ~/.config/llm-council/config.json
+
+# Revert to built-in defaults
+reset_council_defaults()
+```
+
+**Built-in defaults** (used when no user config exists):
+- Models: `anthropic/claude-sonnet-4.5`, `openai/gpt-5`, `google/gemini-2.5-pro`
+- Chairman: `anthropic/claude-sonnet-4.5`
+
+### Available Models (17 total)
 
 | Provider | Models |
 |----------|--------|
 | **Anthropic** (5) | Claude Haiku 4.5, Sonnet 4.5, Sonnet 4.6, Opus 4.5, Opus 4.6 |
 | **OpenAI** (7) | GPT-4.1 Mini, GPT-4.1, GPT-5 Mini, GPT-5, GPT-5.2, o3, o4 Mini |
-| **Google** (6) | Gemini 2.5 Flash, 2.5 Pro, 3 Flash, 3 Pro, 3.1 Pro |
+| **Google** (5) | Gemini 2.5 Flash, 2.5 Pro, 3 Flash, 3 Pro, 3.1 Pro |
 
 ### Live Pricing
 
@@ -341,8 +369,10 @@ if result.meta.stage3_fallback:
 
 ## CLI
 
+### Run a Council
+
 ```bash
-python -m llm_council \
+llm-council \
     --system-prompt "You are a reviewer. Return JSON: {score: int, summary: str}" \
     --user-message "Review: ..." \
     --models "anthropic/claude-sonnet-4.5,openai/gpt-5,google/gemini-2.5-pro" \
@@ -353,14 +383,35 @@ python -m llm_council \
 Or from files:
 
 ```bash
-python -m llm_council \
+llm-council \
     --system-prompt-file system.txt \
-    --user-message-file user.txt \
-    --models "anthropic/claude-sonnet-4.5,openai/gpt-5,google/gemini-2.5-pro" \
-    --chairman "anthropic/claude-sonnet-4.5"
+    --user-message-file user.txt
 ```
 
+When `--models` and `--chairman` are omitted, the CLI uses your configured defaults (see below).
+
 **Environment:** Requires `OPENROUTER_API_KEY`.
+
+### Manage Models
+
+```bash
+# List available models and current defaults
+llm-council models
+
+# Include live OpenRouter pricing
+llm-council models --pricing
+
+# Set default council models
+llm-council models --set-defaults "anthropic/claude-sonnet-4.6,openai/gpt-5,google/gemini-3-pro-preview"
+
+# Set default chairman
+llm-council models --set-chairman "anthropic/claude-opus-4.5"
+
+# Reset to built-in defaults
+llm-council models --reset
+```
+
+Defaults are persisted to `~/.config/llm-council/config.json` and used automatically when `--models`/`--chairman` are omitted.
 
 ## Dependencies
 

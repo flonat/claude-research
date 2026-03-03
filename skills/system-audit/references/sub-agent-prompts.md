@@ -61,7 +61,7 @@ Quick scan of bibliography files and project health across the user's research p
    $HOME/Library/CloudStorage/YOUR-CLOUD/Research/
    Categories: Category A, Category B, Category C, Category D, Category E, Category F, Category G.
    Search each project directory and its paper/ subdirectory (2 levels deep from category).
-   Skip research/topic-finder/ (tooling, not a research project — now lives in Task Management).
+   Skip research/scout/ (tooling, not a research project — now lives in Task Management).
 
 2. For each .bib file found:
    - Count entries (grep for @article, @inproceedings, @book, @misc, etc.)
@@ -83,7 +83,7 @@ Do NOT do a full validation — that's what /bib-validate is for. Just flag proj
 Check convention compliance across the user's research projects. Scan each project directory under:
 $HOME/Library/CloudStorage/YOUR-CLOUD/Research/
 Categories: Category A, Category B, Category C, Category D, Category E, Category F, Category G.
-Skip research/topic-finder/ (tooling, not a research project).
+Skip research/scout/ (tooling, not a research project).
 
 For each project, check:
 
@@ -193,7 +193,7 @@ Run these 4 checks:
    - uv (Python package manager)
    - jq (JSON processor)
    - gemini (Gemini CLI for council mode)
-   - codex (Codex CLI for council mode)
+   - gemini (Gemini CLI for audits and council mode)
    - node (Node.js for MCP servers)
    For each: run "which [tool]" and "[tool] --version" (or equivalent).
    Flag: CRITICAL if a tool referenced in CLAUDE.md as required is not installed.

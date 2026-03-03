@@ -46,13 +46,19 @@ Review correspondence goes under `correspondence/referee-reviews/`, with an `ana
 
 ```
 correspondence/referee-reviews/{venue}-round{n}/
-├── reviews-original.pdf              (copy of input PDF)
+├── reviews-original.pdf              (copy of input PDF — source is NEVER moved/deleted)
 ├── rebuttal.md                       (empty — for response draft)
+├── reviews/                          (individual reviewer files)
+│   ├── reviewer-1.md
+│   ├── reviewer-2.md
+│   └── ...
 └── analysis/
     ├── comment-tracker.md            (atomic comment matrix)
     ├── review-analysis.md            (strategic overview)
     └── reviewer-comments-verbatim.tex (LaTeX transcription)
 ```
+
+**Source PDF preservation:** The original reviews PDF is only ever **copied** to `reviews-original.pdf`. Never move, rename, or delete the source file from its original location (e.g., `to-sort/`, Downloads, etc.). The user decides when to clean up the original.
 
 **Principle:** `correspondence/` holds exchanges with reviewers (their comments, your rebuttal). Internal review work (e.g., referee2 agent reports) goes in `docs/{venue}/internal-reviews/`.
 
@@ -80,7 +86,41 @@ If the round directory already exists (e.g., from manual setup), do NOT overwrit
    - General assessment text
    - Individual comments (each as a separate item)
 
-### Phase 3: Generate LaTeX Verbatim Transcription
+### Phase 3: Generate Individual Review Markdown Files
+
+Create one markdown file per reviewer in `reviews/`:
+
+1. Create the `reviews/` subdirectory
+2. For each reviewer, write `reviews/reviewer-{n}.md` containing:
+   - **Header:** reviewer identifier, recommendation/score, whether revision is allowed
+   - **General Assessment:** full verbatim text of the reviewer's overall assessment
+   - **Individual Comments:** each comment as a numbered item with its assigned ID (`R{n}-C{m}`), verbatim text, and section/page reference if mentioned
+3. Use this template for each file:
+
+```markdown
+# Reviewer {N}
+
+**Recommendation:** {recommendation or score}
+**Revision allowed:** {Yes / No / Not stated}
+
+## General Assessment
+
+{verbatim general assessment text}
+
+## Comments
+
+### R{N}-C1 {optional: section/page reference}
+
+{verbatim comment text}
+
+### R{N}-C2 ...
+
+{verbatim comment text}
+```
+
+4. If files already exist in `reviews/`, follow the same versioning convention as other outputs (flag and version)
+
+### Phase 4: Generate LaTeX Verbatim Transcription
 
 Using the template from `templates/referee-comments/reviewer-comments-verbatim.tex`:
 
@@ -94,7 +134,7 @@ Using the template from `templates/referee-comments/reviewer-comments-verbatim.t
 5. If any IDs are derived (split from a larger comment or inferred), add them to a Derived IDs appendix section
 6. Compile with `latexmk` to verify it builds cleanly
 
-### Phase 4: Generate Comment Tracker
+### Phase 5: Generate Comment Tracker
 
 Using the template from `templates/referee-comments/comment-tracker.md`:
 
@@ -116,7 +156,7 @@ Using the template from `templates/referee-comments/comment-tracker.md`:
 3. Fill in the Status Dashboard counts
 4. Leave Evidence Log, Patch Plan, Response Blocks, and Blockers empty (user fills during revision)
 
-### Phase 5: Generate Review Analysis
+### Phase 6: Generate Review Analysis
 
 Using the template from `templates/referee-comments/review-analysis.md`:
 
@@ -141,7 +181,7 @@ Using the template from `templates/referee-comments/review-analysis.md`:
    - Consider the paper's discipline and methodology when suggesting venues — a qualitative policy analysis fits different outlets than a computational study.
 8. Leave Timeline empty (user fills)
 
-### Phase 6: Summary & Review
+### Phase 7: Summary & Review
 
 Present to the user:
 - Total comments extracted (by reviewer)

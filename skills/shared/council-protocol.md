@@ -4,9 +4,13 @@
 >
 > **Included backend:** `cli-council` (local CLI tools, free with existing subscriptions). An optional API backend (`llm-council` via OpenRouter) is available separately — see below.
 
+## Core Concept: Cross-Model Agentic Invocation
+
+Claude Code can invoke other LLM providers' CLI tools as subprocess reviewers — a different model reviews work that Claude produced, providing genuine architectural diversity. The system is **extensible**: any CLI tool that accepts a prompt and returns text can be wrapped as a backend (~20 lines of Python following the `BackendSpec` pattern in `packages/cli-council/`). Available backends change as subscriptions change; the architecture does not.
+
 ## What Council Mode Is
 
-Instead of a single reviewer, council mode runs a 3-stage deliberation across **multiple LLM providers** (Claude, GPT, Gemini):
+Council mode coordinates this cross-model capability into a structured 3-stage deliberation:
 
 1. **Stage 1: Independent Assessments** — N models (typically 3, each from a different provider) independently evaluate the same artifact using the same instructions
 2. **Stage 2: Anonymised Peer Review** — each model evaluates the others' assessments without knowing which model produced which
@@ -20,11 +24,12 @@ The key insight: genuine model diversity (different architectures, training data
 
 Package: `packages/cli-council/`
 
-- `CouncilRunner` — orchestrator that calls `gemini -p`, `codex exec`, and `claude -p` via subprocess
-- `GeminiBackend`, `CodexBackend`, `ClaudeBackend` — thin async wrappers around CLI tools
+- `CouncilRunner` — orchestrator that invokes CLI backends via subprocess
+- Pluggable backends: `GeminiBackend`, `ClaudeBackend`, and a dormant `CodexBackend` (OpenAI subscription cancelled Mar 2026; resubscribing would restore it). New backends follow the same `BackendSpec` pattern.
 - `CouncilResult` — Pydantic models for text-based results
 - CLI — `python -m cli_council` for standalone use
-- Uses existing subscriptions (ChatGPT Plus, Gemini, Claude Pro) — no per-token API costs
+- Uses existing subscriptions — no per-token API costs
+- **Currently active backends:** Gemini (`gemini -p`), Claude (`claude -p`)
 - **Best for:** Ad-hoc reviews, research tasks, quick multi-perspective opinions
 
 ### API Backend: `llm-council` (Optional, Separate Install)
@@ -218,13 +223,15 @@ The consumer's chairman prompt should instruct the chairman to apply these rules
 
 ## Model Configuration
 
-| Parameter | Default | Override |
-|-----------|---------|---------|
-| Stage 1 models | `anthropic/claude-sonnet-4.5`, `openai/gpt-5`, `google/gemini-2.5-pro` | `--models` CLI flag |
-| Chairman model | `anthropic/claude-sonnet-4.5` | `--chairman` CLI flag |
+| Parameter | Built-in Default | Override |
+|-----------|-----------------|---------|
+| Stage 1 models | `anthropic/claude-sonnet-4.5`, `openai/gpt-5`, `google/gemini-2.5-pro` | `--models` CLI flag or user config |
+| Chairman model | `anthropic/claude-sonnet-4.5` | `--chairman` CLI flag or user config |
 | Max tokens | 4096 | `--max-tokens` CLI flag |
 
-The library's `config.py` contains the full model registry with tiers and pricing.
+**User defaults** persist to `~/.config/llm-council/config.json` and override built-in defaults. Manage via `llm-council models --set-defaults` / `--set-chairman` / `--reset`, or interactively with `llm-council models --pricing` to review options first.
+
+The library's `config.py` contains the full model registry (17 models across Anthropic, OpenAI, Google) with tiers and live pricing.
 
 ## Cost Considerations
 

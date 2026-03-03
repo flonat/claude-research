@@ -29,7 +29,7 @@ A monolithic scientific document generation tool combining Claude with real-time
 |---------------|---------------|
 | `research-lookup` + `citation-management` | `/literature` skill + `.mcp-server-bibliography` |
 | `peer-review` / `scholar-evaluation` | `referee2-reviewer`, `paper-critic`, `domain-reviewer` agents |
-| `venue-templates` | Topic Finder `venues.json` + framing workflow |
+| `venue-templates` | Scout `venues.json` + framing workflow |
 | `latex-posters` / `scientific-slides` | `/beamer-deck`, `/quarto-deck` |
 
 ## Key Differences from Our Approach
@@ -37,7 +37,7 @@ A monolithic scientific document generation tool combining Claude with real-time
 - **Monolithic vs modular**: one tool does everything; ours is skills + agents + standalone apps
 - **External API-heavy**: requires Perplexity, Nano Banana Pro, Parallel Web API keys (more cost)
 - **"Never stop" philosophy**: their CLAUDE.md says "NEVER ask 'would you like me to continue?'"; ours has plan-first discipline and phase boundaries
-- **No novelty scoring or venue-specific framing**: that's unique to our Topic Finder
+- **No novelty scoring or venue-specific framing**: that's unique to our Scout
 - **Heavy CLAUDE.md**: ~500 lines of instructions; ours follows lean-claude-md rule
 - **No design-before-results discipline**: no equivalent to our research design rules
 

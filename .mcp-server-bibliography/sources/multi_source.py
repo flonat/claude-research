@@ -1,7 +1,7 @@
 """Multi-source composite adapter with DOI-based deduplication.
 
 Queries all enabled sources concurrently and merges results.
-Ported from Topic Finder (research/topic-finder/) with improvements.
+Ported from Scout (research/scout/) with improvements.
 """
 
 from __future__ import annotations

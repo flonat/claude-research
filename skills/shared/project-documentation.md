@@ -1,6 +1,6 @@
 # Project Documentation Conventions
 
-> Shared conventions for outward-facing documentation: project READMEs, user manuals, architecture docs, deploy guides, and in-app help. Ensures consistency across Topic Finder, council packages, and future projects.
+> Shared conventions for outward-facing documentation: project READMEs, user manuals, architecture docs, deploy guides, and in-app help. Ensures consistency across Scout, council packages, and future projects.
 >
 > Companion to `system-documentation.md` (which covers internal Task Management docs like CLAUDE.md, SKILL.md, and component catalogues).
 
@@ -17,12 +17,12 @@ Every document governed by these conventions carries a tag on its first line:
 
 | Project | File | Type |
 |---------|------|------|
-| Topic Finder | `README.md` | README |
-| Topic Finder | `docs/user-manual.md` | User manual |
-| Topic Finder | `docs/architecture.md` | Architecture |
-| Topic Finder | `deploy/README.md` | Deploy guide |
-| Topic Finder | `docs/user-manual.tex` | LaTeX manual |
-| Topic Finder | `docs/topic-finder-overview/topic-finder-overview.tex` | Beamer deck |
+| Scout | `README.md` | README |
+| Scout | `docs/user-manual.md` | User manual |
+| Scout | `docs/architecture.md` | Architecture |
+| Scout | `deploy/README.md` | Deploy guide |
+| Scout | `docs/user-manual.tex` | LaTeX manual |
+| Scout | `docs/scout-overview/scout-overview.tex` | Beamer deck |
 | Task Management | `docs/user-manual/user-manual.tex` | LaTeX manual |
 | Task Management | `docs/setup-overview/setup-overview.tex` | Beamer deck |
 | Task Management | `docs/setup-overview/setup-overview-public.tex` | Beamer deck (public) |
@@ -39,7 +39,7 @@ When **creating** new outward-facing documentation (README, user manual, archite
 1. Add the appropriate tag as the very first line of the file
 2. Add the file to the registry table above
 
-When **auditing** a project's documentation (via `/sync-topic-finder-doc`, `/update-project-doc`, or manually):
+When **auditing** a project's documentation (via `/sync-scout-doc`, `/update-project-doc`, or manually):
 
 1. Grep for `Governed by: skills/shared/project-documentation.md` across all `.md` and `.tex` files
 2. Flag any outward-facing docs that lack the tag — these are candidates for tagging
@@ -326,7 +326,7 @@ Summary table:
 
 When referencing code, use backtick-quoted names that match the source exactly:
 
-- Classes: `` `TopicFinderOrchestrator` ``
+- Classes: `` `ScoutOrchestrator` ``
 - Methods: `` `discover_topics()` ``
 - Files: `` `services/llm.py` ``
 
@@ -425,7 +425,7 @@ Tips are defined in a `WORKFLOW_TIPS` dict keyed by workflow name, with `title`,
 
 Section slugs in `WORKFLOW_TIPS` must match actual heading slugs in `user-manual.md`. Validate this automatically:
 - CI script checks slug integrity on every push
-- `/sync-topic-finder-doc` checks during manual audits
+- `/sync-scout-doc` checks during manual audits
 
 ---
 
@@ -637,7 +637,7 @@ When both formats exist, structural parity is required: every `##` heading in th
 
 ## Beamer Presentation Docs
 
-Projects may include Beamer decks in `docs/` (e.g., `docs/topic-finder-overview/`, `docs/setup-overview/`). These are outward-facing documentation, not just slides.
+Projects may include Beamer decks in `docs/` (e.g., `docs/scout-overview/`, `docs/setup-overview/`). These are outward-facing documentation, not just slides.
 
 ### Standard Setup
 

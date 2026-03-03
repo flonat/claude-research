@@ -6,9 +6,9 @@ Optional WOS_API_TIER env var: "starter" (default) or "expanded".
 Expanded tier provides: abstracts, higher per-page limits (100 vs 50),
 full author affiliations, funding data.
 
-SYNC: Mirrored in Topic Finder (claude_topic_finder/services/wos.py).
+SYNC: Mirrored in Scout (scout/services/wos.py).
 Changes to query construction, pagination, or record parsing must be propagated.
-Topic Finder adds get_topics/get_trend_data; this version adds
+Scout adds get_topics/get_trend_data; this version adds
 verify_doi/batch_verify_dois. Core search logic should stay identical.
 """
 

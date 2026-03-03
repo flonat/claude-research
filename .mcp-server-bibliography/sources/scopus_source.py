@@ -3,9 +3,9 @@
 Uses async httpx client. Requires SCOPUS_API_KEY env var.
 Optional SCOPUS_INST_TOKEN for non-institutional IP access.
 
-SYNC: Mirrored in Topic Finder (claude_topic_finder/services/scopus.py).
+SYNC: Mirrored in Scout (scout/services/scopus.py).
 Changes to query construction, pagination, or record parsing must be propagated.
-Topic Finder adds get_topics/get_trend_data; this version adds
+Scout adds get_topics/get_trend_data; this version adds
 verify_doi/batch_verify_dois. Core search logic should stay identical.
 """
 

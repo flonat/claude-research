@@ -35,13 +35,70 @@ AVAILABLE_MODELS: list[dict[str, str]] = [
     {"id": "google/gemini-3.1-pro-preview", "name": "Gemini 3.1 Pro", "tier": "most capable, latest"},
 ]
 
-COUNCIL_DEFAULT_MODELS: list[str] = [
+# Built-in defaults (used when no user config exists)
+_BUILTIN_DEFAULT_MODELS: list[str] = [
     "anthropic/claude-sonnet-4.5",
     "openai/gpt-5",
     "google/gemini-2.5-pro",
 ]
 
-COUNCIL_DEFAULT_CHAIRMAN: str = "anthropic/claude-sonnet-4.5"
+_BUILTIN_DEFAULT_CHAIRMAN: str = "anthropic/claude-sonnet-4.5"
+
+# User config file
+USER_CONFIG_PATH = Path.home() / ".config" / "llm-council" / "config.json"
+
+
+def _load_user_config() -> dict | None:
+    """Load user config from ~/.config/llm-council/config.json."""
+    if not USER_CONFIG_PATH.exists():
+        return None
+    try:
+        return json.loads(USER_CONFIG_PATH.read_text())
+    except (json.JSONDecodeError, OSError):
+        logger.warning("Could not parse %s — using built-in defaults", USER_CONFIG_PATH)
+        return None
+
+
+def get_council_defaults() -> list[str]:
+    """Return council default models (user config > built-in)."""
+    cfg = _load_user_config()
+    if cfg and "council_models" in cfg:
+        return cfg["council_models"]
+    return list(_BUILTIN_DEFAULT_MODELS)
+
+
+def get_chairman_default() -> str:
+    """Return chairman default model (user config > built-in)."""
+    cfg = _load_user_config()
+    if cfg and "chairman" in cfg:
+        return cfg["chairman"]
+    return _BUILTIN_DEFAULT_CHAIRMAN
+
+
+def set_council_defaults(
+    models: list[str] | None = None,
+    chairman: str | None = None,
+) -> dict:
+    """Persist council defaults to user config. Returns the saved config."""
+    cfg = _load_user_config() or {}
+    if models is not None:
+        cfg["council_models"] = models
+    if chairman is not None:
+        cfg["chairman"] = chairman
+    USER_CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    USER_CONFIG_PATH.write_text(json.dumps(cfg, indent=2) + "\n")
+    return cfg
+
+
+def reset_council_defaults() -> None:
+    """Remove user config, reverting to built-in defaults."""
+    if USER_CONFIG_PATH.exists():
+        USER_CONFIG_PATH.unlink()
+
+
+# Public constants that resolve user config automatically
+COUNCIL_DEFAULT_MODELS: list[str] = get_council_defaults()
+COUNCIL_DEFAULT_CHAIRMAN: str = get_chairman_default()
 
 OPENROUTER_MODELS_URL = "https://openrouter.ai/api/v1/models"
 
