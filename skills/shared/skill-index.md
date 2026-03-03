@@ -5,7 +5,7 @@
 
 ## By Category
 
-### Ideation (5)
+### Ideation (3)
 
 | Skill | Purpose |
 |-------|---------|
@@ -88,7 +88,7 @@
 | `code-archaeology` | Review and document old code, data, and analysis files |
 | `pipeline-manifest` | Map scripts to inputs, outputs, and paper figures/tables |
 | `python-env` | Python environment management (enforces uv) |
-| `audit-project-structure` | Audit project against init-project-research template |
+| `audit-project-research` | Audit project against init-project-research template |
 | `audit-project-course` | Audit course folder against init-project-course template |
 | `webapp-testing` | Playwright-based web app testing with server lifecycle management. *From Anthropic.* |
 | `frontend-design` | Distinctive, production-grade frontend interfaces. *From Anthropic.* |
@@ -104,7 +104,7 @@
 | `synthetic-data` | Generate structurally realistic synthetic datasets for pilot testing and power analysis |
 | `replication-package` | Replication package assembly, anonymization, and audit (replaces export-project-clean/anon) |
 
-### Infrastructure (20)
+### Infrastructure (21)
 
 | Skill | Purpose |
 |-------|---------|
@@ -112,13 +112,14 @@
 | `creation-guard` | Pre-flight duplicate check before creating new skills/agents |
 | `lessons-learned` | Structured post-mortem for incidents and stuck sessions |
 | `system-audit` | Parallel audits across skills, hooks, agents, rules, docs |
-| `audit-research-projects` | Full audit of all topics across 4 systems |
+| `audit-research-portfolio` | Full audit of all topics across 4 systems |
 | `sync-private-doc` | Propagate counts across all private Task Management docs |
 | `sync-public-doc` | Sync private infrastructure to the public repo (claude-research) |
 | `sync-refpile-doc` | Sync RefPile docs with actual codebases (extension, dashboard, MCP) |
 | `sync-resources` | Pull latest from cloned resource repos |
 | `sync-permissions` | Sync global permissions into projects |
 | `sync-scout-doc` | Sync Scout + council package docs |
+| `review-public-sync` | Interactive review and editing of public sync allowlists |
 | `full-commit` | Commit and push all 8 global repos with leak guard |
 | `publish` | Full publication pipeline: sync, bump, commit, tag, publish |
 | `skill-creator` | Create, iterate, and benchmark skills with eval viewer. *From Anthropic.* |
@@ -139,4 +140,4 @@
 
 ---
 
-**Total: 81 skills across 11 categories.**
+**Total: 83 skills across 11 categories.**

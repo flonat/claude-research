@@ -1,6 +1,6 @@
 ---
 name: update-project-doc
-description: "Update a project's own documentation (CLAUDE.md, README.md, docs/*.md) to reflect its current state. Detects stale file trees, timestamps, counts, and next steps. Includes a leanness audit: flags CLAUDE.md > 200 lines, sections > 15 lines of reference material, and SKILL.md > 300 lines — with auto-extraction to docs/ or references/."
+description: "Update a project's own documentation (CLAUDE.md, README.md, docs/*.md) to reflect its current state. Detects stale file trees, timestamps, counts, and next steps. Includes a leanness audit: flags CLAUDE.md > 200 lines, sections > 15 lines of reference material, SKILL.md > 300 lines, agents > 400 lines, and context files > 200 lines — with auto-extraction to docs/ or references/."
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash(ls*), Bash(git log*), Bash(git diff*), Bash(readlink*), Bash(wc*), Bash(date*), AskUserQuestion
 argument-hint: (no arguments)
 ---
@@ -61,6 +61,8 @@ Collect the actual state of the project:
 12. **README.md line count** — `wc -l README.md`
 13. **SKILL.md line counts** — (Task Management only) `wc -l skills/*/SKILL.md`
 14. **Duplication scan** — check if CLAUDE.md content duplicates what's already in README.md, docs/, or .context/ files
+15. **Agent line counts** — `wc -l .claude/agents/*.md` (if present)
+16. **Context file line counts** — `wc -l .context/*.md` (if present)
 
 ### Step 3: Run Staleness Checks
 
@@ -88,6 +90,8 @@ Using the data gathered in Step 2 (items 10-14), check infrastructure file sizes
 | `CLAUDE.md` duplication | Content duplicated from README/docs/.context | Which content is duplicated and where | Keep only the pointer in CLAUDE.md |
 | `README.md` | > 300 lines total | Current line count | Extract long sections to `docs/` |
 | `SKILL.md` files | > 300 lines each (TM only) | File name + line count | Move templates/examples/report formats to `references/` or `templates/` subdirectory |
+| Project agents (`.claude/agents/*.md`) | > 400 lines each | File name + line count | Extract verbose prompt sections to companion files |
+| Context files (`.context/*.md`) | > 200 lines each | File name + line count | Archive stale content, keep current |
 
 **What counts as "reference material"** (extractable): assessment guidelines, detailed literature notes, long examples, report templates, checklists, reviewer feedback.
 

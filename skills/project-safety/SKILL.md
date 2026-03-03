@@ -1,6 +1,6 @@
 ---
 name: project-safety
-description: "Set up safety rules and folder structures for research projects. Prevent accidental data loss when Claude reorganizes files. Triggers: 'protect my data', 'set up project safety rules'. Not for auditing structure — use /audit-project-structure."
+description: "Set up safety rules and folder structures for research projects. Prevent accidental data loss when Claude reorganizes files. Triggers: 'protect my data', 'set up project safety rules'. Not for auditing structure — use /audit-project-research."
 argument-hint: [project-path]
 ---
 

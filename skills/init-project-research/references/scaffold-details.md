@@ -134,7 +134,7 @@ Used in Phase 6 when creating `.context/projects/papers/<short-name>.md`:
 
 ## Expected Post-Init Growth
 
-Projects naturally grow beyond the initial scaffold. These items are **not** created by `/init-project-research` but are recognized as valid by `/audit-project-structure`:
+Projects naturally grow beyond the initial scaffold. These items are **not** created by `/init-project-research` but are recognized as valid by `/audit-project-research`:
 
 | Growth item | When it appears | Purpose |
 |-------------|----------------|---------|

@@ -126,8 +126,8 @@ Show the user:
 | Skill | Relationship |
 |-------|-------------|
 | `/bib-validate` | Run on projects flagged by the Bibliography Hygiene sub-agent |
-| `/audit-project-structure` | Complements Convention Compliance with deeper per-project checks |
+| `/audit-project-research` | Complements Convention Compliance with deeper per-project checks |
 | `/update-project-doc` | Fix documentation staleness found by Documentation Freshness |
 | `/sync-permissions` | Fix symlink issues found by Inventory Auditor |
-| `/audit-research-projects` | Full cross-system audit (local + Notion + Zotero + pipeline) — deeper than this sweep |
+| `/audit-research-portfolio` | Full cross-system audit (local + Notion + Zotero + pipeline) — deeper than this sweep |
 | `/insights-deck` | Maintenance findings can feed into system insights presentations |

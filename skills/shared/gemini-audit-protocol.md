@@ -184,6 +184,6 @@ Ask if he wants to address any findings now.
 | Skill | Relationship |
 |-------|-------------|
 | `/system-audit` | Mechanical checks (counts, symlinks) — complementary, not overlapping |
-| `/audit-project-structure` | Per-project structural audit — Gemini audits are cross-cutting |
+| `/audit-project-research` | Per-project structural audit — Gemini audits are cross-cutting |
 | `/lessons-learned` | Critical findings can feed into post-mortems |
 | `/ideas` | Recommendations can be captured as improvement ideas |
