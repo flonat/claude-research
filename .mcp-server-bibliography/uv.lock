@@ -44,19 +44,12 @@ dependencies = [
     { name = "requests" },
 ]
 
-[package.optional-dependencies]
-scopus = [
-    { name = "pybliometrics" },
-]
-
 [package.metadata]
 requires-dist = [
     { name = "httpx", specifier = ">=0.27" },
     { name = "mcp", specifier = ">=1.0.0" },
-    { name = "pybliometrics", marker = "extra == 'scopus'", specifier = ">=3.5" },
     { name = "requests" },
 ]
-provides-extras = ["scopus"]
 
 [[package]]
 name = "certifi"
@@ -436,20 +429,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/fc/6d/62e76bbb8144d6ed86e202b5edd8a4cb631e7c8130f3f4893c3f90262b10/mcp-1.26.0.tar.gz", hash = "sha256:db6e2ef491eecc1a0d93711a76f28dec2e05999f93afd48795da1c1137142c66", size = 608005, upload-time = "2026-01-24T19:40:32.468Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fd/d9/eaa1f80170d2b7c5ba23f3b59f766f3a0bb41155fbc32a69adfa1adaaef9/mcp-1.26.0-py3-none-any.whl", hash = "sha256:904a21c33c25aa98ddbeb47273033c435e595bbacfdb177f4bd87f6dceebe1ca", size = 233615, upload-time = "2026-01-24T19:40:30.652Z" },
-]
-
-[[package]]
-name = "pybliometrics"
-version = "4.4.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "requests" },
-    { name = "tqdm" },
-    { name = "urllib3" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/e7/96/1e50153e41184c2b60a05c505f06544a1dd602e4ccbaa48b97d0e27b5e01/pybliometrics-4.4.1.tar.gz", hash = "sha256:b7d1e1687aadbdba4a1075c2bfb5b3fc06842d2b5ca58a1c215116ad639bb17d", size = 1008536, upload-time = "2026-01-01T18:05:28.212Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/80/7f/0820ddf1c06614289afd4321c7dcf0d32a68ba5282f52542438d0351e517/pybliometrics-4.4.1-py3-none-any.whl", hash = "sha256:4639cb4c7e56719ae677608731170a8599b7dd9800d178cb7506f1ac34427b58", size = 126472, upload-time = "2026-01-01T18:05:01.181Z" },
 ]
 
 [[package]]
@@ -837,18 +816,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/c4/68/79977123bb7be889ad680d79a40f339082c1978b5cfcf62c2d8d196873ac/starlette-0.52.1.tar.gz", hash = "sha256:834edd1b0a23167694292e94f597773bc3f89f362be6effee198165a35d62933", size = 2653702, upload-time = "2026-01-18T13:34:11.062Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/81/0d/13d1d239a25cbfb19e740db83143e95c772a1fe10202dda4b76792b114dd/starlette-0.52.1-py3-none-any.whl", hash = "sha256:0029d43eb3d273bc4f83a08720b4912ea4b071087a3b48db01b7c839f7954d74", size = 74272, upload-time = "2026-01-18T13:34:09.188Z" },
-]
-
-[[package]]
-name = "tqdm"
-version = "4.67.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/09/a9/6ba95a270c6f1fbcd8dac228323f2777d886cb206987444e4bce66338dd4/tqdm-4.67.3.tar.gz", hash = "sha256:7d825f03f89244ef73f1d4ce193cb1774a8179fd96f31d7e1dcde62092b960bb", size = 169598, upload-time = "2026-02-03T17:35:53.048Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/16/e1/3079a9ff9b8e11b846c6ac5c8b5bfb7ff225eee721825310c91b3b50304f/tqdm-4.67.3-py3-none-any.whl", hash = "sha256:ee1e4c0e59148062281c49d80b25b67771a127c85fc9676d3be5f243206826bf", size = 78374, upload-time = "2026-02-03T17:35:50.982Z" },
 ]
 
 [[package]]
