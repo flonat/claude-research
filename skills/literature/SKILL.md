@@ -9,6 +9,8 @@ argument-hint: [topic-or-paper-query]
 
 **CRITICAL RULE: Every citation must be verified to exist before inclusion.** Never include a paper you cannot find via web search. Hallucinated citations are worse than no citations.
 
+**DOI INTEGRITY RULE: Every DOI must be programmatically verified before entering any `.bib` file.** Sub-agents hallucinate plausible-looking DOIs that resolve to wrong papers (e.g., correct journal prefix, wrong suffix). The ONLY reliable verification is `scholarly_verify_dois` with title-matching (see Phase 4). A DOI that resolves to a different title than expected is WRONG — treat it the same as a missing DOI.
+
 **CITATION KEY RULE: ALWAYS use Better BibTeX-format keys (e.g., `Author2016-xx`).** When merging into an existing `.bib`, match existing keys. Never generate custom keys (`AuthorYear`, `AuthorKamenica2017`, etc.) or retain non-standard keys unless the user explicitly says otherwise.
 
 **Python:** Always use `uv run python`. Never bare `python`, `python3`, `pip`, or `pip3`.
@@ -102,15 +104,27 @@ Multi-model literature search via `cli-council` — runs the same query through 
 
 ## Phase 4: Parallel Verification (Sub-Agents)
 
-**Step 1 — Batch DOI pre-verification via MCP:** Collect all DOIs from Phase 3 candidates and call `scholarly_verify_dois` (bibliography MCP). This checks each DOI against all enabled sources (OpenAlex, Scopus, WoS). Papers marked VERIFIED (2+ sources confirm) can skip web-based verification. Only SINGLE_SOURCE and NOT_FOUND papers need full manual verification below.
+**Step 1 — Batch DOI pre-verification via MCP:** Collect all DOIs from Phase 3 candidates and call `scholarly_verify_dois` (bibliography MCP). This checks each DOI against all enabled sources (OpenAlex, Scopus, WoS). For each result:
+- **VERIFIED (2+ sources):** Check that the **returned title matches** the expected paper. If the title doesn't match, the DOI is wrong — flag as DOI MISMATCH and find the correct DOI in Step 2.
+- **SINGLE_SOURCE:** Needs manual verification — the DOI may be real but unconfirmed.
+- **NOT_FOUND:** DOI is likely hallucinated. Find the correct DOI in Step 2.
 
-**Step 2 — Manual verification for remaining papers:** Spawn **multiple general-purpose agents in parallel**, each verifying ~5 papers. Read the full verification template from [references/agent-templates.md](references/agent-templates.md#phase-4-verification-agent-template).
+**Title-matching is mandatory.** `scholarly_verify_dois` returns the title each DOI actually resolves to. Compare this against the title you expect. DOIs that are off by one character in the suffix (e.g., `02387` vs `02366`, `2014.01.014` vs `2014.03.013`) are the most common hallucination pattern — they resolve to real papers in the same journal but with different content.
+
+**Step 2 — Find correct DOIs for flagged papers:** For any paper where the DOI was wrong, missing, or single-source, use these methods **in order of reliability**:
+1. **Crossref API** (most reliable): `curl -sL "https://api.crossref.org/works?query.bibliographic=[URL-encoded title+author]&rows=3"` — returns the actual DOI from publisher metadata.
+2. **`scholarly_search`** with exact title — searches OpenAlex/Scopus/WoS for the paper.
+3. **Web search as last resort** — but DOIs from web search must still be verified via `scholarly_verify_dois` before use.
+
+**Step 3 — Manual verification for remaining papers:** Spawn **multiple general-purpose agents in parallel**, each verifying ~5 papers. Read the full verification template from [references/agent-templates.md](references/agent-templates.md#phase-4-verification-agent-template). **Include the Crossref instruction** in the agent prompt — agents must use Crossref API for DOI lookup, not reconstruct DOIs from memory.
 
 Key rules enforced by the template:
 - DOI verification is mandatory (resolve and confirm)
 - ALL authors must be listed (never "et al." in metadata)
 - Preprint check: always search for published version; use `scholarly_search` MCP tool to find published versions of preprints
 - Results: VERIFIED / NOT FOUND / METADATA MISMATCH
+
+**Step 4 — Final DOI gate:** Before proceeding to Phase 5/6, run `scholarly_verify_dois` one final time on ALL DOIs that will enter the `.bib`. This is the hard gate — no DOI enters a bibliography without passing this check with a matching title. Papers without DOIs (working papers, book chapters, old pre-DOI articles) are acceptable but must be explicitly flagged as `% NO DOI` in the `.bib`.
 
 After all return: collect VERIFIED, drop NOT FOUND, check for remaining duplicates.
 

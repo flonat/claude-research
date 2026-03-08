@@ -268,7 +268,7 @@ This agent supports **council mode** — multi-model deliberation where 3 differ
 
 **Invocation (CLI backend — default, free):**
 ```bash
-cd "packages/cli-council"
+cd "$(cat ~/.config/task-mgmt/path)/packages/cli-council"
 uv run python -m cli_council \
     --prompt-file /tmp/referee2-prompt.txt \
     --context-file /tmp/referee2-paper-and-code.txt \
@@ -279,7 +279,7 @@ uv run python -m cli_council \
 
 **Invocation (API backend — structured JSON):**
 ```bash
-cd "packages/llm-council"
+cd "$(cat ~/.config/task-mgmt/path)/packages/llm-council"
 uv run python -m llm_council \
     --system-prompt-file /tmp/referee2-system.txt \
     --user-message-file /tmp/referee2-content.txt \
@@ -303,7 +303,7 @@ Examples of what to record:
 
 # Persistent Agent Memory
 
-You have a persistent Persistent Agent Memory directory at `.claude/agent-memory/referee2-reviewer/`. Its contents persist across conversations.
+You have a persistent Persistent Agent Memory directory at `~/.claude/agent-memory/referee2-reviewer/`. Its contents persist across conversations.
 
 As you work, consult your memory files to build on previous experience. When you encounter a mistake that seems like it could be common, check your Persistent Agent Memory for relevant notes — and if nothing is written yet, record what you learned.
 

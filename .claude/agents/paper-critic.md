@@ -22,10 +22,10 @@ When launched, gather context in this order:
 1. **Find the `.tex` source(s):** Glob for `**/*.tex` in the project root. Identify the main document (look for `\documentclass` or `\begin{document}`).
 2. **Check for compiled output:** Look for `out/*.pdf`. If no PDF exists → **BLOCKED** (hard gate failure). Also read `out/*.log` for warnings/errors.
 3. **Read quality rubrics** (these define your scoring rules):
-   - Proofread rubric: `skills/proofread/references/quality-rubric.md` (relative to Task Management root: `skills/proofread/references/quality-rubric.md`)
-   - LaTeX-autofix rubric: `skills/latex-autofix/references/quality-rubric.md` (relative to Task Management root: `skills/latex-autofix/references/quality-rubric.md`)
-   - Scoring framework: `skills/shared/quality-scoring.md` (relative to Task Management root: `skills/shared/quality-scoring.md`)
-   - Venue reviewer expectations: `skills/shared/venue-guides/reviewer_expectations.md` (relative to Task Management root: `skills/shared/venue-guides/reviewer_expectations.md`) — read this if the paper targets a specific venue, to calibrate your critique to that venue's reviewer priorities
+   - Proofread rubric: `skills/proofread/references/quality-rubric.md` (absolute: `~/.claude/skills/proofread/references/quality-rubric.md`)
+   - LaTeX-autofix rubric: `skills/latex-autofix/references/quality-rubric.md` (absolute: `~/.claude/skills/latex-autofix/references/quality-rubric.md`)
+   - Scoring framework: `skills/shared/quality-scoring.md` (absolute: `~/.claude/skills/shared/quality-scoring.md`)
+   - Venue reviewer expectations: `skills/shared/venue-guides/reviewer_expectations.md` (absolute: `~/.claude/skills/shared/venue-guides/reviewer_expectations.md`) — read this if the paper targets a specific venue, to calibrate your critique to that venue's reviewer priorities
 4. **Read all `.tex` files** in the project. For large papers, start with the main file, then read included files (`\input{}`, `\include{}`).
 5. **Read the `.bib` file(s)** if they exist in the project.
 6. **Check for page limits:** Read the project's `CLAUDE.md` or `docs/` for any stated page/word limits.
@@ -281,10 +281,10 @@ This agent supports **council mode** — a multi-model deliberation via OpenRout
 ### How to Orchestrate
 
 1. Run **pre-flight**: hard gates (compilation, references, citations, page limit). If any fails, stop.
-2. Read the shared council protocol: `skills/shared/council-protocol.md`
+2. Read the shared council protocol: `~/.claude/skills/shared/council-protocol.md`
 3. Read the reference files:
-   - Personas: `.claude/agents/references/paper-critic/council-personas.md`
-   - Prompts: `.claude/agents/references/paper-critic/council-prompts.md`
+   - Personas: `~/.claude/agents/references/paper-critic/council-personas.md`
+   - Prompts: `~/.claude/agents/references/paper-critic/council-prompts.md`
 4. Construct a **system prompt** from this agent's core instructions (Check Dimensions, Severity Tiers, Scoring, Report Format)
 5. Construct a **user message** from the paper content (all `.tex` files, `.bib` files, `.log` warnings)
 6. Invoke `llm-council` via CLI or Python — the library handles all 3 stages via OpenRouter:
@@ -303,7 +303,7 @@ This agent supports **council mode** — a multi-model deliberation via OpenRout
 Instead of OpenRouter, use `cli-council` to run the council via local CLI tools (Gemini CLI, Codex CLI, Claude Code). Same 3-stage protocol, no per-token cost:
 
 ```bash
-cd "packages/cli-council"
+cd "$(cat ~/.config/task-mgmt/path)/packages/cli-council"
 uv run python -m cli_council \
     --prompt-file /tmp/critic-prompt.txt \
     --context-file /tmp/critic-paper.txt \
@@ -329,7 +329,7 @@ Where `--context-file` contains the paper content (`.tex` source) and `--prompt-
 
 # Persistent Agent Memory
 
-You have a persistent Persistent Agent Memory directory at `.claude/agent-memory/paper-critic/`. Its contents persist across conversations.
+You have a persistent Persistent Agent Memory directory at `~/.claude/agent-memory/paper-critic/`. Its contents persist across conversations.
 
 As you work, consult your memory files to build on previous experience. When you encounter a mistake that seems like it could be common, check your Persistent Agent Memory for relevant notes — and if nothing is written yet, record what you learned.
 

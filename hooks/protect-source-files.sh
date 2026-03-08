@@ -1,4 +1,6 @@
 #!/bin/bash
+# Skip on non-Mac environments (cloud, mobile)
+source "$(dirname "$0")/resolve-task-mgmt.sh" || exit 0
 # protect-source-files.sh
 # PreToolUse hook for Edit|Write — prompts confirmation for files outside
 # the current project, ~/.claude/, and the Task Management directory.
@@ -17,8 +19,6 @@ fi
 # Resolve to absolute paths
 FILE_PATH=$(cd "$(dirname "$FILE_PATH")" 2>/dev/null && echo "$(pwd)/$(basename "$FILE_PATH")" || echo "$FILE_PATH")
 CWD=$(cd "$CWD" 2>/dev/null && pwd || echo "$CWD")
-
-TASK_MGMT="$HOME/Library/CloudStorage/YOUR-CLOUD/Task Management"
 CLAUDE_DIR="$HOME/.claude"
 
 # Allow: file is inside CWD (logical path)

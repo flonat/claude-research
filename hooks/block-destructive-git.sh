@@ -1,4 +1,6 @@
 #!/bin/bash
+# Skip on non-Mac environments (cloud, mobile)
+source "$(dirname "$0")/resolve-task-mgmt.sh" || exit 0
 # block-destructive-git.sh
 # PreToolUse hook for Bash — catches dangerous git/shell commands
 # and surfaces a permission prompt. Soft block via permissionDecision: "ask".

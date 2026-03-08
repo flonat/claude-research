@@ -1,9 +1,9 @@
 #!/bin/bash
+# Skip on non-Mac environments (cloud, mobile)
+source "$(dirname "$0")/resolve-task-mgmt.sh" || exit 0
 # resume-context-loader.sh
 # SessionStart hook (resume) — surfaces current focus and latest session log
 # so Claude picks up where things left off.
-
-TASK_MGMT="$HOME/Library/CloudStorage/YOUR-CLOUD/Task Management"
 FOCUS_FILE="$TASK_MGMT/.context/current-focus.md"
 LOG_DIR="$TASK_MGMT/log"
 

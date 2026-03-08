@@ -104,7 +104,7 @@
 | `synthetic-data` | Generate structurally realistic synthetic datasets for pilot testing and power analysis |
 | `replication-package` | Replication package assembly, anonymization, and audit (replaces export-project-clean/anon) |
 
-### Infrastructure (21)
+### Infrastructure (25)
 
 | Skill | Purpose |
 |-------|---------|
@@ -128,6 +128,10 @@
 | `gemini-public-audit` | Qualitative audit of public repo (claude-research) and sync script via Gemini CLI |
 | `gemini-refpile-audit` | Qualitative architecture audit of RefPile monorepo via Gemini CLI |
 | `gemini-scout-audit` | Qualitative architecture and security audit of Scout app via Gemini CLI |
+| `codex-private-audit` | Qualitative architecture audit of Task Management infrastructure via Codex CLI |
+| `codex-public-audit` | Qualitative audit of public repo (claude-research) and sync script via Codex CLI |
+| `codex-refpile-audit` | Qualitative architecture audit of RefPile monorepo via Codex CLI |
+| `codex-scout-audit` | Qualitative architecture and security audit of Scout app via Codex CLI |
 | `refpile-development` | Update and manage RefPile development topic documents |
 
 ### Document Formats (3)
@@ -140,4 +144,4 @@
 
 ---
 
-**Total: 83 skills across 11 categories.**
+**Total: 88 skills across 11 categories.**

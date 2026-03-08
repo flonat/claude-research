@@ -1,4 +1,6 @@
 #!/bin/bash
+# Skip on non-Mac environments (cloud, mobile)
+source "$(dirname "$0")/resolve-task-mgmt.sh" || exit 0
 # promise-checker.sh
 # Stop hook — catches "performative compliance": Claude says it remembered/noted/saved
 # something but never actually called Edit or Write.

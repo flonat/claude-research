@@ -112,13 +112,15 @@ Before spawning verification agents, collect all DOIs from Phase 3 candidates an
 Call `scholarly_verify_dois` with:
   dois: ["10.1016/j.ejor.2024.01.001", "10.1287/mnsc.2022.4321", ...]
 
-Results: each DOI gets a status:
-  - VERIFIED (2+ sources confirm) → skip manual verification
+Results: each DOI gets a status AND a resolved title:
+  - VERIFIED (2+ sources confirm) → CHECK TITLE MATCH before accepting
   - SINGLE_SOURCE (1 source only) → still needs manual check
-  - NOT_FOUND → needs full manual verification or may be hallucinated
+  - NOT_FOUND → needs full manual verification or may be fabricated
 ```
 
-Papers without DOIs always go to manual verification.
+**CRITICAL — Title-matching gate:** For every VERIFIED DOI, compare the returned title against the expected title. If they don't match, the DOI is WRONG even though it resolves. This is the most common error pattern — lookup tools return DOIs that are structurally valid (correct journal prefix, plausible suffix) but point to a different paper in the same journal. Example: `10.1111/j.1468-0297.2010.02387.x` vs `02366.x` — both resolve, but to different papers.
+
+Papers with title mismatches go to Step 2. Papers without DOIs always go to manual verification.
 
 ### Step 2: Manual Verification for Remaining Papers
 
@@ -140,12 +142,22 @@ prompt: |
   For EACH paper:
   1. Search the web to confirm the paper exists
   2. Verify: authors (ALL authors — full list, exact names and order), title, year, journal, volume, pages
-  3. Find the DOI and **resolve it** by visiting https://doi.org/[DOI] — confirm the
-     landing page shows the SAME title and authors. If the DOI resolves to a
-     different paper, the metadata is wrong. Search for the correct DOI.
-  4. Find the abstract
-  5. Note the URL where you found/confirmed it (publisher page preferred)
-  6. **Preprint check:** If the paper was found on arXiv, SSRN, NBER, or any
+  3. **Find the correct DOI using these methods IN ORDER of reliability:**
+     a. **Crossref API (most reliable):** Run:
+        `curl -sL "https://api.crossref.org/works?query.bibliographic=TITLE+AUTHOR&rows=3"`
+        Parse the JSON response — the first result's `DOI` field is the correct DOI.
+        This uses publisher metadata and is far more reliable than web search.
+     b. **Publisher page:** Visit the journal's website and search for the paper.
+     c. **Web search (last resort):** Search for the paper + "DOI". But DOIs from
+        web search MUST still be verified in step 4.
+  4. **Resolve the DOI** by visiting https://doi.org/[DOI] — confirm the landing
+     page shows the SAME title and authors. If the DOI resolves to a different
+     paper, the metadata is WRONG. Go back to step 3.
+     **NEVER reconstruct DOIs from memory or by guessing suffixes** — this is the
+     most common hallucination pattern (correct journal prefix, wrong suffix).
+  5. Find the abstract
+  6. Note the URL where you found/confirmed it (publisher page preferred)
+  7. **Preprint check:** If the paper was found on arXiv, SSRN, NBER, or any
      working paper series, search for a published journal or conference version.
      Check Google Scholar, the DOI, and the author's publication page.
      - If a published version exists: use that version's metadata instead
@@ -161,9 +173,13 @@ prompt: |
     secondary aggregators.
   - If you find the paper attributed to different authors on different sources,
     trust the publisher/DOI landing page over Google Scholar snippets.
+  - **Verify author order and initials** against the publisher page. Common
+    errors: swapped first/last names, wrong middle initials, missing co-authors,
+    or extra authors from a different paper with a similar title.
 
   **DOI verification is mandatory.** If the DOI does not resolve to the claimed
   paper, the entry FAILS verification — do not mark it as VERIFIED.
+  Use Crossref API for DOI lookup — never guess or reconstruct DOIs.
 
   Return for each paper one of:
   - VERIFIED: [full corrected metadata including DOI and abstract]

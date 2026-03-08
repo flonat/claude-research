@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+import os, sys
+_cfg = os.path.expanduser("~/.config/task-mgmt/path")
+if not os.path.exists(_cfg) or not os.path.exists(open(_cfg).read().strip()): sys.exit(0)
+TASK_MGMT = open(_cfg).read().strip()
 """postcompact-restore.py
 SessionStart hook (compact matcher) — restores state after context compression.
 

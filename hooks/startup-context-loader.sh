@@ -1,9 +1,9 @@
 #!/bin/bash
+# Skip on non-Mac environments (cloud, mobile)
+source "$(dirname "$0")/resolve-task-mgmt.sh" || exit 0
 # startup-context-loader.sh
 # SessionStart hook (startup) — auto-detects and surfaces project documentation
 # on fresh sessions in any project, so Claude doesn't waste tokens searching.
-
-TASK_MGMT="$HOME/Library/CloudStorage/YOUR-CLOUD/Task Management"
 CWD="$(pwd)"
 CONTEXT=""
 MAX_LINES=30

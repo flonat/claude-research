@@ -171,7 +171,7 @@ This agent supports **council mode** — multi-model deliberation where 3 differ
 
 **Invocation (CLI backend — default, free):**
 ```bash
-cd "packages/cli-council"
+cd "$(cat ~/.config/task-mgmt/path)/packages/cli-council"
 uv run python -m cli_council \
     --prompt-file /tmp/proposal-review-prompt.txt \
     --context-file /tmp/proposal-content.txt \
@@ -188,7 +188,7 @@ See `skills/shared/council-protocol.md` for the full orchestration protocol.
 
 # Persistent Agent Memory
 
-You have a persistent Persistent Agent Memory directory at `.claude/agent-memory/proposal-reviewer/`. Its contents persist across conversations.
+You have a persistent Persistent Agent Memory directory at `~/.claude/agent-memory/proposal-reviewer/`. Its contents persist across conversations.
 
 As you work, consult your memory files to build on previous experience. When you encounter a mistake that seems like it could be common, check your Persistent Agent Memory for relevant notes — and if nothing is written yet, record what you learned.
 
