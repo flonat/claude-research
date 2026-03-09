@@ -30,13 +30,12 @@ RESOURCE_REPOS = 37  # 12 academics + 20 general + 5 bibliography
 def get_ground_truth(root: Path) -> dict[str, int]:
     """Derive infrastructure counts from the filesystem."""
     skills = len(list((root / "skills").glob("*/SKILL.md")))
+    # Also count skill.md (lowercase) to avoid missing any
+    skills += len([p for p in (root / "skills").glob("*/skill.md")
+                   if not any(s.name == "SKILL.md" for s in p.parent.iterdir())])
     agents = len(list((root / ".claude" / "agents").glob("*.md")))
-    rules = len(list((root / ".claude" / "rules").glob("*.md")))
-    hooks = [
-        f
-        for f in (root / "hooks").iterdir()
-        if f.name != ".DS_Store" and not f.name.startswith(".")
-    ]
+    rules = _count_via_find(root / ".claude" / "rules", "*.md")
+    hooks = _count_via_find(root / "hooks", "*.sh") + _count_via_find(root / "hooks", "*.py")
     return {
         "skills": skills,
         "agents": agents,

@@ -51,7 +51,7 @@
 | `bib-parse` | Extract citations from a PDF and generate a validated `.bib` file |
 | `latex-scaffold` | Convert Markdown draft into buildable LaTeX project (md→tex) |
 
-### Submission (4)
+### Submission (5)
 
 | Skill | Purpose |
 |-------|---------|
@@ -59,6 +59,7 @@
 | `retarget-journal` | Switch paper to different journal (rename, reformat, rekey) |
 | `process-reviews` | Referee comments PDF into tracking files |
 | `synthesise-reviews` | Synthesise parallel review reports into a prioritised revision plan |
+| `brief-compliance-check` | Check LaTeX submission against assessment brief (deliverables, word limits, required files) |
 
 ### Project Setup & Session (15)
 
@@ -104,7 +105,7 @@
 | `synthetic-data` | Generate structurally realistic synthetic datasets for pilot testing and power analysis |
 | `replication-package` | Replication package assembly, anonymization, and audit (replaces export-project-clean/anon) |
 
-### Infrastructure (25)
+### Infrastructure (28)
 
 | Skill | Purpose |
 |-------|---------|
@@ -133,6 +134,9 @@
 | `codex-refpile-audit` | Qualitative architecture audit of RefPile monorepo via Codex CLI |
 | `codex-scout-audit` | Qualitative architecture and security audit of Scout app via Codex CLI |
 | `refpile-development` | Update and manage RefPile development topic documents |
+| `scaffold-atlas-topics` | Add new research topics to the atlas (topic files, themes, Notion, Dropbox, docs) |
+| `radar` | Search the web for Claude Code updates, AI workflow patterns, and MCP ecosystem news |
+| `radar-integrate` | Convert saved radar tips into infrastructure changes |
 
 ### Document Formats (3)
 
@@ -144,4 +148,4 @@
 
 ---
 
-**Total: 90 skills across 11 categories.**
+**Total: 91 skills across 11 categories.**
