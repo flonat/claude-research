@@ -23,7 +23,8 @@ from pathlib import Path
 
 # Hardcoded constants (not derivable from filesystem)
 NOTION_DBS = 6
-RESOURCE_REPOS = 27  # 9 academics + 13 general + 5 bibliography
+RESOURCE_REPOS = 37  # 12 academics + 20 general + 5 bibliography
+# Note: skill count is derived from filesystem (skills/*/SKILL.md), not hardcoded
 
 
 def get_ground_truth(root: Path) -> dict[str, int]:
