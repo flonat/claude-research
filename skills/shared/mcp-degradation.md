@@ -66,7 +66,7 @@ These skills should reference this pattern:
 | `task-management` | Notion | Daily planning, task creation, pipeline queries |
 | `init-project-research` | Notion | Pipeline entry creation |
 | `literature` | OpenAlex, Scholarly | Citation search, DOI verification |
-| `audit-research-portfolio` | Notion | Pipeline cross-reference |
+| `audit-atlas-portfolio` | Notion | Pipeline cross-reference |
 
 ## When to Apply
 

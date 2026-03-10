@@ -129,5 +129,5 @@ Show the user:
 | `/audit-project-research` | Complements Convention Compliance with deeper per-project checks |
 | `/update-project-doc` | Fix documentation staleness found by Documentation Freshness |
 | `/sync-permissions` | Fix symlink issues found by Inventory Auditor |
-| `/audit-research-portfolio` | Full cross-system audit (local + Notion + Zotero + pipeline) — deeper than this sweep |
+| `/audit-atlas-portfolio` | Full cross-system audit (local + Notion + Zotero + pipeline) — deeper than this sweep |
 | `/insights-deck` | Maintenance findings can feed into system insights presentations |

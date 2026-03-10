@@ -288,3 +288,4 @@ Next steps:
 | `/save-context` | Context library entries created during Phase 6 |
 | `/session-log` | Offer to create a session log after init completes |
 | `/interview-me` | To develop the research idea before scaffolding |
+| `/audit-atlas-portfolio` | **Drift trigger:** new projects change theme dir counts — see `audit-atlas-portfolio/references/drift-checks.md` |
