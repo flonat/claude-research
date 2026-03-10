@@ -118,6 +118,57 @@ Reduce friction by pre-answering common questions. Only ask the user what can't 
 | Location | Project root | User provides path |
 ```
 
+### Drift Prevention
+
+Skills that reference external state (database schemas, file counts, theme lists, status options) go stale silently. Use this 3-part pattern when a skill has hardcoded values derived from mutable sources.
+
+**Part 1: Runtime detection (Phase 0)**
+
+Add a Phase 0 at the start of the skill that checks hardcoded values against reality before proceeding:
+
+```markdown
+## Phase 0: Drift Detection
+
+Before starting, verify skill references:
+1. Count actual {items} — compare against ~N in this skill
+2. List actual {categories} — compare against the N listed here
+3. Fetch {schema/config} — verify properties still match
+
+If drift detected:
+- Warn in output header: "⚠ Drift: {what} was {expected}, actually {found}"
+- Use actual values for this run (self-heal)
+- Log to references/drift-checks.md
+```
+
+**Part 2: Drift reference file**
+
+Create `references/drift-checks.md` listing every drift-prone value:
+
+```markdown
+| Value | Location | Source of Truth | Trigger |
+|-------|----------|-----------------|---------|
+| Topic count (~67) | SKILL.md Phase 1 | ls topics/**/*.md | /scaffold-atlas-topics |
+| Theme list (9) | SKILL.md, sa-prompts.md, build_report.py | ls Research Projects/ | New theme dir |
+```
+
+Include a Drift Log table where Phase 0 appends detected drift with timestamps.
+
+**Part 3: Trigger notes in related skills**
+
+Add cross-references in skills that commonly cause drift:
+
+```markdown
+| `/audit-atlas-portfolio` | **Drift trigger:** new topics change count — see drift-checks.md |
+```
+
+This ensures the person (or agent) running the triggering skill is aware that downstream skills may need updating.
+
+**When to use:** Any skill with hardcoded counts, database IDs, schema property names, status option lists, file paths derived from external systems, or theme/category lists that grow over time.
+
+**When to skip:** Skills that derive all values at runtime (no hardcoded references to external state).
+
+**Example:** `/audit-atlas-portfolio` — topic count, theme list, Notion schemas, stage mappings, rules count all drift. Phase 0 detects and self-heals; `references/drift-checks.md` tracks 8 drift-prone values.
+
 ### Progressive Disclosure
 
 Control what goes where based on how often the agent needs it:

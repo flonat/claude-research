@@ -34,13 +34,15 @@ def get_ground_truth(root: Path) -> dict[str, int]:
     skills += len([p for p in (root / "skills").glob("*/skill.md")
                    if not any(s.name == "SKILL.md" for s in p.parent.iterdir())])
     agents = len(list((root / ".claude" / "agents").glob("*.md")))
-    rules = _count_via_find(root / ".claude" / "rules", "*.md")
-    hooks = _count_via_find(root / "hooks", "*.sh") + _count_via_find(root / "hooks", "*.py")
+    rules = len(list((root / ".claude" / "rules").glob("*.md")))
+    hooks_sh = len(list((root / "hooks").glob("*.sh")))
+    hooks_py = len(list((root / "hooks").glob("*.py")))
+    hooks = hooks_sh + hooks_py
     return {
         "skills": skills,
         "agents": agents,
         "rules": rules,
-        "hooks": len(hooks),
+        "hooks": hooks,
     }
 
 

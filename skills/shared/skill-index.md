@@ -105,7 +105,7 @@
 | `synthetic-data` | Generate structurally realistic synthetic datasets for pilot testing and power analysis |
 | `replication-package` | Replication package assembly, anonymization, and audit (replaces export-project-clean/anon) |
 
-### Infrastructure (28)
+### Infrastructure (24)
 
 | Skill | Purpose |
 |-------|---------|
@@ -113,7 +113,7 @@
 | `creation-guard` | Pre-flight duplicate check before creating new skills/agents |
 | `lessons-learned` | Structured post-mortem for incidents and stuck sessions |
 | `system-audit` | Parallel audits across skills, hooks, agents, rules, docs |
-| `audit-research-portfolio` | Full audit of all topics across 4 systems |
+| `audit-atlas-portfolio` | Full audit of all topics across 4 systems |
 | `sync-private-doc` | Propagate counts across all private Task Management docs |
 | `sync-public-doc` | Sync private infrastructure to the public repo (claude-research) |
 | `sync-refpile-doc` | Sync RefPile docs with actual codebases (extension, dashboard, MCP) |
@@ -125,15 +125,12 @@
 | `publish` | Full publication pipeline: sync, bump, commit, tag, publish |
 | `skill-creator` | Create, iterate, and benchmark skills with eval viewer. *From Anthropic.* |
 | `mcp-builder` | Guide for creating MCP servers (Python/FastMCP or TypeScript). *From Anthropic.* |
-| `gemini-private-audit` | Qualitative architecture audit of Task Management infrastructure via Gemini CLI |
-| `gemini-public-audit` | Qualitative audit of public repo (claude-research) and sync script via Gemini CLI |
-| `gemini-refpile-audit` | Qualitative architecture audit of RefPile monorepo via Gemini CLI |
-| `gemini-scout-audit` | Qualitative architecture and security audit of Scout app via Gemini CLI |
-| `codex-private-audit` | Qualitative architecture audit of Task Management infrastructure via Codex CLI |
-| `codex-public-audit` | Qualitative audit of public repo (claude-research) and sync script via Codex CLI |
-| `codex-refpile-audit` | Qualitative architecture audit of RefPile monorepo via Codex CLI |
-| `codex-scout-audit` | Qualitative architecture and security audit of Scout app via Codex CLI |
+| `external-private-audit` | Qualitative architecture audit of Task Management via external LLM CLI (Codex/Gemini) |
+| `external-public-audit` | Qualitative audit of public repo and sync script via external LLM CLI (Codex/Gemini) |
+| `external-refpile-audit` | Qualitative architecture audit of RefPile monorepo via external LLM CLI (Codex/Gemini) |
+| `external-scout-audit` | Qualitative architecture and security audit of Scout app via external LLM CLI (Codex/Gemini) |
 | `refpile-development` | Update and manage RefPile development topic documents |
+| `deploy-atlas` | Compile atlas.json from topic files, commit, and deploy atlas web app to Fly.io |
 | `scaffold-atlas-topics` | Add new research topics to the atlas (topic files, themes, Notion, Dropbox, docs) |
 | `radar` | Search the web for Claude Code updates, AI workflow patterns, and MCP ecosystem news |
 | `radar-integrate` | Convert saved radar tips into infrastructure changes |
@@ -148,4 +145,4 @@
 
 ---
 
-**Total: 91 skills across 11 categories.**
+**Total: 87 skills across 11 categories.**

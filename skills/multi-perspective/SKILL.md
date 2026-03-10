@@ -23,6 +23,7 @@ The core insight: a single-perspective analysis inherits the biases of that pers
 
 - **Quick feedback** — use `/devils-advocate` (single-perspective adversarial)
 - **Literature search** — use `/literature` (discovery, not deliberation)
+- **Generating new questions** — use `/scout generate` (this skill evaluates, not generates)
 - **Paper proofreading** — use `/proofread` or `paper-critic` agent
 
 ## Workflow

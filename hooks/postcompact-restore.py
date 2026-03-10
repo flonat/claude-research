@@ -20,7 +20,7 @@ import re
 import sys
 from pathlib import Path
 
-TASK_MGMT = Path.home() / "Library" / "CloudStorage" / "YOUR-CLOUD" / "Task Management"
+TASK_MGMT = Path(TASK_MGMT)
 LOG_DIR = TASK_MGMT / "log"
 PLANS_DIR = LOG_DIR / "plans"
 FOCUS_FILE = TASK_MGMT / ".context" / "current-focus.md"

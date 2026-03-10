@@ -297,6 +297,7 @@ Download arXiv LaTeX source for full-text reading (equations, methodology, exact
 
 | Skill / Package | When to use instead/alongside |
 |-------|-------------------------------|
+| `/scout generate` | Generate research questions first |
 | `/interview-me` | Develop a specific idea before searching |
 | `/bib-validate` | **Mandatory** after assembling `.bib` (Phase 6b) — metadata quality, preprint staleness, DOI checks |
 | `/split-pdf` | Deep-read a paper found during search |

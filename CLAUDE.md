@@ -106,6 +106,8 @@ Before running any experiment sweep or simulation batch:
 | Modules — Instructor | `YOUR-MODULES-INSTRUCTOR-DATABASE-ID-HERE` (data source) |
 | Research Themes | `2e8baef4-3e2e-4ea5-b25a-18a71ed47690` (data source) |
 | Atlas (Topic Inventory) | `0a227f82-60f4-451a-a163-bff2ce8fa9c3` (data source) |
+| Venues | `YOUR-CONFERENCES-DATABASE-ID-HERE` |
+| Submissions | `f3d3df85-cd5a-467c-954b-7831a74b7156` |
 
 Always fetch the database schema first to get correct property names before any create/update calls.
 <!-- NOTION-DATABASES:END -->
