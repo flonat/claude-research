@@ -126,27 +126,45 @@ Common typo patterns:
 - Missing/extra letter: `santanna` vs `sant'anna` vs `santana`
 - Underscore vs camelCase: `smith_jones` vs `smithjones`
 
-## Zotero Library Cross-Reference
+## Reference Manager Cross-Reference
 
-After the disk-based cross-reference, check each cited key against the user's Zotero library via the `refpile` MCP server. This ensures the local `.bib` and Zotero stay in sync.
+After the disk-based cross-reference, check each cited key against the user's reference libraries. Two sources are available — check both when possible.
 
-For each citation key found in the `.tex` files:
+### Paperpile (Primary)
+
+Cross-reference via the `paperpile` MCP server. For each citation key found in the `.tex` files:
+
+1. Call `mcp__paperpile__search_library` with the citation key as query
+2. Match on the citekey field in results
+3. For entries with issues, call `mcp__paperpile__get_item` for full metadata
+4. Use `mcp__paperpile__export_bib` to generate correct BibTeX for missing/outdated entries
+
+**Additional checks:**
+- Call `mcp__paperpile__get_labels` to verify folder organisation matches project themes
+- For projects with a known Paperpile label, call `mcp__paperpile__get_items_by_label` to find papers in the folder but not cited (potential missing citations)
+
+### Zotero (Legacy — via RefPile MCP)
+
+Cross-reference via the `refpile` MCP server. For each citation key:
 
 1. Call `search_library` (refpile MCP) with the citation key as query
 2. Match on the `citationKey` field in results
 
-**Status categories:**
+### Combined Status Categories
 
-| .bib | Zotero | Status | Report |
-|------|--------|--------|--------|
-| Yes | Yes | Healthy | `✓ In sync` |
-| Yes | No | Drift | `⚠ In local .bib but not in Zotero — may need import` |
-| No | Yes | Export gap | `ℹ In Zotero but not exported to local .bib` |
-| No | No | Missing | `✗ Missing from both — add to Zotero first` |
+| .bib | Paperpile | Zotero | Status | Report |
+|------|-----------|--------|--------|--------|
+| Yes | Yes | Yes | Healthy | `✓ In sync across all` |
+| Yes | Yes | No | Partial | `✓ Paperpile ↔ .bib in sync (not in Zotero)` |
+| Yes | No | Yes | Partial | `✓ Zotero ↔ .bib in sync (not in Paperpile)` |
+| Yes | No | No | Drift | `⚠ In local .bib but not in any reference manager` |
+| No | Yes | — | Export gap | `ℹ In Paperpile but not exported to local .bib` |
+| No | — | Yes | Export gap | `ℹ In Zotero but not exported to local .bib` |
+| No | No | No | Missing | `✗ Missing from all — add to Paperpile first` |
 
-Include this as a "Zotero Sync" section in the report, after the cross-reference results and before quality checks.
+Include this as a "Reference Manager Sync" section in the report, after cross-reference results and before quality checks.
 
-**Graceful degradation:** If the refpile MCP is unavailable (Zotero not running, server not started), skip this phase with a warning: "Zotero cross-reference skipped — refpile MCP unavailable. Run with Zotero open for full validation." Continue with disk-only validation.
+**Graceful degradation:** If either MCP is unavailable, skip that source with a warning and continue with whatever is available. If both are unavailable, continue with disk-only validation.
 
 ## Quality Checks on .bib Entries
 
@@ -229,8 +247,9 @@ Sections: Summary table → Critical (missing entries) → Warning (typos, unuse
 
 When missing entries or suspicious metadata are flagged, check these sources in order:
 
-1. **Zotero library** (refpile MCP) — call `search_library` by title. The user may already have the reference but with a different key. If found, use the Zotero citation key.
-2. **Bibliography MCP** (scholarly sources):
+1. **Paperpile** (paperpile MCP) — call `mcp__paperpile__search_library` by title. If found, use `mcp__paperpile__export_bib` to get correct BibTeX.
+2. **Zotero library** (refpile MCP) — call `search_library` by title. The user may already have the reference but with a different key.
+3. **Bibliography MCP** (scholarly sources):
    - **`scholarly_search`** — search by title to find the correct entry across OpenAlex + Scopus + WoS
    - **`scholarly_verify_dois`** — batch-verify DOIs across all sources (preferred over manual DOI resolution)
    - **`openalex_lookup_doi`** — look up full metadata for a specific DOI

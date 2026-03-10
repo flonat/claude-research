@@ -25,6 +25,8 @@
 | Skill | Purpose |
 |-------|---------|
 | `proofread` | 7-category LaTeX proofreading scorecard (report only) |
+| `voice-analyzer` | Analyze writing samples to create a portable voice profile (VOICE.md) |
+| `voice-editor` | Edit content to match a voice profile (6-pass workflow, 4 editing modes) |
 
 ### Presentation (8)
 
@@ -105,7 +107,7 @@
 | `synthetic-data` | Generate structurally realistic synthetic datasets for pilot testing and power analysis |
 | `replication-package` | Replication package assembly, anonymization, and audit (replaces export-project-clean/anon) |
 
-### Infrastructure (24)
+### Infrastructure (25)
 
 | Skill | Purpose |
 |-------|---------|
@@ -145,4 +147,4 @@
 
 ---
 
-**Total: 87 skills across 11 categories.**
+**Total: 88 skills across 11 categories.**

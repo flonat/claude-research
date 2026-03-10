@@ -42,7 +42,7 @@ You (orchestrator)
 ├── Phase 4: Parallel verification (general-purpose agents, batches of 5)
 ├── Phase 5: Parallel PDF download (Bash agents)
 ├── Phase 6: Assemble .bib (direct — no sub-agent)
-├── Phase 6c: Sync to Zotero (direct — refpile MCP)
+├── Phase 6c: Sync to reference managers (Paperpile + Zotero via MCP)
 └── Phase 7: Synthesize narrative (direct, or cli-council for multi-model synthesis)
 ```
 
@@ -65,8 +65,9 @@ Check for existing `.bib` files in project root, `/references`, `/bib`, `/biblio
 1. Parse existing entries to avoid duplicates and understand context
 2. Identify gaps — note if bibliography skews toward certain years/methods
 3. Compile list of existing citation keys to pass to sub-agents
-4. **Check Zotero library** — call `search_library` (refpile MCP) for the search topic. This finds papers the user already has, preventing re-discovery of known work. Mark these as **ALREADY IN LIBRARY** and skip them in Phase 2. If refpile MCP is unavailable, log a warning and continue.
-5. **Check source availability** — call `scholarly_source_status` (bibliography MCP) to see which sources are active (OpenAlex always; Scopus and WoS if API keys are set). Report this so search agents know what coverage to expect.
+4. **Check Paperpile library** — call `mcp__paperpile__search_library` for the search topic. This finds papers the user already has, preventing re-discovery of known work. Mark these as **ALREADY IN LIBRARY** and skip them in Phase 2. Also call `mcp__paperpile__get_items_by_label` if a relevant folder exists to get the full reading list for this topic.
+5. **Check Zotero library** (legacy) — call `search_library` (refpile MCP) for the search topic. Same purpose as above. If refpile MCP is unavailable, log a warning and continue.
+6. **Check source availability** — call `scholarly_source_status` (bibliography MCP) to see which sources are active (OpenAlex always; Scopus and WoS if API keys are set). Report this so search agents know what coverage to expect.
 
 ---
 
@@ -180,17 +181,27 @@ This is **not optional** — every time new entries are added to a `.bib` file, 
 
 ---
 
-## Phase 6c: Sync to Zotero
+## Phase 6c: Sync to Reference Managers
 
-After assembling and validating the `.bib`, sync new references to the user's Zotero library via the refpile MCP.
+After assembling and validating the `.bib`, sync new references to the user's reference libraries.
 
-For each new entry in the assembled `.bib` that isn't already in Zotero (not marked **ALREADY IN LIBRARY** from Phase 1):
+### Paperpile (Primary)
+
+For each new entry not marked **ALREADY IN LIBRARY** from Phase 1:
+
+1. **Check if already in Paperpile** — call `mcp__paperpile__search_library` by title to avoid duplicates
+2. **Report additions needed** — list entries that need manual import into Paperpile (Paperpile MCP is read-only; the user adds via the Paperpile app or browser extension)
+3. **Export BibTeX** — if Paperpile has entries with better metadata than what was assembled, call `mcp__paperpile__export_bib` and use those entries instead
+
+### Zotero (Legacy)
+
+For each new entry not already in Zotero:
 
 1. **Auto-add to Zotero** — call `add_item` (refpile MCP) for each new reference with full metadata (title, authors, year, journal, DOI).
 2. **Tag for review** — call `add_to_collection` with the `_Needs Review` collection so the user can verify entries in the Zotero app.
 3. **Report results** — show a summary table of what was added and remind the user to check `_Needs Review` in Zotero.
 
-**Graceful degradation:** If refpile MCP is unavailable (Zotero not running), skip this phase with a warning. The `.bib` file on disk is still the primary output.
+**Graceful degradation:** If either MCP is unavailable, skip that source with a warning. The `.bib` file on disk is still the primary output.
 
 ---
 

@@ -76,6 +76,8 @@ Just say these naturally:
 - Many repos are local-only, synced via Dropbox. Do NOT assume a remote exists.
 - Before pushing, check if a remote is configured with `git remote -v`.
 - Never push without verifying the remote exists and is correct.
+- **Deploy order:** When asked to "commit and push" or "deploy", always follow: 1) commit, 2) push, 3) deploy. Never deploy before pushing.
+- **Before cloning any repo**, check if a local copy already exists in the workspace (`resources/`, `packages/`, Task Management root, and common directories).
 <!-- CONVENTIONS:END -->
 
 ### Experiment Sweeps & Simulation Batches
@@ -163,6 +165,8 @@ In `.claude/rules/` — these apply automatically to every session. See [`docs/r
 - What we worked on
 - Where things were left off
 - What's coming next
+
+**Standard closing sequence:** commit → push → deploy (if needed) → `/session-recap`.
 
 This helps me (Claude) pick up where we left off next time.
 <!-- AFTER-SESSION:END -->

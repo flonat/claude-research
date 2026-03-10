@@ -1,31 +1,33 @@
 ---
 name: init-project-research
-description: "Bootstrap a research project: interview for details, scaffold directory, create Overleaf symlink, init git, and sync with context library and Notion. Triggers: 'new research project', 'start a new paper'. Not for lightweight setups — use /init-project-light instead."
-allowed-tools: Bash(mkdir*), Bash(ln*), Bash(ls*), Bash(git*), Bash(touch*), Bash(jq*), Read, Write, Edit, Glob, Grep, Task, AskUserQuestion, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page
+description: "Bootstrap a research project: interview, scaffold directory, Overleaf symlink, git init, Atlas topic, Notion Pipeline entry, venue links. Triggers: 'new research project', 'start a new paper', 'add this to the atlas'. Not for lightweight setups — use /init-project-light instead."
+allowed-tools: Bash(mkdir*), Bash(ln*), Bash(ls*), Bash(git*), Bash(touch*), Bash(jq*), Bash(uv*), Read, Write, Edit, Glob, Grep, Task, AskUserQuestion, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page
 argument-hint: "[project-name or no arguments for guided setup]"
 ---
 
 # Init Project Research
 
-> Interview-driven skill that scaffolds a research project directory and integrates it with the user's Task Management system (context library + Notion).
+> Interview-driven skill that scaffolds a research project directory, creates an Atlas topic, syncs to Notion (Atlas + Pipeline + Venues), and integrates with the user's Task Management system.
 
 ## When to Use
 
 - Starting a new research paper or project from scratch
 - When the user says "new project", "set up a project", "init project", "bootstrap project"
 - After deciding to pursue a new research idea that needs its own folder
+- When scaffolding ideas from Scout reports, brainstorming, or supervisor meetings
 
 ## Overview
 
-Seven phases, executed in order:
+Eight phases, executed in order:
 
 1. **Interview** — gather project details via structured questions
 2. **Scaffold** — create directory structure based on project type
 3. **Seed files** — populate CLAUDE.md, README.md, .gitignore with interview answers
 4. **Overleaf symlink** — link `paper/` to Overleaf directory
 5. **Git init** — initialise repo and make first commit
-6. **Task Management sync** — update context library and create Notion entry
-7. **Confirmation** — report what was created
+6. **Atlas & Pipeline sync** — create Atlas topic file, Notion Atlas entry, Pipeline row, venue links, Dropbox folder
+7. **Task Management sync** — update context library files
+8. **Confirmation** — report what was created
 
 ---
 
@@ -218,34 +220,81 @@ If local git only: remind project syncs via Dropbox. **Do NOT push unless a remo
 
 ---
 
-## Phase 6: Task Management Integration
+## Phase 6: Atlas & Pipeline Sync
 
-All paths relative to Task Management root.
+Creates the research topic in all 6 systems: local file → Notion Atlas → Notion Pipeline → Venues → Dropbox → documentation.
 
-### 6a. Update `.context/projects/_index.md`
+### 6a. Create Atlas Topic File
 
-Add a new row to the "Papers in Progress" table. Stage is typically "Idea" or "Literature Review".
+1. Read `research/atlas/themes.md` — current themes and topic lists
+2. Glob `research/atlas/topics/**/*.md` — existing slugs (avoid duplicates)
+3. Determine the **slug** (kebab-case, 2-4 words). **Names the idea, not a venue or output.** Anti-patterns: `mres-dissertation`, `icml-paper`. Good: `information-entropy`, `carbon-collusion`.
+4. Write `research/atlas/topics/{theme-dir}/{slug}.md` using the YAML frontmatter template from [`references/atlas-schema.md`](references/atlas-schema.md). Include `## Description`, `## Key References`, `## Open Questions`.
+5. Update `research/atlas/themes.md` — add slug to the correct theme's topic list. If new theme needed: add row, create directory, create Notion theme entry (`data_source_id: 2e8baef4-3e2e-4ea5-b25a-18a71ed47690`).
 
-### 6b. Create `.context/projects/papers/<short-name>.md`
+### 6b. Create Notion Atlas Entry
 
-Template in [references/scaffold-details.md](references/scaffold-details.md#papers-context-file-template).
+1. Look up the theme's Notion page ID via `notion-search`
+2. Create Atlas entry via `notion-create-pages` with parent `data_source_id: 0a227f82-60f4-451a-a163-bff2ce8fa9c3`
+3. Map YAML fields to Notion properties per [`references/atlas-schema.md`](references/atlas-schema.md)
+4. Set Theme relation: `"[\"https://www.notion.so/{theme-page-id}\"]"`
+5. Only use valid Methods multi-select values (see schema reference)
 
-### 6c. Update `.context/current-focus.md`
+### 6c. Create Notion Pipeline Entry
 
-Add to Top 3 Active Projects or as an Open Loop. Use targeted `Edit` — do NOT rewrite the file.
+1. Create Pipeline row via `notion-create-pages` with parent `data_source_id: YOUR-PIPELINE-DATABASE-ID-HERE`
+2. Set: Name (title), Stage, Target Journal, Co-authors, Priority ("Medium")
+3. Link to Atlas topic via "Related Topics" relation
+4. Link to Venues via "Target Venue" relation (search Venues DB `YOUR-CONFERENCES-DATABASE-ID-HERE` for venue pages)
+5. Save the Pipeline Notion page URL for the confirmation report
 
-### 6d. Create Notion Research Pipeline Entry
+### 6d. Create Dropbox Folder
 
+```bash
+mkdir -p "~/Library/CloudStorage/YOUR-CLOUD/Research/{Theme Name}/{Project Name}"
 ```
-Database: YOUR-PIPELINE-DATABASE-ID-HERE
-Properties: Name (title), Stage, Target Journal, Co-authors, Priority ("Medium")
+
+### 6e. Regenerate RECAP.md
+
+```bash
+uv run python research/atlas/generate_recap.py
 ```
 
-Save the Notion page URL for the confirmation report.
+### 6f. Update Atlas Counts
+
+If topic or theme count changed, update `research/atlas/CLAUDE.md` topic/theme counts and theme directory listing.
+
+### Atlas Defaults
+
+| Setting | Default | Override |
+|---------|---------|---------|
+| Status | `Idea` | User specifies |
+| Priority | `Medium` | User specifies |
+| Data Availability | `None` | User specifies |
+| Feasibility | `Medium` | User specifies |
+| Institution | Infer from theme/co-author | User specifies |
 
 ---
 
-## Phase 7: Confirmation Report
+## Phase 7: Task Management Integration
+
+All paths relative to Task Management root.
+
+### 7a. Update `.context/projects/_index.md`
+
+Add a new row to the "Papers in Progress" table. Stage is typically "Idea" or "Literature Review".
+
+### 7b. Create `.context/projects/papers/<short-name>.md`
+
+Template in [references/scaffold-details.md](references/scaffold-details.md#papers-context-file-template).
+
+### 7c. Update `.context/current-focus.md`
+
+Add to Top 3 Active Projects or as an Open Loop. Use targeted `Edit` — do NOT rewrite the file.
+
+---
+
+## Phase 8: Confirmation Report
 
 ```
 Created research project: <Working Title>
@@ -256,11 +305,18 @@ Git:        initialised on branch main (<short commit hash>)
 GitHub:     <URL or "local-only (Dropbox sync)">
 Overleaf:   paper/ → <target path>
 
+Atlas & Pipeline:
+  - Atlas topic file:             research/atlas/topics/{theme}/{slug}.md
+  - Notion Atlas entry:           created (<URL>)
+  - Notion Pipeline entry:        created (<URL>)
+  - Venue links:                  <venue names>
+  - Dropbox folder:               created
+  - RECAP.md:                     regenerated
+
 Task Management updates:
   - projects/_index.md:           added row
   - projects/papers/<name>.md:    created
   - current-focus.md:             updated
-  - Notion Research Pipeline:     created entry (<URL>)
 
 Setup log:  log/<filename>    created
 
@@ -278,6 +334,15 @@ Next steps:
 - **gh CLI not available:** Skip GitHub, note in report.
 - **Notion API fails:** Skip Notion entry, offer to retry.
 - **Directory already exists:** Ask whether to continue or abort.
+- **Duplicate Atlas slug:** Flag and skip Atlas creation — may need merge into existing topic.
+
+## Never Do These (Atlas)
+
+- Never create a topic file without YAML frontmatter — it breaks RECAP.md generation
+- Never hard-code Notion theme page IDs — always look them up (they change if recreated)
+- Never use Methods values outside the valid multi-select options — the API will reject
+- Never use venue/output names as slugs — the slug names the research idea
+- Never create a separate topic file for a companion paper of an existing idea — add it as an output instead
 
 ## Cross-References
 
@@ -285,7 +350,8 @@ Next steps:
 |-------|-------------|
 | `/literature` | Run after init to begin literature search |
 | `/project-safety` | Already handled — .gitignore and settings created during init |
-| `/save-context` | Context library entries created during Phase 6 |
+| `/save-context` | Context library entries created during Phase 7 |
 | `/session-log` | Offer to create a session log after init completes |
 | `/interview-me` | To develop the research idea before scaffolding |
+| `/deploy-atlas` | After init, run to compile and deploy changes to atlas.user.com |
 | `/audit-atlas-portfolio` | **Drift trigger:** new projects change theme dir counts — see `audit-atlas-portfolio/references/drift-checks.md` |
