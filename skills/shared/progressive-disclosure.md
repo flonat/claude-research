@@ -4,7 +4,7 @@
 
 ## The Problem
 
-When a skill is invoked, its full `SKILL.md` is loaded into context. For large skills (200+ lines), most of the content may be irrelevant to the specific task. This wastes tokens and can push sessions toward compression earlier than necessary.
+When a skill is invoked, its full `SKILL.md` is loaded into context. For large skills (200+ lines), most of the content may be irrelevant to the specific task. This wastes tokens and can push sessions toward compression earlier than necessary. Anthropic's official recommendation is to keep SKILL.md under 500 lines; our stricter threshold (200 lines to trigger splitting) ensures leaner context usage.
 
 ## The Pattern
 
@@ -71,6 +71,10 @@ These skills already follow progressive disclosure:
 - `/bib-validate` — preprint check logic in `references/preprint-check.md`, report template in `references/report-template.md`
 - `/code-review` — quality rubric in `references/quality-rubric.md`
 - `/devils-advocate` — competing hypotheses framework in `references/competing-hypotheses.md`
+
+### Reference Depth
+
+Keep references **one level deep** from SKILL.md. All reference files should link directly from SKILL.md — never chain references (SKILL.md → file A → file B). Claude may partially read deeply nested files (e.g., `head -100`), resulting in incomplete information. Per [Anthropic's official best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).
 
 ### When NOT to Apply
 

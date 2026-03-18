@@ -1,7 +1,7 @@
 ---
 name: init-project-research
-description: "Bootstrap a research project: interview, scaffold directory, Overleaf symlink, git init, Atlas topic, Notion Pipeline entry, venue links. Triggers: 'new research project', 'start a new paper', 'add this to the atlas'. Not for lightweight setups — use /init-project-light instead."
-allowed-tools: Bash(mkdir*), Bash(ln*), Bash(ls*), Bash(git*), Bash(touch*), Bash(jq*), Bash(uv*), Read, Write, Edit, Glob, Grep, Task, AskUserQuestion, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page
+description: "Use when you need to bootstrap a full research project with directory scaffold and Overleaf symlink."
+allowed-tools: Bash(mkdir*), Bash(ln*), Bash(ls*), Bash(git*), Bash(touch*), Bash(jq*), Bash(uv*), Bash(scout *), Bash(curl*), Bash(wget*), Read, Write, Edit, Glob, Grep, Task, WebSearch, WebFetch, AskUserQuestion, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page
 argument-hint: "[project-name or no arguments for guided setup]"
 ---
 
@@ -27,7 +27,8 @@ Eight phases, executed in order:
 5. **Git init** — initialise repo and make first commit
 6. **Atlas & Pipeline sync** — create Atlas topic file, Notion Atlas entry, Pipeline row, venue links, Dropbox folder
 7. **Task Management sync** — update context library files
-8. **Confirmation** — report what was created
+8. **Literature & Discovery** — run literature review + scout novelty assessment
+9. **Confirmation** — report what was created
 
 ---
 
@@ -59,7 +60,7 @@ Present detected values as the first option (marked "Detected from paper") in in
 
 ### Round 2 — Setup Details
 
-1. **Overleaf project name** — folder under `~/Library/CloudStorage/YOUR-CLOUD/Apps/Overleaf/`. Verify path exists.
+1. **Overleaf project name** — folder under the Overleaf root (read from `~/.config/task-mgmt/overleaf-root`, fallback `~/Apps/Overleaf/`) or git-synced Overleaf. Verify path exists.
 2. **LaTeX template** — scan `Task Management/templates/` for options. Default: Working Paper (`templates/latex-wp/`). Also offer "None".
 3. **Overleaf external sharing link** — read-only URL for collaborators
 4. **Git repository?** — Local git (Recommended) / GitHub remote / No git
@@ -67,9 +68,30 @@ Present detected values as the first option (marked "Detected from paper") in in
 
 ### Round 3 — Research Content
 
-1. **Abstract / elevator pitch** — 1-2 sentences
-2. **Key research questions** — up to 3
-3. **Methodology overview** — one line
+1. **Paper type** — Empirical / Theoretical / Methodological / Mixed
+2. **Abstract / elevator pitch** — 1-2 sentences
+3. **Key research questions** — up to 3
+
+Then ask **paper-type-specific questions** (adapted from Lopez-Lira's idea evaluation template):
+
+#### If Empirical:
+4. **Identification strategy** — How will you establish causality? What is your source of exogenous variation? Name the specific shock, instrument, or natural experiment. (If unknown, note "TBD — pipeline will help identify")
+5. **Data sources** — List every dataset. Be specific: name the database, key variables, and sample period. (e.g., "CRSP Monthly Stock File (1970-2025): returns, market cap")
+6. **Proposed specification** — Write the main regression equation if possible, or describe the empirical test in words.
+
+#### If Theoretical:
+4. **Model setup** — Key agents, frictions, or market failures. Which assumptions drive results? Which are new vs standard?
+5. **Key predictions** — 2-3 testable predictions or comparative statics that distinguish this model from existing ones.
+6. **Relation to existing models** — Which models are closest? What friction/agent/structure is added or changed? Why does this matter?
+
+#### If Methodological:
+4. **The problem** — What existing method fails, and in what setting? What bias, inconsistency, or limitation is addressed?
+5. **Proposed method** — What is the new estimator, test, or procedure? Key properties (consistency, efficiency, robustness)?
+6. **Demonstration plan** — Monte Carlo, analytical proofs, empirical application to a known setting? What existing results would change?
+
+#### If Mixed:
+Ask the relevant subset of the above based on which types apply.
+
 
 ---
 
@@ -216,63 +238,15 @@ cd "<project-path>" && git init && git branch -m main && git add . && git commit
 
 If GitHub remote requested: `gh repo create "user/<project-name>" --private --source=. --remote=origin --push`
 
-If local git only: remind project syncs via Dropbox. **Do NOT push unless a remote was explicitly requested.**
+If local git only: remind to push before switching machines. **Do NOT push unless a remote was explicitly requested.**
 
 ---
 
 ## Phase 6: Atlas & Pipeline Sync
 
-Creates the research topic in all 6 systems: local file → Notion Atlas → Notion Pipeline → Venues → Dropbox → documentation.
+Creates the research topic in all systems: local file → Notion Atlas → Notion Pipeline → Venues → project folder → documentation.
 
-### 6a. Create Atlas Topic File
-
-1. Read `research/atlas/themes.md` — current themes and topic lists
-2. Glob `research/atlas/topics/**/*.md` — existing slugs (avoid duplicates)
-3. Determine the **slug** (kebab-case, 2-4 words). **Names the idea, not a venue or output.** Anti-patterns: `mres-dissertation`, `icml-paper`. Good: `information-entropy`, `carbon-collusion`.
-4. Write `research/atlas/topics/{theme-dir}/{slug}.md` using the YAML frontmatter template from [`references/atlas-schema.md`](references/atlas-schema.md). Include `## Description`, `## Key References`, `## Open Questions`.
-5. Update `research/atlas/themes.md` — add slug to the correct theme's topic list. If new theme needed: add row, create directory, create Notion theme entry (`data_source_id: 2e8baef4-3e2e-4ea5-b25a-18a71ed47690`).
-
-### 6b. Create Notion Atlas Entry
-
-1. Look up the theme's Notion page ID via `notion-search`
-2. Create Atlas entry via `notion-create-pages` with parent `data_source_id: 0a227f82-60f4-451a-a163-bff2ce8fa9c3`
-3. Map YAML fields to Notion properties per [`references/atlas-schema.md`](references/atlas-schema.md)
-4. Set Theme relation: `"[\"https://www.notion.so/{theme-page-id}\"]"`
-5. Only use valid Methods multi-select values (see schema reference)
-
-### 6c. Create Notion Pipeline Entry
-
-1. Create Pipeline row via `notion-create-pages` with parent `data_source_id: YOUR-PIPELINE-DATABASE-ID-HERE`
-2. Set: Name (title), Stage, Target Journal, Co-authors, Priority ("Medium")
-3. Link to Atlas topic via "Related Topics" relation
-4. Link to Venues via "Target Venue" relation (search Venues DB `YOUR-CONFERENCES-DATABASE-ID-HERE` for venue pages)
-5. Save the Pipeline Notion page URL for the confirmation report
-
-### 6d. Create Dropbox Folder
-
-```bash
-mkdir -p "~/Library/CloudStorage/YOUR-CLOUD/Research/{Theme Name}/{Project Name}"
-```
-
-### 6e. Regenerate RECAP.md
-
-```bash
-uv run python research/atlas/generate_recap.py
-```
-
-### 6f. Update Atlas Counts
-
-If topic or theme count changed, update `research/atlas/CLAUDE.md` topic/theme counts and theme directory listing.
-
-### Atlas Defaults
-
-| Setting | Default | Override |
-|---------|---------|---------|
-| Status | `Idea` | User specifies |
-| Priority | `Medium` | User specifies |
-| Data Availability | `None` | User specifies |
-| Feasibility | `Medium` | User specifies |
-| Institution | Infer from theme/co-author | User specifies |
+Full steps (6a–6f) and Atlas defaults: [`references/atlas-pipeline-sync.md`](references/atlas-pipeline-sync.md)
 
 ---
 
@@ -294,7 +268,15 @@ Add to Top 3 Active Projects or as an Open Loop. Use targeted `Edit` — do NOT 
 
 ---
 
-## Phase 8: Confirmation Report
+## Phase 8: Literature & Discovery
+
+After scaffolding and syncing, automatically run a literature review (`/literature`) and scout novelty assessment (`/scout`) in parallel via sub-agents.
+
+Full steps (8a–8c) and error handling: [`references/literature-discovery.md`](references/literature-discovery.md)
+
+---
+
+## Phase 9: Confirmation Report
 
 ```
 Created research project: <Working Title>
@@ -302,7 +284,7 @@ Created research project: <Working Title>
 Directory:  <full path>
 Structure:  <N> folders, <N> files
 Git:        initialised on branch main (<short commit hash>)
-GitHub:     <URL or "local-only (Dropbox sync)">
+GitHub:     <URL or "local-only">
 Overleaf:   paper/ → <target path>
 
 Atlas & Pipeline:
@@ -310,7 +292,7 @@ Atlas & Pipeline:
   - Notion Atlas entry:           created (<URL>)
   - Notion Pipeline entry:        created (<URL>)
   - Venue links:                  <venue names>
-  - Dropbox folder:               created
+  - Project folder:               created
   - RECAP.md:                     regenerated
 
 Task Management updates:
@@ -318,11 +300,17 @@ Task Management updates:
   - projects/papers/<name>.md:    created
   - current-focus.md:             updated
 
+Literature & Discovery:
+  - Literature review:            docs/literature-review/YYYY-MM-DD-initial-review.md (<N> papers)
+  - Bibliography:                 docs/literature-review/references.bib
+  - Scout novelty:                docs/YYYY-MM-DD-scout-novelty.md (score: X/10)
+  - Atlas topic updated:          key references + novelty assessment added
+
 Setup log:  log/<filename>    created
 
 Next steps:
   1. Open Overleaf and set up main.tex
-  2. Run /literature to begin literature review
+  2. Review literature map in docs/literature-review/
   3. Start drafting in paper/
 ```
 
@@ -348,10 +336,12 @@ Next steps:
 
 | Skill | Relationship |
 |-------|-------------|
-| `/literature` | Run after init to begin literature search |
+| `/literature` | Runs automatically in Phase 8a — initial literature review |
+| `/scout` | Runs automatically in Phase 8b — novelty assessment |
 | `/project-safety` | Already handled — .gitignore and settings created during init |
 | `/save-context` | Context library entries created during Phase 7 |
 | `/session-log` | Offer to create a session log after init completes |
 | `/interview-me` | To develop the research idea before scaffolding |
 | `/deploy-atlas` | After init, run to compile and deploy changes to atlas.user.com |
-| `/audit-atlas-portfolio` | **Drift trigger:** new projects change theme dir counts — see `audit-atlas-portfolio/references/drift-checks.md` |
+| `/atlas-review` | **Drift trigger:** new projects change theme dir counts — see `atlas-review/references/drift-checks.md` |
+| `references/domain-profile-template.md` | Template for economics/field-specific domain profiles — copy to project's `docs/domain-profile.md` during init for economics papers |

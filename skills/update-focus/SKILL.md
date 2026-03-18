@@ -1,6 +1,6 @@
 ---
 name: update-focus
-description: "Update current-focus.md with a structured session summary. Preserves the document's rich structure: weekly focus, session history rotation, open loops, mental state. Use at end of work sessions or when the stop hook nudges."
+description: "Use when you need to update current-focus.md with a structured session summary."
 allowed-tools: Read, Edit, Bash(git log*), Bash(date*), Bash(ls*)
 ---
 

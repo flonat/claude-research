@@ -33,6 +33,15 @@ The audit must be independent. Only the author modifies the author's code. Your 
 
 ---
 
+## Shared References
+
+- Escalation protocol: `skills/shared/escalation-protocol.md` — use when methodology is vague or unsound; escalate through 4 levels (Probe → Explain stakes → Challenge → Flag and stop)
+- Method probing questions: `skills/shared/method-probing-questions.md` — check whether the paper addresses mandatory questions for its stated method
+- Validation tiers: `skills/shared/validation-tiers.md` — verify claim strength matches declared validation tier
+- Distribution diagnostics: `skills/shared/distribution-diagnostics.md` — check whether DV diagnostics were run and model choice is justified
+- Engagement-stratified sampling: `skills/shared/engagement-stratified-sampling.md` — check sampling strategy for social media studies
+- Inter-coder reliability: `skills/shared/intercoder-reliability.md` — verify per-category reliability for content analysis
+
 ## Your Role
 
 You are auditing and replicating work submitted by another Claude instance (or human). You have no loyalty to the original author. Your reputation depends on catching problems before they become retractions, failed replications, or public embarrassments.
@@ -88,6 +97,17 @@ These are issues that should be fixed but don't individually threaten the paper:
 - Presentation issues (tables, figures, flow)
 - LaTeX formatting problems
 
+### Required vs Suggested Analyses
+After listing Major and Minor Concerns, explicitly split additional analyses into two categories:
+
+**Required Analyses (must-do before acceptance):**
+Analyses that address a fundamental concern — without these, the paper's core claims are unsupported. Examples: a robustness check for the main identification strategy, a placebo test, controlling for a plausible confounder.
+
+**Suggested Extensions (would strengthen but not blocking):**
+Analyses that would enrich the paper but whose absence doesn't invalidate the contribution. Examples: additional heterogeneity analysis, alternative outcome measures, extended sample periods.
+
+Be disciplined about this split. Reviewers who mark everything as "required" lose credibility. If an analysis is truly optional, say so — it helps the author prioritise and signals to the editor what genuinely matters.
+
 ### Line-by-Line Comments
 When reviewing a specific document, provide precise references:
 - "Page X, Line Y: [issue]"
@@ -115,7 +135,9 @@ Read `references/referee2-reviewer/audit-checklists.md` for the full checklists,
 ## Specific Methodological Expertise
 
 ### Cross-Cutting (all paradigms)
-- **Causal language without causal identification** — if they say "effect" or "impact", they need a credible identification strategy, regardless of the method
+- **Causal language without causal identification** — if they say "effect" or "impact", they need a credible identification strategy, regardless of the method. Audit systematically: scan every instance of "effect", "impact", "cause", "leads to", "drives", "results in" and verify each has a matching identification argument. Flag unhedged causal claims without credible design as Major.
+- **Mechanism claims without mechanism tests** — if they claim X works "through" or "via" a mechanism, demand a formal mediation analysis or at minimum suggestive evidence. Vague mechanism stories without empirical support are a Major concern.
+- **Hedging failures** — claims stated as fact that should be hedged ("our results show" when the design only supports "our results are consistent with"). Flag systematic over-claiming as Critical.
 - **p-hacking and specification searching** — demand pre-registration details or robustness across specifications
 - **Missing heterogeneity analysis** — average effects can mask important variation
 - **Ecological fallacy** — group-level findings claimed at individual level
@@ -226,7 +248,9 @@ Also check for compilation issues, notation consistency, and bibliography correc
 
 ## Field Calibration
 
-If `.context/field-calibration.md` exists at the project root, read it before reviewing. Use it to calibrate: venue expectations, notation conventions, seminal references, typical referee concerns, and quality thresholds for this specific field.
+If `.context/field-calibration.md` or `docs/domain-profile.md` exists at the project root, read it before reviewing. Use it to calibrate: venue expectations, notation conventions, seminal references, typical referee concerns, and quality thresholds for this specific field.
+
+If a target journal is specified (e.g., "review as if submitting to AER"), read `references/journal-referee-profiles.md` and adopt that journal's typical referee perspective — adjusting domain focus, methods expectations, and typical concerns accordingly.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: multi-perspective
-description: "Explore a research question from multiple independent perspectives with diverse epistemic priors. Spawns parallel agents with distinct disciplinary lenses, then synthesises findings. Triggers: 'look at this from different angles', 'get diverse perspectives'."
+description: "Use when you need to explore a research question from multiple independent perspectives."
 allowed-tools: Read, Write, Edit, Glob, Grep, Task, AskUserQuestion
 argument-hint: "[research question, hypothesis, or design choice]"
 ---
@@ -104,6 +104,30 @@ Write 300-500 words. Do not hedge — commit to your perspective's position.
 - Run all agents in parallel (up to 5 concurrent, per orchestration convention)
 - Each agent writes to a temp file; collect results after all complete
 
+### Phase 3.25: User Check-In (Interactive Mode)
+
+After collecting all perspective outputs, present them to the user as a structured summary and run an interactive check-in. This is the key differentiator from a passive multi-perspective analysis — the user participates as an active contributor, not a spectator.
+
+**What to present:**
+- Each perspective's key position (2-3 sentences, not the full output)
+- The main disagreements visible so far
+- Any assumptions the perspectives made about the research context
+
+**Then ask (via AskUserQuestion):**
+
+> "Here's where the perspectives stand so far. Before they peer-review each other, I want to check in:
+>
+> 1. **Reveal constraints:** Is there anything these perspectives don't know that would change their analysis? (e.g., data limitations, institutional constraints, supervisor preferences, timeline)
+> 2. **Redirect:** Is any perspective completely off-base or exploring an irrelevant direction?
+> 3. **Challenge:** Do you want to push back on any specific claim before cross-evaluation?"
+
+**How the user's input feeds forward:**
+- Constraints revealed here are injected into the cross-evaluation prompt as "Additional context from the researcher" — each evaluator sees them
+- If a perspective is marked as off-base, it is still included in cross-evaluation (for completeness) but flagged: "The researcher considers this direction less relevant because [reason]"
+- Challenges are posed directly to the relevant perspective in the cross-evaluation round as an additional evaluation criterion
+
+**When to skip:** If the user says "skip check-in", "just run it", or "non-interactive", proceed directly to Phase 3.5. The default is interactive.
+
 ### Phase 3.5: Anonymised Cross-Evaluation
 
 Before synthesising, run a peer-review round where each perspective critiques all others — without knowing which lens produced which output. This forces content-based evaluation rather than tribal dismissal.
@@ -132,6 +156,14 @@ TASK: Evaluate each perspective on these criteria (1-5 scale):
 2. **Relevance** — Does it address the core question?
 3. **Novelty** — Does it surface something the others miss?
 4. **Practicality** — Could the researcher act on this advice?
+
+[IF USER PROVIDED INPUT IN PHASE 3.25, ADD:]
+Additional context from the researcher:
+- Constraints: [user-revealed constraints]
+- Challenges: [user's pushback on specific claims]
+- Relevance notes: [any perspectives the user flagged as less relevant, with reason]
+
+Factor this researcher context into your evaluation — perspectives that ignore known constraints should score lower on Practicality.
 
 For each perspective, provide:
 - Scores (4 numbers)

@@ -26,6 +26,7 @@ When launched, gather context in this order:
    - LaTeX-autofix rubric: `skills/latex-autofix/references/quality-rubric.md` (absolute: `~/.claude/skills/latex-autofix/references/quality-rubric.md`)
    - Scoring framework: `skills/shared/quality-scoring.md` (absolute: `~/.claude/skills/shared/quality-scoring.md`)
    - Venue reviewer expectations: `skills/shared/venue-guides/reviewer_expectations.md` (absolute: `~/.claude/skills/shared/venue-guides/reviewer_expectations.md`) — read this if the paper targets a specific venue, to calibrate your critique to that venue's reviewer priorities
+   - Escalation protocol: `skills/shared/escalation-protocol.md` (absolute: `~/.claude/skills/shared/escalation-protocol.md`) — use when methodology is vague or unsound; flag Level 3-4 issues as Critical/Blocker in the report
 4. **Read all `.tex` files** in the project. For large papers, start with the main file, then read included files (`\input{}`, `\include{}`).
 5. **Read the `.bib` file(s)** if they exist in the project.
 6. **Check for page limits:** Read the project's `CLAUDE.md` or `docs/` for any stated page/word limits.
@@ -48,7 +49,7 @@ These are binary pass/fail checks. **Any failure = BLOCKED verdict, score = 0.**
 
 ## Check Dimensions
 
-After hard gates pass, audit these 6 categories (aligned with `/proofread`):
+After hard gates pass, audit these 8 categories (first 6 aligned with `/proofread`, plus Internal Consistency and Tables & Figures):
 
 ### 1. Grammar & Spelling
 - Subject-verb agreement
@@ -95,6 +96,24 @@ After hard gates pass, audit these 6 categories (aligned with `/proofread`):
 - Label positioning
 - Readability at print size
 - If no TikZ diagrams exist, skip this category (no penalty).
+
+### 7. Internal Consistency
+- **Abstract ↔ Body:** Do claims in the abstract match the results actually reported? Do sample sizes, effect magnitudes, and key findings align?
+- **Introduction ↔ Results:** Are contributions promised in the introduction delivered in the results section?
+- **Numerical consistency:** Do the same numbers (N, coefficients, percentages, dates) match across abstract, text, tables, and figure captions?
+- **Sample description consistency:** Is the sample described the same way everywhere (same N, same inclusion criteria, same time period)?
+- **Control variable consistency:** Are the controls listed in the methodology text the same as those appearing in table notes?
+- **Claim-evidence matching:** Does every factual claim in the text have a corresponding table, figure, or citation to support it?
+- Cross-reference every number that appears more than once. A single mismatch is Major; systematic mismatches are Critical.
+
+### 8. Tables & Figures
+- **Self-containment:** Can each table/figure be understood without reading the text? (title, column headers, row labels, notes)
+- **Notes completeness:** Do table notes define all abbreviations, state significance levels (*, **, ***), and identify the sample?
+- **Axis labels and units:** Do all figure axes have labels with units where applicable?
+- **Text-table redundancy:** Flag cases where the text repeats exact numbers from a table — prefer referencing "Table X" rather than duplicating values
+- **Scale appropriateness:** Are axis scales chosen to show variation, not to exaggerate or hide effects?
+- **Consistent formatting:** Do all tables use the same style (booktabs, same decimal places, same SE/CI format)?
+- If no tables or figures exist, skip this category (no penalty).
 
 ---
 
@@ -174,7 +193,7 @@ Write the report to `reviews/paper-critic/YYYY-MM-DD_CRITIC-REPORT.md` in the **
 ## Critical Issues (MUST FIX)
 
 ### C1: [Short title]
-- **Category:** [Grammar / Notation / Citation / Tone / LaTeX / TikZ]
+- **Category:** [Grammar / Notation / Citation / Tone / LaTeX / TikZ / Internal Consistency / Tables & Figures]
 - **Location:** `file.tex:line`
 - **Problem:** [What is wrong]
 - **Fix:** [Precise instruction for the fixer — what to change, not why]
@@ -322,6 +341,7 @@ Where `--context-file` contains the paper content (`.tex` source) and `--prompt-
 
 - **3 models from different providers** — diversity comes from architectural differences, not persona prompts
 - **Personas** (Technical Rigour, Presentation, Scholarly Standards) are optional additional emphasis — defined in `council-personas.md`
+- **Cross-dimension triage:** When the chairman synthesises reports, apply this priority order to resolve conflicts and rank issues: Internal Consistency > Notation > Citation > Tables & Figures > Grammar > Tone > LaTeX > TikZ. A Critical notation error outranks a Critical tone issue. This prevents surface-level issues from drowning out substantive ones in the final report.
 - **Output:** Standard CRITIC-REPORT.md format with Council Notes and Council Metadata appended — fully compatible with the fixer agent
 - **Cost:** `cli-council` = free (subscription-included); `llm-council` = 7 OpenRouter API calls
 

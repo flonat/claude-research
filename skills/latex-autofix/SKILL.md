@@ -1,6 +1,6 @@
 ---
 name: latex-autofix
-description: "LaTeX compilation with autonomous error resolution. Build artifacts go to out/, PDF is copied back to source directory. Parses logs, auto-fixes known errors (missing packages, font conflicts, citation issues, bad paths, stale cache), and runs citation audit on success."
+description: "Use when you need to compile LaTeX with autonomous error resolution and citation audit."
 allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(biber*), Bash(bibtex*), Bash(mkdir*), Bash(ls*), Bash(wc*), Read, Write, Edit, Grep, Glob
 argument-hint: [tex-file-path]
 ---

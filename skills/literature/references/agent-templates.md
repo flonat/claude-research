@@ -52,29 +52,32 @@ prompt: |
   Target: [N] papers.
 ```
 
-### Agent 2 (recommended): Cross-Source Search via Biblio MCP
+### Agent 2 (recommended): Cross-Source Search via Pre-Fetched Biblio Data
 
-**This is the primary structured search agent.** It queries all enabled sources (OpenAlex + Scopus + WoS) in a single call with automatic DOI-based deduplication.
+**This is the primary structured search agent.** The orchestrator (main context) calls `scholarly_search` via the bibliography MCP before spawning this agent, and writes results to a temp file.
+
+**MCP tools are NOT available in sub-agents.** The orchestrator must pre-fetch search results.
+
+**Orchestrator pre-fetch step (run in main context before spawning Agent 2):**
+1. Call `scholarly_search` with query, year_from, year_to, sort_by, limit: 50
+2. If sub-themes exist, run additional `scholarly_search` calls
+3. Optionally call `scholarly_similar_works` for related papers
+4. Write all results to `/tmp/lit-search/bibliography-results.json`
 
 ```
 subagent_type: Explore
 prompt: |
-  Search for academic papers on: [TOPIC]
+  Read pre-fetched bibliography search results from:
+    /tmp/lit-search/bibliography-results.json
 
-  Use the bibliography MCP tools (these are available as MCP tools, call them directly):
+  This file contains structured results from OpenAlex, Scopus, and WoS
+  for papers on: [TOPIC]
 
-  1. Call `scholarly_search` with:
-     - query: "[TOPIC]"
-     - year_from: [YEAR] (if specified)
-     - year_to: [YEAR] (if specified)
-     - sort_by: "cited_by_count" for foundational papers, "relevance" for topical search
-     - limit: 50
-
-  2. If the topic has sub-themes, run `scholarly_search` again with narrower queries
-     to capture papers the broad search might miss.
-
-  3. For finding papers related to a specific known paper, use `scholarly_similar_works`
-     with the paper's title or abstract as the text argument.
+  Your tasks:
+  1. Parse the results and extract: title, authors, year, journal, DOI, citation count
+  2. Supplement with WebSearch for papers that may be missing from bibliometric databases
+     (very recent papers, working papers, interdisciplinary work)
+  3. Search Semantic Scholar (site:semanticscholar.org) for additional coverage
 
   Skip these already-known papers: [LIST OF EXISTING CITATION KEYS]
 
@@ -143,10 +146,12 @@ prompt: |
   1. Search the web to confirm the paper exists
   2. Verify: authors (ALL authors — full list, exact names and order), title, year, journal, volume, pages
   3. **Find the correct DOI using these methods IN ORDER of reliability:**
-     a. **Crossref API (most reliable):** Run:
+     a. **Crossref API (most reliable — ALWAYS try this first):** Run:
         `curl -sL "https://api.crossref.org/works?query.bibliographic=TITLE+AUTHOR&rows=3"`
         Parse the JSON response — the first result's `DOI` field is the correct DOI.
-        This uses publisher metadata and is far more reliable than web search.
+        This uses publisher metadata and is far more reliable than web search or MCP tools.
+        **Do NOT use MCP `scholarly_search` for specific known papers** — it returns
+        noisy, irrelevant results. Crossref is the gold standard for targeted lookups.
      b. **Publisher page:** Visit the journal's website and search for the paper.
      c. **Web search (last resort):** Search for the paper + "DOI". But DOIs from
         web search MUST still be verified in step 4.
@@ -160,6 +165,8 @@ prompt: |
   7. **Preprint check:** If the paper was found on arXiv, SSRN, NBER, or any
      working paper series, search for a published journal or conference version.
      Check Google Scholar, the DOI, and the author's publication page.
+     Use Crossref API or WebSearch — do NOT call MCP tools (scholarly_search,
+     scholarly_verify_dois, etc.) as MCP tools are not available in sub-agents.
      - If a published version exists: use that version's metadata instead
        (journal, year, volume, pages, DOI)
      - If no published version exists: keep the preprint, but note it as
@@ -289,7 +296,7 @@ PROMPT
 **Step 2:** Run the council:
 
 ```bash
-cd "packages/cli-council"
+cd "$TM/packages/cli-council"
 uv run python -m cli_council \
     --prompt-file /tmp/lit-council-prompt.txt \
     --output /tmp/lit-council-result.json \
@@ -344,7 +351,7 @@ PROMPT
 **Step 3:** Run the council:
 
 ```bash
-cd "packages/cli-council"
+cd "$TM/packages/cli-council"
 uv run python -m cli_council \
     --prompt-file /tmp/lit-synthesis-prompt.txt \
     --context-file /tmp/lit-papers.txt \

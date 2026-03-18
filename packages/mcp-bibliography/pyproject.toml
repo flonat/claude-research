@@ -2,10 +2,14 @@
 name = "biblio-mcp"
 version = "0.2.0"
 description = "Multi-source scholarly search MCP server: OpenAlex + Scopus + Web of Science"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "mcp>=1.0.0",
     "requests",
     "httpx>=0.27",
+    "biblio-sources @ git+https://github.com/user/biblio-sources.git@9cff529",
 ]
+
+[tool.uv.sources]
+biblio-sources = { path = "../biblio-sources", editable = true }
 

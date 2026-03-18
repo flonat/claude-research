@@ -110,6 +110,7 @@ Before running any experiment sweep or simulation batch:
 | Atlas (Topic Inventory) | `0a227f82-60f4-451a-a163-bff2ce8fa9c3` (data source) |
 | Venues | `YOUR-CONFERENCES-DATABASE-ID-HERE` |
 | Submissions | `f3d3df85-cd5a-467c-954b-7831a74b7156` |
+| People | `ee63feff-7f71-49e2-ae1b-ebad8dc34887` (data source) |
 
 Always fetch the database schema first to get correct property names before any create/update calls.
 <!-- NOTION-DATABASES:END -->
@@ -191,10 +192,11 @@ This helps me (Claude) pick up where we left off next time.
 | `.claude/rules/` | Auto-loaded rules (9 rules) |
 | `skills/` | 39 skill definitions |
 | `hooks/` | 8 hook scripts |
-| `.mcp-server-biblio/` | Multi-source scholarly search MCP server (OpenAlex + Scopus + WoS) |
+| `mcp-bibliography/` | Multi-source scholarly search MCP server (OpenAlex + Scopus + WoS) |
 | `.scripts/` | CLI tools for Notion task management |
 | `packages/cli-council/` | Multi-model council via local CLI tools |
 | `packages/llm-council/` | Multi-model council via OpenRouter API |
+| `packages/mcp-bibliography/` | mcp-bibliography |
 | `log/` | Session logs |
 | `docs/` | Documentation |
 <!-- FILE-STRUCTURE:END -->

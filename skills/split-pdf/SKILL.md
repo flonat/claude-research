@@ -1,7 +1,7 @@
 ---
 name: split-pdf
-description: Download, split, and deeply read academic PDFs. Use when asked to read, review, or summarize an academic paper. Splits PDFs into 4-page chunks, reads them in small batches, and produces structured reading notes — avoiding context window crashes and shallow comprehension.
-allowed-tools: Bash(python*), Bash(uv*), Bash(curl*), Bash(wget*), Bash(mkdir*), Bash(ls*), Read, Write, Edit, WebSearch, WebFetch
+description: "Use when you need to download, split, and deeply read an academic PDF."
+allowed-tools: Bash(python*), Bash(uv*), Bash(curl*), Bash(wget*), Bash(mkdir*), Bash(ls*), Read, Write, Edit, WebSearch, WebFetch, mcp__refpile__parse_pdf_fulltext, mcp__refpile__parse_pdf_metadata
 argument-hint: [pdf-path-or-search-query]
 ---
 
@@ -136,6 +136,22 @@ articles/split_smith_2024/notes.md
 This file is **updated incrementally** after each batch. Structure it with clear headers for each of the 8 dimensions. After each batch, update whichever dimensions have new information — do not rewrite from scratch.
 
 By the time all splits are read, the notes should contain specific data sources, variable names, equation references, sample sizes, coefficient estimates, and standard errors. Not a summary — a structured extraction.
+
+## Structured Mode (GROBID)
+
+If the paper is a **Zotero item** (user provides a key), try GROBID-powered extraction before splitting:
+
+1. Call `mcp__refpile__parse_pdf_metadata(key=KEY)` — get title, authors, abstract, affiliations
+2. Call `mcp__refpile__parse_pdf_fulltext(key=KEY)` — get sections with headings and paragraphs
+
+If GROBID succeeds, you get **semantically structured sections** (Introduction, Methods, Results, etc.) instead of arbitrary 4-page chunks. This is better for reading notes because:
+- Sections don't split mid-paragraph
+- Headings give natural structure for `notes.md`
+- Figures and tables are identified with captions
+
+**Use structured mode when:** the paper is in Zotero and GROBID returns sections. Still write to `notes.md` with the same 8-dimension extraction.
+
+**Fall back to page splits when:** GROBID is unavailable, returns an error, or the paper isn't in Zotero (local PDF only). The 4-page split workflow remains the default for local-only PDFs.
 
 ## When NOT to Split
 

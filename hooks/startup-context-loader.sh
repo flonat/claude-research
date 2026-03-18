@@ -67,6 +67,19 @@ if [ -d "$TASK_MGMT/log/plans" ]; then
   add_section "Latest Plan ($(basename "$LATEST_PLAN" 2>/dev/null))" "$LATEST_PLAN" 25
 fi
 
+# --- Skill observations: weekly review check ---
+REVIEW_DATE_FILE="$HOME/.claude/skill-observations/last-review-date.txt"
+if [ -f "$REVIEW_DATE_FILE" ]; then
+  LAST_REVIEW=$(cat "$REVIEW_DATE_FILE" | tr -d '\n')
+  DAYS_SINCE=$(( ( $(date +%s) - $(date -j -f "%Y-%m-%d" "$LAST_REVIEW" +%s 2>/dev/null || echo 0) ) / 86400 ))
+  if [ "$DAYS_SINCE" -ge 7 ] 2>/dev/null; then
+    if [ -n "$CONTEXT" ]; then
+      CONTEXT="$CONTEXT\n\n"
+    fi
+    CONTEXT="${CONTEXT}## Skill Observations\nWeekly review overdue (last: ${LAST_REVIEW}, ${DAYS_SINCE} days ago). Consider running \`/skill-health\` to review."
+  fi
+fi
+
 if [ -z "$CONTEXT" ]; then
   exit 0
 fi

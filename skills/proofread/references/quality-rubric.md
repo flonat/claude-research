@@ -50,6 +50,43 @@
 | In-line:parenthetical ratio exceeds 1:1 | -10 | Once for the document — systematic overuse |
 | Run of 3+ consecutive in-line citations | -5 | Per run (paragraph or section) |
 
+### Numeric Cross-Check (-5 to -25)
+
+| Issue | Deduction | Notes |
+|-------|-----------|-------|
+| Text claims a number that contradicts its own table | -25 | Critical — per instance. Embarrassing if caught by a reviewer. |
+| Significance claim in text doesn't match stars/p-value in table | -15 | Critical — misleading |
+| Sample size (N) inconsistency between text and table | -15 | Critical — per instance |
+| N inconsistency across related table specifications (unexplained) | -5 | Major — per table pair |
+| Table/figure referenced in text but doesn't exist | -15 | Critical — broken reference |
+| Table/figure exists but never referenced in text | -5 | Major — orphaned exhibit |
+
+### Causal Language (-5 to -25)
+
+| Issue | Deduction | Notes |
+|-------|-----------|-------|
+| Causal claim ("causes", "the effect of") with no identification strategy | -25 | Critical — reviewer will attack this |
+| Causal claim that exceeds the stated identification strategy's strength | -15 | Critical — overclaiming |
+| Ambiguous "significant" (could be statistical or substantive) | -5 | Major — per instance |
+| Coefficient described without units or scale | -5 | Major — per instance |
+| Correlation/causation conflation (sliding from association to causal claim) | -15 | Critical |
+
+### Equation Completeness (-5 to -15)
+
+| Issue | Deduction | Notes |
+|-------|-----------|-------|
+| Variable in equation undefined in surrounding text | -5 | Major — per variable |
+| Subscript/index level doesn't match described observation unit | -15 | Critical — conceptual error |
+| Inconsistent notation across equations (same concept, different symbol) | -15 | Critical — same as Check 2 but across equations |
+| Error term specification inconsistent with described model | -5 | Major |
+| Equation cross-reference points to wrong equation | -15 | Critical |
+
+### Preprint Staleness (-5)
+
+| Issue | Deduction | Notes |
+|-------|-----------|-------|
+| Preprint cited when published version exists | -5 | Major — per instance. Suggest running `/bib-validate` for thorough check. |
+
 ## Category Mapping
 
 | Rubric category | SKILL.md check category |
@@ -61,3 +98,7 @@
 | LaTeX-specific | Check 5 |
 | Citation voice balance | Check 6 |
 | TikZ diagrams | Check 7 |
+| Numeric cross-check | Check 8 |
+| Causal language | Check 9 |
+| Equation completeness | Check 10 |
+| Preprint staleness | Check 11 |

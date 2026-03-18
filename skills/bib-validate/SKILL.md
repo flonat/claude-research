@@ -1,13 +1,11 @@
 ---
 name: bib-validate
-description: "Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Read-only in standard mode."
-allowed-tools: Read, Glob, Grep, Task, Write, Bash(mkdir*), Bash(ls*), Bash(rm*)
+description: "Use when you need to cross-reference \cite{} keys against .bib files to find missing or unused entries."
+allowed-tools: Read, Glob, Grep, Task, Write, Bash(mkdir*), Bash(ls*), Bash(rm*), mcp__refpile__add_item, mcp__refpile__add_to_collection, mcp__refpile__search_library
 argument-hint: [project-path or tex-file]
 ---
 
 # Bibliography Validation
-
-**Read-only skill.** Never edit source files — produce a categorised report only.
 
 **Citation key rule:** Existing keys in the project always take precedence. They come from the user's reference management system and are canonical. When suggesting replacements (typo corrections, preprint upgrades, metadata fixes), always keep the user's key and update the `.bib` entry metadata around it — never suggest renaming a key to match some "standard" format.
 
@@ -128,9 +126,16 @@ Common typo patterns:
 
 ## Reference Manager Cross-Reference
 
-After the disk-based cross-reference, check each cited key against the user's reference libraries. Two sources are available — check both when possible.
+After the disk-based cross-reference, check each cited key against the user's reference libraries using the resolution order from [`shared/reference-resolution.md`](../shared/reference-resolution.md). Two sources are available — check both when possible.
 
-### Paperpile (Primary)
+### Zotero (Active Write Target — via RefPile MCP)
+
+Cross-reference via the `refpile` MCP server. For each citation key:
+
+1. Call `mcp__refpile__search_library` with the citation key as query
+2. Match on the `citationKey` field in results
+
+### Paperpile (Read-Only Cross-Reference)
 
 Cross-reference via the `paperpile` MCP server. For each citation key found in the `.tex` files:
 
@@ -143,24 +148,17 @@ Cross-reference via the `paperpile` MCP server. For each citation key found in t
 - Call `mcp__paperpile__get_labels` to verify folder organisation matches project themes
 - For projects with a known Paperpile label, call `mcp__paperpile__get_items_by_label` to find papers in the folder but not cited (potential missing citations)
 
-### Zotero (Legacy — via RefPile MCP)
-
-Cross-reference via the `refpile` MCP server. For each citation key:
-
-1. Call `search_library` (refpile MCP) with the citation key as query
-2. Match on the `citationKey` field in results
-
 ### Combined Status Categories
 
-| .bib | Paperpile | Zotero | Status | Report |
-|------|-----------|--------|--------|--------|
-| Yes | Yes | Yes | Healthy | `✓ In sync across all` |
-| Yes | Yes | No | Partial | `✓ Paperpile ↔ .bib in sync (not in Zotero)` |
-| Yes | No | Yes | Partial | `✓ Zotero ↔ .bib in sync (not in Paperpile)` |
-| Yes | No | No | Drift | `⚠ In local .bib but not in any reference manager` |
-| No | Yes | — | Export gap | `ℹ In Paperpile but not exported to local .bib` |
-| No | — | Yes | Export gap | `ℹ In Zotero but not exported to local .bib` |
-| No | No | No | Missing | `✗ Missing from all — add to Paperpile first` |
+| .bib | Zotero | Paperpile | Status | Report |
+|------|--------|-----------|--------|--------|
+| Yes | Yes | Yes | `HEALTHY` | `✓ In sync across all` |
+| Yes | Yes | No | `HEALTHY` | `✓ Zotero ↔ .bib in sync (not in Paperpile)` |
+| Yes | No | Yes | `MIGRATE_TO_ZOTERO` | `⚠ In Paperpile + .bib but not Zotero — auto-add?` |
+| Yes | No | No | `DRIFT` | `⚠ In local .bib but not in any reference manager` |
+| No | Yes | — | `EXPORT_GAP` | `ℹ In Zotero but not exported to local .bib` |
+| No | No | Yes | `EXPORT_GAP` | `ℹ In Paperpile but not exported to local .bib` |
+| No | No | No | `MISSING` | `✗ Missing from all — will add to Zotero in Fix Mode` |
 
 Include this as a "Reference Manager Sync" section in the report, after cross-reference results and before quality checks.
 
@@ -264,6 +262,41 @@ Triggered by: `--deep-verify` flag, 40+ entries, or "deep verify" / "verify all 
 
 For high-stakes submissions. Trigger: "council bib-validate", "thorough bib check". Full details: [references/council-mode.md](references/council-mode.md)
 
+## Fix Mode
+
+After producing the validation report, automatically fix resolvable issues using the filing sequence from [`shared/reference-resolution.md`](../shared/reference-resolution.md).
+
+### Auto-Fix Actions
+
+1. **`DRIFT` entries** (in .bib but not in any reference manager):
+   - Add to Zotero via `mcp__refpile__add_item` using metadata from the `.bib` entry.
+   - File into topic collection + `_Needs Review` per the filing sequence.
+
+2. **`MISSING` entries** (cited in .tex but not found anywhere):
+   - Search via the resolution order (Zotero → Paperpile → bibliography MCP → Crossref → web).
+   - If found, export correct BibTeX and add the entry to the `.bib` file.
+   - Add to Zotero and file per the filing sequence.
+
+3. **`MIGRATE_TO_ZOTERO` entries** (in Paperpile but not Zotero):
+   - Auto-add to Zotero using Paperpile metadata.
+   - File into topic collection + `_Needs Review`.
+
+4. **Metadata issues** (DOI mismatch, stale preprint, missing fields):
+   - Export correct BibTeX from Paperpile (`mcp__paperpile__export_bib`) or bibliography MCP (`scholarly_search`) for entries with metadata problems.
+   - Present corrected entries for confirmation before overwriting.
+
+### Post-Fix Maintenance
+
+1. **Update `zotero-collections.md`** — increment item counts for affected collections.
+2. **Report summary** — show a table of all fixes applied: entry key, issue, action taken, status.
+
+### Skip Fix Mode
+
+Fix mode is skipped when:
+- The skill is invoked with `--report-only` or `--dry-run`
+- No actionable issues are found (all entries are `HEALTHY`)
+- Both refpile MCP and paperpile MCP are unavailable
+
 ## Quality Scoring
 
 When producing a full validation report, apply numeric quality scoring using the shared framework:
@@ -281,6 +314,7 @@ Compute the score and include the Score Block in the report after the summary ta
 
 - **`/proofread`** — For overall paper quality including citation format
 - **`/literature`** — For finding and adding new references (includes full OpenAlex workflows)
+- **`/bib-coverage`** — Compare project `.bib` vs Zotero topic collection — find uncited papers and unfiled references
 - **`/latex`** — For compilation with reference checking
 - **`/latex-autofix`** — For compilation and error resolution. Run after fixing bibliography issues to verify citations compile cleanly.
-- **`/latex-autofix`** — After fixing bibliography issues, run to verify citations compile cleanly
+- **`shared/reference-resolution.md`** — Canonical lookup + filing sequence used by Ref Manager Cross-Reference and Fix Mode

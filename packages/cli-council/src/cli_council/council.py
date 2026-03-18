@@ -3,6 +3,9 @@
 Stage 1 — Independent assessments (parallel subprocess calls)
 Stage 2 — Anonymised peer review (each backend reviews all assessments)
 Stage 3 — Chairman synthesis (single backend reads everything, produces final)
+
+Supports checkpoint-based session resumption (inspired by Owlex) and
+atomic file-based state (inspired by agents-council).
 """
 
 from __future__ import annotations
@@ -11,9 +14,11 @@ import asyncio
 import logging
 import re
 from collections import defaultdict
+from pathlib import Path
 from time import perf_counter
 
 from cli_council.backends.base import CLIBackend
+from cli_council.checkpoint import CouncilCheckpointer
 from cli_council.config import DEFAULT_CHAIRMAN, DEFAULT_COUNCIL_BACKENDS, STAGE_TIMEOUT
 from cli_council.models import Assessment, CouncilMeta, CouncilResult, PeerReview
 
@@ -46,11 +51,13 @@ class CouncilRunner:
         chairman: str | None = None,
         timeout: int = STAGE_TIMEOUT,
         cwd: str | None = None,
+        checkpoint_dir: str | Path | None = None,
     ) -> None:
         self.backend_names = backends or DEFAULT_COUNCIL_BACKENDS
         self.chairman_name = chairman or DEFAULT_CHAIRMAN
         self.timeout = timeout
         self.cwd = cwd
+        self._checkpoint_dir = Path(checkpoint_dir) if checkpoint_dir else None
 
         # Instantiate and validate backends
         self.backends: dict[str, CLIBackend] = {}
@@ -71,6 +78,7 @@ class CouncilRunner:
         prompt: str,
         *,
         system_context: str = "",
+        resume: bool = False,
     ) -> CouncilResult:
         """Run the full 3-stage council process.
 
@@ -81,16 +89,54 @@ class CouncilRunner:
         system_context:
             Optional context prepended to all prompts (project description,
             file contents, constraints, etc.).
+        resume:
+            If True and checkpoint_dir was provided, resume from the last
+            completed stage instead of starting fresh.
         """
         errors: list[str] = []
         t_total = perf_counter()
 
         full_prompt = f"{system_context}\n\n{prompt}".strip() if system_context else prompt
 
+        # Set up checkpointing
+        ckpt = None
+        resume_from = 0
+        if self._checkpoint_dir:
+            if resume:
+                # Find the latest run and resume from it
+                probe = CouncilCheckpointer(self._checkpoint_dir)
+                latest_run = probe.find_latest_run()
+                if latest_run:
+                    ckpt = CouncilCheckpointer(self._checkpoint_dir, run_id=latest_run)
+                    resume_from = ckpt.last_completed_stage()
+                    if resume_from > 0:
+                        logger.info(
+                            "Resuming run %s from stage %d",
+                            latest_run, resume_from + 1,
+                        )
+                    else:
+                        ckpt = CouncilCheckpointer(self._checkpoint_dir)
+                else:
+                    ckpt = CouncilCheckpointer(self._checkpoint_dir)
+            else:
+                ckpt = CouncilCheckpointer(self._checkpoint_dir)
+
         # Stage 1: Independent assessments
-        t1 = perf_counter()
-        assessments = await self._stage1(full_prompt, errors)
-        stage1_ms = int((perf_counter() - t1) * 1000)
+        stage1_ms = 0
+        if resume_from >= 1 and ckpt:
+            # Resume: load from checkpoint
+            saved = ckpt.load_stage1()
+            if saved:
+                assessments = [Assessment(**a) for a in saved]
+                logger.info("Stage 1: loaded %d assessments from checkpoint", len(assessments))
+            else:
+                t1 = perf_counter()
+                assessments = await self._stage1(full_prompt, errors)
+                stage1_ms = int((perf_counter() - t1) * 1000)
+        else:
+            t1 = perf_counter()
+            assessments = await self._stage1(full_prompt, errors)
+            stage1_ms = int((perf_counter() - t1) * 1000)
 
         if len(assessments) < 2:
             errors.append(f"Only {len(assessments)} backend(s) responded — need at least 2 for peer review")
@@ -111,15 +157,51 @@ class CouncilRunner:
         for i, a in enumerate(assessments):
             a.label = f"Assessment {chr(65 + i)}"
 
+        # Checkpoint Stage 1
+        if ckpt and resume_from < 1:
+            ckpt.save_stage1(
+                [a.model_dump() for a in assessments],
+                [a.backend for a in assessments],
+            )
+            pending = ckpt.pending_participants(
+                self.backend_names,
+                [a.backend for a in assessments],
+            )
+            if pending:
+                logger.warning("Stage 1: pending backends: %s", pending)
+
         # Stage 2: Peer review
-        t2 = perf_counter()
-        peer_reviews = await self._stage2(prompt, assessments, errors)
-        stage2_ms = int((perf_counter() - t2) * 1000)
+        stage2_ms = 0
+        if resume_from >= 2 and ckpt:
+            saved = ckpt.load_stage2()
+            if saved:
+                reviews_data, _ = saved
+                peer_reviews = [PeerReview(**r) for r in reviews_data]
+                logger.info("Stage 2: loaded %d reviews from checkpoint", len(peer_reviews))
+            else:
+                t2 = perf_counter()
+                peer_reviews = await self._stage2(prompt, assessments, errors)
+                stage2_ms = int((perf_counter() - t2) * 1000)
+        else:
+            t2 = perf_counter()
+            peer_reviews = await self._stage2(prompt, assessments, errors)
+            stage2_ms = int((perf_counter() - t2) * 1000)
+
+        # Checkpoint Stage 2
+        if ckpt and resume_from < 2:
+            ckpt.save_stage2(
+                [r.model_dump() for r in peer_reviews],
+                [r.backend for r in peer_reviews],
+            )
 
         # Stage 3: Chairman synthesis
         t3 = perf_counter()
         synthesis = await self._stage3(prompt, assessments, peer_reviews, errors)
         stage3_ms = int((perf_counter() - t3) * 1000)
+
+        # Checkpoint Stage 3
+        if ckpt:
+            ckpt.save_stage3(synthesis, self.chairman_name)
 
         total_ms = int((perf_counter() - t_total) * 1000)
 

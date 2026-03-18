@@ -1,6 +1,6 @@
 ---
 name: beamer-deck
-description: "Generate academic Beamer presentations with multi-agent review. Builds original themes, applies rhetoric principles, iterates until zero warnings. Triggers: 'make slides', 'create a presentation', 'build a talk'. For web-shareable HTML slides, use /quarto-deck instead."
+description: "Use when you need to create an academic Beamer presentation with original theme and multi-agent review."
 allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(biber*), Bash(bibtex*), Bash(mkdir*), Bash(ls*), Bash(R*), Bash(Rscript*), Bash(python*), Read, Write, Edit, Task
 argument-hint: [topic, content-path, or project-name]
 ---

@@ -216,7 +216,7 @@ What it does, when it applies, and how it works.
 ```
 
 **Conventions:**
-- **Count in blockquote:** Every catalogue opens with the actual count. This count must match reality — `/sync-private-doc` propagates count changes across files.
+- **Count in blockquote:** Every catalogue opens with the actual count. This count must match reality — `/sync-repo private` propagates count changes across files.
 - **Overview table first:** A compact table listing every item before any details. Columns vary by component type (see below).
 - **Numbered detail sections:** Each component gets a `###` subsection.
 - **Cross-file count consistency:** Counts appear in CLAUDE.md, README.md, `docs/system.md`, and the catalogue file. All must agree.
@@ -278,7 +278,7 @@ Use these terms consistently across all documentation:
 
 - Spell out numbers one through nine in prose; use digits for 10+.
 - Always verify counts by listing actual files — never trust cached numbers in docs.
-- When a count appears in multiple files, update all of them (or use `/sync-private-doc`).
+- When a count appears in multiple files, update all of them (or use `/sync-repo private`).
 
 ### File Paths
 

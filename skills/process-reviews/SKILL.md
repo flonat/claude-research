@@ -1,6 +1,6 @@
 ---
 name: process-reviews
-description: "Process referee comments from a reviews PDF into standardised tracking files: comment tracker, review analysis, and LaTeX verbatim transcription. Triggers: 'got referee comments', 'process reviewer feedback', 'R&R response'. Not for writing the response — this extracts and organises the comments."
+description: "Use when you need to process referee comments from a reviews PDF into tracking files."
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(mkdir*), Bash(cp*), Bash(ls*), Bash(latexmk*), AskUserQuestion, Task
 argument-hint: "[path-to-reviews-pdf or no arguments for guided setup]"
 ---
@@ -144,6 +144,7 @@ Using the template from `templates/referee-comments/comment-tracker.md`:
    - **Reviewer:** reviewer number
    - **Comment:** short verbatim quote (first ~100 chars in quotes)
    - **Type:** classify as Major / Minor / Editorial / Question / Praise
+   - **R&R Classification:** classify as NEW ANALYSIS / CLARIFICATION / DISAGREE / MINOR (see `references/rr-routing.md` for decision rules and signal words)
    - **Priority:** assign Critical / High / Medium / Low based on:
      - Critical = threatens acceptance if not addressed
      - High = significant concern, must address
@@ -154,7 +155,13 @@ Using the template from `templates/referee-comments/comment-tracker.md`:
    - **Status:** set all to "Pending"
    - **Section:** paper section referenced, if identifiable
 3. Fill in the Status Dashboard counts
-4. Leave Evidence Log, Patch Plan, Response Blocks, and Blockers empty (user fills during revision)
+4. Generate a **Routing Summary** table grouping comments by R&R classification:
+   - NEW ANALYSIS: list IDs + brief description of required analysis
+   - CLARIFICATION: list IDs + target sections needing revision
+   - DISAGREE: list IDs + flag for user review
+   - MINOR: list IDs
+5. Identify **Cross-Cutting Themes** — concerns raised by 2+ reviewers, tagged T1, T2, etc.
+6. Leave Evidence Log, Patch Plan, Response Blocks, and Blockers empty (user fills during revision)
 
 ### Phase 6: Generate Review Analysis
 
@@ -181,12 +188,35 @@ Using the template from `templates/referee-comments/review-analysis.md`:
    - Consider the paper's discipline and methodology when suggesting venues — a qualitative policy analysis fits different outlets than a computational study.
 8. Leave Timeline empty (user fills)
 
+### Phase 6.5: Strategic Coaching (Interactive)
+
+For each **Major** or **Critical** comment, walk the user through a structured deliberation:
+
+1. **Understanding:** "What is this reviewer's core concern — methodology, theory, or framing?"
+2. **Position:** Classify as one of:
+   - **Agree** — will revise as suggested
+   - **Partially agree** — will address the spirit but not the exact suggestion. State which parts you accept and which you push back on.
+   - **Disagree** — will rebut with evidence. Draft the core rebuttal argument.
+3. **Risk assessment:** "If you push back on this, how likely is the reviewer to escalate? Is it worth the risk?"
+4. **Response sketch:** One-sentence draft of the response direction (not the full response — just the strategy).
+
+Record these in the Comment Matrix by adding two columns after `R&R Classification`:
+- **Position:** Agree / Partially / Disagree
+- **Strategy:** one-line response direction
+
+**Rules:**
+- Only Major and Critical comments get coaching. Minor/Editorial are auto-classified as "Agree" with no coaching.
+- the user can say "skip coaching" to bypass and classify all remaining as Agree.
+- Maximum 2 rounds of dialogue per comment — do not over-discuss.
+- Do not write the actual response letter — that remains the user's job.
+
 ### Phase 7: Summary & Review
 
 Present to the user:
 - Total comments extracted (by reviewer)
 - Breakdown by type and priority
 - Key cross-cutting themes
+- Position summary: N Agree / N Partially / N Disagree
 - Any comments that were ambiguous or hard to classify
 - Ask for corrections before finalising
 
@@ -211,3 +241,4 @@ Located in `templates/referee-comments/`:
 - `/bib-validate` — run after revision to check bibliography
 - `/pre-submission-report` — full quality check before resubmission
 - `paper-critic` agent — for self-review of the revised paper
+- `references/rr-routing.md` — R&R classification system and routing logic for revision workflow

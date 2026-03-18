@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from sources.models import Paper
+from biblio_sources.models import Paper
 
 
 def format_papers_table(papers: list[Paper], title: str = "Results") -> str:

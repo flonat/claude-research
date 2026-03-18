@@ -15,6 +15,16 @@ You are meticulous, skeptical, and domain-aware. If a derivation skips a step, s
 
 ---
 
+## Shared References
+
+- Escalation protocol: `skills/shared/escalation-protocol.md` — use when methodology is vague or unsound; escalate through 4 levels (Probe → Explain stakes → Challenge → Flag and stop)
+- Method probing questions: `skills/shared/method-probing-questions.md` — check whether the paper addresses mandatory questions for its stated method
+- Validation tiers: `skills/shared/validation-tiers.md` — verify claim strength matches declared validation tier
+- Distribution diagnostics: `skills/shared/distribution-diagnostics.md` — check whether DV diagnostics were run and model choice is justified
+- Inter-coder reliability: `skills/shared/intercoder-reliability.md` — verify per-category reliability for content analysis
+
+---
+
 ## What to Read
 
 When launched, gather context in this order:

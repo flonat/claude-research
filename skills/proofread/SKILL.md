@@ -1,6 +1,6 @@
 ---
 name: proofread
-description: "Academic proofreading for LaTeX papers. Grammar, notation consistency, citation format, tone, LaTeX issues, citation voice balance, and TikZ diagram review. Report-only — never edits source files."
+description: "Use when you need academic proofreading of a LaTeX paper (11 check categories)."
 allowed-tools: Read, Glob, Grep
 argument-hint: [project-path or tex-file]
 ---
@@ -26,7 +26,7 @@ argument-hint: [project-path or tex-file]
 
 1. **Locate files**: Find all `.tex` files in the project (and `.log` files for LaTeX diagnostics)
 2. **Read the document**: Read all `.tex` source files in order
-3. **Run 7 check categories** (below)
+3. **Run 11 check categories** (below)
 4. **Produce report**: Write `YYYY-MM-DD_PROOFREAD-REPORT.md` in `reviews/proofread/` under the project directory (create the directory if it does not exist). Do NOT overwrite previous reports — each review is dated.
 
 ## Check Categories
@@ -99,13 +99,58 @@ If the document contains TikZ code (`\begin{tikzpicture}` or `\tikz`):
 
 For detailed spatial verification (Bezier depth calculations, gap minimums, shape boundary clearance), see [`../shared/tikz-rules.md`](../shared/tikz-rules.md).
 
+### 8. Numeric Text↔Table Cross-Check
+
+Cross-check every number mentioned in the prose against the corresponding table or figure. Flag ANY discrepancy, no matter how small.
+
+- **Coefficient claims**: "a 3.2 percentage point increase" in text vs coefficient of 0.031 in the table — flag the mismatch
+- **Sample sizes**: "N = 1,247" in text vs N row in table — must match exactly
+- **Significance claims**: "statistically significant at the 5% level" in text vs the actual stars/p-value in the table
+- **Summary statistics**: means, medians, standard deviations mentioned in prose must match the descriptive statistics table
+- **Figure references**: claims about trends or magnitudes must be consistent with what the figure shows
+- **Table/figure existence**: every table/figure referenced in text must exist; every table/figure in the document must be referenced in text
+- **N consistency**: the number of observations should be consistent across related specifications unless there's an explained reason for differences
+
+### 9. Causal Language Audit
+
+Audit causal claims against the stated identification strategy. The strength of causal language must match the strength of the research design.
+
+- **Flag "X causes Y"** or "the causal effect of X" when the identification strategy is observational (OLS with controls, correlational) — should be "is associated with" or "predicts"
+- **Flag "proves"** — almost never appropriate; use "provides evidence consistent with"
+- **Match language to design**:
+  - DiD/RDD/IV → "we estimate the causal effect" is acceptable with qualifiers
+  - OLS with controls → "we find a relationship" or "our estimates suggest"
+  - Correlational → never use causal language
+- **Flag "significant" ambiguity** — must always be clear whether "statistically significant" or "economically meaningful/large"
+- **Flag coefficient descriptions without units or scale** — "a coefficient of 0.031" means nothing without knowing the units of X and Y
+- **Flag correlation/causation conflation** — any statement that slides from an association to a causal claim without an identification argument
+
+### 10. Equation Completeness
+
+Verify that mathematical notation is complete and internally consistent.
+
+- **Every variable in an equation must be defined** in the text (either before or immediately after the equation)
+- **Error terms**: properly specified (ε_it vs u_i vs e_ij) and consistent with the econometric framework described
+- **Equation numbering**: sequential, and all cross-references to equations are correct
+- **Subscript/index structure must match the level of observation** — e.g., if the text describes individual-level variation, the equation should have individual subscripts, not county-level
+- **Summation/expectation indices**: verify bounds match the described sample
+- **Consistent notation across equations**: don't switch between β and b for the same coefficient, or between X_i and x_i
+
+### 11. Preprint Staleness
+
+For every citation that looks like a preprint or working paper, check whether a peer-reviewed version has since been published. Flag stale preprints as Major issues.
+
+- **Detection signals**: URL contains `arxiv.org`, `ssrn.com`, `nber.org`; journal field says "Working Paper", "mimeo"; entry type is `@techreport` or `@unpublished`
+- **Action**: note the stale citation and suggest the published venue/year
+- **This is a lighter version of `/bib-validate`'s preprint check** — only flag obvious cases visible from the `.bib` or `\bibitem` entries. For thorough preprint checking, recommend running `/bib-validate` separately.
+
 ## Severity Levels
 
 | Level | Definition | Example |
 |-------|-----------|---------|
-| **Critical** | Will be noticed by reviewers, may cause rejection | Broken references, major grammar errors, inconsistent core notation |
-| **Major** | Noticeable quality issue | Inconsistent citation style, tone issues, overfull hbox > 10pt |
-| **Minor** | Polish issue | Occasional British/American mix, minor spacing |
+| **Critical** | Will be noticed by reviewers, may cause rejection | Broken references, major grammar errors, inconsistent core notation, text↔table number mismatch, causal overclaiming with weak design |
+| **Major** | Noticeable quality issue | Inconsistent citation style, tone issues, overfull hbox > 10pt, undefined variable in equation, stale preprint, ambiguous "significant" |
+| **Minor** | Polish issue | Occasional British/American mix, minor spacing, missing equation number for referenced equation |
 
 ## Quality Scoring
 
@@ -136,6 +181,10 @@ Start at 100, deduct per issue found, apply verdict. Insert the Score Block into
 | LaTeX-specific | 0 | 0 | 0 |
 | Citation voice balance | 0 | 0 | 0 |
 | TikZ diagrams | 0 | 0 | 0 |
+| Numeric cross-check | 0 | 0 | 0 |
+| Causal language | 0 | 0 | 0 |
+| Equation completeness | 0 | 0 | 0 |
+| Preprint staleness | 0 | 0 | 0 |
 | **Total** | **0** | **0** | **0** |
 
 ## Critical Issues

@@ -56,6 +56,26 @@
 
 [Entries with suspicious years]
 
+## Reference Manager Cross-Reference
+
+| Key | .bib | Zotero | Paperpile | Status |
+|-----|------|--------|-----------|--------|
+| `smith2020` | Yes | Yes | Yes | HEALTHY |
+| `jones2019` | Yes | No | Yes | MIGRATE_TO_ZOTERO |
+| `doe2021` | Yes | No | No | MISSING |
+
+## Fix Mode Actions
+
+*Omit this section if `--no-fix` was passed or no fixable issues were found.*
+
+| Action | Key | Result |
+|--------|-----|--------|
+| Added to Zotero | `doe2021` | Filed → [Topic Collection] + _Needs Review |
+| Migrated to Zotero | `jones2019` | Copied from Paperpile → [Topic Collection] + _Needs Review |
+| Metadata corrected | `smith2020` | Updated year: 2019 → 2020 |
+
+**Post-fix:** Updated `zotero-collections.md` item counts for [collection].
+
 ## Limitations
 
 *If embedded:* Embedded bibliographies (`\bibitem`) lack structured metadata (author, year, journal as separate fields). Only cross-reference checks were performed. Quality checks (required fields, year reasonableness, author formatting) require an external `.bib` file.

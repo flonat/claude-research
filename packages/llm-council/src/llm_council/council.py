@@ -4,6 +4,9 @@ Adapted from karpathy/llm-council:
   Stage 1 -- Individual assessments (parallel, structured JSON or text)
   Stage 2 -- Peer review (parallel, free-form text with FINAL RANKING)
   Stage 3 -- Chairman synthesis (single model, structured JSON or text)
+
+Supports checkpoint-based session resumption (inspired by Owlex) and
+atomic file-based state (inspired by agents-council).
 """
 
 from __future__ import annotations
@@ -13,8 +16,10 @@ import json
 import logging
 import re
 from collections import defaultdict
+from pathlib import Path
 from time import perf_counter
 
+from llm_council.checkpoint import CouncilCheckpointer
 from llm_council.client import LLMClient
 from llm_council.config import AVAILABLE_MODELS, model_display_name
 from llm_council.models import (
@@ -45,6 +50,8 @@ class CouncilService:
         existing_model: str | None = None,
         stage2_system: str | None = None,
         stage3_prompt_builder: object | None = None,
+        checkpoint_dir: str | Path | None = None,
+        resume: bool = False,
     ) -> CouncilResult:
         """Run the full 3-stage council process.
 
@@ -69,17 +76,61 @@ class CouncilService:
             Optional callable(assessments, peer_reviews, user_msg) -> str
             that builds a custom Stage 3 chairman prompt. If None, uses
             the default synthesis prompt.
+        checkpoint_dir:
+            Directory for checkpoint files. If provided, each stage's
+            results are saved atomically for crash recovery and resumption.
+        resume:
+            If True and checkpoint_dir is provided, resume from the last
+            completed stage of the most recent run.
         """
         t_total = perf_counter()
 
+        # Set up checkpointing
+        ckpt = None
+        resume_from = 0
+        if checkpoint_dir:
+            checkpoint_path = Path(checkpoint_dir)
+            if resume:
+                probe = CouncilCheckpointer(checkpoint_path)
+                latest_run = probe.find_latest_run()
+                if latest_run:
+                    ckpt = CouncilCheckpointer(checkpoint_path, run_id=latest_run)
+                    resume_from = ckpt.last_completed_stage()
+                    if resume_from > 0:
+                        logger.info(
+                            "Resuming run %s from stage %d",
+                            latest_run, resume_from + 1,
+                        )
+                    else:
+                        ckpt = CouncilCheckpointer(checkpoint_path)
+                else:
+                    ckpt = CouncilCheckpointer(checkpoint_path)
+            else:
+                ckpt = CouncilCheckpointer(checkpoint_path)
+
         # Stage 1
-        t1 = perf_counter()
-        assessments = await self._stage1_collect(
-            system_prompt, user_msg, council_models,
-            existing_result=existing_result,
-            existing_model=existing_model,
-        )
-        stage1_ms = int((perf_counter() - t1) * 1000)
+        stage1_ms = 0
+        if resume_from >= 1 and ckpt:
+            saved = ckpt.load_stage1()
+            if saved:
+                assessments = [CouncilAssessment(**a) for a in saved]
+                logger.info("Stage 1: loaded %d assessments from checkpoint", len(assessments))
+            else:
+                t1 = perf_counter()
+                assessments = await self._stage1_collect(
+                    system_prompt, user_msg, council_models,
+                    existing_result=existing_result,
+                    existing_model=existing_model,
+                )
+                stage1_ms = int((perf_counter() - t1) * 1000)
+        else:
+            t1 = perf_counter()
+            assessments = await self._stage1_collect(
+                system_prompt, user_msg, council_models,
+                existing_result=existing_result,
+                existing_model=existing_model,
+            )
+            stage1_ms = int((perf_counter() - t1) * 1000)
 
         if not assessments:
             return CouncilResult(
@@ -98,17 +149,58 @@ class CouncilService:
         for i, a in enumerate(assessments):
             a.label = f"Assessment {chr(65 + i)}"
 
-        # Stage 2
-        t2 = perf_counter()
-        peer_reviews, label_to_model = await self._stage2_peer_review(
-            system_prompt, user_msg, assessments, council_models,
-            custom_system=stage2_system,
-        )
-        stage2_ms = int((perf_counter() - t2) * 1000)
+        # Checkpoint Stage 1
+        if ckpt and resume_from < 1:
+            ckpt.save_stage1(
+                [a.model_dump() for a in assessments],
+                [a.model for a in assessments],
+            )
+            pending = ckpt.pending_participants(
+                council_models,
+                [a.model for a in assessments],
+            )
+            if pending:
+                logger.warning("Stage 1: pending models: %s", pending)
 
-        aggregate_rankings = self._calculate_aggregate_rankings(
-            peer_reviews, label_to_model,
-        )
+        # Stage 2
+        stage2_ms = 0
+        label_to_model = {a.label: a.model for a in assessments}
+
+        if resume_from >= 2 and ckpt:
+            saved = ckpt.load_stage2()
+            if saved:
+                reviews_data, saved_rankings = saved
+                peer_reviews = [CouncilPeerReview(**r) for r in reviews_data]
+                aggregate_rankings = saved_rankings
+                logger.info("Stage 2: loaded %d reviews from checkpoint", len(peer_reviews))
+            else:
+                t2 = perf_counter()
+                peer_reviews, label_to_model = await self._stage2_peer_review(
+                    system_prompt, user_msg, assessments, council_models,
+                    custom_system=stage2_system,
+                )
+                stage2_ms = int((perf_counter() - t2) * 1000)
+                aggregate_rankings = self._calculate_aggregate_rankings(
+                    peer_reviews, label_to_model,
+                )
+        else:
+            t2 = perf_counter()
+            peer_reviews, label_to_model = await self._stage2_peer_review(
+                system_prompt, user_msg, assessments, council_models,
+                custom_system=stage2_system,
+            )
+            stage2_ms = int((perf_counter() - t2) * 1000)
+            aggregate_rankings = self._calculate_aggregate_rankings(
+                peer_reviews, label_to_model,
+            )
+
+        # Checkpoint Stage 2
+        if ckpt and resume_from < 2:
+            ckpt.save_stage2(
+                [r.model_dump() for r in peer_reviews],
+                [r.model for r in peer_reviews],
+                aggregate_rankings=aggregate_rankings,
+            )
 
         # Stage 3
         t3 = perf_counter()
@@ -118,6 +210,10 @@ class CouncilService:
             custom_prompt_builder=stage3_prompt_builder,
         )
         stage3_ms = int((perf_counter() - t3) * 1000)
+
+        # Checkpoint Stage 3
+        if ckpt:
+            ckpt.save_stage3(final_result, chairman_model)
 
         total_ms = int((perf_counter() - t_total) * 1000)
 

@@ -1,6 +1,6 @@
 ---
 name: interview-me
-description: "Interactive interview to formalise a research idea into a structured specification with hypotheses and empirical strategy. Conversational — asks questions one at a time. Triggers: 'help me formalise this idea', 'develop my research question'. Not for literature search — use /literature."
+description: "Use when you need to conduct a structured interview to extract knowledge or preferences."
 disable-model-invocation: true
 argument-hint: "[brief topic or 'start fresh']"
 allowed-tools: Read, Write, Edit

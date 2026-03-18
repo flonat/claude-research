@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: "Quality review for R and Python research scripts. 11-category scorecard covering reproducibility, structure, domain correctness, cross-language verification, and more. Report-only — never edits source files."
+description: "Use when you need a quality review of R or Python research scripts."
 allowed-tools: Read, Glob, Grep
 argument-hint: [script-path or project-path]
 ---

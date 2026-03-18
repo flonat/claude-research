@@ -1,6 +1,6 @@
 ---
 name: session-recap
-description: "End-of-session checklist. Checks for uncommitted changes, offers to update focus, project docs, context, and session log. Replaces the old stop hook. Triggers: 'wrap up', 'end session', 'what did we do today'. Not for mid-session logging — use /session-log."
+description: "Use when you need to run the end-of-session checklist (uncommitted changes, focus update, project sync)."
 allowed-tools: Bash(git*), Read, Write, Edit, Glob, Grep, Skill, AskUserQuestion, Task
 argument-hint: (no arguments)
 ---
@@ -41,6 +41,14 @@ argument-hint: (no arguments)
 
 Three phases: **scan**, **interview**, **execute in parallel**, then **git last**.
 
+### Phase 0: Sync Auto-Memory
+
+Push local auto-memory to the shared location so it gets committed with the repo:
+
+```bash
+bash "$(head -1 ~/.config/task-mgmt/path)/scripts/sync-push-memory.sh"
+```
+
 ### Phase 1: Context Scan (automatic, no prompting)
 
 Silently detect what's applicable. Do these checks in parallel:
@@ -70,7 +78,7 @@ AskUserQuestion with multiSelect: true
 |--------|-----------------|-------------|
 | **Update focus** | Always | Rotate session history in `.context/current-focus.md` — captures where you left off, manages open loops, updates weekly goals |
 | **Refresh project docs** | Only if CWD has `CLAUDE.md` or `README.md` | Update the project's own `CLAUDE.md`/`README.md` — fixes stale file trees, counts, and next steps |
-| **Sync project state** | Only if CWD has `CLAUDE.md` | Propagate stage/journal/status to `.context/projects/_index.md` and Notion Research Pipeline |
+| **Sync project state** | Only if CWD has `CLAUDE.md` | Propagate stage/journal/status to `.context/projects/_index.md` (sub-agent) and Notion Research Pipeline (main context after agents) |
 | **Update planning state** | Only if `.planning/state.md` exists | Update phase progress, component status, and decisions in `.planning/state.md` |
 | **Archive session log** | Always | Create timestamped `log/YYYY-MM-DD-HHMM.md` — permanent detailed record of this session |
 
@@ -103,13 +111,15 @@ Launch **parallel Task agents** (subagent_type: "general-purpose") for all selec
 |-------|---------------|
 | Focus agent | `.context/current-focus.md` — session rotation, open loops, weekly goals |
 | Project docs agent | Project `CLAUDE.md`, `README.md` — stale trees, counts, next steps |
-| Project state agent | `.context/projects/_index.md` + Notion Research Pipeline — stage, journal, status |
+| Project state agent | `.context/projects/_index.md` — stage, journal, status (**local file only**) |
 | Planning state agent | `.planning/state.md` — phase progress, component status, decisions |
 | Session log agent | `log/YYYY-MM-DD-HHMM.md` — timestamped session archive |
 
 **Memory update** runs in the main context (it's fast — just appending to MEMORY.md files) while agents execute.
 
 Wait for all agents to complete before proceeding to Phase 3.5.
+
+**Notion sync (main context, after agents complete):** MCP tools are not available inside sub-agents — they are permission-scoped to the main conversation context only. After all agents complete, call `/sync-notion` from the main context to propagate changes to the Notion Research Pipeline. This ensures the Notion update actually succeeds.
 
 ### Phase 3.5: Memory Review
 
@@ -125,6 +135,23 @@ Memory updates:
 If nothing was saved, show: `Memory: nothing to save this session.`
 
 the user can say "undo" or "remove the last one" to adjust.
+
+**Collaboration quality** (only for sessions with substantive research work — skip for infra/admin/quick sessions):
+
+If the session involved paper writing, research design, data analysis, or multi-step research tasks, add a brief collaboration assessment to the session summary:
+
+```
+Collaboration quality:
+  Direction-setting:        [1 sentence — how clear were goals and pivots?]
+  Intellectual contribution: [1 sentence — did the user add insights beyond what AI could generate?]
+  Iteration discipline:     [1 sentence — were corrections timely? Was quality gating effective?]
+```
+
+Rules:
+- No numeric scores — just honest one-sentence assessments
+- Be candid: "User pressed 'continue' without reviewing" is valid
+- Skip entirely for sessions that were purely mechanical (compilation, file moves, infra updates)
+- This goes into the session log (via the Session log agent), not into a separate file
 
 **Follow-up suggestions** (from Phase 1 checks 7-8). Show any that apply, then proceed to Phase 4:
 

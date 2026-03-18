@@ -1,6 +1,6 @@
 ---
 name: context-status
-description: "Show current context status and session health.\nUse to check how much context has been used, whether auto-compact is\napproaching, and what state will be preserved."
+description: "Use when you need to check current context status and session health."
 allowed_tools:
   - Read
   - Glob

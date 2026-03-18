@@ -1,6 +1,6 @@
 ---
 name: code-archaeology
-description: "Systematically review and understand old code, data, and analysis files. For reviving old projects, auditing inherited code, or preparing for R&R. Triggers: 'what does this old code do', 'understand this legacy project', 'revive this project'. Not for active code review — use /code-review."
+description: "Use when you need to review and understand old code, data, or analysis files."
 allowed-tools: Bash(ls*), Bash(cp*), Bash(mkdir*), Bash(git*), Read, Write, Edit, Glob, Grep
 argument-hint: [project-path]
 ---
