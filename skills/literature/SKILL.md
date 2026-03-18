@@ -1,7 +1,7 @@
 ---
 name: literature
-description: "Academic literature discovery, synthesis, and bibliography management. Find papers, verify citations, create .bib files, download PDFs, and synthesize literature narratives. Includes OpenAlex, Scopus, and Web of Science API integration for structured scholarly queries."
-allowed-tools: Bash(curl*), Bash(wget*), Bash(mkdir*), Bash(ls*), Bash(uv*), Bash(cd*), Read, Write, Edit, WebSearch, WebFetch, Task
+description: "Use when you need academic literature discovery, synthesis, or bibliography management."
+allowed-tools: Bash(curl*), Bash(wget*), Bash(mkdir*), Bash(ls*), Bash(uv*), Bash(cd*), Read, Write, Edit, WebSearch, WebFetch, Task, mcp__paperpile__search_library, mcp__paperpile__get_items_by_label, mcp__refpile__search_library, mcp__refpile__get_collections, mcp__refpile__add_item, mcp__refpile__add_to_collection, mcp__refpile__parse_pdf_metadata, mcp__refpile__parse_pdf_references
 argument-hint: [topic-or-paper-query]
 ---
 
@@ -15,10 +15,17 @@ argument-hint: [topic-or-paper-query]
 
 **Python:** Always use `uv run python`. Never bare `python`, `python3`, `pip`, or `pip3`.
 
-**PREPRINT RULE: Always prefer the published version.** If a paper is found on arXiv, SSRN, NBER, or any working paper series, search for a published journal/conference version. Only cite a preprint if no published version can be found.
+**LIBRARY-FIRST RULE: ALWAYS check both Zotero (refpile MCP) and Paperpile (paperpile MCP) BEFORE any external search.** Call `mcp__refpile__search_library` and `mcp__paperpile__search_library` for the topic in Phase 1. Do not skip this even if no `.bib` file exists yet. Papers already in either library should be reused, not re-discovered.
+
+**PREPRINT RULE: Always prefer the published version.** If a paper is found on arXiv, SSRN, NBER, or any working paper series, search for a published journal/conference version using `scholarly_search`. Only cite a preprint if no published version can be found. This applies at every phase: Phase 2 (discovery), Phase 4 (verification), and Phase 6b (bib-validate runs the full preprint staleness check from `bib-validate/references/preprint-check.md`).
 
 > Comprehensive academic literature workflow: discover, verify, organize, synthesize.
 > Uses parallel sub-agents to search multiple sources, verify citations, and fetch PDFs concurrently.
+
+## Shared References
+
+- Concept validation gate: `shared/concept-validation-gate.md` — validate concept before synthesis
+- Escalation protocol: `shared/escalation-protocol.md` — escalate when research question is vague
 
 ## When to Use
 
@@ -65,23 +72,32 @@ Check for existing `.bib` files in project root, `/references`, `/bib`, `/biblio
 1. Parse existing entries to avoid duplicates and understand context
 2. Identify gaps — note if bibliography skews toward certain years/methods
 3. Compile list of existing citation keys to pass to sub-agents
-4. **Check Paperpile library** — call `mcp__paperpile__search_library` for the search topic. This finds papers the user already has, preventing re-discovery of known work. Mark these as **ALREADY IN LIBRARY** and skip them in Phase 2. Also call `mcp__paperpile__get_items_by_label` if a relevant folder exists to get the full reading list for this topic.
-5. **Check Zotero library** (legacy) — call `search_library` (refpile MCP) for the search topic. Same purpose as above. If refpile MCP is unavailable, log a warning and continue.
-6. **Check source availability** — call `scholarly_source_status` (bibliography MCP) to see which sources are active (OpenAlex always; Scopus and WoS if API keys are set). Report this so search agents know what coverage to expect.
+4. **MANDATORY: Check Zotero library** (active write target) — call `mcp__refpile__search_library` for the search topic. This finds papers the user already has, preventing re-discovery of known work. Mark these as **ALREADY IN ZOTERO** and reuse their citation keys. If refpile MCP is unavailable, log a warning and continue — but always attempt the call.
+5. **MANDATORY: Check Paperpile library** (read-only cross-reference) — call `mcp__paperpile__search_library` for the search topic. Also call `mcp__paperpile__get_items_by_label` if a relevant folder exists. Mark matches as **ALREADY IN PAPERPILE**. Items in Paperpile but not Zotero are flagged as `MIGRATE_TO_ZOTERO` candidates. If Paperpile MCP is unavailable, log a warning and continue — but always attempt the call.
+6. **Resolve topic collection** — read `zotero-collections.md` to find the collection key for the current topic (see `shared/reference-resolution.md` for resolution logic). This key is used in Phase 6c for filing.
+7. **Check source availability** — call `scholarly_source_status` (bibliography MCP) to see which sources are active (OpenAlex always; Scopus and WoS if API keys are set). Report this so search agents know what coverage to expect.
+
+**Steps 4 and 5 are NOT optional.** Every literature search must check both reference managers before external discovery. This prevents re-discovering papers already in the library and identifies migration candidates early.
 
 ---
 
 ## Phase 2: Parallel Search (Sub-Agents)
 
+**MCP pre-fetch (main context, before spawning agents):** Call these bibliography MCP tools from the main context before spawning agents. MCP tools are not available inside sub-agents — they are permission-scoped to the main conversation context only. Write results to `/tmp/lit-search/`.
+
+1. **`scholarly_search`** — cross-source keyword search (OpenAlex + S2 + Scopus + WoS). Write to `/tmp/lit-search/bibliography-results.json`.
+2. **`scholarly_similar_works`** — ML-based recommendations (powered by S2 Recommendations API). Pass the topic description as text to find semantically related papers beyond keyword matches. Write to `/tmp/lit-search/similar-results.json`.
+3. **`scholarly_author_papers`** — if key authors are known, fetch their publication lists. Write to `/tmp/lit-search/author-results.json`.
+
 Spawn **2-3 Explore agents in parallel** in a single message, one per source. Read the full prompt templates from [references/agent-templates.md](references/agent-templates.md#phase-2-search-agent-templates).
 
 Available search agents:
-1. **Google Scholar** — broad academic search via web
-2. **Cross-Source via bibliography MCP** (recommended) — call `scholarly_search` to query all enabled sources (OpenAlex + Scopus + WoS) with automatic DOI-based deduplication. Returns structured metadata, citation counts, and DOIs — reducing Phase 4 verification work significantly
-3. **Semantic Scholar / arXiv** (optional) — CS/ML focused, useful when topic has strong CS overlap
-4. **Domain-specific** (optional) — SSRN, NBER, specific journals
+1. **Google Scholar** — broad academic search via web (no MCP needed)
+2. **Cross-Source via pre-fetched biblio data** (recommended) — reads `/tmp/lit-search/bibliography-results.json` and `/tmp/lit-search/similar-results.json` (pre-fetched by the orchestrator) and supplements with WebSearch
+3. **Semantic Scholar / arXiv** (optional) — CS/ML focused, useful when topic has strong CS overlap (no MCP needed)
+4. **Domain-specific** (optional) — SSRN, NBER, specific journals (no MCP needed)
 
-**Prefer the bibliography MCP `scholarly_search` tool over the raw Python client** — it queries all configured sources in one call and deduplicates automatically. Use it as Agent 2 alongside Google Scholar for maximum coverage.
+**The MCP calls happen in the main context (Phase 2 pre-fetch), not inside sub-agents.** Sub-agents read the pre-fetched results and supplement with web search.
 
 ---
 
@@ -90,6 +106,22 @@ Available search agents:
 Multi-model literature search via `cli-council` — runs the same query through Gemini, Codex, and Claude for maximum recall. Use for broad reviews (20+ papers) or interdisciplinary topics.
 
 **Full invocation, prompt template, and post-processing:** [references/cli-council-search.md](references/cli-council-search.md#phase-2b-cli-council-search-optional)
+
+---
+
+## Phase 2.5: Snowball Search (Optional — Main Context)
+
+After Phase 2 results are merged, use S2's citation graph to expand the candidate pool via snowballing. This finds seminal papers (backward) and recent follow-ups (forward) that keyword search misses.
+
+1. **Identify seed papers** — pick the 3-5 most relevant papers from Phase 2 results (highest citation count + relevance)
+2. **Forward snowball** — call `scholarly_citations` for each seed to find papers that cite it. Useful for finding recent work building on foundational papers.
+3. **Backward snowball** — call `scholarly_references` for each seed to find papers it cites. Useful for finding seminal/foundational works.
+4. **Filter** — deduplicate against Phase 2 results, keep only papers with ≥5 citations (avoid noise)
+5. **Add to candidate pool** — merge into the main list before Phase 3 ranking
+
+**When to use:** Literature reviews, broad topic surveys, or when Phase 2 returned <15 unique papers. Skip for narrow/targeted searches where the initial results are sufficient.
+
+**Paper detail enrichment:** For top candidates, call `scholarly_paper_detail` to get TLDR summaries (one-line AI-generated descriptions) — useful for rapid screening without reading abstracts.
 
 ---
 
@@ -117,7 +149,7 @@ Multi-model literature search via `cli-council` — runs the same query through 
 2. **`scholarly_search`** with exact title — searches OpenAlex/Scopus/WoS for the paper.
 3. **Web search as last resort** — but DOIs from web search must still be verified via `scholarly_verify_dois` before use.
 
-**Step 3 — Manual verification for remaining papers:** Spawn **multiple general-purpose agents in parallel**, each verifying ~5 papers. Read the full verification template from [references/agent-templates.md](references/agent-templates.md#phase-4-verification-agent-template). **Include the Crossref instruction** in the agent prompt — agents must use Crossref API for DOI lookup, not reconstruct DOIs from memory.
+**Step 3 — Manual verification for remaining papers:** Spawn **multiple general-purpose agents in parallel**, each verifying ~5 papers. Read the full verification template from [references/agent-templates.md](references/agent-templates.md#phase-4-verification-agent-template). **Include the Crossref instruction** in the agent prompt — agents must use Crossref API (`curl`) for DOI lookup, not reconstruct DOIs from memory. **Do NOT instruct sub-agents to call MCP tools** (`scholarly_search`, `scholarly_verify_dois`) — MCP tools are not available in sub-agents. Sub-agents should use Crossref API and WebSearch/WebFetch only.
 
 Key rules enforced by the template:
 - DOI verification is mandatory (resolve and confirm)
@@ -161,9 +193,11 @@ Spawn Bash agents in parallel, 3-5 papers each. Read template from [references/a
 
 Rules:
 - Citation keys: use **Better BibTeX-format keys** (e.g., `Author2016-xx`). If merging into an existing `.bib`, match the key format already in use. Never generate `AuthorYear` keys.
+- **Reuse existing Zotero citation keys** — for entries marked **ALREADY IN ZOTERO** in Phase 1, use the Zotero `citationKey` directly. Do not generate a new key.
 - Only VERIFIED papers — no METADATA MISMATCH entries
 - **List ALL authors explicitly** — never "et al." in BibTeX
 - Include abstracts when available
+- **S2 BibTeX seed:** Call `scholarly_paper_detail` for each verified paper to get pre-formatted BibTeX via the `citationStyles` field. Use as a starting template, then enrich with missing fields (abstract, pages, volume) and correct the citation key to BBT format. This reduces manual entry errors.
 
 ---
 
@@ -183,25 +217,9 @@ This is **not optional** — every time new entries are added to a `.bib` file, 
 
 ## Phase 6c: Sync to Reference Managers
 
-After assembling and validating the `.bib`, sync new references to the user's reference libraries.
+After assembling and validating the `.bib`, sync new references to Zotero (active write target) and cross-reference with Paperpile (read-only). Handles migration candidates and post-run maintenance.
 
-### Paperpile (Primary)
-
-For each new entry not marked **ALREADY IN LIBRARY** from Phase 1:
-
-1. **Check if already in Paperpile** — call `mcp__paperpile__search_library` by title to avoid duplicates
-2. **Report additions needed** — list entries that need manual import into Paperpile (Paperpile MCP is read-only; the user adds via the Paperpile app or browser extension)
-3. **Export BibTeX** — if Paperpile has entries with better metadata than what was assembled, call `mcp__paperpile__export_bib` and use those entries instead
-
-### Zotero (Legacy)
-
-For each new entry not already in Zotero:
-
-1. **Auto-add to Zotero** — call `add_item` (refpile MCP) for each new reference with full metadata (title, authors, year, journal, DOI).
-2. **Tag for review** — call `add_to_collection` with the `_Needs Review` collection so the user can verify entries in the Zotero app.
-3. **Report results** — show a summary table of what was added and remind the user to check `_Needs Review` in Zotero.
-
-**Graceful degradation:** If either MCP is unavailable, skip that source with a warning. The `.bib` file on disk is still the primary output.
+Full steps: [`references/reference-manager-sync.md`](references/reference-manager-sync.md)
 
 ---
 
@@ -212,7 +230,32 @@ For each new entry not already in Zotero:
 3. **Note current debates** — where do researchers disagree?
 4. **Find gaps** — what's missing?
 
-Output types: narrative summary (LaTeX), literature deck, annotated bibliography.
+Output types: narrative summary (LaTeX), literature deck, annotated bibliography, concise field synthesis.
+
+### Concise Field Synthesis (~400 words)
+
+When the user asks for a "quick synthesis", "field overview", or "what does the literature say", produce a tight ~400-word synthesis instead of a full narrative. No paper-by-paper summaries — write about the field, not individual papers.
+
+Structure:
+1. **What the field collectively believes** — established consensus (2-3 sentences)
+2. **Where researchers disagree** — active debates with camps identified (2-3 sentences)
+3. **What has been proven** — findings with strong, replicated evidence (2-3 sentences)
+4. **The single most important unanswered question** — one question, why it matters, why it's hard (2-3 sentences)
+
+Cite papers parenthetically (Author, Year) but never summarise individual papers. The goal is a helicopter view that a newcomer could read in 2 minutes and understand where the field stands.
+
+### [VERIFY] Citation Tags
+
+When synthesising, mark uncertain attributions with `[VERIFY]` tags for later resolution:
+
+```markdown
+Meraz and Papacharissi (2013) argue that gatekeeping power shifted
+from institutional positions to network centrality [VERIFY: exact claim on p. 12?].
+```
+
+- **Drafting tier:** [VERIFY] tags are acceptable — resolve before finalising
+- **Publication tier:** All [VERIFY] tags must be resolved (read the actual source)
+- Run `/bib-validate` to catch any remaining [VERIFY] tags before submission
 
 ### Multi-Model Synthesis (Optional)
 
@@ -264,7 +307,20 @@ project/
 
 ## Bibliometric API Structured Queries
 
-Three bibliometric sources are available. The **bibliography MCP server** (`.mcp-server-bibliography/`) is the preferred interface — `scholarly_search` queries all enabled sources in one call with automatic DOI-based dedup; `scholarly_verify_dois` batch-verifies DOIs across all sources. Use the Python clients only for source-specific workflows not yet exposed via MCP (e.g., citation networks, institution analysis).
+Four bibliometric sources are available. The **bibliography MCP server** (`packages/mcp-bibliography/`) is the preferred interface — `scholarly_search` queries all enabled sources in one call with automatic DOI-based dedup; `scholarly_verify_dois` batch-verifies DOIs across all sources.
+
+### Bibliography MCP Tools (preferred)
+
+| Tool | What it does | When to use |
+|------|-------------|-------------|
+| `scholarly_search` | Cross-source keyword search (OpenAlex + S2 + Scopus + WoS) with dedup | Phase 2 pre-fetch |
+| `scholarly_similar_works` | ML-based recommendations (S2 Recommendations API) | Phase 2 pre-fetch — finds papers beyond keyword matches |
+| `scholarly_verify_dois` | Batch DOI verification across all sources | Phase 4 verification |
+| `scholarly_citations` | Forward citation graph (papers citing a given paper) | Phase 2.5 snowball — find follow-up work |
+| `scholarly_references` | Backward citation graph (papers referenced by a given paper) | Phase 2.5 snowball — find foundational works |
+| `scholarly_paper_detail` | Full metadata + TLDR + BibTeX + OA PDF link | Phase 3 screening, Phase 6 BibTeX assembly |
+| `scholarly_author_papers` | All papers by an author | Phase 2 pre-fetch — author-based search |
+| `scholarly_source_status` | Check which sources are active | Phase 1 |
 
 ### OpenAlex (always available)
 
@@ -311,6 +367,8 @@ Download arXiv LaTeX source for full-text reading (equations, methodology, exact
 | `/scout generate` | Generate research questions first |
 | `/interview-me` | Develop a specific idea before searching |
 | `/bib-validate` | **Mandatory** after assembling `.bib` (Phase 6b) — metadata quality, preprint staleness, DOI checks |
+| `/bib-coverage` | Compare project `.bib` vs Zotero topic collection — find uncited papers and unfiled references |
 | `/split-pdf` | Deep-read a paper found during search |
 | `cli-council` | Multi-model search (Phase 2b) and synthesis (Phase 7) — `packages/cli-council/` |
-| `refpile` MCP | Search personal Zotero library, extract PDF text/annotations, export BibTeX. Use in Phase 1 to check what's already in the library before searching externally |
+| `refpile` MCP | Search personal Zotero library, extract PDF text/annotations, export BibTeX. Use in Phase 1 to check what's already in the library before searching externally. GROBID tools (`parse_pdf_metadata`, `parse_pdf_references`) extract structured metadata and bibliographies from PDFs — use after downloading to auto-extract refs without manual reading |
+| `shared/reference-resolution.md` | Canonical lookup + filing sequence used by Phase 1 and Phase 6c |

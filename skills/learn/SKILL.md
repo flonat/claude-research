@@ -203,11 +203,15 @@ Fix all errors. Address warnings to improve quality. Use `--strict` to promote w
 
 The validator checks: frontmatter validity, name format and directory match, description quality, body length, broken links, referenced directories, and placeholder text.
 
-## Phase 6: Confirm
+## Phase 6: Deploy and Confirm
 
-1. Check that `~/.claude/skills/{name}/SKILL.md` exists (via the symlink)
-2. Tell the user: "Created `/{name}` — [one-line summary]. It's available immediately in all projects."
-3. If the skill is substantial, suggest updating `docs/skills.md` with the new entry
+1. Copy the skill to the deployed location (rsync won't run until next session start):
+   ```bash
+   cp -r skills/{name} ~/.claude/skills/{name}
+   ```
+2. Check that `~/.claude/skills/{name}/SKILL.md` exists
+3. Tell the user: "Created `/{name}` — [one-line summary]. It's available immediately in all projects."
+4. If the skill is substantial, suggest updating `docs/skills.md` with the new entry
 
 ## What This Skill Does NOT Do
 

@@ -6,10 +6,10 @@
 ## Shared Context (prepend to all prompts)
 
 ```
-Task Management root: 
+Task Management root: $TM/
 Global Claude config: ~/.claude/
 Project index: .context/projects/_index.md
-Research projects root: $HOME/Library/CloudStorage/YOUR-CLOUD/Research/
+Research projects root: $RESEARCH_ROOT/
 Research project categories (subdirectories of the root above):
   - Category A/
   - Category B/
@@ -39,7 +39,7 @@ Audit the Task Management system inventory. Check:
    - ~/.claude/settings.json → Task Management/.claude/settings.json
    - ~/.claude/CLAUDE.md → Task Management/GLOBAL-CLAUDE.md
    - ~/.claude/statusline-command.sh → Task Management/.claude/statusline-command.sh
-6. **MCP server tool count:** The MCP server in .mcp-server-desktop/server.py registers tools as `skill-<name>` and `agent-<name>`. Count the cached skills and agents it discovers (read the discovery functions in server.py). Compare against actual skill/agent counts.
+6. **MCP server tool count:** The MCP server in packages/mcp-desktop/server.py registers tools as `skill-<name>` and `agent-<name>`. Count the cached skills and agents it discovers (read the discovery functions in server.py). Compare against actual skill/agent counts.
 7. **Undocumented items:** Any skills/hooks/agents/rules that exist on disk but aren't listed in their respective docs file (docs/skills.md, docs/hooks.md, docs/agents.md, docs/rules.md).
 8. **MCP server alignment:** Compare MCP servers between Claude Code (.mcp.json in project root) and Claude Desktop (~/Library/Application Support/Claude/claude_desktop_config.json). Check:
    - Servers present in both configs use the same name for the same service
@@ -58,7 +58,7 @@ Return findings as markdown with sections for each check, using checkmarks for p
 Quick scan of bibliography files and project health across the user's research projects. Check:
 
 1. **Find all .bib files** under the research projects root:
-   $HOME/Library/CloudStorage/YOUR-CLOUD/Research/
+   $RESEARCH_ROOT/
    Categories: Category A, Category B, Category C, Category D, Category E, Category F, Category G.
    Search each project directory and its paper/ subdirectory (2 levels deep from category).
    Skip research/scout/ (tooling, not a research project — now lives in Task Management).
@@ -81,7 +81,7 @@ Do NOT do a full validation — that's what /bib-validate is for. Just flag proj
 **Prompt:**
 ```
 Check convention compliance across the user's research projects. Scan each project directory under:
-$HOME/Library/CloudStorage/YOUR-CLOUD/Research/
+$RESEARCH_ROOT/
 Categories: Category A, Category B, Category C, Category D, Category E, Category F, Category G.
 Skip research/scout/ (tooling, not a research project).
 
@@ -89,7 +89,7 @@ For each project, check:
 
 1. **LaTeX output directory:** If .tex files exist (in project root or paper/), does an out/ directory exist? Is there a .latexmkrc file?
 2. **Overleaf separation:** If a paper/ directory exists, is it a symlink? Check that paper/ contains ONLY LaTeX source files (.tex, .sty, .cls, .bst, .bbl, .bib, .latexmkrc, out/) and figures (.pdf, .png, .eps, .jpg, .svg, .tikz). Flag any code files (.py, .R, .jl, .sh, .ipynb), data files (.csv, .xlsx, .json, .dta, .parquet), or other non-LaTeX artifacts found inside paper/.
-3. **Hook executability:** All .sh files in hooks/ should be executable (chmod +x).
+3. **Hook executability:** All .sh files in $TM/hooks/ should be executable (chmod +x).
 4. **Python environment:** If .py files exist in the project, is there a pyproject.toml? Any sign of bare pip usage (requirements.txt without pyproject.toml, pip in scripts)?
 5. **CLAUDE.md presence:** Does each project have a CLAUDE.md?
 6. **Git health:** Is the project a git repo? Any uncommitted changes? Any untracked files that should probably be tracked?
@@ -105,7 +105,7 @@ Only scan top-level project directories — don't recurse deeply into subdirecto
 **Prompt:**
 ```
 Check documentation freshness in the Task Management system at:
-
+$TM/
 
 Audit:
 
@@ -135,7 +135,7 @@ Return as markdown with severity levels: OK, STALE, BROKEN.
 **Prompt:**
 ```
 Check ecosystem health for the Task Management system at:
-
+$TM/
 
 Run these 4 checks:
 
@@ -211,7 +211,7 @@ Keep output under 500 words — write details to /tmp/system-audit/sa-5.md if ne
 **Prompt:**
 ```
 Evaluate skill quality and cross-component overlap for the Task Management system at:
-
+$TM/
 
 ## Part A: Skill Quality
 
@@ -259,4 +259,36 @@ Return a cross-component table:
 Only flag genuine overlaps — a rule mentioning "use uv" and a hook enforcing "use uv" is complementary (expected), not redundant. Focus on cases where work is truly duplicated or instructions conflict.
 
 Keep total output under 500 words. Write details to /tmp/system-audit/sa-6.md if needed.
+```
+
+## Sub-Agent 7: Santi Repo Health
+
+**Prompt:**
+```
+Quick health check of Santiago's starter kit at:
+$TM/public/santi-repo/
+
+This is a downstream copy of skills/rules for Santiago. Check:
+
+1. **Skill count:** Count directories in santi-repo/skills/ that contain a SKILL.md. Compare against the count stated in README.md and ADAPTATION-NEEDED.md.
+
+2. **Rule count:** Count .md files in santi-repo/rules/. Compare against the count stated in README.md.
+
+3. **Skill freshness (sample):** Pick 5 random skills from santi-repo/skills/ and diff their SKILL.md against the upstream version in $TM/skills/. Flag any with substantive upstream changes not reflected in santi-repo (ignoring anonymisation differences like "the user" → "the user").
+
+4. **Rule freshness:** For each rule in santi-repo/rules/, compare against the upstream version in $TM/.claude/rules/. Flag substantive differences (ignoring anonymisation).
+
+5. **Anonymisation spot-check:** Grep all .md files in santi-repo/ for leaked personal details:
+   - "the user" (case-sensitive, excluding "Made by the user" in README.md)
+   - "$HOME" (macOS path)
+   - "Warwick", "Southampton", "Bath", "LSE" (institution names)
+   Exclude GitHub URLs containing "user" (intentional).
+
+6. **README accuracy:** Does the skill count in README.md match the actual count? Does the rule count match?
+
+7. **Install script:** Does install.sh exist and contain no macOS-specific commands (sed -i '', open, brew without apt)?
+
+Return a summary table:
+| Check | Status | Notes |
+Then list any issues found. Keep output under 300 words.
 ```

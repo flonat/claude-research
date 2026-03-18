@@ -1,6 +1,6 @@
 ---
 name: lessons-learned
-description: "Structured post-mortem after incidents, mistakes, or stuck sessions. Transforms problems into systematic improvements (skills, guards, docs, hooks). Triggers: 'what went wrong', 'post-mortem', 'how do we prevent this'."
+description: "Use when you need a structured post-mortem after incidents, mistakes, or stuck sessions."
 allowed_tools:
   - Read
   - Write

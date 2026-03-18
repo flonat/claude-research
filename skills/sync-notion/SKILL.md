@@ -1,6 +1,6 @@
 ---
 name: sync-notion
-description: "Sync the current project's state to the central context library and Notion. Updates projects/_index.md, current-focus.md, and the Research Pipeline database entry."
+description: "Use when you need to sync the current project's state to the context library and Notion."
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash(ls*), mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-update-page, mcp__claude_ai_Notion__notion-fetch
 argument-hint: [optional: summary of what changed]
 ---
@@ -49,7 +49,7 @@ Look in the project's `log/` directory for the latest `YYYY-MM-DD-HHMM.md` file.
 
 ### Step 3: Update `.context/projects/_index.md`
 
-Location: `.context/projects/_index.md`
+Location: `$TM/.context/projects/_index.md`
 
 Find the project's row in the "Papers in Progress" table. If it exists, update the Stage, Target Journal, and Status columns. If it doesn't exist, add a new row.
 
@@ -60,7 +60,7 @@ Find the project's row in the "Papers in Progress" table. If it exists, update t
 
 ### Step 4: Update `.context/current-focus.md`
 
-Location: `.context/current-focus.md`
+Location: `$TM/.context/current-focus.md`
 
 Update the "Recent Context" section with a brief summary of the latest session. Add any new open loops.
 

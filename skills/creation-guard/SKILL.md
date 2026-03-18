@@ -1,6 +1,6 @@
 ---
 name: creation-guard
-description: "Pre-flight duplicate check before creating new skills or agents. Prevents duplicates and suggests iterations. MUST be invoked before writing any new artifact definition."
+description: "Use when you need a pre-flight duplicate check before creating new skills or agents."
 allowed_tools:
   - Read
   - Glob

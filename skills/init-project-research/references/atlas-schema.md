@@ -4,8 +4,8 @@
 
 | Database | Data Source ID |
 |----------|---------------|
-| Research Themes | `YOUR-THEMES-DB-ID` |
-| Topic Inventory (Atlas) | `YOUR-ATLAS-DB-ID` |
+| Research Themes | `2e8baef4-3e2e-4ea5-b25a-18a71ed47690` |
+| Topic Inventory (Atlas) | `0a227f82-60f4-451a-a163-bff2ce8fa9c3` |
 
 ## Theme → Notion Page ID Mapping
 
@@ -25,7 +25,7 @@ Format for the Theme relation property:
 title: "Topic Name"
 theme: "Theme Name"  # Must match a theme in themes.md
 status: "Idea"  # Idea | Exploring | Active Project | Parked | Archived
-institution: "Institution A"  # Institution A | Institution B | Institution C | None
+institution: "Bath"  # Warwick | Bath | Southampton | UPF | None
 project_path: "Theme Name/Project Name"  # Relative to Research Projects/
 linked_projects: []
 connected_topics: ["slug-1", "slug-2"]  # kebab-case slugs of related topics
@@ -72,8 +72,10 @@ If a topic uses methods not in this list (e.g., "Mechanism Design", "Cryptograph
 - Topic file: `kebab-case-slug.md` in `research/atlas/topics/{theme-dir}/`
 - Theme directories: `operations-research/`, `behavioural-decision-science/`, `ai-safety-governance/`, `human-ai-interaction/`, `mechanism-design/`, `nlp-computational-ai/`, `political-science/`, `organisation-strategy/`, `environmental-economics/`
 
-## Dropbox Project Path
+## Research Project Path
 
 ```
-~/Library/CloudStorage/YOUR-CLOUD/Research/{Theme Name}/{Project Name}/
+$RESEARCH_ROOT/{Theme Name}/{Project Name}/
 ```
+
+Where `$RESEARCH_ROOT` is `~/Library/CloudStorage/YOUR-CLOUD/Research` (MacBook) or `~/Research Projects` (Mac Mini).

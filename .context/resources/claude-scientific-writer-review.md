@@ -27,7 +27,7 @@ A monolithic scientific document generation tool combining Claude with real-time
 
 | Their Feature | Our Equivalent |
 |---------------|---------------|
-| `research-lookup` + `citation-management` | `/literature` skill + `.mcp-server-bibliography` |
+| `research-lookup` + `citation-management` | `/literature` skill + `packages/mcp-bibliography` |
 | `peer-review` / `scholar-evaluation` | `referee2-reviewer`, `paper-critic`, `domain-reviewer` agents |
 | `venue-templates` | Scout `venues.json` + framing workflow |
 | `latex-posters` / `scientific-slides` | `/beamer-deck`, `/quarto-deck` |

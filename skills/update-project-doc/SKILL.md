@@ -1,6 +1,6 @@
 ---
 name: update-project-doc
-description: "Update a project's own documentation (CLAUDE.md, README.md, docs/*.md) to reflect its current state. Detects stale file trees, timestamps, counts, and next steps. Includes a leanness audit: flags CLAUDE.md > 200 lines, sections > 15 lines of reference material, SKILL.md > 300 lines, agents > 400 lines, and context files > 200 lines — with auto-extraction to docs/ or references/."
+description: "Use when you need to update a project's own CLAUDE.md, README.md, or docs/ to reflect current state."
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash(ls*), Bash(git log*), Bash(git diff*), Bash(readlink*), Bash(wc*), Bash(date*), AskUserQuestion
 argument-hint: (no arguments)
 ---
@@ -189,6 +189,6 @@ Updated project docs:
 ## Cross-References
 
 - `/session-recap` — offers to run this skill at Step 3.5
-- `/sync-private-doc` — Task Management-specific superset: propagates counts across all private TM docs including LaTeX files. Run after this skill when in the TM project.
+- `/sync-repo private` — Task Management-specific superset: propagates counts across all private TM docs including LaTeX files. Run after this skill when in the TM project.
 - `/sync-notion` — syncs state to the central context library (complementary; run after this)
 - `/update-focus` — updates `current-focus.md` (different purpose: session state, not doc accuracy)

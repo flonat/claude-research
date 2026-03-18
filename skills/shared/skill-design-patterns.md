@@ -158,7 +158,7 @@ Include a Drift Log table where Phase 0 appends detected drift with timestamps.
 Add cross-references in skills that commonly cause drift:
 
 ```markdown
-| `/audit-atlas-portfolio` | **Drift trigger:** new topics change count — see drift-checks.md |
+| `/atlas-review` | **Drift trigger:** new topics change count — see drift-checks.md |
 ```
 
 This ensures the person (or agent) running the triggering skill is aware that downstream skills may need updating.
@@ -167,7 +167,7 @@ This ensures the person (or agent) running the triggering skill is aware that do
 
 **When to skip:** Skills that derive all values at runtime (no hardcoded references to external state).
 
-**Example:** `/audit-atlas-portfolio` — topic count, theme list, Notion schemas, stage mappings, rules count all drift. Phase 0 detects and self-heals; `references/drift-checks.md` tracks 8 drift-prone values.
+**Example:** `/atlas-review` — topic count, theme list, Notion schemas, stage mappings, rules count all drift. Phase 0 detects and self-heals; `references/drift-checks.md` tracks 8 drift-prone values.
 
 ### Progressive Disclosure
 
@@ -188,7 +188,7 @@ Control what goes where based on how often the agent needs it:
 
 ### For the Description (Frontmatter)
 
-The `description` determines when the skill activates. It's always in context.
+The `description` determines when the skill activates. It's always in context. **Write in third person** — the description is injected into the system prompt, and inconsistent point-of-view causes discovery problems.
 
 **Good:**
 - `"Analyze datasets using statistical methods. Handles EDA, hypothesis testing, and causal inference. Use when asked to analyze CSV/Excel data or run A/B test analysis."`
@@ -196,7 +196,7 @@ The `description` determines when the skill activates. It's always in context.
 
 **Bad:**
 - `"A helpful skill"` — too vague, triggers on everything
-- `"This skill helps users"` — tells the router nothing
+- `"I can help you process files"` — wrong point-of-view (first person)
 - `"Skill for doing things with files"` — will trigger on every file operation
 
 **Tips:**
@@ -204,6 +204,7 @@ The `description` determines when the skill activates. It's always in context.
 - Include concrete task types as trigger phrases
 - End with "Use when..." to define activation conditions
 - State what it does NOT do if there's a common confusion
+- Max 1024 characters; name max 64 characters (lowercase, hyphens, numbers only)
 
 ### For the Body (System Prompt)
 
@@ -211,7 +212,7 @@ The `description` determines when the skill activates. It's always in context.
 - **Imperative form.** "Parse the input" not "You should parse the input."
 - **Be specific about what NOT to do.** Anti-pattern lists are highly effective.
 - **Include concrete examples.** Input/output pairs and good/bad snippets beat abstract rules.
-- **Keep SKILL.md under 300 lines.** Move detailed specs and large examples to `references/`.
+- **Keep SKILL.md under 500 lines** (Anthropic official threshold). Move detailed specs and large examples to `references/`. Aim for under 300 lines when possible.
 - **Every instruction must be actionable.** If the agent cannot act on a sentence, delete it.
 - **Use tables for structured data.** Defaults, field specs, command references — tables are faster to parse than prose.
 - **One section, one concern.** Don't mix workflow steps with quality criteria.
@@ -246,3 +247,26 @@ Before finalising any skill, verify:
 | References extracted | Is detailed reference material in `references/`, not inline? |
 | Description specificity | Would the description distinguish this from similar skills? |
 | Tested | Has the procedure been tested, not just theorised? |
+| Refs one-level deep | All reference files link directly from SKILL.md (no nested refs)? |
+| Third-person description | Description uses "Processes..." not "I can..." or "You can..."? |
+
+---
+
+## Evaluation-Driven Development
+
+Per [Anthropic's official best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices):
+
+1. **Identify gaps:** Run Claude on representative tasks without the skill. Document specific failures.
+2. **Create evaluations:** Build 3+ scenarios that test these gaps.
+3. **Establish baseline:** Measure Claude's performance without the skill.
+4. **Write minimal instructions:** Just enough to address the gaps and pass evaluations.
+5. **Iterate:** Execute evaluations, compare against baseline, refine.
+
+### Claude A / Claude B Pattern
+
+- **Claude A** (the expert): helps design and refine the skill
+- **Claude B** (the user): tests the skill in real tasks with fresh context
+- Observe Claude B's behavior, bring insights back to Claude A
+- Repeat: observe → refine → test
+
+This is similar to the existing `/skill-creator` workflow but emphasises real-task testing over synthetic evaluation.

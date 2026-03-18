@@ -47,12 +47,12 @@
 ## Setup
 
 ### Overleaf
-- **Symlink:** `paper/` → `~/...Dropbox.../Apps/Overleaf/<overleaf-name>/`
+- **Symlink:** `paper/` → `<overleaf-path>/`
 - **External link:** <URL>
 - **To recreate symlink:** `ln -s "<overleaf-path>" "<project-path>/paper"`
 
 ### GitHub
-<URL or "Local-only (synced via Dropbox)">
+<URL or "Local-only">
 
 ### Collaborators
 <Names, affiliations, contact if provided>

@@ -1,13 +1,13 @@
 ---
 name: system-audit
-description: "Run parallel system audits across skills, hooks, agents, rules, bibliographies, conventions, and documentation freshness. Report-only — never modifies files."
+description: "Use when you need to run parallel audits across skills, hooks, agents, rules, and conventions."
 allowed-tools: Bash(ls*), Bash(readlink*), Bash(wc*), Bash(git*), Bash(test*), Bash(stat*), Bash(find*), Read, Glob, Grep, Task
 argument-hint: "[no arguments — runs full sweep]"
 ---
 
 # Maintenance Sweep
 
-> System-wide health check using 6 parallel sub-agents. Produces a consolidated report at `audits/system-audit-YYYY-MM-DD.md`. **Report-only — never modifies any files.**
+> System-wide health check using agnix lint + 7 parallel sub-agents. Produces a consolidated report at `audits/system-audit-YYYY-MM-DD.md`. **Report-only — never modifies any files.**
 
 ## When to Use
 
@@ -18,18 +18,31 @@ argument-hint: "[no arguments — runs full sweep]"
 
 ## Overview
 
-1. **Dispatch** — launch 6 sub-agents in parallel via the Task tool
-2. **Collect** — gather each sub-agent's findings
-3. **Consolidate** — merge into a single timestamped report with summary dashboard
-4. **Present** — show key findings to the user
+1. **Lint** — run `npx agnix .` to validate skills, hooks, agents, and CLAUDE.md
+2. **Dispatch** — launch 7 sub-agents in parallel via the Task tool
+3. **Collect** — gather each sub-agent's findings
+4. **Consolidate** — merge lint results + sub-agent findings into a single timestamped report
+5. **Present** — show key findings to the user
 
 **Python:** Always use `uv run python` or `uv pip install`. Never bare `python`, `python3`, `pip`, or `pip3`. Include this in sub-agent prompts.
 
 ---
 
+## Phase 0: agnix Lint
+
+Run `npx agnix .` in the main context (no sub-agent needed — it's fast). Capture the summary line.
+
+**Pass criteria:** 0 errors. Warnings are informational only.
+
+If errors > 0, list them in the report under an **agnix Lint** section. These are structural issues in skill/hook/agent frontmatter that should be fixed.
+
+Config lives in `.agnix.toml` at project root — known false positives are already suppressed.
+
+---
+
 ## Phase 1: Dispatch Sub-Agents
 
-Launch all 6 in a single message using parallel Task tool calls. Each sub-agent is `subagent_type: Explore`.
+Launch all 7 in a single message using parallel Task tool calls. Each sub-agent is `subagent_type: Explore`.
 
 **Context overflow prevention:** Instruct each sub-agent to keep its returned output concise — summary tables and key findings only (under 500 words). If detailed findings are large, the sub-agent should write them to a temp file (e.g., `/tmp/system-audit/sa-N.md`) and return only the file path + summary.
 
@@ -47,12 +60,13 @@ Sub-agents at a glance:
 | 4 | Documentation Freshness | Stale counts, broken links, .context/ freshness |
 | 5 | Ecosystem Health | MCP server refs, staleness, orphans, CLI tools |
 | 6 | Skill Quality & Overlap | Bloat, staleness, cross-component overlap |
+| 7 | Santi Repo Health | Skill/rule freshness vs upstream, anonymisation, install script |
 
 ---
 
 ## Phase 2: Collect and Consolidate
 
-After all 6 sub-agents return, merge their findings into a single report.
+After all 7 sub-agents return, merge their findings into a single report.
 
 ### Report Template
 
@@ -65,12 +79,17 @@ Write to `audits/system-audit-YYYY-MM-DD.md`:
 
 | Area | Status | Issues |
 |------|--------|--------|
+| agnix Lint | <OK/WARN/FAIL> | <count> |
 | Inventory | <OK/WARN/FAIL> | <count> |
 | Bibliography & Projects | <OK/WARN/FAIL> | <count> |
 | Conventions | <OK/WARN/FAIL> | <count> |
 | Documentation | <OK/WARN/FAIL> | <count> |
 | Ecosystem Health | <OK/WARN/FAIL> | <count> |
 | Skill Quality & Overlap | <OK/WARN/FAIL> | <count> |
+| Santi Repo Health | <OK/WARN/FAIL> | <count> |
+
+## agnix Lint
+<Phase 0 results: error count, warning count, any specific errors>
 
 ## Inventory Audit
 <Sub-agent 1 findings>
@@ -89,6 +108,9 @@ Write to `audits/system-audit-YYYY-MM-DD.md`:
 
 ## Skill Quality & Cross-Component Overlap
 <Sub-agent 6 findings>
+
+## Santi Repo Health
+<Sub-agent 7 findings>
 
 ## Recommended Actions
 <Prioritised list of things to fix, grouped by effort level>
@@ -129,5 +151,7 @@ Show the user:
 | `/audit-project-research` | Complements Convention Compliance with deeper per-project checks |
 | `/update-project-doc` | Fix documentation staleness found by Documentation Freshness |
 | `/sync-permissions` | Fix symlink issues found by Inventory Auditor |
-| `/audit-atlas-portfolio` | Full cross-system audit (local + Notion + Zotero + pipeline) — deeper than this sweep |
+| `/atlas-review` | Full cross-system audit (local + Notion + Zotero + pipeline) — deeper than this sweep |
 | `/insights-deck` | Maintenance findings can feed into system insights presentations |
+| `/audit-doc santi` | Dedicated deep audit for santi-repo — Sub-agent 7 is a quick health check; the audit skill is the full version |
+| `/sync-santi-repo` | Fix freshness issues found by Sub-agent 7 |

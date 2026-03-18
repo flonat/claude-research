@@ -1,6 +1,6 @@
 ---
 name: session-log
-description: "Create timestamped progress logs for research sessions. Detects multi-project sessions and creates separate logs per project. Enables continuity between Claude sessions."
+description: "Use when you need to create a timestamped progress log for a research session."
 allowed-tools: Read, Write, Edit, Bash(mkdir*), Bash(ls*)
 argument-hint: [project-name-or-path]
 ---

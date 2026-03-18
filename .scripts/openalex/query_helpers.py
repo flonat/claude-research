@@ -6,7 +6,7 @@ Provides high-level functions for typical research queries.
 """
 
 from typing import List, Dict, Optional, Any
-from openalex_client import OpenAlexClient
+from biblio_sources import OpenAlexClient
 
 
 def find_author_works(

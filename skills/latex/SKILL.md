@@ -1,6 +1,6 @@
 ---
 name: latex
-description: "LaTeX document compilation and management. When Claude needs to compile LaTeX documents (.tex files) for papers, presentations, or other academic content. Triggers: 'compile this tex file', 'build my paper'. Prefer /latex-autofix for error-resilient compilation."
+description: "Use when you need to compile a LaTeX document or manage LaTeX projects."
 allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(biber*), Bash(bibtex*), Bash(mkdir*), Bash(ls*), Read, Write, Edit
 argument-hint: [tex-file-path]
 ---
@@ -38,10 +38,9 @@ Not all projects sync to Overleaf. For local-only projects:
 
 ### Working Paper Template
 
-When creating a **new working paper**, use the template. The canonical location is the Overleaf copy, with a local fallback:
+When creating a **new working paper**, use the template. The canonical location is the local git repo:
 
-1. `~/Library/CloudStorage/YOUR-CLOUD/Apps/Overleaf/Template/` (Overleaf source)
-2. `~/Library/CloudStorage/YOUR-CLOUD/Task Management/templates/latex-wp/` (local copy)
+1. `templates/latex-wp/` (in Task Management — canonical source, git-tracked)
 
 The template contains:
 

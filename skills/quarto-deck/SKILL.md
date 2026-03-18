@@ -1,6 +1,6 @@
 ---
 name: quarto-deck
-description: "Generate Reveal.js HTML presentations from Markdown. Applies rhetoric principles (assertion titles, one idea per slide, narrative arc). Best for teaching, informal talks, and web-shareable decks."
+description: "Use when you need to generate a Reveal.js HTML presentation from Markdown."
 allowed-tools: Bash(reveal-md*), Bash(npx*), Bash(mkdir*), Bash(ls*), Bash(cp*), Bash(open*), Bash(R*), Bash(Rscript*), Bash(python*), Read, Write, Edit, Task
 argument-hint: [topic, content-path, or project-name]
 ---

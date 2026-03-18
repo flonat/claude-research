@@ -1,6 +1,6 @@
 ---
 name: task-management
-description: "the user's personal task management system. Use for: daily planning, weekly reviews, meeting action extraction, task creation in Notion, progress tracking, and research pipeline management. Triggers: 'plan my day', 'what should I work on', 'extract actions', 'weekly review', 'what's overdue', 'update my tasks'."
+description: "Use when you need help with daily planning, weekly reviews, meeting actions, or Notion task queries."
 allowed-tools: Read, Write, Edit, AskUserQuestion
 ---
 

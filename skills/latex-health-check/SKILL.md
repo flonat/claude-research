@@ -1,6 +1,6 @@
 ---
 name: latex-health-check
-description: "Compile all LaTeX projects, auto-fix known errors, and check cross-project consistency. Self-healing build agent for the multi-project research ecosystem."
+description: "Use when you need to compile all LaTeX projects and check cross-project consistency."
 allowed_tools:
   - Read
   - Edit
@@ -43,9 +43,9 @@ argument-hint: "[project-path | 'all' | 'quick']"
 
 Find all directories containing a `\documentclass` in a .tex file:
 
-Search locations:
-- `~/Library/CloudStorage/YOUR-CLOUD/Research Projects/`
-- `~/Library/CloudStorage/YOUR-CLOUD/Task Management/docs/`
+Search locations (read from config, detect which exist):
+- Research root from `~/.config/task-mgmt/research-root` (fallback: `~/Research Projects/`)
+- `$TM/docs/`
 
 For each discovered project, record:
 - Project name (directory name)

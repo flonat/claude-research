@@ -1,6 +1,6 @@
 ---
 name: init-project-course
-description: "Bootstrap a university course/module folder: scan existing content, interview, organise into lectures/workshops/assessments structure, and create CLAUDE.md. Triggers: 'new course module', 'set up a teaching folder'. For taught modules with recurring components."
+description: "Use when you need to bootstrap a university course or module folder."
 allowed-tools: Bash(mkdir*), Bash(mv*), Bash(ls*), Bash(tree*), Bash(find*), Bash(rm*), Bash(cp*), Read, Write, Edit, Glob, Grep, AskUserQuestion, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-create-pages
 argument-hint: "[no arguments — runs in current directory]"
 ---

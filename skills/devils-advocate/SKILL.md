@@ -1,6 +1,6 @@
 ---
 name: devils-advocate
-description: "Challenge research assumptions and identify weaknesses in arguments. Stress-test papers before submission or revision. Triggers: 'find holes in my argument', 'what would a reviewer say'. Not for proofreading — use /proofread. Not for full peer review — use referee2-reviewer agent."
+description: "Use when you need to challenge research assumptions or stress-test arguments."
 argument-hint: [paper-or-argument-description]
 ---
 

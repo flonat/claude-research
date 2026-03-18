@@ -1,6 +1,6 @@
 ---
 name: consolidate-memory
-description: "Consolidate MEMORY.md files: prune duplicates, merge overlapping entries, generate abstractions, and remove stale knowledge. Triggers: 'clean up MEMORY.md', 'prune stale knowledge'. Inspired by npcsh sleep/dream cycles."
+description: "Use when you need to prune duplicates and merge overlapping entries in MEMORY.md files."
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion
 argument-hint: "[project-path or 'all' for global consolidation]"
 ---
@@ -192,12 +192,12 @@ Standard sections from the `learn-tags` rule:
 
 The Task Management MEMORY.md at the project root:
 ```
-MEMORY.md
+$TM/MEMORY.md
 ```
 
-Also check the auto-memory directory:
+Also check the auto-memory directory (path varies by machine — glob for it):
 ```
-~/.claude/projects/-Users-user-Library-CloudStorage-YOUR-CLOUD-Task-Management/memory/MEMORY.md
+~/.claude/projects/-Users-user-*Task-Management/memory/MEMORY.md
 ```
 
 ## Cross-References

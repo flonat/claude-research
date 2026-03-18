@@ -39,7 +39,7 @@ When **creating** new outward-facing documentation (README, user manual, archite
 1. Add the appropriate tag as the very first line of the file
 2. Add the file to the registry table above
 
-When **auditing** a project's documentation (via `/sync-scout-doc`, `/update-project-doc`, or manually):
+When **auditing** a project's documentation (via `/sync-repo scout`, `/update-project-doc`, or manually):
 
 1. Grep for `Governed by: skills/shared/project-documentation.md` across all `.md` and `.tex` files
 2. Flag any outward-facing docs that lack the tag — these are candidates for tagging
@@ -425,7 +425,7 @@ Tips are defined in a `WORKFLOW_TIPS` dict keyed by workflow name, with `title`,
 
 Section slugs in `WORKFLOW_TIPS` must match actual heading slugs in `user-manual.md`. Validate this automatically:
 - CI script checks slug integrity on every push
-- `/sync-scout-doc` checks during manual audits
+- `/sync-repo scout` checks during manual audits
 
 ---
 
