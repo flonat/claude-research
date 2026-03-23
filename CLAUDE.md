@@ -155,7 +155,7 @@ In `.claude/rules/` — these apply automatically to every session. See [`docs/r
 
 ## Hooks
 
-8 hook scripts in `hooks/`. See [`docs/hooks.md`](docs/hooks.md) for the full table.
+5 hook scripts in `hooks/`. See [`docs/hooks.md`](docs/hooks.md) for the full table.
 <!-- COMPONENTS:END -->
 
 ## After Every Session
@@ -191,7 +191,7 @@ This helps me (Claude) pick up where we left off next time.
 | `.claude/agents/` | Agent definitions (6 agents) |
 | `.claude/rules/` | Auto-loaded rules (9 rules) |
 | `skills/` | 39 skill definitions |
-| `hooks/` | 8 hook scripts |
+| `hooks/` | 5 hook scripts |
 | `mcp-bibliography/` | Multi-source scholarly search MCP server (OpenAlex + Scopus + WoS) |
 | `.scripts/` | CLI tools for Notion task management |
 | `packages/cli-council/` | Multi-model council via local CLI tools |
