@@ -2,7 +2,7 @@
 
 ## Principle
 
-**The `paper/` directory (Overleaf symlink) is for LaTeX source files ONLY.** All code, data, and computational artifacts belong in the project directory itself — never inside `paper/`.
+**The `paper/` directory (Overleaf symlink inside `paper-{venue}/paper/`) is for LaTeX source files ONLY.** All code, data, and computational artifacts belong in the project directory itself — never inside `paper/`.
 
 ## What Belongs in `paper/`
 
@@ -47,6 +47,20 @@
 2. **Propose moves:** Show where each file should go in the project directory.
 3. **Wait for approval** before moving anything.
 4. **Never silently leave** code or data in `paper/`.
+
+## Overleaf Folder Lifecycle
+
+Creating a folder in the Overleaf root automatically creates an Overleaf project. This has implications for what Claude can and cannot do:
+
+| Action | Claude allowed? | Notes |
+|--------|:-:|-------|
+| **Create** | Yes | `mkdir` in the Overleaf root creates a project. Use during `/init-project-research` scaffolding. |
+| **Rename** | No — ask user | Renaming loses Overleaf project history. The user must rename via the Overleaf UI to preserve history. Flag as a manual TODO. |
+| **Delete** | Break the glass | Deleting a folder destroys the Overleaf project and all its history. Requires explicit confirmation per the `break-the-glass` rule. |
+
+**When scaffolding:** Ask if the Overleaf project already exists. If yes, get the folder name and symlink to it. If no, create the folder via `mkdir` and then symlink.
+
+**When renaming:** Never rename an Overleaf folder. Update the symlink to point to the new name only after the user confirms they've renamed it in the Overleaf UI.
 
 ## Why This Matters
 

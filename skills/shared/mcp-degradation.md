@@ -9,7 +9,7 @@
 Before any MCP-dependent work, test connectivity:
 
 ```
-Try a lightweight read operation (e.g., notion-search with a known term,
+Try a lightweight read operation (e.g., mcp__taskflow__search_tasks with a known term,
 openalex_search_works with a trivial query). If it times out or errors,
 mark that server as unavailable for the session.
 ```
@@ -22,7 +22,7 @@ After probing, state clearly:
 
 ```
 MCP status:
-- Notion: ✓ available
+- Vault: ✓ available
 - OpenAlex: ✗ unavailable (timeout)
 ```
 
@@ -33,7 +33,7 @@ This sets expectations before the user sees skipped steps.
 When a server is unavailable, skip phases that depend on it entirely — do not attempt them, do not retry. Mark skipped phases clearly in the output:
 
 ```
-Step 5: Update Notion Research Pipeline — SKIPPED (Notion unavailable)
+Step 5: Update vault research pipeline — SKIPPED (vault unavailable)
 ```
 
 ### Step 4: Offer Fallbacks
@@ -42,7 +42,7 @@ For each skipped phase, suggest what the user can do manually:
 
 | Unavailable | Fallback |
 |-------------|----------|
-| Notion MCP | "Run `/sync-notion` later when Notion is accessible" |
+| taskflow MCP | "Run `vault sync (edit vault files directly)` later when vault is accessible" |
 | OpenAlex MCP | "Use `/literature` with web search mode instead" |
 | Scholarly MCP | "Use `/literature` with web search mode instead" |
 
@@ -52,8 +52,8 @@ Close with a clean summary of what completed vs. what was skipped:
 
 ```
 Completed: Steps 1-4 (local context updates)
-Skipped: Step 5 (Notion sync — server unavailable)
-Action needed: Run `/sync-notion` when Notion is back
+Skipped: Step 5 (vault sync — server unavailable)
+Action needed: Run `vault sync (edit vault files directly)` when vault is accessible
 ```
 
 ## MCP-Consuming Skills
@@ -62,11 +62,11 @@ These skills should reference this pattern:
 
 | Skill | MCP Server | What depends on it |
 |-------|------------|-------------------|
-| `sync-notion` | Notion | Steps 3, 5 (search + update) |
-| `task-management` | Notion | Daily planning, task creation, pipeline queries |
-| `init-project-research` | Notion | Pipeline entry creation |
+| `vault sync` | vault | Steps 3, 5 (search + update) |
+| `task-management` | vault | Daily planning, task creation, pipeline queries |
+| `init-project-research` | vault | Pipeline entry creation |
 | `literature` | OpenAlex, Scholarly | Citation search, DOI verification |
-| `atlas-review` | Notion | Pipeline cross-reference |
+| `atlas-review` | vault | Pipeline cross-reference |
 
 ## When to Apply
 
@@ -77,5 +77,5 @@ These skills should reference this pattern:
 ## When to Skip
 
 - Skills that don't use MCP tools
-- When the user explicitly says "skip Notion" or "offline mode"
+- When the user explicitly says "skip vault" or "offline mode"
 - Interactive sessions where the user can retry immediately

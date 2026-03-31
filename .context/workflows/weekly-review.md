@@ -11,7 +11,7 @@ Duration: 30-45 minutes
 
 ### Part 1: Clear the Decks (10 min)
 
-- [ ] Process inbox (Notion tasks with no due date)
+- [ ] Process inbox (vault tasks with no due date)
 - [ ] Review all "Waiting" status tasks - still waiting?
 - [ ] Check for any loose paper notes, email drafts, or mental open loops
 - [ ] Update `current-focus.md` with where things stand
@@ -21,7 +21,7 @@ Duration: 30-45 minutes
 Reflect on:
 
 1. **What got done?**
-   - List completed tasks (check Notion "Done" status)
+   - List completed tasks (check vault tasks with "Done" status)
    - Note any significant progress on papers/projects
    - Acknowledge wins, even small ones
 
@@ -95,7 +95,7 @@ For each active project (see `projects/_index.md`):
 
 When helping with weekly review, AI should:
 
-1. **Pull data from Notion**
+1. **Pull data from vault**
    - Completed tasks this week
    - Overdue tasks
    - Tasks created this week

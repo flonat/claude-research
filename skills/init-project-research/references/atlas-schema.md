@@ -1,21 +1,21 @@
 # Atlas Schema Reference
 
-## Notion Database IDs
+## Vault paths
 
 | Database | Data Source ID |
 |----------|---------------|
 | Research Themes | `2e8baef4-3e2e-4ea5-b25a-18a71ed47690` |
 | Topic Inventory (Atlas) | `0a227f82-60f4-451a-a163-bff2ce8fa9c3` |
 
-## Theme → Notion Page ID Mapping
+## Theme → Vault Path Mapping
 
 Look up the theme page ID before creating atlas entries. Theme is a **relation** property — pass as JSON array of page URLs.
 
-To find a theme's page ID: query the Research Themes database or use `notion-search` for the theme name.
+To find a theme's page ID: query the Research Themes database or use `mcp__taskflow__search_tasks` for the theme name.
 
 Format for the Theme relation property:
 ```
-"Theme": "[\"https://www.notion.so/<theme-page-id-no-dashes>\"]"
+"Theme": "[\"~/Research-Vault/<theme-page-id-no-dashes>\"]"
 ```
 
 ## YAML Frontmatter Template
@@ -26,7 +26,7 @@ title: "Topic Name"
 theme: "Theme Name"  # Must match a theme in themes.md
 status: "Idea"  # Idea | Exploring | Active Project | Parked | Archived
 institution: "Bath"  # Warwick | Bath | Southampton | UPF | None
-project_path: "Theme Name/Project Name"  # Relative to Research Projects/
+project_path: "Theme Name/Project Name"  # Relative to Projects/
 linked_projects: []
 connected_topics: ["slug-1", "slug-2"]  # kebab-case slugs of related topics
 methods: ["Game Theory", "Formal Model"]
@@ -60,7 +60,7 @@ priority: "Medium"  # Critical | High | Medium | Low
 - [Key unknowns]
 ```
 
-## Notion Methods Multi-Select Options
+## Vault Methods Multi-Select Options
 
 Only these values are valid (others will error):
 `MCDM`, `Experiment`, `Formal Model`, `Survey`, `Simulation`, `Econometrics`, `Game Theory`, `Meta-Analysis`, `Qualitative`, `NLP/ML`
@@ -78,4 +78,4 @@ If a topic uses methods not in this list (e.g., "Mechanism Design", "Cryptograph
 $RESEARCH_ROOT/{Theme Name}/{Project Name}/
 ```
 
-Where `$RESEARCH_ROOT` is `~/Library/CloudStorage/YOUR-CLOUD/Research` (MacBook) or `~/Research Projects` (Mac Mini).
+Where `$RESEARCH_ROOT` is `~/Library/CloudStorage/YOUR-CLOUD/Research` (MacBook) or `~/Projects` (Mac Mini).

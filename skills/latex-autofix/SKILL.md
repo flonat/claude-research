@@ -1,7 +1,7 @@
 ---
 name: latex-autofix
 description: "Use when you need to compile LaTeX with autonomous error resolution and citation audit."
-allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(biber*), Bash(bibtex*), Bash(mkdir*), Bash(ls*), Bash(wc*), Read, Write, Edit, Grep, Glob
+allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(biber*), Bash(bibtex*), Bash(mkdir*), Bash(ls*), Bash(wc*), Bash(cp*), Read, Write, Edit, Grep, Glob
 argument-hint: [tex-file-path]
 ---
 
@@ -97,6 +97,29 @@ Check the log against these patterns. Full fix instructions: [`references/known-
 | 8 | TikZ reserved keys | `I do not know the key '/tikz/<name>'` or pgfkeys error |
 
 If an error matches, read the full fix from the reference and apply it. If no pattern matches, record as **unresolved** and stop the loop.
+
+---
+
+### Phase 2.5: PDF Backup (paper directories only)
+
+**Only run if Phase 2 ended with a successful compilation (PDF exists).**
+
+If the `.tex` file is inside a `paper-{venue}/paper/` structure (where `paper/` is a symlink to Overleaf):
+
+1. **Identify the paper wrapper** — the parent of the `paper/` symlink (e.g., `paper-jbdm/`).
+2. **Create the backup directory:** `mkdir -p <paper-wrapper>/backup`
+3. **Copy the PDF:**
+   ```bash
+   cp <paper-wrapper>/paper/<filename>.pdf <paper-wrapper>/backup/<wrapper-name>_vcurrent.pdf
+   ```
+   Example: `paper-jbdm/paper/main.pdf` → `paper-jbdm/backup/paper-jbdm_vcurrent.pdf`
+
+**Detection logic:**
+- The project directory containing the `.tex` file is a symlink named `paper`
+- Its parent directory name starts with `paper-`
+- If either condition is false, skip this phase silently
+
+**Skip if:** compilation failed, or the `.tex` file is not inside a paper directory structure.
 
 ---
 

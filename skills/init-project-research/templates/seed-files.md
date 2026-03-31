@@ -292,23 +292,26 @@ Copy the template from `skills/init-project-research/templates/field-calibration
 
 ## .claude/hooks/copy-paper-pdf.sh
 
-PostToolUse hook that copies compiled paper PDFs to project root after LaTeX compilation. Multi-paper-safe: scans for all `paper*` directories/symlinks and copies each `main.pdf` to `<dirname>_vcurrent.pdf`.
+PostToolUse hook that copies compiled paper PDFs to the backup folder after LaTeX compilation. Multi-paper-safe: scans for all `paper-*` directories/symlinks and copies each `main.pdf` to `<paper-wrapper>/backup/<dirname>_vcurrent.pdf`.
 
 ```bash
 #!/usr/bin/env bash
-# PostToolUse hook: copy compiled paper PDFs to project root after LaTeX compilation
-# Scans for all paper* directories and copies each main.pdf → <dirname>_vcurrent.pdf
+# PostToolUse hook: copy compiled paper PDFs to backup folder after LaTeX compilation
+# Scans for all paper-* directories and copies each main.pdf → backup/<dirname>_vcurrent.pdf
 # Only copies when source is newer; silently skips missing PDFs
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
-for paper_dir in "$PROJECT_ROOT"/paper*; do
+for paper_dir in "$PROJECT_ROOT"/paper-*; do
     [ -d "$paper_dir" ] || [ -L "$paper_dir" ] || continue
     dirname="$(basename "$paper_dir")"
-    src="$paper_dir/main.pdf"
-    dest="$PROJECT_ROOT/${dirname}_vcurrent.pdf"
+    src="$paper_dir/paper/main.pdf"
+    [ -f "$src" ] || src="$paper_dir/main.pdf"
+    backup_dir="$paper_dir/backup"
+    dest="$backup_dir/${dirname}_vcurrent.pdf"
     if [ -f "$src" ]; then
         if [ ! -f "$dest" ] || [ "$src" -nt "$dest" ]; then
+            mkdir -p "$backup_dir"
             cp "$src" "$dest"
         fi
     fi

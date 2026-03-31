@@ -1,7 +1,7 @@
 ---
 name: init-project-course
 description: "Use when you need to bootstrap a university course or module folder."
-allowed-tools: Bash(mkdir*), Bash(mv*), Bash(ls*), Bash(tree*), Bash(find*), Bash(rm*), Bash(cp*), Read, Write, Edit, Glob, Grep, AskUserQuestion, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-create-pages
+allowed-tools: Bash(mkdir*), Bash(mv*), Bash(ls*), Bash(tree*), Bash(find*), Bash(rm*), Bash(cp*), Read, Write, Edit, Glob, Grep, AskUserQuestion
 argument-hint: "[no arguments — runs in current directory]"
 ---
 
@@ -93,7 +93,7 @@ Follow the `lean-claude-md` rule. Include only:
 
 ## Phase 5: Seed MEMORY.md
 
-Create `MEMORY.md` using the appropriate template (student or instructor). Templates, settings.local.json, and Notion pipeline sync details: [references/memory-and-settings.md](references/memory-and-settings.md)
+Create `MEMORY.md` using the appropriate template (student or instructor). Templates, settings.local.json, and vault pipeline sync details: [references/memory-and-settings.md](references/memory-and-settings.md)
 
 ---
 
@@ -103,7 +103,7 @@ Create `.claude/settings.local.json` if missing. Full details: [references/memor
 
 ---
 
-## Phase 7: Notion Pipeline Sync
+## Phase 7: vault pipeline Sync
 
 Offer to create a row in the appropriate Modules Pipeline (Student or Instructor). Database IDs and field mappings: [references/memory-and-settings.md](references/memory-and-settings.md)
 
@@ -127,7 +127,7 @@ Created:
   - assessments/{types}/ (moved from original folders)
   - docs/ (module specification, guidelines)
   - [.claude/settings.local.json if created]
-  - [Notion row created in Modules Pipeline (Student/Instructor)]
+  - [vault entry created in Modules Pipeline (Student/Instructor)]
 
 Workshop naming:
   "Workshop 1 - JavaScript Bootcamp" → workshops/01-javascript-bootcamp

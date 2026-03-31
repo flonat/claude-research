@@ -4,16 +4,11 @@
 
 Made by a humble PhD student. A complete Claude Code infrastructure for researchers — skills, agents, hooks, and rules for academic workflows. Built for researchers who write papers in LaTeX, manage bibliographies, run experiments, and want AI assistance that understands academic conventions.
 
+Works on **macOS, Linux, and Windows**. Use Claude Code from the [terminal CLI](https://docs.anthropic.com/en/docs/claude-code), [VS Code](https://marketplace.visualstudio.com/items?itemName=anthropics.claude-code), [JetBrains IDEs](https://plugins.jetbrains.com/plugin/27189-claude-code), [the web](https://claude.ai/code), or the [desktop app](https://claude.ai/download) — all share the same skills, agents, and rules.
+
 ## Installation
 
-### Option A: npm (recommended)
-
-```bash
-npm install -g @flonat/claude-research
-claude-research-setup
-```
-
-### Option B: Git clone
+### macOS / Linux
 
 ```bash
 git clone https://github.com/flonat/claude-research.git
@@ -21,17 +16,25 @@ cd claude-research
 ./scripts/setup.sh
 ```
 
+### Windows (PowerShell)
+
+```powershell
+git clone https://github.com/flonat/claude-research.git
+cd claude-research
+.\scripts\setup.ps1
+```
+
 ### Update
 
 ```bash
-# npm: update package, then re-link
-npm update -g @flonat/claude-research && claude-research-setup
-
-# git: pull latest, then re-link without overwriting settings
+# macOS/Linux: pull latest, then re-link without overwriting settings
 git pull && ./scripts/setup.sh --update
+
+# Windows (PowerShell):
+git pull; .\scripts\setup.ps1 -Update
 ```
 
-Then customise `.context/profile.md`, `.context/current-focus.md`, and `CLAUDE.md` with your details. See [`docs/getting-started.md`](docs/getting-started.md) for the full guide.
+Then customise `.context/profile.md`, `.context/current-focus.md`, and `CLAUDE.md` with your details. See [`docs/getting-started.md`](docs/getting-started.md) for the full guide (includes Windows-specific setup, Python install, and troubleshooting).
 
 ### Related Packages
 
@@ -217,12 +220,17 @@ claude-research/
 
 ## Requirements
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (CLI) — `curl -fsSL https://claude.ai/install.sh | bash`
-- [TeX Live](https://tug.org/texlive/) (LaTeX distribution for paper compilation)
-- [uv](https://docs.astral.sh/uv/) (Python package management)
-- [Git](https://git-scm.com/)
+| Tool | Why you need it | macOS | Linux | Windows |
+|------|----------------|-------|-------|---------|
+| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | The AI engine — runs skills, agents, hooks | `curl -fsSL https://claude.ai/install.sh \| bash` | same | `winget install Anthropic.ClaudeCode` |
+| [Python 3.11+](https://www.python.org/) | Hooks and MCP servers | `brew install python@3.12` | `apt install python3.12` | `winget install Python.Python.3.12` |
+| [uv](https://docs.astral.sh/uv/) | Fast Python package manager — isolates dependencies, replaces `pip` | `brew install uv` | `curl -LsSf https://astral.sh/uv/install.sh \| sh` | `winget install astral-sh.uv` |
+| [Git](https://git-scm.com/) | Version control | Included | `apt install git` | `winget install Git.Git` |
+| [TeX Live](https://tug.org/texlive/) | LaTeX compilation (`/proofread`, `/latex-autofix`) | `brew install --cask mactex` | `apt install texlive-full` | [install guide](https://tug.org/texlive/windows.html) |
 
-See [`docs/getting-started.md`](docs/getting-started.md) for cross-platform install commands and recommended editor setup.
+Also available as a [VS Code extension](https://marketplace.visualstudio.com/items?itemName=anthropics.claude-code), [JetBrains plugin](https://plugins.jetbrains.com/plugin/27189-claude-code), [web app](https://claude.ai/code), or [desktop app](https://claude.ai/download).
+
+See [`docs/getting-started.md`](docs/getting-started.md) for Fedora/Arch commands, Windows-specific setup, Python version guidance, and troubleshooting.
 
 ## Credits
 

@@ -2,13 +2,31 @@
 
 > How to process the user's meeting transcripts and extract action items.
 
-## Source: Notion Meeting Transcripts
+## Recording System: Minutes
 
-Meeting transcripts are stored in Notion as pages with titles like:
-- `@14 January 2026 14:31`
-- `@8 December 2025 16:02`
+**Tool:** [minutes](https://github.com/silverstein/minutes) — local-first meeting capture with whisper.cpp transcription, speaker diarization, and structured output.
 
-These are typically audio transcripts from meetings with supervisors, collaborators, and students.
+**Output location:** `~/meetings/` (multi-speaker recordings), `~/meetings/memos/` (voice memos)
+
+**Output format:** Markdown with YAML frontmatter containing:
+- `title`, `date`, `duration`, `type` (meeting/memo)
+- `attendees`, `speaker_map` (diarized speakers → real names)
+- `action_items` (structured: assignee, task, due, status)
+- `decisions` (structured: text, topic)
+
+**Audio routing:** BlackHole 2ch virtual audio device for system audio (Zoom, Meet, Teams). Built-in mic for in-person.
+
+## Meeting Lifecycle Skills
+
+| Step | Skill | When |
+|------|-------|------|
+| Prepare | `/minutes prep` | Before a call — builds relationship brief from prior meetings |
+| Record | `/minutes record` | During meeting — `minutes record` / `minutes stop` |
+| Note | `/minutes note` | During meeting — add timestamped annotations |
+| Debrief | `/minutes debrief` | After meeting — compare outcomes to prep, track decisions |
+| Daily recap | `/minutes recap` | End of day — digest all meetings |
+| Weekly | `/minutes weekly` | End of week — themes, decision arcs, stale commitments |
+| Search | `/minutes search` | Anytime — find past discussions by topic, person, decision |
 
 ## Extraction Rules
 
@@ -30,48 +48,35 @@ For each action item, extract:
 | **Assignee** | Who should do it (the user or someone else) | the user |
 | **Deadline** | When it's due (if mentioned) | "by next Tuesday" |
 | **Related Project** | Which project this relates to | Journal Revision |
-| **Source Meeting** | Link to the transcript | @14 January 2026 |
+| **Source Meeting** | Path to the transcript file | `~/meetings/2026-03-29-weekly-standup.md` |
 | **Context** | Why this matters / what was discussed | "Reviewer 2 requested more references on cognitive load" |
 
-### Output Format for Notion
+### Output Format
 
-Create tasks in **Tasks Tracker** database with:
+Create tasks in the vault's `tasks/` directory as markdown files with YAML frontmatter:
 
-```
-Task name: [Action verb] [Object] - [Brief context]
-Status: Not started
-Priority: [Infer from urgency/deadline]
-Due date: [If mentioned]
-Description:
-  - Context: [Why this task exists]
-  - From meeting: [Date] with [Person]
-  - Related to: [Project]
-```
+```yaml
+---
+title: "[Action verb] [Object] - [Brief context]"
+status: not-started
+priority: [Infer from urgency/deadline]
+due: YYYY-MM-DD
+project: [project-slug]
+tags: [meeting-action]
+---
 
-### Example Extraction
-
-**From transcript:**
-> "the user, I know you would be operative for you, right? So when you have these events. You need to give a list of the names of people coming to the desk downstairs at the building..."
-
-**Extracted action:**
-```
-Task name: Send guest list to Shard reception - event logistics
-Status: Not started
-Priority: Medium
-Due date: [Before event date]
-Description:
-  - Context: For upcoming event, need to provide names to building security
-  - From meeting: @11 December 2025 with [Person]
-  - Related to: Event planning
+- **Context:** [Why this task exists]
+- **From meeting:** [Date] with [Person]
+- **Related to:** [Project]
 ```
 
 ## Processing Workflow
 
-1. **Identify unprocessed transcripts** - Pages with `@[Date]` format
-2. **Scan for action language** - Commitments, requests, agreements
-3. **Extract with full context** - Don't just list tasks, explain why
-4. **Create in Notion** - Add to Tasks Tracker with proper fields
-5. **Mark as processed** - Add a property or note to the transcript page
+1. **Check for new transcripts** — `minutes list` or browse `~/meetings/`
+2. **Run debrief** — `/minutes debrief` for structured analysis
+3. **Extract action items** — from YAML frontmatter `action_items:` or transcript scan
+4. **Create in vault** — add to `tasks/` directory with proper frontmatter
+5. **Check for conflicts** — `/minutes debrief` flags decision conflicts with prior meetings
 
 ## Special Cases
 
@@ -89,6 +94,15 @@ Description:
 
 ## Integration
 
-- **Auto-create:** Tasks go directly into Notion
-- **Review:** the user reviews in the "Inbox" view (no due date set)
+- **Auto-extraction:** Minutes extracts `action_items` into YAML frontmatter (when LLM summarization is configured)
+- **Manual extraction:** Run `/minutes debrief` or use `meeting-analyst` agent for cross-meeting synthesis
+- **Vault sync:** Tasks are written directly to vault `tasks/` files
 - **Triage:** During daily review, assign priorities and dates
+
+## Cross-Meeting Intelligence
+
+The `meeting-analyst` agent handles questions spanning multiple meetings:
+- Person profiles: "What does X usually bring up?"
+- Decision tracking: "What have we decided about pricing?"
+- Stale commitments: "What's still outstanding?"
+- Preparation: "Prepare me for my call with the Acme team"

@@ -1,7 +1,10 @@
 ---
 name: paper-critic
 description: "Read-only adversarial auditor for LaTeX papers. Finds problems without fixing them — produces a structured CRITIC-REPORT.md with scored issues that the fixer agent can action. Assumes the paper has already been compiled (run /latex-autofix first). Never modifies source files. Supports council mode: 3 independent critics with anonymised cross-review and chairman synthesis (see Council Mode section).\n\nExamples:\n\n- Example 1:\n  user: \"Quality check my paper\"\n  assistant: \"I'll launch the paper-critic agent to audit your paper.\"\n  <commentary>\n  User wants a quality check. Launch paper-critic to produce a CRITIC-REPORT.md.\n  </commentary>\n\n- Example 2:\n  user: \"Is my paper ready to submit?\"\n  assistant: \"Let me launch the paper-critic agent to assess submission readiness.\"\n  <commentary>\n  Submission readiness check. Launch paper-critic for a hard-gate and quality audit.\n  </commentary>\n\n- Example 3:\n  user: \"Run the critic on my draft\"\n  assistant: \"Launching the paper-critic agent now.\"\n  <commentary>\n  Direct invocation. Launch paper-critic.\n  </commentary>\n\n- Example 4:\n  user: \"Run the critic in council mode\"\n  assistant: \"I'll orchestrate a council review — 3 independent critics with cross-review and chairman synthesis.\"\n  <commentary>\n  Council mode requested. Do NOT launch a single paper-critic agent. Instead, the main session orchestrates the council protocol: read references/paper-critic/council-personas.md and council-prompts.md, then follow skills/shared/council-protocol.md.\n  </commentary>\n\n- Example 5:\n  user: \"Council review my paper\"\n  assistant: \"Running paper-critic in council mode — this spawns 3 independent reviewers, cross-review, and synthesis.\"\n  <commentary>\n  Council mode trigger. Main session orchestrates per council-protocol.md.\n  </commentary>\n\n- Example 6:\n  user: \"Thorough quality check on my paper\"\n  assistant: \"I'll run the paper-critic in council mode for a thorough review.\"\n  <commentary>\n  'Thorough' signals council mode. Main session orchestrates.\n  </commentary>"
-tools: Read, Glob, Grep
+tools:
+  - Read
+  - Glob
+  - Grep
 model: opus
 color: red
 memory: project

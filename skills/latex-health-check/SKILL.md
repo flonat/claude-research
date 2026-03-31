@@ -44,7 +44,7 @@ argument-hint: "[project-path | 'all' | 'quick']"
 Find all directories containing a `\documentclass` in a .tex file:
 
 Search locations (read from config, detect which exist):
-- Research root from `~/.config/task-mgmt/research-root` (fallback: `~/Research Projects/`)
+- Research root from `~/.config/task-mgmt/research-root` (fallback: `~/Projects/`)
 - `$TM/docs/`
 
 For each discovered project, record:
@@ -158,4 +158,4 @@ Print to stdout. If `--save` flag or 10+ projects scanned, also write to `log/la
 | `/latex` | Manual compilation config and `.latexmkrc` reference — health-check creates `.latexmkrc` files using the conventions defined there. |
 | `/audit-project-research` | Checks project structure (directories, files). This skill checks build health. |
 | `/bib-validate` | Validates bibliography entries. This skill checks if citations compile. |
-| `/audit-template-compliance` | Checks preamble alignment with the working paper template. Complementary: run after health-check to ensure preamble consistency. |
+| `/latex-template` | Checks preamble alignment with the working paper template. Complementary: run after health-check to ensure preamble consistency. |

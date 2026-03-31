@@ -205,4 +205,4 @@ Also check the auto-memory directory (path varies by machine — glob for it):
 - **`/system-audit`** — Run consolidation as part of periodic maintenance
 - **`/learn`** — Creates the entries that this skill consolidates
 - **`[LEARN]` tags** (rule) — The tagging system that feeds MEMORY.md
-- **`/session-recap`** — May surface entries worth recording before consolidation
+- **`/general-session-recap`** — May surface entries worth recording before consolidation

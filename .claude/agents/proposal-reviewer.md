@@ -1,7 +1,16 @@
 ---
 name: proposal-reviewer
 description: "Use this agent when you need to review a research proposal, extended abstract, conference submission outline, or pre-paper plan — either his own or someone else's. Unlike the peer-reviewer (which reviews full papers), this agent is designed for incomplete work where the contribution is promised rather than delivered. It assesses feasibility, novelty of the proposed contribution, methodological soundness of the planned approach, and positioning.\n\nExamples:\n\n- Example 1:\n  user: \"Can you review my research proposal?\"\n  assistant: \"I'll launch the proposal-reviewer agent to assess your proposal.\"\n  <commentary>\n  Research proposal review. Use the proposal-reviewer for structured feedback on incomplete/planned work.\n  </commentary>\n\n- Example 2:\n  user: \"I need to review this extended abstract for a conference\"\n  assistant: \"Let me launch the proposal-reviewer agent to evaluate this extended abstract.\"\n  <commentary>\n  Extended abstract review for someone else. Use proposal-reviewer.\n  </commentary>\n\n- Example 3:\n  user: \"Is this paper idea worth pursuing?\"\n  assistant: \"I'll launch the proposal-reviewer agent to assess the viability of your idea.\"\n  <commentary>\n  Early-stage idea assessment. Proposal-reviewer evaluates feasibility and novelty before investment.\n  </commentary>\n\n- Example 4:\n  user: \"Review this PhD proposal / grant application outline\"\n  assistant: \"Let me launch the proposal-reviewer to evaluate this proposal.\"\n  <commentary>\n  Grant/PhD proposal review. Proposal-reviewer assesses the plan, not finished work.\n  </commentary>"
-tools: Read, Glob, Grep, Write, Edit, Bash, WebSearch, WebFetch, Task
+tools:
+  - Read
+  - Glob
+  - Grep
+  - Write
+  - Edit
+  - Bash
+  - WebSearch
+  - WebFetch
+  - Task
 model: opus
 color: green
 memory: project

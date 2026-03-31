@@ -148,7 +148,7 @@ Create `references/drift-checks.md` listing every drift-prone value:
 | Value | Location | Source of Truth | Trigger |
 |-------|----------|-----------------|---------|
 | Topic count (~67) | SKILL.md Phase 1 | ls topics/**/*.md | /scaffold-atlas-topics |
-| Theme list (9) | SKILL.md, sa-prompts.md, build_report.py | ls Research Projects/ | New theme dir |
+| Theme list (9) | SKILL.md, sa-prompts.md, build_report.py | ls Projects/ | New theme dir |
 ```
 
 Include a Drift Log table where Phase 0 appends detected drift with timestamps.
@@ -167,7 +167,7 @@ This ensures the person (or agent) running the triggering skill is aware that do
 
 **When to skip:** Skills that derive all values at runtime (no hardcoded references to external state).
 
-**Example:** `/atlas-review` — topic count, theme list, Notion schemas, stage mappings, rules count all drift. Phase 0 detects and self-heals; `references/drift-checks.md` tracks 8 drift-prone values.
+**Example:** `/atlas-review` — topic count, theme list, vault schemas, stage mappings, rules count all drift. Phase 0 detects and self-heals; `references/drift-checks.md` tracks 8 drift-prone values.
 
 ### Progressive Disclosure
 
