@@ -1,29 +1,25 @@
 ---
 name: multi-perspective
-description: "Use when you need to explore a research question from multiple independent perspectives."
+description: "Use when exploring a research question from multiple independent disciplinary perspectives. Spawns 3-5 parallel agents with distinct epistemic priors, runs anonymised cross-evaluation, and synthesises a structured comparison of agreements, tensions, and blind spots."
 allowed-tools: Read, Write, Edit, Glob, Grep, Task, AskUserQuestion
 argument-hint: "[research question, hypothesis, or design choice]"
 ---
 
 # Multi-Perspective Exploration
 
-Spawn 3-5 parallel agents, each with a distinct disciplinary lens and epistemic prior, to independently investigate a research question. Then synthesise their findings into a structured comparison that surfaces agreements, tensions, and blind spots.
-
-The core insight: a single-perspective analysis inherits the biases of that perspective. Deliberately introducing cognitive diversity — grounded in real disciplinary traditions — produces more robust research designs.
+Spawn 3-5 parallel agents, each with a distinct disciplinary lens and epistemic prior, to independently investigate a research question. Synthesise their findings into a structured comparison that surfaces agreements, tensions, and blind spots.
 
 ## When to Use
 
-- Early-stage research design: "Is this the right question? Is this the right method?"
-- When choosing between competing identification strategies
-- When a paper needs to convince reviewers from different traditions
+- Early-stage research design: "Is this the right question/method?"
+- Choosing between competing identification strategies
 - Before committing to a theoretical framework
-- When you suspect your approach has blind spots
+- When a paper needs to convince reviewers from different traditions
 
 ## When NOT to Use
 
 - **Quick feedback** — use `/devils-advocate` (single-perspective adversarial)
-- **Literature search** — use `/literature` (discovery, not deliberation)
-- **Generating new questions** — use `/scout generate` (this skill evaluates, not generates)
+- **Literature search** — use `/literature`
 - **Paper proofreading** — use `/proofread` or `paper-critic` agent
 
 ## Workflow
@@ -106,86 +102,25 @@ Write 300-500 words. Do not hedge — commit to your perspective's position.
 
 ### Phase 3.25: User Check-In (Interactive Mode)
 
-After collecting all perspective outputs, present them to the user as a structured summary and run an interactive check-in. This is the key differentiator from a passive multi-perspective analysis — the user participates as an active contributor, not a spectator.
+Present each perspective's key position (2-3 sentences) and main disagreements. Ask via AskUserQuestion:
 
-**What to present:**
-- Each perspective's key position (2-3 sentences, not the full output)
-- The main disagreements visible so far
-- Any assumptions the perspectives made about the research context
+1. **Reveal constraints:** Anything these perspectives don't know? (data limitations, institutional constraints, supervisor preferences)
+2. **Redirect:** Any perspective off-base or irrelevant?
+3. **Challenge:** Push back on any specific claim?
 
-**Then ask (via AskUserQuestion):**
+User input feeds forward: constraints become "Additional context from the researcher" in cross-evaluation prompts; off-base perspectives are flagged but still included; challenges become extra evaluation criteria.
 
-> "Here's where the perspectives stand so far. Before they peer-review each other, I want to check in:
->
-> 1. **Reveal constraints:** Is there anything these perspectives don't know that would change their analysis? (e.g., data limitations, institutional constraints, supervisor preferences, timeline)
-> 2. **Redirect:** Is any perspective completely off-base or exploring an irrelevant direction?
-> 3. **Challenge:** Do you want to push back on any specific claim before cross-evaluation?"
-
-**How the user's input feeds forward:**
-- Constraints revealed here are injected into the cross-evaluation prompt as "Additional context from the researcher" — each evaluator sees them
-- If a perspective is marked as off-base, it is still included in cross-evaluation (for completeness) but flagged: "The researcher considers this direction less relevant because [reason]"
-- Challenges are posed directly to the relevant perspective in the cross-evaluation round as an additional evaluation criterion
-
-**When to skip:** If the user says "skip check-in", "just run it", or "non-interactive", proceed directly to Phase 3.5. The default is interactive.
+**Skip when:** User says "skip check-in", "just run it", or "non-interactive".
 
 ### Phase 3.5: Anonymised Cross-Evaluation
 
-Before synthesising, run a peer-review round where each perspective critiques all others — without knowing which lens produced which output. This forces content-based evaluation rather than tribal dismissal.
+Run a peer-review round where each perspective critiques all others without knowing which lens produced which output.
 
-**Setup:** Anonymise each perspective's output by replacing the label with a neutral identifier (Perspective A, B, C, ...). Strip any self-identifying language (e.g., "as an econometrician, I...").
+**Setup:** Replace labels with neutral identifiers (Perspective A, B, C...). Strip self-identifying language.
 
-**Spawn one evaluator agent per perspective** using the Task tool. Each receives:
+**Spawn one evaluator agent per perspective** (parallel, `subagent_type: general-purpose`). Each evaluates all anonymous perspectives on: Rigour (1-5), Relevance (1-5), Novelty (1-5), Practicality (1-5). Each provides one strength, one weakness, and whether they'd change their own analysis. Include user constraints from Phase 3.25 if available — perspectives ignoring known constraints score lower on Practicality.
 
-```
-You are a [LABEL] ([DISCIPLINE]).
-
-Below are [N] anonymous analyses of this research question:
-
-[QUESTION]
-
----
-[Perspective A output — anonymised]
----
-[Perspective B output — anonymised]
----
-[Perspective C output — anonymised]
----
-
-TASK: Evaluate each perspective on these criteria (1-5 scale):
-1. **Rigour** — Is the reasoning sound? Are claims supported?
-2. **Relevance** — Does it address the core question?
-3. **Novelty** — Does it surface something the others miss?
-4. **Practicality** — Could the researcher act on this advice?
-
-[IF USER PROVIDED INPUT IN PHASE 3.25, ADD:]
-Additional context from the researcher:
-- Constraints: [user-revealed constraints]
-- Challenges: [user's pushback on specific claims]
-- Relevance notes: [any perspectives the user flagged as less relevant, with reason]
-
-Factor this researcher context into your evaluation — perspectives that ignore known constraints should score lower on Practicality.
-
-For each perspective, provide:
-- Scores (4 numbers)
-- One strength (1 sentence)
-- One weakness (1 sentence)
-- Would you change your own analysis based on this? (yes/no + why)
-
-Then rank all perspectives from most to least valuable for the researcher.
-Be honest — evaluate the content, not the style. 200-300 words total.
-```
-
-**Agent configuration:**
-- Use `subagent_type: general-purpose` for each
-- Run all evaluator agents in parallel
-- Each agent must NOT see which label produced which output
-
-**What this produces:**
-- A cross-evaluation matrix (each perspective rated by every other)
-- Self-revision signals (perspectives that update their view after seeing others)
-- Consensus rankings (which perspectives were rated highest across evaluators)
-
-Include the cross-evaluation matrix in the final report (Section "Peer Evaluation") so the user can see where perspectives found each other compelling or weak.
+**Output:** Cross-evaluation matrix, self-revision signals, and consensus rankings for the final report.
 
 ### Phase 4: Synthesise
 
@@ -274,31 +209,21 @@ Write the report to the project directory as `PERSPECTIVES-REPORT.md` (or print 
 - [ ] [Actionable item 2]
 ```
 
-## Council Mode Enhancement
-
-In standard mode, Phase 3 spawns Claude sub-agents with different personas — but they all share the same underlying model. Council mode upgrades this to genuine model diversity: different LLM providers (Claude, GPT, Gemini) bring genuinely different reasoning patterns, training biases, and knowledge bases.
+## Council Mode
 
 **Trigger:** "Council multi-perspective" or "thorough multi-perspective"
 
-**What changes in council mode:**
-- Phase 3 (Parallel Investigation): Each perspective is assigned to a different LLM provider via `cli-council`, not Claude sub-agents
-- Phase 3.5 (Cross-Evaluation): Each model evaluates the others' perspectives without knowing which model produced which — genuine blind review
-- Phase 4 (Synthesis): Chairman model reads all perspectives and cross-evaluations, weighted by peer scores
+Upgrades Phase 3 to use genuinely different LLM providers (Claude, GPT, Gemini) via `cli-council` instead of Claude sub-agents with personas. Cross-evaluation becomes genuine blind review across models.
 
-**Invocation (CLI backend):**
 ```bash
-cd packages/cli-council
 uv run python -m cli_council \
     --prompt-file /tmp/perspective-prompt.txt \
     --context-file /tmp/research-context.txt \
     --output-md /tmp/perspectives-council.md \
-    --chairman claude \
-    --timeout 180
+    --chairman claude --timeout 180
 ```
 
 See `skills/shared/council-protocol.md` for the full orchestration protocol.
-
-**Value:** High — this skill is the natural fit for council mode. The whole point of multi-perspective analysis is cognitive diversity, and using genuinely different models instead of persona-differentiated instances of the same model is a strict upgrade.
 
 ## Cross-References
 

@@ -1,6 +1,6 @@
 ---
 name: bib-validate
-description: "Use when you need to cross-reference \cite{} keys against .bib files to find missing or unused entries."
+description: "Use when cross-referencing LaTeX citation keys against .bib files or bibliography entries to find missing, unused, or mismatched references before compilation. Validates BibTeX metadata, detects stale preprints, and syncs with Zotero/Paperpile."
 allowed-tools: Read, Glob, Grep, Task, Write, Bash(mkdir*), Bash(ls*), Bash(rm*), mcp__refpile__add_item, mcp__refpile__add_to_collection, mcp__refpile__search_library
 argument-hint: [project-path or tex-file]
 ---
@@ -28,11 +28,7 @@ Bibliography validation with preprint staleness checks can be context-heavy (Ope
 
 ## Convention
 
-**Default bibliography file is `references.bib`** — this is the standard across all projects (per the `/latex` skill convention). However, the skill also supports:
-
-- Any `.bib` file found in the same directory as the `.tex` files being audited
-- Embedded bibliographies using `\begin{thebibliography}` / `\bibitem{key}` blocks
-- Both external and embedded simultaneously (rare but possible)
+**Default bibliography file is `references.bib`** — this is the standard across all projects (per the `/latex` skill convention). The skill also supports any `.bib` file found in the same directory as the `.tex` files, embedded bibliographies using `\begin{thebibliography}` / `\bibitem{key}` blocks, or both simultaneously.
 
 ## Bibliography Detection
 
@@ -40,30 +36,15 @@ At the start of validation, detect which bibliography method the project uses:
 
 ### 1. External `.bib` file (standard)
 
-Look for `.bib` files in the project directory. Priority order:
-1. `references.bib` (preferred — standard naming convention across all projects)
-2. Any other `.bib` file in the same directory as the `.tex` files
-
-If **multiple `.bib` files** are found, validate all of them and produce a combined report. Note which file each issue belongs to. If a legacy-named `.bib` file (e.g., `paperpile.bib`) exists alongside `references.bib`, flag it as a potential cleanup opportunity (the project may have migrated from Paperpile).
-
-Full validation applies: cross-reference checks **and** quality checks.
+Look for `.bib` files in the project directory. Priority: `references.bib` first, then any other `.bib` file in the `.tex` directory. If **multiple `.bib` files** are found, validate all and produce a combined report noting which file each issue belongs to. Flag legacy-named files (e.g., `paperpile.bib`) alongside `references.bib` as potential cleanup opportunities. Full validation applies: cross-reference checks **and** quality checks.
 
 ### 2. Embedded `\begin{thebibliography}` / `\bibitem{key}`
 
-Some LaTeX documents define references inline rather than using an external `.bib` file. Detect by scanning `.tex` files for `\begin{thebibliography}`.
-
-Extract keys from `\bibitem` entries:
-- `\bibitem{key}` — standard form, key is the argument in braces
-- `\bibitem[label]{key}` — optional label form (e.g., `\bibitem[Smith et al., 2020]{smith2020}`), key is in the **second** set of braces
-
-Only **cross-reference checks** apply (missing keys, unused keys, typos). Quality checks (required fields, year, author formatting) are **skipped** because embedded bibliographies don't have structured metadata.
+Detect by scanning `.tex` files for `\begin{thebibliography}`. Extract keys from `\bibitem{key}` (standard) and `\bibitem[label]{key}` (optional label — key is in the second set of braces). Only **cross-reference checks** apply; quality checks are skipped because embedded bibliographies lack structured metadata.
 
 ### 3. Both (rare)
 
-If a project has both a `.bib` file and `\begin{thebibliography}` blocks, validate both:
-- Run full validation on the `.bib` file
-- Run cross-reference checks on `\bibitem` entries
-- Merge both key sets when checking for missing citations
+If a project has both, validate the `.bib` file fully and run cross-reference checks on `\bibitem` entries, merging both key sets when checking for missing citations.
 
 ## Workflow
 
@@ -79,21 +60,7 @@ If a project has both a `.bib` file and `\begin{thebibliography}` blocks, valida
 
 ## Citation Commands to Scan
 
-Scan `.tex` files for all of these patterns:
-
-| Command | Example |
-|---------|---------|
-| `\cite{key}` | Basic citation |
-| `\citet{key}` | Textual: Author (Year) |
-| `\citep{key}` | Parenthetical: (Author, Year) |
-| `\textcite{key}` | biblatex textual |
-| `\autocite{key}` | biblatex auto |
-| `\parencite{key}` | biblatex parenthetical |
-| `\citeauthor{key}` | Author name only |
-| `\citeyear{key}` | Year only |
-| `\nocite{key}` | Include in bibliography without in-text citation |
-
-Also handle **multi-key citations**: `\citep{key1, key2, key3}`
+Scan `.tex` files for all `\cite`, `\citet`, `\citep`, `\textcite`, `\autocite`, `\parencite`, `\citeauthor`, `\citeyear`, and `\nocite` commands. Also handle **multi-key citations**: `\citep{key1, key2, key3}`.
 
 ## Cross-Reference Checks
 
@@ -168,51 +135,21 @@ Include this as a "Reference Manager Sync" section in the report, after cross-re
 
 **These checks apply only to external `.bib` files.** Embedded bibliographies lack structured metadata, so quality checks are skipped for them.
 
-### Required Fields by Entry Type
+### Required Fields
 
-| Entry Type | Required Fields |
-|-----------|----------------|
-| `@article` | author, title, journal, year |
-| `@book` | author/editor, title, publisher, year |
-| `@incollection` | author, title, booktitle, publisher, year |
-| `@inproceedings` | author, title, booktitle, year |
-| `@techreport` | author, title, institution, year |
-| `@unpublished` | author, title, note, year |
-| `@phdthesis` | author, title, school, year |
+Check each entry type has its standard required BibTeX fields (author, title, year, plus type-specific fields like journal for `@article`, booktitle for `@inproceedings`, publisher for `@book`, etc.).
 
-### Year Reasonableness
+### Year and Author Checks
 
-- Flag entries with year < 1900 or year > current year + 1
-- Flag entries with no year at all
+- Flag entries with year < 1900, year > current year + 1, or no year
+- Flag "and others" or "et al." in author fields — never valid in BibTeX (Warning)
+- Flag inconsistent author formats and unbraced organisation names
 
-### Author Formatting
+### DOI Resolution (optional — `--verify-dois` flag)
 
-- Check for inconsistent author formats within the file
-- **Flag entries where author field contains "and others" or "et al."** — this is never valid in BibTeX. All authors must be listed explicitly. Severity: **Warning**.
-- Flag entries with organisation names that might need `{{braces}}` to prevent splitting
+**Preferred:** Call `scholarly_verify_dois` with all DOIs (up to 50 per call) for batch verification across OpenAlex, Scopus, WoS. Results: VERIFIED (2+ sources), SINGLE_SOURCE (spot-check), NOT_FOUND (resolve manually).
 
-### DOI Resolution (optional — triggered by `--verify-dois` flag or when issues are suspected)
-
-**Preferred method: bibliography MCP `scholarly_verify_dois`.** Collect all DOIs from the `.bib` file and call `scholarly_verify_dois` (up to 50 per call). This batch-verifies each DOI against all enabled sources (OpenAlex, Scopus, WoS). Results:
-- **VERIFIED** (2+ sources confirm) — DOI is valid, metadata can be trusted
-- **SINGLE_SOURCE** (1 source only) — DOI exists but warrants a manual spot-check
-- **NOT_FOUND** — DOI not found in any source; resolve manually via WebFetch
-
-**Fallback for NOT_FOUND DOIs:** Resolve via `https://doi.org/[DOI]` and confirm the returned metadata matches the entry:
-
-1. **Title match**: Does the DOI landing page title match the `.bib` title?
-2. **Author match**: Does the first author on the landing page match the `.bib` first author?
-3. **Journal match**: Does the venue match?
-
-Flag mismatches as:
-- **Warning: DOI mismatch** — DOI resolves to a different paper than claimed. This usually means the DOI is wrong (adjacent DOI in the same journal volume) or the authors are wrong (conflation of researchers in the same subfield).
-
-This check catches:
-- Wrong DOIs (e.g., off-by-one in the DOI suffix)
-- Author conflation (real researchers incorrectly attributed to a paper)
-- Metadata copied from secondary sources without verification
-
-For manual WebFetch resolution, process in batches of 5 to avoid rate limiting. Only flag confirmed mismatches — if the DOI cannot be resolved (404, timeout), note it as "unresolvable" at Info level.
+**Fallback for NOT_FOUND:** Resolve via `https://doi.org/[DOI]` and check title/author/journal match. Flag mismatches as Warning. Process in batches of 5.
 
 ### Preprint Staleness Check
 
@@ -241,26 +178,19 @@ Full report template with all sections: [`references/report-template.md`](refere
 
 Sections: Summary table → Critical (missing entries) → Warning (typos, unused, missing fields, DOI mismatches, stale preprints) → Info (year issues) → Limitations (for embedded bibliographies).
 
-## Optional: Metadata Verification via MCP Tools
+## Metadata Verification via MCP Tools
 
-When missing entries or suspicious metadata are flagged, check these sources in order:
-
-1. **Paperpile** (paperpile MCP) — call `mcp__paperpile__search_library` by title. If found, use `mcp__paperpile__export_bib` to get correct BibTeX.
-2. **Zotero library** (refpile MCP) — call `search_library` by title. The user may already have the reference but with a different key.
-3. **Bibliography MCP** (scholarly sources):
-   - **`scholarly_search`** — search by title to find the correct entry across OpenAlex + Scopus + WoS
-   - **`scholarly_verify_dois`** — batch-verify DOIs across all sources (preferred over manual DOI resolution)
-   - **`openalex_lookup_doi`** — look up full metadata for a specific DOI
+When missing entries or suspicious metadata are flagged, check these sources in order: (1) **Paperpile** — `mcp__paperpile__search_library` by title, then `mcp__paperpile__export_bib` for correct BibTeX; (2) **Zotero** — `search_library` by title; (3) **Bibliography MCP** — `scholarly_search` by title across OpenAlex + Scopus + WoS, `scholarly_verify_dois` for batch DOI verification, `openalex_lookup_doi` for full metadata.
 
 For Python client fallback (citation networks, institution analysis): [`references/openalex-verification.md`](references/openalex-verification.md)
 
-## Deep Verification Mode (Parallel, Disk-Based)
+## Deep Verification Mode
 
-Triggered by: `--deep-verify` flag, 40+ entries, or "deep verify" / "verify all references". Spawns parallel sub-agents that verify batches and write results to disk. Full architecture, batch JSON format, and assembly: [references/deep-verify.md](references/deep-verify.md)
+Triggered by `--deep-verify` flag, 40+ entries, or "deep verify" / "verify all references". Full architecture and batch format: [references/deep-verify.md](references/deep-verify.md)
 
-## Council Mode (Optional)
+## Council Mode
 
-For high-stakes submissions. Trigger: "council bib-validate", "thorough bib check". Full details: [references/council-mode.md](references/council-mode.md)
+For high-stakes submissions. Trigger: "council bib-validate" or "thorough bib check". Full details: [references/council-mode.md](references/council-mode.md)
 
 ## Fix Mode
 

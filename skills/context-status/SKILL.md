@@ -1,71 +1,46 @@
 ---
 name: context-status
-description: "Use when you need to check current context status and session health."
-allowed_tools:
-  - Read
-  - Glob
-  - Bash(ls*, cat*)
+description: "Use when checking how much context window remains, whether preservation hooks are active, or what work items are pending. Displays a diagnostic summary of context usage percentage, active plans, session log freshness, and hook configuration status."
+allowed-tools: Read, Glob, Bash(ls*), Bash(cat*)
 ---
 
 # Context Status: Session Health Check
 
 On-demand diagnostic showing context usage, preservation state, and open work items. Fast and lightweight — no Notion queries.
 
-## What to Check
+## Workflow
 
-### 1. Context Usage Estimate
+### Step 1: Context Usage Estimate
 
-Read the context monitor state file to get the current tool call count:
+Read `~/.claude/sessions/{project-hash}/context-monitor-state.json` (project hash = first 12 chars of SHA-256 of `CLAUDE_PROJECT_DIR`). Calculate tool calls so far, estimated percentage (calls / 150), which thresholds have fired, and time since last warning. If the state file doesn't exist, report "No context monitor data — hook may not be active."
 
-```
-~/.claude/sessions/{project-hash}/context-monitor-state.json
-```
+### Step 2: Active Plan
 
-The project hash is a SHA-256 of `CLAUDE_PROJECT_DIR` (first 12 chars). If the state file doesn't exist, report "No context monitor data — hook may not be active."
+Find the latest file in `log/plans/`. Show filename, first 3 lines, and whether it contains "APPROVED" or "DRAFT". If none found, report "No active plan."
 
-Calculate:
-- Tool calls so far
-- Estimated percentage (calls / 150)
-- Which thresholds have fired (from the `fired` array)
-- Time since last warning
+### Step 3: Latest Session Log
 
-### 2. Active Plan
+Find the latest non-compact `.md` file in `log/` (skip `-compact` files). Show filename and first 3 lines.
 
-Find the latest file in `log/plans/`:
-- If found: show filename, first 3 lines, and whether it contains "APPROVED" or is still "DRAFT"
-- If none: report "No active plan"
+### Step 4: Focus Freshness
 
-### 3. Latest Session Log
+Check `.context/current-focus.md` modification date. If older than 3 days, warn "Focus file is stale — consider running `/update-focus`". Show the first 5 lines.
 
-Find the latest non-compact `.md` file in `log/` (skip files with `-compact` in the name):
-- If found: show filename and first 3 lines
-- If none: report "No session log found"
-
-### 4. Focus Freshness
-
-Check when `.context/current-focus.md` was last modified:
-- Show the modification date
-- If older than 3 days: warn "Focus file is stale — consider running `/update-focus`"
-- Show the first 5 lines (headline)
-
-### 5. Preservation Hooks
+### Step 5: Preservation Hooks
 
 Verify these hooks are configured in `~/.claude/settings.json`:
-- `PreCompact` → `precompact-autosave.py` (pre-compact state save)
-- `SessionStart` compact → `postcompact-restore.py` (post-compact restore)
-- `PostToolUse` → `context-monitor.py` (this monitor)
 
-For each: report CONFIGURED or MISSING.
+| Hook | Script | Expected |
+|------|--------|----------|
+| PreCompact | `precompact-autosave.py` | CONFIGURED |
+| SessionStart compact | `postcompact-restore.py` | CONFIGURED |
+| PostToolUse | `context-monitor.py` | CONFIGURED |
 
-### 6. Open Loops
+### Step 6: Open Loops
 
-Count unchecked items (`- [ ]`) in `.context/current-focus.md`:
-- Report the count
-- If > 5: warn "Many open loops — consider triaging"
+Count unchecked items (`- [ ]`) in `.context/current-focus.md`. If > 5, warn "Many open loops — consider triaging."
 
 ## Output Format
-
-Present as a compact status panel:
 
 ```
 ## Session Health
@@ -92,35 +67,19 @@ Present as a compact status panel:
 [Only if there are issues — e.g., stale focus, missing hooks, high context usage]
 ```
 
-### 7. Compaction Guidance
+### Step 7: Compaction Guidance (when context > 60%)
 
-When context is high (>60%), include these reference tables in the output:
-
-**When to compact:**
+Include these reference tables when context is high:
 
 | Phase Transition | Compact? | Why |
 |---|---|---|
-| Research to Planning | Yes | Research context is bulky; plan is the distilled output |
-| Planning to Implementation | Yes | Plan is in a file; free up context for code |
-| Implementation to Testing | Maybe | Keep if tests reference recent code |
-| Debugging to Next feature | Yes | Debug traces pollute context |
-| Mid-implementation | No | Losing file paths and partial state is costly |
+| Research → Planning | Yes | Research context is bulky; plan is the distilled output |
+| Planning → Implementation | Yes | Plan is in a file; free up context for code |
+| Debugging → Next feature | Yes | Debug traces pollute context |
 | After a failed approach | Yes | Clear dead-end reasoning |
+| Mid-implementation | No | Losing file paths and partial state is costly |
 
-**What survives compaction:**
-
-| Persists | Lost |
+| Persists After Compaction | Lost |
 |---|---|
-| CLAUDE.md + rules | Intermediate reasoning |
-| Task list | File contents previously read |
-| MEMORY.md | Multi-step conversation context |
-| Git state | Tool call history |
-| Files on disk | Verbal preferences |
-| precompact-autosave state | — |
-
-## When to Use
-
-- When the context monitor fires a warning
-- Before starting a large task (to check remaining capacity)
-- After resuming a session (to verify state was preserved)
-- When unsure if preservation hooks are working
+| CLAUDE.md + rules, Task list, MEMORY.md | Intermediate reasoning, file contents read |
+| Git state, files on disk, precompact state | Multi-step context, tool call history |
