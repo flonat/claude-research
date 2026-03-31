@@ -1,7 +1,13 @@
 ---
 name: fixer
 description: "Generic fix implementer for any critic report. Reads CRITIC-REPORT.md, applies fixes by priority (Critical → Major → Minor), recompiles, and produces FIX-REPORT.md. Does not make independent editorial decisions — follows the critic's instructions precisely.\n\nExamples:\n\n- Example 1:\n  user: [main session launches fixer after paper-critic returns NEEDS REVISION]\n  assistant: \"Launching the fixer agent to address the issues in CRITIC-REPORT.md.\"\n  <commentary>\n  Paper critic returned NEEDS REVISION. Launch fixer to apply the fixes.\n  </commentary>\n\n- Example 2:\n  user: \"Fix the issues in the critic report\"\n  assistant: \"I'll launch the fixer agent to apply the fixes from CRITIC-REPORT.md.\"\n  <commentary>\n  User wants fixes applied. Launch fixer.\n  </commentary>"
-tools: Read, Edit, Write, Bash, Glob, Grep
+tools:
+  - Read
+  - Edit
+  - Write
+  - Bash
+  - Glob
+  - Grep
 model: opus
 color: green
 memory: project

@@ -12,7 +12,7 @@ argument-hint: (no arguments)
 ## When to Use
 
 - After significant project work (new files, completed milestones, structural changes)
-- During `/session-recap` when offered
+- During `/general-session-recap` when offered
 - When the user says "update project docs", "refresh docs", "sync my docs", "update my README"
 - Periodically to keep documentation accurate
 
@@ -188,7 +188,7 @@ Updated project docs:
 
 ## Cross-References
 
-- `/session-recap` — offers to run this skill at Step 3.5
+- `/general-session-recap` — offers to run this skill at Step 3.5
 - `/sync-repo private` — Task Management-specific superset: propagates counts across all private TM docs including LaTeX files. Run after this skill when in the TM project.
-- `/sync-notion` — syncs state to the central context library (complementary; run after this)
+- `vault sync (edit vault files directly)` — syncs state to the central context library (complementary; run after this)
 - `/update-focus` — updates `current-focus.md` (different purpose: session state, not doc accuracy)

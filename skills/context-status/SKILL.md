@@ -9,7 +9,7 @@ allowed_tools:
 
 # Context Status: Session Health Check
 
-On-demand diagnostic showing context usage, preservation state, and open work items. Fast and lightweight — no Notion queries.
+On-demand diagnostic showing context usage, preservation state, and open work items. Fast and lightweight — no vault queries.
 
 ## What to Check
 

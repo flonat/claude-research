@@ -1,11 +1,13 @@
 ---
 name: bib-validate
-description: "Use when you need to cross-reference \cite{} keys against .bib files to find missing or unused entries."
-allowed-tools: Read, Glob, Grep, Task, Write, Bash(mkdir*), Bash(ls*), Bash(rm*), mcp__refpile__add_item, mcp__refpile__add_to_collection, mcp__refpile__search_library
+description: "Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Fix mode auto-adds missing entries to Zotero."
+allowed-tools: Read, Glob, Grep, Task, Write, Bash(mkdir*), Bash(ls*), Bash(rm*), mcp__refpile__add_item, mcp__refpile__add_to_collection, mcp__refpile__search_library, mcp__paperpile__search_library, mcp__paperpile__export_bib
 argument-hint: [project-path or tex-file]
 ---
 
 # Bibliography Validation
+
+**LIBRARY-FIRST RULE: ALWAYS cross-reference cited keys against both Zotero (`mcp__refpile__search_library`) and Paperpile (`mcp__paperpile__search_library`) during validation.** This catches drift between the `.bib` file and reference managers. See the Reference Manager Cross-Reference section.
 
 **Citation key rule:** Existing keys in the project always take precedence. They come from the user's reference management system and are canonical. When suggesting replacements (typo corrections, preprint upgrades, metadata fixes), always keep the user's key and update the `.bib` entry metadata around it — never suggest renaming a key to match some "standard" format.
 
@@ -126,43 +128,9 @@ Common typo patterns:
 
 ## Reference Manager Cross-Reference
 
-After the disk-based cross-reference, check each cited key against the user's reference libraries using the resolution order from [`shared/reference-resolution.md`](../shared/reference-resolution.md). Two sources are available — check both when possible.
+After the disk-based cross-reference, check each cited key against Zotero (via RefPile MCP) and Paperpile (read-only). Produces a combined status table (HEALTHY / MIGRATE_TO_ZOTERO / DRIFT / EXPORT_GAP / MISSING).
 
-### Zotero (Active Write Target — via RefPile MCP)
-
-Cross-reference via the `refpile` MCP server. For each citation key:
-
-1. Call `mcp__refpile__search_library` with the citation key as query
-2. Match on the `citationKey` field in results
-
-### Paperpile (Read-Only Cross-Reference)
-
-Cross-reference via the `paperpile` MCP server. For each citation key found in the `.tex` files:
-
-1. Call `mcp__paperpile__search_library` with the citation key as query
-2. Match on the citekey field in results
-3. For entries with issues, call `mcp__paperpile__get_item` for full metadata
-4. Use `mcp__paperpile__export_bib` to generate correct BibTeX for missing/outdated entries
-
-**Additional checks:**
-- Call `mcp__paperpile__get_labels` to verify folder organisation matches project themes
-- For projects with a known Paperpile label, call `mcp__paperpile__get_items_by_label` to find papers in the folder but not cited (potential missing citations)
-
-### Combined Status Categories
-
-| .bib | Zotero | Paperpile | Status | Report |
-|------|--------|-----------|--------|--------|
-| Yes | Yes | Yes | `HEALTHY` | `✓ In sync across all` |
-| Yes | Yes | No | `HEALTHY` | `✓ Zotero ↔ .bib in sync (not in Paperpile)` |
-| Yes | No | Yes | `MIGRATE_TO_ZOTERO` | `⚠ In Paperpile + .bib but not Zotero — auto-add?` |
-| Yes | No | No | `DRIFT` | `⚠ In local .bib but not in any reference manager` |
-| No | Yes | — | `EXPORT_GAP` | `ℹ In Zotero but not exported to local .bib` |
-| No | No | Yes | `EXPORT_GAP` | `ℹ In Paperpile but not exported to local .bib` |
-| No | No | No | `MISSING` | `✗ Missing from all — will add to Zotero in Fix Mode` |
-
-Include this as a "Reference Manager Sync" section in the report, after cross-reference results and before quality checks.
-
-**Graceful degradation:** If either MCP is unavailable, skip that source with a warning and continue with whatever is available. If both are unavailable, continue with disk-only validation.
+Full steps, MCP calls, and status categories: [`references/ref-manager-crossref.md`](references/ref-manager-crossref.md)
 
 ## Quality Checks on .bib Entries
 
@@ -248,8 +216,10 @@ When missing entries or suspicious metadata are flagged, check these sources in 
 1. **Paperpile** (paperpile MCP) — call `mcp__paperpile__search_library` by title. If found, use `mcp__paperpile__export_bib` to get correct BibTeX.
 2. **Zotero library** (refpile MCP) — call `search_library` by title. The user may already have the reference but with a different key.
 3. **Bibliography MCP** (scholarly sources):
-   - **`scholarly_search`** — search by title to find the correct entry across OpenAlex + Scopus + WoS
+   - **`scholarly_search`** — search by title to find the correct entry across OpenAlex + S2 + Scopus + WoS
    - **`scholarly_verify_dois`** — batch-verify DOIs across all sources (preferred over manual DOI resolution)
+   - **`scholarly_paper_detail`** — get full metadata including pre-formatted BibTeX (via S2 `citationStyles`), TLDR summary, and open access PDF link. Use for auto-generating BibTeX entries for missing references.
+   - **`scholarly_citations`** / **`scholarly_references`** — check citation context (how many papers cite this? what does it cite?) to assess relevance when deciding whether to keep or drop questionable entries
    - **`openalex_lookup_doi`** — look up full metadata for a specific DOI
 
 For Python client fallback (citation networks, institution analysis): [`references/openalex-verification.md`](references/openalex-verification.md)
@@ -264,38 +234,9 @@ For high-stakes submissions. Trigger: "council bib-validate", "thorough bib chec
 
 ## Fix Mode
 
-After producing the validation report, automatically fix resolvable issues using the filing sequence from [`shared/reference-resolution.md`](../shared/reference-resolution.md).
+After producing the validation report, automatically fix resolvable issues (DRIFT → add to Zotero, MISSING → search + add, MIGRATE → auto-add, metadata → correct BibTeX).
 
-### Auto-Fix Actions
-
-1. **`DRIFT` entries** (in .bib but not in any reference manager):
-   - Add to Zotero via `mcp__refpile__add_item` using metadata from the `.bib` entry.
-   - File into topic collection + `_Needs Review` per the filing sequence.
-
-2. **`MISSING` entries** (cited in .tex but not found anywhere):
-   - Search via the resolution order (Zotero → Paperpile → bibliography MCP → Crossref → web).
-   - If found, export correct BibTeX and add the entry to the `.bib` file.
-   - Add to Zotero and file per the filing sequence.
-
-3. **`MIGRATE_TO_ZOTERO` entries** (in Paperpile but not Zotero):
-   - Auto-add to Zotero using Paperpile metadata.
-   - File into topic collection + `_Needs Review`.
-
-4. **Metadata issues** (DOI mismatch, stale preprint, missing fields):
-   - Export correct BibTeX from Paperpile (`mcp__paperpile__export_bib`) or bibliography MCP (`scholarly_search`) for entries with metadata problems.
-   - Present corrected entries for confirmation before overwriting.
-
-### Post-Fix Maintenance
-
-1. **Update `zotero-collections.md`** — increment item counts for affected collections.
-2. **Report summary** — show a table of all fixes applied: entry key, issue, action taken, status.
-
-### Skip Fix Mode
-
-Fix mode is skipped when:
-- The skill is invoked with `--report-only` or `--dry-run`
-- No actionable issues are found (all entries are `HEALTHY`)
-- Both refpile MCP and paperpile MCP are unavailable
+Full auto-fix actions, post-fix maintenance, and skip conditions: [`references/fix-mode.md`](references/fix-mode.md)
 
 ## Quality Scoring
 

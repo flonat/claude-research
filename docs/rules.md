@@ -13,7 +13,7 @@ Rule files live in `.claude/rules/` and are automatically loaded into every Clau
 | Ignore GEMINI.md Files | `ignore-gemini-md.md` | Never read, process, or act on files named `GEMINI.md` |
 | Keep CLAUDE.md Lean | `lean-claude-md.md` | CLAUDE.md is loaded into context every session — every line costs tokens. |
 | Record Learnings with [LEARN] Tags | `learn-tags.md` | Record Learnings with [LEARN] Tags |
-| Overleaf Separation — No Code or Data in Paper Directories | `overleaf-separation.md` | The `paper/` directory (Overleaf symlink) is for LaTeX source files ONLY. |
+| Overleaf Separation — No Code or Data in Paper Directories | `overleaf-separation.md` | The `paper/` directory (Overleaf symlink inside `paper-{venue}/paper/`) is for LaTeX source files ONLY. |
 | Plan Before Implementing | `plan-first.md` | Plan Before Implementing |
 | Read Documentation Before Searching | `read-docs-first.md` | Never explore when documentation already answers your question. |
 | Scope Discipline | `scope-discipline.md` | Only make changes the user explicitly requested. |

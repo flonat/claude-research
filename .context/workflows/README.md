@@ -54,8 +54,8 @@ Point to the specific workflow:
 
 ### Meeting Actions
 **Purpose:** Extract tasks from meeting transcripts/notes
-**Process:** Find transcript → Identify action items → Create Notion tasks
-**Output:** Tasks in Notion with proper attribution
+**Process:** Find transcript → Identify action items → Create vault tasks
+**Output:** Tasks in vault with proper attribution
 
 ### Replication Protocol
 **Purpose:** Replicate results from a published paper before extending

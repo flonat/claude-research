@@ -1,6 +1,6 @@
 # Skills
 
-> 39 reusable workflow definitions available across all projects.
+> 38 reusable workflow definitions available across all projects.
 
 Skills are structured instruction sets (`SKILL.md` files) that turn Claude into a specialised tool for specific tasks — from compiling LaTeX to bootstrapping research projects.
 
@@ -9,7 +9,7 @@ Skills are structured instruction sets (`SKILL.md` files) that turn Claude into 
 | Skill | Description |
 |-------|-------------|
 | `beamer-deck` | Use when you need to create an academic Beamer presentation with original theme and multi-agent review |
-| `bib-validate` | Use when you need to cross-reference \cite{} keys against .bib files to find missing or unused entries |
+| `bib-validate` | Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Fix mode auto-adds missing entries to Zotero |
 | `code-archaeology` | Use when you need to review and understand old code, data, or analysis files |
 | `code-review` | Use when you need a quality review of R or Python research scripts |
 | `consolidate-memory` | Use when you need to prune duplicates and merge overlapping entries in MEMORY.md files |
@@ -39,11 +39,10 @@ Skills are structured instruction sets (`SKILL.md` files) that turn Claude into 
 | `quarto-deck` | Use when you need to generate a Reveal.js HTML presentation from Markdown |
 | `save-context` | Use when you need to save information from the current conversation to the context library |
 | `session-log` | Use when you need to create a timestamped progress log for a research session |
-| `session-recap` | Use when you need to run the end-of-session checklist (uncommitted changes, focus update, project sync) |
 | `split-pdf` | Use when you need to download, split, and deeply read an academic PDF |
 | `sync-notion` | Use when you need to sync the current project's state to the context library and Notion |
 | `system-audit` | Use when you need to run parallel audits across skills, hooks, agents, rules, and conventions |
-| `task-management` | Use when you need help with daily planning, weekly reviews, meeting actions, or Notion task queries |
+| `task-management` | Use when you need help with daily planning, weekly reviews, meeting actions, or vault task queries |
 | `update-focus` | Use when you need to update current-focus.md with a structured session summary |
 | `update-project-doc` | Use when you need to update a project's own CLAUDE.md, README.md, or docs/ to reflect current state |
 | `validate-bib` | Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Read-only in standard mode |

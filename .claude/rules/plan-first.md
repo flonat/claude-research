@@ -36,7 +36,7 @@ Then **wait for confirmation**. One word from the user ("yes", "go", thumbs up) 
 - "I'll use BBT-format keys from the existing .bib"
 - "I'll compile with Beamer, not reveal-md"
 - "I'll edit only the 3 lines you mentioned, not the surrounding block"
-- "I'll put the report in the current project directory, not the Research Projects root"
+- "I'll put the report in the current project directory, not the Projects root"
 
 **When to skip the assumption check:**
 - the user's instruction is fully explicit (exact file paths, exact format, exact scope)

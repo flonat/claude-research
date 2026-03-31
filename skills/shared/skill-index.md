@@ -41,9 +41,11 @@
 | Skill | Purpose |
 |-------|---------|
 | `proofread` | 7-category LaTeX proofreading scorecard (report only) |
+| `claim-audit` | Verify cited claims against actual source papers |
 | `voice-analyzer` | Analyze writing samples to create a portable voice profile (VOICE.md) |
 | `voice-editor` | Edit content to match a voice profile (6-pass workflow, 4 editing modes) |
 | `journal-voice` | Extract journal writing patterns and conventions into JOURNAL-VOICE.md |
+| `review-response` | Systematic reviewer response drafting with classification, strategy, and tone checks |
 
 ### Presentation (8)
 
@@ -65,7 +67,7 @@
 | `latex` | Basic LaTeX compilation with latexmk |
 | `latex-autofix` | **Default compiler** — auto-fixes errors, citation audit on success |
 | `latex-health-check` | Compile all projects, auto-fix, check cross-project consistency |
-| `audit-template-compliance` | Compare preamble against working paper template (report + apply) |
+| `latex-template` | Compare preamble against working paper template (report + apply) |
 | `bib-validate` | Cross-reference \cite{} keys against .bib files (report only) |
 | `bib-filter` | Filter a .bib file to only entries actually cited in a .tex project |
 | `bib-parse` | Extract citations from a PDF and generate a validated `.bib` file |
@@ -87,21 +89,22 @@
 
 | Skill | Purpose |
 |-------|---------|
-| `init-project-research` | Full project scaffold (interview, git, Overleaf, Notion) |
+| `init-project-research` | Full project scaffold (interview, git, Overleaf, vault) |
 | `init-project-course` | Course/module folder scaffold |
-| `init-project-light` | Lightweight scaffold (CLAUDE.md only, no git/Notion) |
+| `init-project-light` | Lightweight scaffold (CLAUDE.md only, no git/vault) |
 | `init-project-orchestration` | Add project agents, commands, and planning to a research project |
 | `project-safety` | Safety rules and folder structures to prevent data loss |
 | `session-log` | Timestamped progress logs for session continuity |
-| `session-recap` | End-of-session checklist (git, focus, docs, log) |
+| `general-session-recap` | End-of-session checklist for any project type |
+| `research-session-recap` | Research session close with atlas/vault checks |
 | `update-focus` | Structured update to current-focus.md |
 | `context-status` | On-demand session health check |
 | `save-context` | Save information to context library files |
-| `task-management` | Daily planning, weekly reviews, meeting actions, Notion |
+| `task-management` | Daily planning, weekly reviews, meeting actions, vault |
 | `ideas` | Capture improvement ideas for the infrastructure |
 | `consolidate-memory` | Prune, merge, and abstract MEMORY.md entries |
 | `update-project-doc` | Update a project's own docs to reflect current state |
-| `sync-notion` | Sync project state to context library and Notion |
+| `vault sync` | Sync project state to context library and vault |
 | `email-digest` | Email digest from Gmail |
 | `decision-toolkit` | Structured decision-making for methodology, venue, or framework choices |
 
@@ -132,7 +135,7 @@
 | `econ-plots` | Economics-standard ggplot2 plots: coefficient, binscatter, RDD, decomposition |
 | `r-econometrics` | R regression and econometrics: OLS, IV, panel, RDD, robust SEs |
 | `event-studies` | DiD and event study implementation in R (TWFE vs modern estimators) |
-| `verify-paper` | Systematic 6-phase code-paper consistency audit |
+| `code-paper-audit` | Systematic 6-phase code-paper consistency audit |
 
 ### Infrastructure (30)
 
@@ -143,10 +146,10 @@
 | `lessons-learned` | Structured post-mortem for incidents and stuck sessions |
 | `system-audit` | Parallel audits across skills, hooks, agents, rules, docs |
 | `atlas-review` | Full audit of all topics across 4 systems |
-| `deploy-atlas` | Compile atlas.json from topic files, commit, and deploy atlas web app to Fly.io |
-| `rename-atlas-slug` | Rename an Atlas topic slug across all systems |
-| `sync-atlas` | Bidirectional sync between local Atlas topic files and Notion |
-| `atlas-drift-check` | Verify Atlas schema, Notion sync, disk paths, and frontmatter consistency |
+| `atlas-deploy` | Compile atlas.json from topic files, commit, and deploy atlas web app to Fly.io |
+| `rename-project-research` | Rename an Atlas topic slug across all systems |
+| `sync-atlas` | Sync between Atlas topic files and vault |
+| `atlas-drift-check` | Verify Atlas schema, vault sync, disk paths, and frontmatter consistency |
 | `scout-drift-check` | Check CLI-web parity, route coverage, and taxonomy consistency in Scout |
 | `sync-repo` | Sync docs with system state for atlas, scout, refpile, or private repos |
 | `sync-public-repo` | Sync private infrastructure to the public repo (claude-research) |
@@ -177,9 +180,25 @@
 | `pdf` | Read, extract, combine, split, rotate, watermark PDF files |
 | `xlsx` | Create, read, edit spreadsheets (.xlsx, .csv, .tsv) |
 
+### Meetings (11)
+
+| Skill | Purpose |
+|-------|---------|
+| `minutes-record` | Start or stop recording a meeting, call, or voice memo |
+| `minutes-debrief` | Post-meeting debrief — compare outcomes to prep intentions |
+| `minutes-prep` | Interactive meeting preparation with relationship briefs |
+| `minutes-recap` | Daily digest of meetings — decisions, action items, themes |
+| `minutes-weekly` | Weekly meeting synthesis — themes, decision arcs, stale commitments |
+| `minutes-search` | Search past meeting transcripts and voice memos |
+| `minutes-list` | List recent meetings and voice memos |
+| `minutes-note` | Add timestamped notes during or after a recording |
+| `minutes-verify` | Verify minutes setup — model, mic, directories |
+| `minutes-setup` | Guided first-time setup for minutes |
+| `minutes-cleanup` | Manage old recordings — archive, delete, disk space |
+
 ---
 
-**Total: 120 skills across 11 categories.**
+**Total: 139 skills across 12 categories.**
 
 ---
 
@@ -212,7 +231,9 @@ Files in `skills/shared/` that multiple skills and agents reference. These are n
 | `external-audit-protocol.md` | Protocol for external LLM audits |
 | `paid-api-safety.md` | Cost guardrails for paid API calls |
 | `mcp-degradation.md` | Graceful degradation when MCP tools are unavailable |
-| `project-documentation.md` | Project documentation conventions |
+| `project-documentation.md` | Project documentation conventions (index) |
+| `project-documentation-content.md` | Content conventions (README, manual, architecture, deploy) |
+| `project-documentation-format.md` | Format conventions (ASCII, LaTeX, Beamer, public variants) |
 | `system-documentation.md` | System documentation conventions |
 | `tikz-rules.md` | TikZ diagram conventions |
 | `palettes.md` | Colour palettes for visualisations |

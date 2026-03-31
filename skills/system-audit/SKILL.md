@@ -151,7 +151,7 @@ Show the user:
 | `/audit-project-research` | Complements Convention Compliance with deeper per-project checks |
 | `/update-project-doc` | Fix documentation staleness found by Documentation Freshness |
 | `/sync-permissions` | Fix symlink issues found by Inventory Auditor |
-| `/atlas-review` | Full cross-system audit (local + Notion + Zotero + pipeline) — deeper than this sweep |
+| `/atlas-review` | Full cross-system audit (local + vault + Zotero + pipeline) — deeper than this sweep |
 | `/insights-deck` | Maintenance findings can feed into system insights presentations |
 | `/audit-doc santi` | Dedicated deep audit for santi-repo — Sub-agent 7 is a quick health check; the audit skill is the full version |
 | `/sync-santi-repo` | Fix freshness issues found by Sub-agent 7 |

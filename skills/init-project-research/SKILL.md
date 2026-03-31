@@ -1,13 +1,13 @@
 ---
 name: init-project-research
 description: "Use when you need to bootstrap a full research project with directory scaffold and Overleaf symlink."
-allowed-tools: Bash(mkdir*), Bash(ln*), Bash(ls*), Bash(git*), Bash(touch*), Bash(jq*), Bash(uv*), Bash(scout *), Bash(curl*), Bash(wget*), Read, Write, Edit, Glob, Grep, Task, WebSearch, WebFetch, AskUserQuestion, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page
+allowed-tools: Bash(mkdir*), Bash(ln*), Bash(ls*), Bash(git*), Bash(touch*), Bash(jq*), Bash(uv*), Bash(scout *), Bash(curl*), Bash(wget*), Read, Write, Edit, Glob, Grep, Task, WebSearch, WebFetch, AskUserQuestion
 argument-hint: "[project-name or no arguments for guided setup]"
 ---
 
 # Init Project Research
 
-> Interview-driven skill that scaffolds a research project directory, creates an Atlas topic, syncs to Notion (Atlas + Pipeline + Venues), and integrates with the user's Task Management system.
+> Interview-driven skill that scaffolds a research project directory, creates an Atlas topic, syncs to vault (Atlas + Pipeline + Venues), and integrates with the user's Task Management system.
 
 ## When to Use
 
@@ -25,7 +25,7 @@ Eight phases, executed in order:
 3. **Seed files** — populate CLAUDE.md, README.md, .gitignore with interview answers
 4. **Overleaf symlink** — link `paper/` to Overleaf directory
 5. **Git init** — initialise repo and make first commit
-6. **Atlas & Pipeline sync** — create Atlas topic file, Notion Atlas entry, Pipeline row, venue links, Dropbox folder
+6. **Atlas & Pipeline sync** — create Atlas topic file, vault atlas entry, Pipeline row, venue links, Dropbox folder
 7. **Task Management sync** — update context library files
 8. **Literature & Discovery** — run literature review + scout novelty assessment
 9. **Confirmation** — report what was created
@@ -51,7 +51,7 @@ Present detected values as the first option (marked "Detected from paper") in in
 1. **Project slug** — kebab-case identifier (e.g., `costly-voice`). Folder name on disk is Title Case with spaces (e.g., `Costly Voice`). Confirm the derived folder name.
 2. **Working title** — full paper/project title
 3. **Authors / collaborators** — names and affiliations
-4. **Research area** — which parent folder under Research Projects/. Scan for existing theme folders and present as options. Also offer "New topic folder" and "Other location".
+4. **Research area** — which parent folder under Projects/. Scan for existing theme folders and present as options. Also offer "New topic folder" and "Other location".
 5. **Target venue** — journal, conference, or preprint:
    - **Journal:** Check CABS AJG ranking via `.context/resources/venue-rankings.md` and the CSV (`.context/resources/venue-rankings/abs_ajg_2024.csv`). For SJR score, query the Elsevier Serial Title API (see venue-rankings.md for snippet; requires `SCOPUS_API_KEY`). Flag journals below CABS 4 with alternatives.
    - **Conference:** Check CORE ranking via `.context/resources/venue-rankings.md` and the CSV (`.context/resources/venue-rankings/core_2026.csv`). Capture page limit, format, review type, anonymisation, deadlines.
@@ -60,7 +60,7 @@ Present detected values as the first option (marked "Detected from paper") in in
 
 ### Round 2 — Setup Details
 
-1. **Overleaf project name** — folder under the Overleaf root (read from `~/.config/task-mgmt/overleaf-root`, fallback `~/Apps/Overleaf/`) or git-synced Overleaf. Verify path exists.
+1. **Overleaf project** — ask: "Does the Overleaf project already exist, or should I create it?" If it exists, get the folder name under the Overleaf root (read from `~/.config/task-mgmt/overleaf-root`, fallback `~/Apps/Overleaf/`) and verify the path. If it doesn't exist, create it via `mkdir` (creating a folder in the Overleaf root automatically creates an Overleaf project).
 2. **LaTeX template** — scan `Task Management/templates/` for options. Default: Working Paper (`templates/latex-wp/`). Also offer "None".
 3. **Overleaf external sharing link** — read-only URL for collaborators
 4. **Git repository?** — Local git (Recommended) / GitHub remote / No git
@@ -68,30 +68,9 @@ Present detected values as the first option (marked "Detected from paper") in in
 
 ### Round 3 — Research Content
 
-1. **Paper type** — Empirical / Theoretical / Methodological / Mixed
-2. **Abstract / elevator pitch** — 1-2 sentences
-3. **Key research questions** — up to 3
+Paper type, abstract, key research questions, then paper-type-specific questions (empirical/theoretical/methodological/mixed) adapted from Lopez-Lira's idea evaluation template.
 
-Then ask **paper-type-specific questions** (adapted from Lopez-Lira's idea evaluation template):
-
-#### If Empirical:
-4. **Identification strategy** — How will you establish causality? What is your source of exogenous variation? Name the specific shock, instrument, or natural experiment. (If unknown, note "TBD — pipeline will help identify")
-5. **Data sources** — List every dataset. Be specific: name the database, key variables, and sample period. (e.g., "CRSP Monthly Stock File (1970-2025): returns, market cap")
-6. **Proposed specification** — Write the main regression equation if possible, or describe the empirical test in words.
-
-#### If Theoretical:
-4. **Model setup** — Key agents, frictions, or market failures. Which assumptions drive results? Which are new vs standard?
-5. **Key predictions** — 2-3 testable predictions or comparative statics that distinguish this model from existing ones.
-6. **Relation to existing models** — Which models are closest? What friction/agent/structure is added or changed? Why does this matter?
-
-#### If Methodological:
-4. **The problem** — What existing method fails, and in what setting? What bias, inconsistency, or limitation is addressed?
-5. **Proposed method** — What is the new estimator, test, or procedure? Key properties (consistency, efficiency, robustness)?
-6. **Demonstration plan** — Monte Carlo, analytical proofs, empirical application to a known setting? What existing results would change?
-
-#### If Mixed:
-Ask the relevant subset of the above based on which types apply.
-
+Full question set and storage instructions: [`references/interview-round3.md`](references/interview-round3.md)
 
 ---
 
@@ -134,7 +113,7 @@ If the directory doesn't exist, create it and proceed.
 │   └── project-recap.md
 ├── .claude/
 │   ├── hooks/
-│   │   └── copy-paper-pdf.sh   # PostToolUse hook — copies paper*/main.pdf → *_vcurrent.pdf
+│   │   └── copy-paper-pdf.sh   # PostToolUse hook — copies paper-*/paper/main.pdf → backup/*_vcurrent.pdf
 │   └── settings.local.json
 ├── correspondence/
 │   └── reviews/           # .gitkeep (see scaffold-details.md for review structure)
@@ -143,7 +122,10 @@ If the directory doesn't exist, create it and proceed.
 │   ├── readings/           # .gitkeep
 │   └── venues/             # .gitkeep (submission/venue material only)
 ├── log/                   # .gitkeep
-├── paper/                 # Symlink → Overleaf (Phase 4) — LaTeX source ONLY
+├── paper/                 # Paper directory (Phase 4):
+│   └── paper/             #   Symlink → Overleaf — LaTeX source ONLY
+│                          #   Venue-specific files (checklists, cover letters) live in parent
+├── backup/                # Local backups of Overleaf paper directories (subdirs per paper)
 ├── reviews/               # .gitkeep (subdirs created on demand by review agents)
 └── to-sort/               # .gitkeep
 ```
@@ -224,7 +206,78 @@ Also merge the `permissions.deny` array using the same logic.
 
 ## Phase 4: Overleaf Symlink & Template
 
-Create symlink, seed template files if selected, ensure `.latexmkrc` exists. Full commands and steps: [references/scaffold-details.md](references/scaffold-details.md#overleaf-symlink-commands-phase-4).
+### Paper Directory Convention (Nested Pattern)
+
+Each paper submission gets its own **real directory** at project root (e.g., `paper/`, `paper-ccs/`, `paper-rg/`). Inside that directory, a `paper/` **symlink** points to the Overleaf folder. This nesting allows venue-specific files (submission checklists, cover letters, response documents, reviewer correspondence) to live alongside the Overleaf content without being synced to Overleaf.
+
+**Structure:**
+```
+paper-ccs/                    # Real directory (venue wrapper)
+├── paper/                    # Symlink → Overleaf directory
+├── submission-checklist.md   # Venue-specific (not in Overleaf)
+├── cover-letter.tex          # Venue-specific
+└── response-to-reviewers.tex # Added after R&R
+```
+
+**Single-paper projects** use the same pattern:
+```
+paper/                        # Real directory (venue wrapper)
+└── paper/                    # Symlink → Overleaf directory
+```
+
+**Naming convention:** `Paper {THEME_PREFIX} {Title Cased Slug}` — e.g., `Paper ASG Privacy Compliance Gaming`, `Paper BDS Identity Belief Alignment`. The theme prefix is a short abbreviation of the research theme:
+
+| Theme | Prefix |
+|-------|--------|
+| Category A | ASG |
+| Category B | BDS |
+| Category C | EnvEcon |
+| Category D | HAI |
+| Industrial Organisation | IO |
+| Mechanism Design | MechDes |
+| NLP & Computational AI | NLP |
+| Operations Research | OR |
+| Category F | OrgStrat |
+| Category G | PolSci |
+
+For multi-venue submissions, append the venue abbreviation in parentheses: `Paper ASG Privacy Compliance Gaming (CCS)`.
+
+**Commands:**
+```bash
+# Create the Overleaf project folder if it doesn't exist yet
+# (creating a folder in the Overleaf root automatically creates an Overleaf project)
+overleaf_root="$(cat ~/.config/task-mgmt/overleaf-root 2>/dev/null || echo ~/Apps/Overleaf)"
+mkdir -p "$overleaf_root/Paper ASG Privacy Compliance Gaming (CCS)"
+
+# For each venue:
+mkdir -p paper-ccs
+ln -s "$overleaf_root/Paper ASG Privacy Compliance Gaming (CCS)" paper-ccs/paper
+
+# Single paper:
+mkdir -p paper
+ln -s "$overleaf_root/Paper BDS Identity Belief Alignment" paper/paper
+```
+
+**Important:** Never rename or delete Overleaf folders — see `.claude/rules/overleaf-separation.md` (Overleaf Folder Lifecycle).
+
+Ensure `.latexmkrc` exists inside the Overleaf target (the symlink destination), not in the wrapper directory. Full template setup: [references/scaffold-details.md](references/scaffold-details.md#overleaf-symlink-commands-phase-4).
+
+### Backup Directory
+
+After creating paper directories, create a `backup/` directory with one subdirectory per paper:
+
+```bash
+mkdir -p backup/
+for d in paper*/; do
+  mkdir -p "backup/$(basename "$d")"
+done
+```
+
+**Convention:** One `backup/` directory at project root, with subdirectories matching each `paper*` directory name. The daily `backup-overleaf-papers.sh` script copies `.tex`/`.bib`/style files from the Overleaf symlink targets into these subdirectories.
+
+**Examples:**
+- Single paper: `backup/paper/`
+- Multi-paper: `backup/paper-ccs/`, `backup/paper-rg/`
 
 ---
 
@@ -244,7 +297,7 @@ If local git only: remind to push before switching machines. **Do NOT push unles
 
 ## Phase 6: Atlas & Pipeline Sync
 
-Creates the research topic in all systems: local file → Notion Atlas → Notion Pipeline → Venues → project folder → documentation.
+Creates the research topic in all systems: local file → vault atlas → vault pipeline → Venues → project folder → documentation.
 
 Full steps (6a–6f) and Atlas defaults: [`references/atlas-pipeline-sync.md`](references/atlas-pipeline-sync.md)
 
@@ -278,41 +331,9 @@ Full steps (8a–8c) and error handling: [`references/literature-discovery.md`](
 
 ## Phase 9: Confirmation Report
 
-```
-Created research project: <Working Title>
+Print the structured confirmation after all phases complete.
 
-Directory:  <full path>
-Structure:  <N> folders, <N> files
-Git:        initialised on branch main (<short commit hash>)
-GitHub:     <URL or "local-only">
-Overleaf:   paper/ → <target path>
-
-Atlas & Pipeline:
-  - Atlas topic file:             research/atlas/topics/{theme}/{slug}.md
-  - Notion Atlas entry:           created (<URL>)
-  - Notion Pipeline entry:        created (<URL>)
-  - Venue links:                  <venue names>
-  - Project folder:               created
-  - RECAP.md:                     regenerated
-
-Task Management updates:
-  - projects/_index.md:           added row
-  - projects/papers/<name>.md:    created
-  - current-focus.md:             updated
-
-Literature & Discovery:
-  - Literature review:            docs/literature-review/YYYY-MM-DD-initial-review.md (<N> papers)
-  - Bibliography:                 docs/literature-review/references.bib
-  - Scout novelty:                docs/YYYY-MM-DD-scout-novelty.md (score: X/10)
-  - Atlas topic updated:          key references + novelty assessment added
-
-Setup log:  log/<filename>    created
-
-Next steps:
-  1. Open Overleaf and set up main.tex
-  2. Review literature map in docs/literature-review/
-  3. Start drafting in paper/
-```
+Full template: [`references/confirmation-report.md`](references/confirmation-report.md)
 
 ---
 
@@ -320,14 +341,14 @@ Next steps:
 
 - **Overleaf path doesn't exist:** Create symlink anyway (resolves when Overleaf syncs). Warn user.
 - **gh CLI not available:** Skip GitHub, note in report.
-- **Notion API fails:** Skip Notion entry, offer to retry.
+- **taskflow MCP server fails:** Skip vault entry, offer to retry.
 - **Directory already exists:** Ask whether to continue or abort.
 - **Duplicate Atlas slug:** Flag and skip Atlas creation — may need merge into existing topic.
 
 ## Never Do These (Atlas)
 
 - Never create a topic file without YAML frontmatter — it breaks RECAP.md generation
-- Never hard-code Notion theme page IDs — always look them up (they change if recreated)
+- Never hard-code vault theme paths — always look them up (they change if recreated)
 - Never use Methods values outside the valid multi-select options — the API will reject
 - Never use venue/output names as slugs — the slug names the research idea
 - Never create a separate topic file for a companion paper of an existing idea — add it as an output instead
@@ -342,6 +363,6 @@ Next steps:
 | `/save-context` | Context library entries created during Phase 7 |
 | `/session-log` | Offer to create a session log after init completes |
 | `/interview-me` | To develop the research idea before scaffolding |
-| `/deploy-atlas` | After init, run to compile and deploy changes to atlas.user.com |
+| `/atlas-deploy` | After init, run to compile and deploy changes to atlas.user.com |
 | `/atlas-review` | **Drift trigger:** new projects change theme dir counts — see `atlas-review/references/drift-checks.md` |
 | `references/domain-profile-template.md` | Template for economics/field-specific domain profiles — copy to project's `docs/domain-profile.md` during init for economics papers |

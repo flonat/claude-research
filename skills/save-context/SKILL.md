@@ -157,14 +157,14 @@ Tell the user what was saved and where:
 1. Determine if it's project-specific or general
 2. If project-specific: save to `projects/papers/[project].md`
 3. If general: save key points to `current-focus.md`
-4. Extract any action items and offer to create Notion tasks
+4. Extract any action items and offer to create vault tasks
 
-## Integration with Notion
+## Integration with vault
 
 After saving to context files, offer to:
-- Create related tasks in Notion Tasks Tracker
+- Create related tasks in vault tasks
 - Update Research Pipeline if paper-related
-- Link context to specific Notion pages
+- Link context to specific vault files
 
 ## Tips
 

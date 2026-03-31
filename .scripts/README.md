@@ -1,31 +1,33 @@
 # Automation Scripts
 
-> Python utilities for task management automation, designed to work with Claude/Cowork.
+> Python utilities for task management automation.
+
+> **⚠️ DEPRECATED (March 2026):** The Notion-based CLI tools below are superseded by the Research Vault (`~/Research-Vault`) and the `taskflow` MCP server. They remain here for reference but are no longer the active workflow. Use `taskflow` MCP tools instead.
 
 ## Overview
 
-### CLI Tools
+### CLI Tools (Legacy — Notion-based)
 
-| Script | Purpose |
-|--------|---------|
-| `task` | Create a new task in Notion |
-| `tasks` | Query and list tasks |
-| `done` | Mark tasks as completed |
-| `focus` | Update current focus file |
-| `papers` | Research pipeline management |
-| `inbox` | Process tasks without dates |
-| `week` | Weekly summary |
-| `conf` | Conference tracking |
-| `query` | Search context files and Notion |
+| Script | Purpose | Replacement |
+|--------|---------|-------------|
+| `task` | Create a new task | `mcp__taskflow__create_task` |
+| `tasks` | Query and list tasks | `mcp__taskflow__list_tasks` |
+| `done` | Mark tasks as completed | `mcp__taskflow__complete_task` |
+| `focus` | Update current focus file | Still active (no Notion dependency) |
+| `papers` | Research pipeline management | `mcp__taskflow__list_papers` |
+| `inbox` | Process tasks without dates | `mcp__taskflow__search_tasks` |
+| `week` | Weekly summary | Vault-based weekly review |
+| `conf` | Conference tracking | `mcp__taskflow__list_venues` |
+| `query` | Search context files | Still active (no Notion dependency) |
 
-### Helper Modules
+### Helper Modules (Legacy)
 
-| Script | Purpose |
-|--------|---------|
-| `config.py` | Configuration (auto-loads `.env` for Notion token) |
-| `notion_helpers.py` | Utility functions for Notion operations |
-| `extract_meeting_actions.py` | Extract action items from meeting transcripts |
-| `daily_digest.py` | Generate daily planning briefings |
+| Script | Purpose | Status |
+|--------|---------|--------|
+| `config.py` | Configuration (auto-loads `.env`) | Deprecated — vault needs no API token |
+| `notion_helpers.py` | Utility functions for Notion API | Deprecated — replaced by taskflow MCP |
+| `extract_meeting_actions.py` | Extract action items from meeting transcripts | Still useful (output now goes to vault) |
+| `daily_digest.py` | Generate daily planning briefings | Deprecated — use vault tasks directly |
 
 ### Shared Libraries
 

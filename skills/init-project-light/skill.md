@@ -21,7 +21,7 @@ argument-hint: "[no arguments — runs in current directory]"
 
 - Research papers targeting a journal or conference
 - Projects with code, data, or computational pipelines
-- Anything that needs Overleaf, git, or a Notion pipeline entry
+- Anything that needs Overleaf, git, or a vault pipeline entry
 
 ---
 
@@ -64,7 +64,7 @@ Follow the `lean-claude-md` rule. Include only:
 
 **Do NOT include:**
 - Detailed literature notes or reference lists
-- Action items or timelines (those go to Notion)
+- Action items or timelines (those go to vault)
 - Anything that duplicates global rules
 
 ---
@@ -126,7 +126,7 @@ Created:
   - [.claude/settings.local.json if created]
 
 Skipped (use /init-project-research if needed later):
-  - Git, Overleaf, Notion pipeline, code scaffold
+  - Git, Overleaf, vault pipeline, code scaffold
 ```
 
 ---

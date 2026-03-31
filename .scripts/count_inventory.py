@@ -77,6 +77,7 @@ EXCLUDE_LINE_PATTERNS = [
     re.compile(r"^\s*#"),  # comment-only lines in code blocks
     re.compile(r"Referee.2 agent performs"),  # prose about what an agent does
     re.compile(r"Referee.2 agent .+never"),  # prose about agent behavior
+    re.compile(r"Referee.2 Agent", re.IGNORECASE),  # section title "The Referee~2 Agent"
 ]
 
 
@@ -92,16 +93,19 @@ class Mismatch:
 
 # Pattern tuples: (compiled regex, count_key)
 # Each regex has a single capture group for the number.
+# All patterns are case-insensitive to catch "81 Skills", "25 Hooks" etc.
 SCAN_PATTERNS: list[tuple[re.Pattern, str]] = [
-    (re.compile(r"(\d+)\s+skills?\b"), "skills"),
-    (re.compile(r"(\d+)\s+skill definitions?\b"), "skills"),
-    (re.compile(r"(\d+)\s+reusable\b"), "skills"),
-    (re.compile(r"(\d+)\s+agents?\b"), "agents"),
-    (re.compile(r"(\d+)\s+agent definitions?\b"), "agents"),
-    (re.compile(r"(\d+)\s+rules?\b"), "rules"),
-    (re.compile(r"(\d+)\s+auto-loaded\b"), "rules"),
-    (re.compile(r"(\d+)\s+hooks?\b"), "hooks"),
-    (re.compile(r"(\d+)\s+hook scripts?\b"), "hooks"),
+    (re.compile(r"(\d+)\s+skills?\b", re.IGNORECASE), "skills"),
+    (re.compile(r"(\d+)\s+skill definitions?\b", re.IGNORECASE), "skills"),
+    (re.compile(r"(\d+)\s+reusable\b", re.IGNORECASE), "skills"),
+    (re.compile(r"(\d+)\s+agents?\b", re.IGNORECASE), "agents"),
+    (re.compile(r"(\d+)\s+agent definitions?\b", re.IGNORECASE), "agents"),
+    (re.compile(r"(\d+)\s+rules?\b", re.IGNORECASE), "rules"),
+    (re.compile(r"(\d+)\s+auto-loaded\b", re.IGNORECASE), "rules"),
+    (re.compile(r"(\d+)\s+hooks?\b", re.IGNORECASE), "hooks"),
+    (re.compile(r"(\d+)\s+hook scripts?\b", re.IGNORECASE), "hooks"),
+    # Heading format: ## Hooks (N scripts)
+    (re.compile(r"\((\d+)\s+scripts?\)"), "hooks"),
 ]
 
 

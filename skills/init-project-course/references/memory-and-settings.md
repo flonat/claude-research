@@ -1,6 +1,6 @@
-# Phase 5-7: MEMORY.md Templates, Settings & Notion Sync
+# Phase 5-7: MEMORY.md Templates, Settings & Vault Sync
 
-> Templates for seeding MEMORY.md, settings.local.json, and Notion pipeline sync for `/init-project-course`.
+> Templates for seeding MEMORY.md, settings.local.json, and vault pipeline sync for `/init-project-course`.
 
 ---
 
@@ -75,9 +75,9 @@ If `.claude/settings.local.json` exists, leave it. If not, create one:
 
 ---
 
-## Notion Pipeline Sync
+## vault pipeline Sync
 
-Offer to create a row in the appropriate Notion pipeline. If the user accepts:
+Offer to create a row in the appropriate vault pipeline. If the user accepts:
 
 ### Student module → Modules Pipeline (Student)
 

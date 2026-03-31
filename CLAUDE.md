@@ -39,11 +39,11 @@ Just say these naturally:
 
 | You say | Claude does |
 |---------|-------------|
-| "Plan my day" | Reads context, queries Notion, asks questions, creates a plan |
+| "Plan my day" | Reads context, queries vault, asks questions, creates a plan |
 | "What should I work on?" | Reviews priorities and helps you decide |
-| "Extract actions from my meeting with [name]" | Finds transcript, extracts tasks, creates in Notion |
+| "Extract actions from my meeting with [name]" | Finds transcript, extracts tasks, creates in vault |
 | "Weekly review" | Guides you through reflection and planning |
-| "What's overdue?" | Queries Notion and summarises |
+| "What's overdue?" | Queries vault tasks and summarises |
 | "Update my research pipeline" | Shows paper status, helps update stages |
 | "Find references on [topic]" | Academic search with verified citations |
 | "What did I accomplish this week?" | Summarises completed tasks |
@@ -51,7 +51,7 @@ Just say these naturally:
 | "Validate my bibliography" | Cross-references `\cite{}` keys against `references.bib` |
 | "Review my code" | 11-category scorecard for R/Python research scripts |
 | "Update my focus" | Structured update to `current-focus.md` with session rotation and open loops |
-| "New project" | Interview-driven setup: scaffold directory, Overleaf symlink, git init, context + Notion sync |
+| "New project" | Interview-driven setup: scaffold directory, Overleaf symlink, git init, context + vault sync |
 <!-- QUICK-COMMANDS:END -->
 
 ## Conventions
@@ -65,18 +65,13 @@ Just say these naturally:
 - Never leave build artifacts (`.aux`, `.log`, etc.) in the source directory.
 
 ### Python & Package Management
-- Always use `uv` to run Python. Never use bare `python` or `pip`.
-- Use `uv run python ...` or `uv pip install ...` for all Python operations.
-- All projects use uv-managed virtual environments.
+- Always use `uv`: see `python-uv` rule (global).
 
 ### R
 - Use `<-` for assignment, not `=`.
 
 ### Git & Remote
-- Many repos are local-only, synced via Dropbox. Do NOT assume a remote exists.
-- Before pushing, check if a remote is configured with `git remote -v`.
-- Never push without verifying the remote exists and is correct.
-- **Deploy order:** When asked to "commit and push" or "deploy", always follow: 1) commit, 2) push, 3) deploy. Never deploy before pushing.
+- Remote verification, push safety, and deploy order: see `git-safety` rule (global).
 - **Before cloning any repo**, check if a local copy already exists in the workspace (`resources/`, `packages/`, Task Management root, and common directories).
 <!-- CONVENTIONS:END -->
 
@@ -96,24 +91,24 @@ Before running any experiment sweep or simulation batch:
 - When a page/word limit is specified, treat it as a hard constraint. Draft to 80%, then expand — never exceed and trim.
 - Always report the actual page/word count after drafting.
 
-## Notion Databases
+## Research Vault
 
-<!-- NOTION-DATABASES:START -->
-<!-- CUSTOMISE: Replace database IDs with your own Notion workspace IDs -->
-| Database | ID |
-|----------|-----|
-| Tasks Tracker | `YOUR-TASKS-DATABASE-ID-HERE` |
-| Research Pipeline | `YOUR-PIPELINE-DATABASE-ID-HERE` |
-| Modules — Student | `YOUR-MODULES-STUDENT-DATABASE-ID-HERE` (data source) |
-| Modules — Instructor | `YOUR-MODULES-INSTRUCTOR-DATABASE-ID-HERE` (data source) |
-| Research Themes | `2e8baef4-3e2e-4ea5-b25a-18a71ed47690` (data source) |
-| Atlas (Topic Inventory) | `0a227f82-60f4-451a-a163-bff2ce8fa9c3` (data source) |
-| Venues | `YOUR-CONFERENCES-DATABASE-ID-HERE` |
-| Submissions | `f3d3df85-cd5a-467c-954b-7831a74b7156` |
-| People | `ee63feff-7f71-49e2-ae1b-ebad8dc34887` (data source) |
+<!-- RESEARCH-VAULT:START -->
+<!-- CUSTOMISE: Point this to your own Obsidian-style markdown vault -->
+The Research Vault (`~/Research-Vault`) stores all dynamic research data as markdown files with YAML frontmatter. The `taskflow` MCP server reads/writes these files.
 
-Always fetch the database schema first to get correct property names before any create/update calls.
-<!-- NOTION-DATABASES:END -->
+| Directory | Content |
+|-----------|---------|
+| `tasks/` | Personal tasks (GTD-style) |
+| `pipeline/` | Research papers (stages: Idea → Published) |
+| `submissions/` | Submission events (dates, outcomes) |
+| `atlas/` | Research topics (nested by theme) |
+| `venues/` | Journals, conferences, rankings |
+| `people/` | Collaborators, supervisors |
+| `themes/` | Research themes |
+
+IDs are filename slugs (e.g., `cancel-leap-water-in-rugby`), not integers.
+<!-- RESEARCH-VAULT:END -->
 
 ## Workflows
 
@@ -129,7 +124,7 @@ Detailed instructions in `.context/workflows/`:
 <!-- COMPONENTS:START -->
 ## Skills Available
 
-39 skills in `skills/` folder. See [`docs/skills.md`](docs/skills.md) for the full catalogue.
+38 skills in `skills/` folder. See [`docs/skills.md`](docs/skills.md) for the full catalogue.
 
 ## Agents
 
@@ -147,7 +142,7 @@ In `.claude/rules/` — these apply automatically to every session. See [`docs/r
 | `ignore-gemini-md.md` | Never read, process, or act on files named `GEMINI.md` |
 | `lean-claude-md.md` | CLAUDE.md is loaded into context every session — every line costs tokens. |
 | `learn-tags.md` | Record Learnings with [LEARN] Tags |
-| `overleaf-separation.md` | The `paper/` directory (Overleaf symlink) is for LaTeX source files ONLY. |
+| `overleaf-separation.md` | The `paper/` directory (Overleaf symlink inside `paper-{venue}/paper/`) is for LaTeX source files ONLY. |
 | `plan-first.md` | Plan Before Implementing |
 | `read-docs-first.md` | Never explore when documentation already answers your question. |
 | `scope-discipline.md` | Only make changes the user explicitly requested. |
@@ -155,7 +150,7 @@ In `.claude/rules/` — these apply automatically to every session. See [`docs/r
 
 ## Hooks
 
-5 hook scripts in `hooks/`. See [`docs/hooks.md`](docs/hooks.md) for the full table.
+8 hook scripts in `hooks/`. See [`docs/hooks.md`](docs/hooks.md) for the full table.
 <!-- COMPONENTS:END -->
 
 ## After Every Session
@@ -167,7 +162,7 @@ In `.claude/rules/` — these apply automatically to every session. See [`docs/r
 - Where things were left off
 - What's coming next
 
-**Standard closing sequence:** commit → push → deploy (if needed) → `/session-recap`.
+**Standard closing sequence:** commit → push → deploy (if needed) → `/general-session-recap` or `/research-session-recap`.
 
 This helps me (Claude) pick up where we left off next time.
 <!-- AFTER-SESSION:END -->
@@ -190,10 +185,10 @@ This helps me (Claude) pick up where we left off next time.
 | `.context/` | AI context library (profile, focus, projects, workflows, preferences) |
 | `.claude/agents/` | Agent definitions (6 agents) |
 | `.claude/rules/` | Auto-loaded rules (9 rules) |
-| `skills/` | 39 skill definitions |
-| `hooks/` | 5 hook scripts |
+| `skills/` | 38 skill definitions |
+| `hooks/` | 8 hook scripts |
 | `mcp-bibliography/` | Multi-source scholarly search MCP server (OpenAlex + Scopus + WoS) |
-| `.scripts/` | CLI tools for Notion task management |
+| `.scripts/` | CLI tools for vault task management |
 | `packages/cli-council/` | Multi-model council via local CLI tools |
 | `packages/llm-council/` | Multi-model council via OpenRouter API |
 | `packages/mcp-bibliography/` | mcp-bibliography |

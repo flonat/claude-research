@@ -1,6 +1,6 @@
 ---
 name: task-management
-description: "Use when you need help with daily planning, weekly reviews, meeting actions, or Notion task queries."
+description: "Use when you need help with daily planning, weekly reviews, meeting actions, or vault task queries."
 allowed-tools: Read, Write, Edit, AskUserQuestion
 ---
 
@@ -8,14 +8,14 @@ allowed-tools: Read, Write, Edit, AskUserQuestion
 
 ## MCP Pre-Check
 
-Before any Notion-dependent workflow, probe Notion MCP availability with a lightweight search. If unavailable, skip Notion queries and offer local-only fallbacks per [`shared/mcp-degradation.md`](../shared/mcp-degradation.md).
+Before any vault-dependent workflow, probe taskflow MCP availability with a lightweight search. If unavailable, skip vault queries and offer local-only fallbacks per [`shared/mcp-degradation.md`](../shared/mcp-degradation.md).
 
 ## System Overview
 
-This is a hybrid Notion + local context library system. Before taking action:
+This is a hybrid vault + local context library system. Before taking action:
 
 1. **Read context files** in `.context/` to understand current state
-2. **Query Notion** for dynamic task data
+2. **Query vault** for dynamic task data
 3. **Ask questions** before dumping lists (the user prefers this)
 4. **Update context** after sessions
 
@@ -29,7 +29,7 @@ This is a hybrid Notion + local context library system. Before taking action:
 - `preferences/` — Priority definitions, naming conventions
 - `people/` — Supervisors and collaborators
 
-### Notion Databases
+### Vaults
 - **Tasks Tracker**: `collection://YOUR-TASKS-DATABASE-ID-HERE`
 - **Research Pipeline**: `collection://YOUR-PIPELINE-DATABASE-ID-HERE`
 
@@ -40,7 +40,7 @@ This is a hybrid Notion + local context library system. Before taking action:
 When the user asks to plan their day:
 
 1. **Read** `.context/current-focus.md` and `.context/workflows/daily-review.md`
-2. **Query Notion** for:
+2. **Query vault** for:
    - Overdue tasks (Due date < today, Status != Done)
    - Due today (Due date = today)
    - High priority items
@@ -56,12 +56,12 @@ When the user asks to plan their day:
 When the user asks to extract actions from a meeting:
 
 1. **Read** `.context/workflows/meeting-actions.md`
-2. **Find the meeting transcript** in Notion (pages starting with @Date)
+2. **Find the meeting transcript** in vault (pages starting with @Date)
 3. **Extract action items** looking for:
    - "I'll...", "I need to...", "I should..."
    - "Can you...", "Please..."
    - "We agreed to...", "Next step is..."
-4. **Create tasks in Notion** with full context:
+4. **Create tasks in vault** with full context:
    - Task name (action verb + object)
    - Project (infer from context)
    - Source: "Meeting"
@@ -73,7 +73,7 @@ When the user asks to extract actions from a meeting:
 When the user asks for weekly review:
 
 1. **Read** `.context/workflows/weekly-review.md`
-2. **Query Notion** for:
+2. **Query vault** for:
    - Completed tasks this week
    - Overdue tasks
    - Upcoming deadlines
@@ -86,7 +86,7 @@ When the user asks for weekly review:
 
 ### Task Creation
 
-When creating tasks in Notion:
+When creating tasks in vault:
 
 **Required fields:**
 - Task name (action verb + specific object)

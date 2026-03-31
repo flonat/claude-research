@@ -108,7 +108,7 @@ Used in Phase 6 when creating `.context/projects/papers/<short-name>.md`:
 ## Links
 - **Overleaf:** <external link>
 - **GitHub:** <URL or "local-only">
-- **Notion:** <URL — added after Notion entry created>
+- **Vault:** <vault path auto-populated>
 - **Project folder:** <relative path>
 
 ## Research Questions
@@ -123,7 +123,7 @@ Used in Phase 6 when creating `.context/projects/papers/<short-name>.md`:
 - [x] Project folder structure + Overleaf symlink
 - [x] Git initialised
 - [x] Context library entries created
-- [x] Notion Research Pipeline entry
+- [x] vault research pipeline entry
 
 ## Action Items
 - [ ] Literature review

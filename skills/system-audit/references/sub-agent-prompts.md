@@ -153,8 +153,8 @@ Run these 4 checks:
 
    Flag: CRITICAL if a referenced server is not configured anywhere (phantom tool).
    Flag: WARNING if a server is configured but also in disabledMcpServers.
-   Known aliases: "claude_ai_Notion" is a Claude.ai managed integration (not in local config — OK).
-   Known servers: bibliography, context7, claude_ai_Notion, claude_ai_Gamma.
+   Known aliases: "claude_ai_vault" is a Claude.ai managed integration (not in local config — OK).
+   Known servers: bibliography, context7, claude_ai_vault, claude_ai_Gamma.
 
 2. **Staleness detection:** Find components not modified in 90+ days across ALL types:
    find skills/ -name "SKILL.md" -not -path "*/shared/*" -mtime +90 -type f

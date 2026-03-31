@@ -25,3 +25,56 @@ timestamp,tool,file_path,action,details
 2026-03-18 13:07:50,Edit,/Users/florianburnat/Task-Management/docs/user-manual/user-manual.tex,modified,
 2026-03-18 13:08:00,Edit,/Users/florianburnat/Task-Management/docs/user-manual/user-manual.tex,modified,
 2026-03-18 13:08:30,Edit,/Users/florianburnat/Task-Management/docs/user-manual/user-manual.tex,modified,
+2026-03-30 11:58:10,Bash,-,executed,cd /Users/florianburnat/Task-Management/public/public-repo && git status
+2026-03-30 11:58:35,Bash,-,executed,"cd /Users/florianburnat/Task-Management/public/public-repo && git add README.md && git commit -m ""$(cat <<'EOF'
+Add star history chart to README
+EOF
+)"""
+2026-03-30 11:58:44,Bash,-,executed,cd /Users/florianburnat/Task-Management/public/public-repo && git remote -v
+2026-03-30 11:59:01,Bash,-,executed,cd /Users/florianburnat/Task-Management/public/public-repo && git push origin main
+2026-03-30 12:41:03,Bash,-,executed,"curl -s -o /dev/null -w ""%{http_code} %{time_total}s"" https://atlas.flonat.com"
+2026-03-30 12:41:03,Bash,-,executed,"curl -s -o /dev/null -w ""%{http_code} %{time_total}s"" https://taskflow.flonat.com"
+2026-03-30 12:41:04,Bash,-,executed,"curl -s -o /dev/null -w ""%{http_code} %{time_total}s"" https://vault.flonat.com"
+2026-03-30 12:41:11,Bash,-,executed,dig +short refpile.flonat.com
+2026-03-30 12:41:15,Bash,-,executed,dig +short atlas.flonat.com
+2026-03-30 12:41:15,Bash,-,executed,dig +short flonat.com
+2026-03-30 12:41:29,Bash,-,executed,"curl -s -o /dev/null -w ""%{http_code} %{time_total}s"" https://refpile.com"
+2026-03-30 12:41:30,Bash,-,executed,"curl -s -o /dev/null -w ""%{http_code} %{time_total}s"" https://api.refpile.com"
+2026-03-30 12:41:31,Bash,-,executed,"curl -s -o /dev/null -w ""%{http_code} %{time_total}s"" https://scout.flonat.com"
+2026-03-30 12:50:01,Bash,-,executed,curl -s -D - -o /dev/null https://refpile.com 2>&1 | head -20
+2026-03-30 12:50:32,Bash,-,executed,"curl -s -D - -o /dev/null -L --max-redirs 0 ""https://refpile.com"" 2>&1 | grep -i ""location:"""
+2026-03-30 12:52:04,Bash,-,executed,"curl -s -D - -o /dev/null -L --max-redirs 1 ""https://refpile.com"" 2>&1 | grep -i ""location\|HTTP/"""
+2026-03-30 12:53:22,Bash,-,executed,"# Simulate what happens after CF Access auth by sending a request with a fake CF auth cookie
+curl -s -D - -o /dev/null --max-redirs 0 -H ""Host: refpile.com"" ""https://refpile.com/"" 2>&1 | grep -i ""loca"
+2026-03-30 13:17:33,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose logs refpile --tail=30"" 2>&1"
+2026-03-30 13:17:42,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose logs refpile --tail=100 2>&1 | grep -A5 -i 'error\|traceback\|exception'"" 2>&1"
+2026-03-30 13:17:48,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose exec refpile python -c \""from refpile.config import AuthSettings; s = AuthSettings(); print('client_key:', repr(s.zotero_client_key)); print('client_se"
+2026-03-30 13:17:54,Bash,-,executed,"ssh vps ""grep -i zotero /opt/flonat/deploy/.env"" 2>&1"
+2026-03-30 13:20:38,Bash,-,executed,"ssh vps ""grep -i zotero /opt/flonat/deploy/.env"" 2>&1"
+2026-03-30 13:20:45,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose exec refpile python -c \""from refpile.config import AuthSettings; s = AuthSettings(); print('client_key:', repr(s.zotero_client_key)); print('client_se"
+2026-03-30 13:21:11,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose up -d refpile"" 2>&1"
+2026-03-30 13:21:16,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose exec refpile python -c \""from refpile.config import AuthSettings; s = AuthSettings(); print('client_key:', repr(s.zotero_client_key)); print('client_se"
+2026-03-30 13:22:25,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose logs refpile --tail=20"" 2>&1"
+2026-03-30 13:22:30,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose ps --format 'table {{.Name}}\t{{.Status}}'"" 2>&1"
+2026-03-30 13:22:38,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose restart caddy"" 2>&1"
+2026-03-30 13:24:09,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose ps refpile caddy --format 'table {{.Name}}\t{{.Status}}'"""
+2026-03-30 13:24:15,Bash,-,executed,"ssh vps ""curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/health 2>/dev/null || echo 'failed'"""
+2026-03-30 13:24:19,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose exec refpile curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/health 2>/dev/null"""
+2026-03-30 13:24:24,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose logs refpile --tail=15 2>&1"""
+2026-03-30 13:24:29,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose logs caddy --tail=10 2>&1"""
+2026-03-30 13:24:42,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose ps --format 'table {{.Name}}\t{{.Status}}\t{{.Networks}}'"" 2>&1"
+2026-03-30 13:24:50,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && grep -A 5 'caddy:' docker-compose.yml | head -20"""
+2026-03-30 13:24:55,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && grep -A 30 'caddy:' docker-compose.yml"" 2>&1"
+2026-03-30 13:25:00,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && grep -E '^\s+networks:' -A 10 docker-compose.yml"" 2>&1 | head -60"
+2026-03-30 13:25:20,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose up -d caddy"" 2>&1"
+2026-03-30 13:25:25,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose ps --format 'table {{.Name}}\t{{.Status}}'"" 2>&1"
+2026-03-30 13:25:34,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && docker compose exec caddy wget -q -O /dev/null --spider http://refpile:8080/api/health && echo 'OK' || echo 'FAILED'"" 2>&1"
+2026-03-30 13:28:46,Edit,/Users/florianburnat/Task-Management/research/scout/src/scout/config.py,modified,
+2026-03-30 13:29:03,Edit,/Users/florianburnat/Task-Management/research/scout/src/scout/main.py,modified,
+2026-03-30 13:29:13,Edit,/Users/florianburnat/Task-Management/research/scout/src/scout/routes/models.py,modified,
+2026-03-30 13:29:19,Edit,/Users/florianburnat/Task-Management/research/scout/src/scout/routes/models.py,modified,
+2026-03-30 13:29:28,Edit,/Users/florianburnat/Task-Management/research/scout/src/scout/routes/pages.py,modified,
+2026-03-30 13:29:39,Edit,/Users/florianburnat/Task-Management/research/scout/src/scout/templates/index.html,modified,
+2026-03-30 13:29:52,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && grep -A 20 'scout:' docker-compose.yml | grep -E 'env|environment'"" 2>&1"
+2026-03-30 13:29:58,Bash,-,executed,"ssh vps ""cd /opt/flonat/deploy && grep -A 30 '# ── Scout' docker-compose.yml"" 2>&1"
+2026-03-30 13:30:18,Edit,/Users/florianburnat/Task-Management/deploy/vps/docker-compose.yml,modified,
