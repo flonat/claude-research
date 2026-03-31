@@ -1,87 +1,101 @@
 ---
 name: project-deck
-description: "Use when you need to create a presentation deck to communicate project status."
+description: "Use when creating a LaTeX Beamer slide deck to communicate project status, research progress, or findings to collaborators. Generates structured .tex presentations with assertion-style titles, figures, and summary frames."
 allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(mkdir*), Read, Write, Edit
 argument-hint: [project-name-or-path]
 ---
 
-# Project Deck Skill
+# Project Deck
 
-> Create beautiful presentation decks to communicate project status to your future self and collaborators.
-
-## Purpose
-
-Based on Scott Cunningham's Part 7: "Making Beautiful Decks For My Future Self" - using decks not for public speaking but to efficiently communicate work status across time and to coauthors.
-
-## The Philosophy
-
-"I use decks to help me keep track of the work I was doing so that I can communicate it to my coauthors and myself later in the week when we meet to go over our projects."
-
-Claude has absorbed the "rhetoric of decks" - the tacit knowledge about what makes presentations effective:
-- One idea per slide
-- Titles are assertions, not labels
-- Lead with conclusions
-- Visual hierarchy signals importance
-- Repeat for retention
-- Transition explicitly
+Create Beamer presentation decks to communicate project status to your future self and collaborators. Based on Scott Cunningham's approach: using decks not for public speaking but to efficiently communicate work status across time and to coauthors.
 
 ## When to Use
 
 - Before a supervisor meeting
-- At the end of a research sprint
-- When handing off to a coauthor
+- At the end of a research sprint or when handing off to a coauthor
 - When returning to a dormant project
 - Weekly project status updates
 
 ## Workflow
 
-1. **Read project context** - Progress logs, current focus, recent work
-2. **Design deck structure**:
-   - Research question
-   - What's been done (with figures/tables)
-   - Key findings so far
-   - Current blockers
-   - Next steps
-3. **Create beautiful output** - Clean design, good typography, optimal cognitive density
-4. **Include visuals** - Figures, tables, diagrams that capture the work
+### Phase 1: Gather Context
+
+Read project context to understand current state:
+1. Read `.context/current-focus.md` for active work
+2. Read recent session logs in `log/` for progress
+3. Read any existing figures/tables in `output/` or `results/`
+4. If `$ARGUMENTS` specifies a project path, read its CLAUDE.md and README
+
+### Phase 2: Design Deck Structure
+
+Plan the slide sequence following the rhetoric principles:
+
+1. **Title slide** — project name, date, authors
+2. **Research question** — one slide, assertion-style title
+3. **What's been done** — 2-3 slides with figures/tables
+4. **Key findings so far** — lead with conclusions, not "Results"
+5. **Current blockers** — what's slowing progress
+6. **Next steps** — concrete actions with owners/dates
+
+Present the outline to the user for approval before writing LaTeX.
+
+### Phase 3: Create LaTeX
+
+Write the Beamer `.tex` file in the project directory (not in `paper/`). Minimal template:
+
+```latex
+\documentclass[aspectratio=169]{beamer}
+\usetheme{metropolis}
+\title{Project Status: [Name]}
+\author{[Author]}
+\date{\today}
+\begin{document}
+\maketitle
+\begin{frame}{Key Finding: [Assertion-style title]}
+  \begin{itemize}
+    \item Main result with evidence
+    \item Supporting detail
+  \end{itemize}
+  % \includegraphics[width=0.8\textwidth]{figures/main-result.pdf}
+\end{frame}
+\begin{frame}{Next Steps}
+  \begin{enumerate}
+    \item Concrete action with owner
+    \item Timeline-bound deliverable
+  \end{enumerate}
+\end{frame}
+\end{document}
+```
+
+- One idea per slide — titles are assertions, not labels
+- Include existing figures via `\includegraphics` where relevant
+
+### Phase 4: Compile and Validate
+
+```bash
+latexmk -xelatex -output-directory=out <deck>.tex
+```
+
+1. Check exit code — fix any compilation errors
+2. Review log for overfull hbox warnings and fix
+3. Copy PDF from `out/` to the source directory
+4. Verify slide count matches the planned structure
+
+Present the compiled PDF path to the user.
 
 ## Deck Rhetoric Principles
 
-```markdown
-## Principles for Effective Decks
+1. **Titles are assertions** — "Distance increases abortion rates" not "Results"
+2. **Lead with conclusions** — don't bury the lede
+3. **One idea per slide** — don't overload
+4. **Visual hierarchy** — most important things stand out
+5. **Beautiful figures and tables** — data visualisation matters
+6. **Explicit transitions** — guide the reader through the narrative
 
-1. **One idea per slide** - Don't overload
-2. **Titles are assertions** - "Distance increases abortion rates" not "Results"
-3. **Lead with conclusions** - Don't bury the lede
-4. **Visual hierarchy** - Most important things stand out
-5. **Optimal cognitive density** - Smooth delivery, not overloaded
-6. **Beautiful figures and tables** - Data visualisation matters
-7. **Explicit transitions** - Guide the reader through the narrative
-```
+## Cross-References
 
-## Extended Rhetoric Principles
-
-### For Research Decks
-- **Motivation slides**: Why should anyone care? What's the gap?
-- **Methods slides**: Identification strategy in plain English, visualize variation
-- **Results slides**: Lead with main coefficient, visualize where possible
-- **Figures**: Clear titles, labeled axes, no chartjunk
-
-### For "Decks as Thinking Tools"
-When making decks for yourself/coauthors:
-1. **Document decisions** — Why did we choose this approach?
-2. **Visualize data** — Patterns you've discovered
-3. **Track progress** — What's done, what's next
-4. **Summarize code** — What scripts do what
-5. **Capture context** — So future-you remembers
-
-### Beamer Tips
-- Custom themes > recognizable templates
-- Metropolis or Madrid themes as starting points
-- Sans-serif fonts for readability
-- Generous margins and whitespace
-- Compile without warnings (fix overfull hboxes)
-
-## Example Prompt
-
-"Create a project deck for my Indifference Adjustments paper. Read my progress logs and the current state of the project, then make a 10-slide deck that I can use in my supervisor meeting next week. Include the key figures and a clear 'what's next' section."
+| Skill | When to use instead |
+|-------|---------------------|
+| `/beamer-deck` | General-purpose Beamer decks (not project-status specific) |
+| `/insights-deck` | For communicating research insights and findings |
+| `/quarto-deck` | For Quarto/Reveal.js presentations instead of Beamer |
