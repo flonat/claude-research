@@ -6,9 +6,22 @@ Made by a humble PhD student. A complete Claude Code infrastructure for research
 
 Works on **macOS, Linux, and Windows**. Use Claude Code from the [terminal CLI](https://docs.anthropic.com/en/docs/claude-code), [VS Code](https://marketplace.visualstudio.com/items?itemName=anthropics.claude-code), [JetBrains IDEs](https://plugins.jetbrains.com/plugin/27189-claude-code), [the web](https://claude.ai/code), or the [desktop app](https://claude.ai/download) — all share the same skills, agents, and rules.
 
+[![npm version](https://img.shields.io/npm/v/flonat-research)](https://www.npmjs.com/package/flonat-research)
+[![GitHub release](https://img.shields.io/github/v/release/flonat/claude-research)](https://github.com/flonat/claude-research/releases)
+
 ## Installation
 
-### macOS / Linux
+### Quick Install (npm)
+
+```bash
+npx flonat-research
+```
+
+This downloads the package and runs the setup script, which symlinks skills, agents, hooks, and rules into `~/.claude/`.
+
+### Full Install (recommended for customisation)
+
+#### macOS / Linux
 
 ```bash
 git clone https://github.com/flonat/claude-research.git
@@ -16,13 +29,15 @@ cd claude-research
 ./scripts/setup.sh
 ```
 
-### Windows (PowerShell)
+#### Windows (PowerShell)
 
 ```powershell
 git clone https://github.com/flonat/claude-research.git
 cd claude-research
 .\scripts\setup.ps1
 ```
+
+The git clone gives you a local copy you can fully customise — edit `.context/profile.md`, `CLAUDE.md`, and workflows to match your research.
 
 ### Update
 
