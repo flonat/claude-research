@@ -1,14 +1,14 @@
 {
-  "name": "@user/claude-research",
-  "version": "1.0.0",
+  "name": "@flonat/claude-research",
+  "version": "0.1.0",
   "description": "Claude Code infrastructure for academic research — skills, agents, hooks, and rules for LaTeX, bibliography, proofreading, and project management workflows.",
-  "author": "the user",
+  "author": "Florian Burnat",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/user/claude-research.git"
+    "url": "https://github.com/flonat/claude-research.git"
   },
-  "homepage": "https://github.com/user/claude-research",
+  "homepage": "https://github.com/flonat/claude-research",
   "keywords": [
     "claude-code",
     "academic",
