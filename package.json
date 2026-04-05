@@ -22,10 +22,10 @@
     "hooks"
   ],
   "bin": {
-    "claude-research-setup": "scripts/setup.sh"
+    "flonat-research": "scripts/setup.sh"
   },
   "scripts": {
-    "postinstall": "echo '\\nRun: npx claude-research-setup\\nto create symlinks for skills, agents, hooks, and rules.\\n'",
+    "postinstall": "echo '\\nRun: npx flonat-research\\nto create symlinks for skills, agents, hooks, and rules.\\n'",
     "setup": "bash scripts/setup.sh"
   },
   "files": [
