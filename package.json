@@ -1,6 +1,6 @@
 {
   "name": "flonat-research",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Claude Code infrastructure for academic research — skills, agents, hooks, and rules for LaTeX, bibliography, proofreading, and project management workflows.",
   "author": "Florian Burnat",
   "license": "MIT",
