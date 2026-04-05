@@ -84,7 +84,21 @@ Python is required for several hooks (context monitor, compact save/restore) and
 
 ## Installation
 
-### macOS / Linux
+### Quick Install (npm)
+
+If you have Node.js 18+ installed:
+
+```bash
+npx flonat-research
+```
+
+This downloads the package, runs the setup script, and symlinks skills, agents, hooks, and rules into `~/.claude/`. Good for trying it out quickly.
+
+> **Note:** The npm install places files inside `node_modules/`. For full customisation (editing context files, adding your own skills), use the git clone method below.
+
+### Full Install (recommended for customisation)
+
+#### macOS / Linux
 
 ```bash
 git clone https://github.com/flonat/claude-research.git
@@ -92,7 +106,7 @@ cd claude-research
 ./scripts/setup.sh
 ```
 
-### Windows
+#### Windows
 
 Open **PowerShell** (not Command Prompt) and run:
 
@@ -113,6 +127,16 @@ The setup script creates links in `~/.claude/` so Claude Code can find your skil
 3. Copies `settings.json` (first install only — preserved on updates)
 4. Checks that Python, uv, Git, and LaTeX are installed
 5. Creates `log/` directories for session continuity
+
+### Update
+
+```bash
+# macOS/Linux: pull latest, then re-link without overwriting settings
+git pull && ./scripts/setup.sh --update
+
+# Windows (PowerShell):
+git pull; .\scripts\setup.ps1 -Update
+```
 
 ## Linux Notes
 
