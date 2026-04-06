@@ -2,7 +2,7 @@
 # Wrapper to launch the bibliography MCP server with API keys from Scout's .env
 set -euo pipefail
 
-ENV_FILE="$(dirname "$0")/../../research/scout/.env"
+ENV_FILE="$(dirname "$0")/../../packages/scout/.env"
 
 if [[ -f "$ENV_FILE" ]]; then
   while IFS='=' read -r key value; do

@@ -69,7 +69,7 @@ If a topic uses methods not in this list (e.g., "Mechanism Design", "Cryptograph
 
 ## File Naming
 
-- Topic file: `kebab-case-slug.md` in `research/atlas/topics/{theme-dir}/`
+- Topic file: `kebab-case-slug.md` in `packages/atlas/topics/{theme-dir}/`
 - Theme directories: `operations-research/`, `behavioural-decision-science/`, `ai-safety-governance/`, `human-ai-interaction/`, `mechanism-design/`, `nlp-computational-ai/`, `political-science/`, `organisation-strategy/`, `environmental-economics/`
 
 ## Research Project Path

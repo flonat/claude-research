@@ -49,7 +49,7 @@ async def lookup_sjr(title: str, api_key: str) -> dict | None:
     return {"sjr": float(sjr_list[0]["$"]), "quartile": "..."} if sjr_list else None
 ```
 
-The Scout app (`research/scout/src/scout/services/rankings.py`) has a full implementation with quartile extraction.
+The Scout app (`packages/scout/src/scout/services/rankings.py`) has a full implementation with quartile extraction.
 
 ---
 

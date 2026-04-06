@@ -6,12 +6,12 @@ Creates the research topic in all systems: local file → vault atlas → vault 
 
 ## 6a. Create Atlas Topic File
 
-1. Read `research/atlas/themes.md` — current themes and topic lists
-2. Glob `research/atlas/topics/**/*.md` — existing slugs (avoid duplicates)
+1. Read `packages/atlas/themes.md` — current themes and topic lists
+2. Glob `packages/atlas/topics/**/*.md` — existing slugs (avoid duplicates)
 3. Determine the **slug** (kebab-case, 2-5 words). Pattern: `{contribution}-{domain-object}`. Names the idea, not venue/output/method. Within clusters (e.g., carbon, elicitation), each slug needs a unique distinguishing word. Anti-patterns: acronyms (`efficient-pe`), bare fields (`smart-meters`), venue names (`facct-paper`). Good: `carbon-collusion`, `elicitation-cost-tradeoffs`.
-4. Write `research/atlas/topics/{theme-dir}/{slug}.md` using the YAML frontmatter template from [`atlas-schema.md`](atlas-schema.md). Include `## Description`, `## Key References`, `## Open Questions`.
-5. **Validate the topic file** before proceeding: run `uv run python research/atlas/schema.py topics/{theme-dir}/{slug}.md` from the atlas directory. If validation fails, fix the file before syncing to vault.
-6. Update `research/atlas/themes.md` — add slug to the correct theme's topic list. If new theme needed: add row, create directory, create vault theme entry (`data_source_id: 2e8baef4-3e2e-4ea5-b25a-18a71ed47690`).
+4. Write `packages/atlas/topics/{theme-dir}/{slug}.md` using the YAML frontmatter template from [`atlas-schema.md`](atlas-schema.md). Include `## Description`, `## Key References`, `## Open Questions`.
+5. **Validate the topic file** before proceeding: run `uv run python packages/atlas/schema.py topics/{theme-dir}/{slug}.md` from the atlas directory. If validation fails, fix the file before syncing to vault.
+6. Update `packages/atlas/themes.md` — add slug to the correct theme's topic list. If new theme needed: add row, create directory, create vault theme entry (`data_source_id: 2e8baef4-3e2e-4ea5-b25a-18a71ed47690`).
 
 ## 6b. Create vault Atlas Entry
 
@@ -52,12 +52,12 @@ mkdir -p "$RESEARCH_ROOT/{Theme Name}/{Project Name}"
 ## 6e. Regenerate RECAP.md
 
 ```bash
-uv run python research/atlas/generate_recap.py
+uv run python packages/atlas/generate_recap.py
 ```
 
 ## 6f. Update Atlas Counts
 
-If topic or theme count changed, update `research/atlas/CLAUDE.md` topic/theme counts and theme directory listing.
+If topic or theme count changed, update `packages/atlas/CLAUDE.md` topic/theme counts and theme directory listing.
 
 ## Atlas Defaults
 

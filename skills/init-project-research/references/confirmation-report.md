@@ -12,7 +12,7 @@ GitHub:     <URL or "local-only">
 Overleaf:   paper/ → <target path>
 
 Atlas & Pipeline:
-  - Atlas topic file:             research/atlas/topics/{theme}/{slug}.md
+  - Atlas topic file:             packages/atlas/topics/{theme}/{slug}.md
   - vault atlas entry:           created (<URL>)
   - vault pipeline entry:        created (<URL>)
   - Venue links:                  <venue names>
