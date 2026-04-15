@@ -5,7 +5,7 @@
 
 ## Field & Subfields
 
-- **Primary field:** <e.g., Operations Research, Organisational Behaviour, Computer Science>
+- **Primary field:** <e.g., Category E, Organisational Behaviour, Computer Science>
 - **Subfield(s):** <e.g., Multi-Criteria Decision Making, Category D>
 - **Adjacent fields:** <fields reviewers might draw from>
 

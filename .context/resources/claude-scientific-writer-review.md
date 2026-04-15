@@ -27,7 +27,7 @@ A monolithic scientific document generation tool combining Claude with real-time
 
 | Their Feature | Our Equivalent |
 |---------------|---------------|
-| `research-lookup` + `citation-management` | `/literature` skill + `packages/mcp-bibliography` |
+| `research-lookup` + `citation-management` | `/literature` skill + `packages/mcp-scholarly` |
 | `peer-review` / `scholar-evaluation` | `referee2-reviewer`, `paper-critic`, `domain-reviewer` agents |
 | `venue-templates` | Scout `venues.json` + framing workflow |
 | `latex-posters` / `scientific-slides` | `/beamer-deck`, `/quarto-deck` |
@@ -44,5 +44,5 @@ A monolithic scientific document generation tool combining Claude with real-time
 ## Ideas Worth Borrowing
 
 1. **Citation metadata verification loop** — after BibTeX creation, systematically search for missing DOI/volume/pages. Could enhance `/bib-validate`.
-4. **PDF review via image conversion** — convert PDF to images and visually inspect each page for formatting issues. Could add as a step in `/latex-autofix`.
+4. **PDF review via image conversion** — convert PDF to images and visually inspect each page for formatting issues. Could add as a step in `/latex`.
 5. **Progress logging per section** — timestamped logs of word count and citation count per section during writing. Lighter version could fit our session logging.

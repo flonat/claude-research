@@ -106,7 +106,7 @@ CORE Portal: https://portal.core.edu.au/conf-ranks/
 33. Manufacturing and Service Operations Management*
 34. Marketing Science
 35. MIS Quarterly
-36. Operations Research
+36. Category E
 37. Organization Science
 38. Organization Studies
 39. Organizational Behavior and Human Decision Processes

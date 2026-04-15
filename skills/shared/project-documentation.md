@@ -18,14 +18,14 @@ Every document governed by these conventions carries a tag on its first line:
 | Project | File | Type |
 |---------|------|------|
 | Scout | `README.md` | README |
-| Scout | `docs/user-manual.md` | User manual |
+| Scout | `docs/reference/user-manual.md` | User manual |
 | Scout | `docs/architecture.md` | Architecture |
 | Scout | `deploy/README.md` | Deploy guide |
-| Scout | `docs/user-manual.tex` | LaTeX manual |
+| Scout | `docs/reference/user-manual.tex` | LaTeX manual |
 | Scout | `docs/scout-overview/scout-overview.tex` | Beamer deck |
-| Task Management | `docs/user-manual/user-manual.tex` | LaTeX manual |
-| Task Management | `docs/setup-overview/setup-overview.tex` | Beamer deck |
-| Task Management | `docs/setup-overview/setup-overview-public.tex` | Beamer deck (public) |
+| Task Management | `docs/reference/user-manual/user-manual.tex` | LaTeX manual |
+| Task Management | `docs/setup/setup-overview/setup-overview.tex` | Beamer deck |
+| Task Management | `docs/setup/setup-overview/setup-overview-public.tex` | Beamer deck (public) |
 | Task Management | `public/public-repo/README.md` | README (public) |
 | Task Management | `public/public-repo/docs/getting-started.md` | Getting started |
 | Task Management | `public/public-repo/docs/council-mode.md` | Feature guide |
@@ -43,7 +43,7 @@ When **auditing** a project's documentation (via `/sync-repo scout`, `/update-pr
 
 1. Grep for `Governed by: skills/shared/project-documentation.md` across all `.md` and `.tex` files
 2. Flag any outward-facing docs that lack the tag — these are candidates for tagging
-3. Do not tag internal docs (CLAUDE.md, SKILL.md, `.context/` files, `log/` files, `docs/skills.md`, etc.) — those are governed by `system-documentation.md`
+3. Do not tag internal docs (CLAUDE.md, SKILL.md, `.context/` files, `log/` files, `docs/components/skills.md`, etc.) — those are governed by `system-documentation.md`
 
 ---
 
@@ -54,7 +54,7 @@ Every software project should have a README. Larger projects add docs as they gr
 | Document | Create when | Audience | Covers |
 |----------|------------|----------|--------|
 | `README.md` | Always | Everyone | What it does, quick start, project structure |
-| `docs/user-manual.md` | Web UI or CLI with 3+ workflows | End users | Every feature, step-by-step, with examples |
+| `docs/reference/user-manual.md` | Web UI or CLI with 3+ workflows | End users | Every feature, step-by-step, with examples |
 | `docs/architecture.md` | 5+ source files or non-obvious design | Maintainers | Service layers, data flow, design patterns |
 | `deploy/README.md` | Remote deployment exists | DevOps / self | Infrastructure, secrets, CI/CD |
 | In-app help (`/help` + tips) | Web UI exists | End users | Same content as user manual, rendered in-app |

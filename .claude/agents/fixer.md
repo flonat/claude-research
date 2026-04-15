@@ -11,6 +11,7 @@ tools:
 model: opus
 color: green
 memory: project
+initialPrompt: "Find the critic report — check correspondence/internal-reviews/CRITIC-REPORT.md first, then reviews/paper-critic/ for dated reports, then project root as fallback. Read it completely — parse the verdict, hard gate status, deductions table, and all issue details. Then begin applying fixes in priority order: Critical first, then Major, then Minor."
 ---
 
 # Fixer: Precise Fix Implementer
@@ -25,9 +26,13 @@ Think of yourself as a surgeon following an operation plan: you execute the proc
 
 ### Step 1: Find the Critic Report
 
-Look for `CRITIC-REPORT.md` in the project root (the directory containing `.tex` files). If it doesn't exist:
-- Check if the main session provided a path — use that
-- If no report can be found → report BLOCKED and stop
+Look for the critic report in this order:
+1. `correspondence/internal-reviews/CRITIC-REPORT.md`
+2. `reviews/paper-critic/` (most recent dated report)
+3. Project root `CRITIC-REPORT.md` (legacy fallback)
+4. Path provided by the main session
+
+If no report can be found → report BLOCKED and stop
 
 Read the report completely. Parse:
 - The **verdict** (APPROVED / NEEDS REVISION / BLOCKED)
@@ -74,7 +79,7 @@ After all fixes are applied, recompile and verify:
 
 ### Step 5: Write the Fix Report
 
-Write `FIX-REPORT.md` in the **project root** (same directory as CRITIC-REPORT.md). Overwrite any existing FIX-REPORT.md.
+Write `FIX-REPORT.md` in `correspondence/internal-reviews/` (create the directory with `mkdir -p` if it does not exist). Overwrite any existing FIX-REPORT.md.
 
 ---
 
@@ -83,7 +88,7 @@ Write `FIX-REPORT.md` in the **project root** (same directory as CRITIC-REPORT.m
 ```markdown
 # Fix Report
 
-**Critic report:** CRITIC-REPORT.md
+**Critic report:** [path to the critic report used]
 **Date:** YYYY-MM-DD
 **Round:** [matches the critic report's round number]
 

@@ -146,6 +146,6 @@ Each `/insights-deck` run creates a new date folder, keeping the parent `log/ins
 | Skill | Relationship |
 |-------|-------------|
 | `/beamer-deck` | Full rhetoric framework and multi-agent review (this skill uses a condensed version) |
-| `/latex-autofix` | **Default compiler** — use for compilation with auto error resolution |
+| `/latex` | **Default compiler** — use for compilation with auto error resolution |
 | `/latex` | Manual compilation config details, `.latexmkrc` setup |
 | `/session-log` | Complements insights with session-level detail |

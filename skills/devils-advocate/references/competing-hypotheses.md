@@ -1,6 +1,6 @@
 # Competing Hypotheses Checklist
 
-Structured process for generating and evaluating rival explanations before locking a research design. Complements the `design-before-results` rule (`.claude/rules/design-before-results.md`) by specifying HOW to formulate competing explanations, not just that you should. Adapted from K-Dense's hypothesis-generation skill and quality criteria framework.
+Structured process for generating and evaluating rival explanations before locking a research design. Complements the `design-before-results` rule (`rules/design-before-results.md`) by specifying HOW to formulate competing explanations, not just that you should. Adapted from K-Dense's hypothesis-generation skill and quality criteria framework.
 
 ## When to Use
 

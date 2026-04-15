@@ -11,10 +11,10 @@ Git:        initialised on branch main (<short commit hash>)
 GitHub:     <URL or "local-only">
 Overleaf:   paper/ → <target path>
 
-Atlas & Pipeline:
-  - Atlas topic file:             packages/atlas/topics/{theme}/{slug}.md
-  - vault atlas entry:           created (<URL>)
-  - vault pipeline entry:        created (<URL>)
+Atlas & Venues:
+  - Atlas topic file:             ~/Research-Vault/atlas/{theme}/{slug}.md
+  - vault atlas entry:            created (<URL>)
+  - atlas outputs:                configured
   - Venue links:                  <venue names>
   - Project folder:               created
   - RECAP.md:                     regenerated

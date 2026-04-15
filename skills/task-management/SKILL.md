@@ -30,8 +30,8 @@ This is a hybrid vault + local context library system. Before taking action:
 - `people/` — Supervisors and collaborators
 
 ### Vaults
-- **Tasks Tracker**: `collection://YOUR-TASKS-DATABASE-ID-HERE`
-- **Research Pipeline**: `collection://YOUR-PIPELINE-DATABASE-ID-HERE`
+- **Tasks Tracker**: Research Vault tasks database at `~/Research-Vault`
+- **Research Pipeline**: Research Vault pipeline database at `~/Research-Vault`
 
 ## Workflows
 

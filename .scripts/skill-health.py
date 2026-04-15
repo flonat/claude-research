@@ -379,7 +379,7 @@ def format_table(report: dict, args) -> str:
     """Format the health report as a readable table."""
     if not report:
         return "No observation data found. The skill observer hook may not have fired yet.\n" \
-               "Invoke any skill (e.g., /context-status) and check ~/.claude/ecc/ for data."
+               "Invoke any skill (e.g., /session-health) and check ~/.claude/ecc/ for data."
 
     # Sort by total invocations descending
     items = sorted(report.items(), key=lambda x: -x[1]["total_invocations"])

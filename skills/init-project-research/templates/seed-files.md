@@ -63,16 +63,8 @@
 ```
 
 ## Conventions
-- Compile LaTeX: build artifacts to `out/`, PDF copied back to source directory via `.latexmkrc`
-- Use `uv` for Python, never bare `pip` or `python`
-- Canonical bibliography: `paper/references.bib`
-- Citation keys: Better BibTeX format (e.g., `AuthorYYYY-xx`)
-- **Overleaf separation:** `paper/` is LaTeX source ONLY — no code, data, or scripts. All code goes in `code/` or `src/`, all data in `data/`. Only exported figures/tables go into `paper/`.
 
-## Session Continuity
-- Update `.context/current-focus.md` at end of each session
-- Use `.context/project-recap.md` for research design notes
-- Session logs go in `log/`
+LaTeX → `out/`, Python → `uv`, paper/ → LaTeX only. Full conventions enforced by global rules (loaded automatically).
 ```
 
 ## README.md
@@ -128,6 +120,9 @@ to-sort/
 
 # Machine-specific memory (gitignored, never synced)
 .claude/state/
+
+# GitHub release repo (separate git repo — see references/github-release-repo.md)
+github-repo/
 
 # Python
 __pycache__/

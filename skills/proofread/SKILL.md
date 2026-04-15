@@ -63,6 +63,9 @@ argument-hint: [project-path or tex-file]
 - Appropriate use of hedging language ("suggests" vs "proves")
 - No exclamation marks in body text
 - Consistent tense (present for established facts, past for specific studies)
+- **Filler hedge phrases to flag** (delete on sight): "interestingly", "importantly", "it is worth noting", "it should be noted that", "needless to say", "of course", "obviously", "clearly" (unless something is literally clear from a figure)
+- **Vague quantifiers to flag**: "very", "quite", "rather", "somewhat", "fairly" — replace with specific magnitudes or delete
+- **Tautological constructions**: "significant and important", "novel and new", "unique and distinctive" — one adjective suffices
 
 ### 5. LaTeX-Specific Issues
 
@@ -84,7 +87,7 @@ Check the ratio of in-line (`\citet`) to parenthetical (`\citep`) citations:
 - **Flag "As shown by \citet{}" patterns** where parenthetical would be more natural — Minor
 - **Report the overall ratio** (e.g., "42 parenthetical, 28 in-line — ratio 1.5:1")
 
-See `docs/conventions.md` § Citation Voice Balance for the full convention.
+See `docs/reference/conventions.md` § Citation Voice Balance for the full convention.
 
 ### 7. TikZ Diagram Review
 
@@ -160,6 +163,21 @@ Apply numeric quality scoring using the shared framework and skill-specific rubr
 - **Rubric:** [`references/quality-rubric.md`](references/quality-rubric.md) — issue-to-deduction mappings for this skill
 
 Start at 100, deduct per issue found, apply verdict. Insert the Score Block into the report after the summary table.
+
+## Recurring Pattern Grouping
+
+When the same issue appears 3+ times, **group it as a single pattern finding** instead of listing each instance separately. This prevents reports bloated with 50 individual items when the real message is "you have 3 recurring problems."
+
+**Format:**
+```
+### M3: Hedge phrase "interestingly" (8 instances)
+- **Category:** Academic tone
+- **Locations:** lines 42, 67, 103, 145, 189, 203, 267, 301
+- **Problem:** Filler hedge phrase adds no content
+- **Fix:** Delete all 8 instances
+```
+
+One deduction for the pattern (not 8 separate deductions). Escalation still applies: 5+ instances of the same minor issue → one Major deduction.
 
 ## Report Format
 
@@ -249,6 +267,6 @@ See `skills/shared/council-protocol.md` for the full orchestration protocol.
 ## Cross-References
 
 - **`/bib-validate`** — For thorough bibliography cross-referencing
-- **`/latex-autofix`** — For compilation and error resolution (run before proofreading to ensure the document compiles cleanly)
+- **`/latex`** — For compilation and error resolution (run before proofreading to ensure the document compiles cleanly)
 - **Referee 2 agent** — For formal code + paper auditing
 - **`/devils-advocate`** — For argument quality and logical scrutiny

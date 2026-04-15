@@ -1,13 +1,13 @@
 ---
 name: bib-validate
-description: "Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Fix mode auto-adds missing entries to Zotero."
-allowed-tools: Read, Glob, Grep, Task, Write, Bash(mkdir*), Bash(ls*), Bash(rm*), mcp__refpile__add_item, mcp__refpile__add_to_collection, mcp__refpile__search_library, mcp__paperpile__search_library, mcp__paperpile__export_bib
+description: "Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Fix mode auto-adds missing entries to Paperpile."
+allowed-tools: Read, Glob, Grep, Task, Write, Bash(mkdir*), Bash(ls*), Bash(rm*), mcp__paperpile__write_bib, mcp__paperpile__search_library, mcp__paperpile__export_bib
 argument-hint: [project-path or tex-file]
 ---
 
 # Bibliography Validation
 
-**LIBRARY-FIRST RULE: ALWAYS cross-reference cited keys against both Zotero (`mcp__refpile__search_library`) and Paperpile (`mcp__paperpile__search_library`) during validation.** This catches drift between the `.bib` file and reference managers. See the Reference Manager Cross-Reference section.
+**LIBRARY-FIRST RULE: ALWAYS cross-reference cited keys against Paperpile (`mcp__paperpile__search_library`) during validation.** This catches drift between the `.bib` file and the reference manager. See the Reference Manager Cross-Reference section.
 
 **Citation key rule:** Existing keys in the project always take precedence. They come from the user's reference management system and are canonical. When suggesting replacements (typo corrections, preprint upgrades, metadata fixes), always keep the user's key and update the `.bib` entry metadata around it — never suggest renaming a key to match some "standard" format.
 
@@ -128,7 +128,7 @@ Common typo patterns:
 
 ## Reference Manager Cross-Reference
 
-After the disk-based cross-reference, check each cited key against Zotero (via RefPile MCP) and Paperpile (read-only). Produces a combined status table (HEALTHY / MIGRATE_TO_ZOTERO / DRIFT / EXPORT_GAP / MISSING).
+After the disk-based cross-reference, check each cited key against Paperpile. Produces a status table (HEALTHY / DRIFT / EXPORT_GAP / MISSING).
 
 Full steps, MCP calls, and status categories: [`references/ref-manager-crossref.md`](references/ref-manager-crossref.md)
 
@@ -214,7 +214,7 @@ Sections: Summary table → Critical (missing entries) → Warning (typos, unuse
 When missing entries or suspicious metadata are flagged, check these sources in order:
 
 1. **Paperpile** (paperpile MCP) — call `mcp__paperpile__search_library` by title. If found, use `mcp__paperpile__export_bib` to get correct BibTeX.
-2. **Zotero library** (refpile MCP) — call `search_library` by title. The user may already have the reference but with a different key.
+2. **Paperpile library** (Paperpile MCP) — call `search_library` by title. The user may already have the reference but with a different key.
 3. **Bibliography MCP** (scholarly sources):
    - **`scholarly_search`** — search by title to find the correct entry across OpenAlex + S2 + Scopus + WoS
    - **`scholarly_verify_dois`** — batch-verify DOIs across all sources (preferred over manual DOI resolution)
@@ -234,7 +234,7 @@ For high-stakes submissions. Trigger: "council bib-validate", "thorough bib chec
 
 ## Fix Mode
 
-After producing the validation report, automatically fix resolvable issues (DRIFT → add to Zotero, MISSING → search + add, MIGRATE → auto-add, metadata → correct BibTeX).
+After producing the validation report, automatically fix resolvable issues (DRIFT → stage as BibTeX for Paperpile import, MISSING → search + add, MIGRATE → auto-add, metadata → correct BibTeX).
 
 Full auto-fix actions, post-fix maintenance, and skip conditions: [`references/fix-mode.md`](references/fix-mode.md)
 
@@ -255,7 +255,7 @@ Compute the score and include the Score Block in the report after the summary ta
 
 - **`/proofread`** — For overall paper quality including citation format
 - **`/literature`** — For finding and adding new references (includes full OpenAlex workflows)
-- **`/bib-coverage`** — Compare project `.bib` vs Zotero topic collection — find uncited papers and unfiled references
+- **`/bib-coverage`** — Compare project `.bib` vs Paperpile label — find uncited papers and unfiled references
 - **`/latex`** — For compilation with reference checking
-- **`/latex-autofix`** — For compilation and error resolution. Run after fixing bibliography issues to verify citations compile cleanly.
+- **`/latex`** — For compilation and error resolution. Run after fixing bibliography issues to verify citations compile cleanly.
 - **`shared/reference-resolution.md`** — Canonical lookup + filing sequence used by Ref Manager Cross-Reference and Fix Mode

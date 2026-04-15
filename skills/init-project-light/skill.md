@@ -21,7 +21,7 @@ argument-hint: "[no arguments — runs in current directory]"
 
 - Research papers targeting a journal or conference
 - Projects with code, data, or computational pipelines
-- Anything that needs Overleaf, git, or a vault pipeline entry
+- Anything that needs Overleaf, git, or a vault atlas entry
 
 ---
 
@@ -126,7 +126,7 @@ Created:
   - [.claude/settings.local.json if created]
 
 Skipped (use /init-project-research if needed later):
-  - Git, Overleaf, vault pipeline, code scaffold
+  - Git, Overleaf, vault atlas, code scaffold
 ```
 
 ---

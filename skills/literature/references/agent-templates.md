@@ -226,6 +226,93 @@ prompt: |
 
 ---
 
+## Phase 4.5: Deep Loop Agent Templates
+
+### Gap Analysis (runs in main context, not a sub-agent)
+
+The orchestrator runs gap analysis directly — it needs access to the verified paper list and MCP tools.
+
+```
+Given these {N} verified papers on "{topic}":
+{paper_list — title, authors, year, journal for each}
+
+Identify 2-4 specific gaps in this literature set. Check each dimension:
+
+1. **Time coverage:** Are any decades or periods underrepresented?
+   (e.g., "No papers before 2018 despite the field existing since 2005")
+2. **Methods:** What methodological approaches are missing?
+   (e.g., "All papers use surveys — no experimental or computational studies")
+3. **Theory:** What theoretical frameworks are absent?
+   (e.g., "No behavioural economics perspective despite relevance")
+4. **Context:** What geographic, institutional, or domain contexts are missing?
+   (e.g., "All studies are US-based — no European or Asian contexts")
+5. **Key works:** Check references of found papers — are seminal works missing?
+   (e.g., "Smith (2015) is cited by 8 papers in the set but not included")
+
+For each gap, provide:
+- **Gap:** What is missing (be specific)
+- **Why it matters:** Why this gap weakens the review
+- **Search query:** A targeted query to find papers filling this gap
+- **Best source:** Which MCP tool to use (scholarly_search, arxiv_search,
+  exa_search_papers, dblp_search, core_search_fulltext)
+```
+
+### Refined Search Agent (targets specific gaps)
+
+Spawned as sub-agents with pre-fetched results from MCP.
+
+```
+subagent_type: Explore
+prompt: |
+  I'm conducting an iterative literature review on: [TOPIC]
+
+  The initial search found {N} papers but has this gap:
+  **Gap:** [SPECIFIC GAP STATEMENT]
+
+  Pre-fetched search results for this gap are in:
+    /tmp/lit-deep-loop/gap-{N}-results.json
+
+  Your tasks:
+  1. Read the pre-fetched results
+  2. Supplement with WebSearch for papers the bibliometric databases may miss:
+     - Working papers, policy reports, grey literature
+     - Very recent publications (last 6 months)
+     - Interdisciplinary work that crosses database boundaries
+  3. For each paper found, provide: title, authors, year, journal/venue, DOI if known
+
+  Skip these already-found papers: [LIST OF EXISTING TITLES/DOIS]
+
+  Return a structured list. Target: 5-10 papers specifically addressing the gap.
+  Quality over quantity — only include papers directly relevant to the gap.
+```
+
+### arXiv-Specific Gap Search (for preprint-heavy gaps)
+
+Used when the gap analysis identifies missing preprints or working papers.
+
+```
+subagent_type: Explore
+prompt: |
+  Search for arXiv preprints addressing this gap in a literature review on: [TOPIC]
+
+  **Gap:** [SPECIFIC GAP STATEMENT]
+
+  Pre-fetched arXiv results are in:
+    /tmp/lit-deep-loop/arxiv-gap-{N}-results.json
+
+  Also search the web for:
+  - SSRN working papers (site:ssrn.com)
+  - NBER working papers (site:nber.org)
+  - Author working paper pages at universities
+
+  Skip these already-found papers: [LIST OF EXISTING TITLES/DOIS]
+
+  Return: title, authors, year, venue (arXiv category or working paper series), URL.
+  Target: 5-10 papers.
+```
+
+---
+
 ## Prompt Templates (User-Facing)
 
 ### Find specific references

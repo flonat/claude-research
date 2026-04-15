@@ -27,8 +27,8 @@ Each category contains individual project directories.
 ```
 Audit the Task Management system inventory. Check:
 
-1. **Skill count:** Count directories in skills/ that contain a SKILL.md (exclude .DS_Store, shared/). Compare against documented count in CLAUDE.md, README.md, docs/system.md, docs/skills.md.
-2. **Hook count:** Count .sh files in hooks/ (exclude .DS_Store). Compare against documented count in CLAUDE.md, README.md, docs/system.md, docs/hooks.md.
+1. **Skill count:** Count directories in skills/ that contain a SKILL.md (exclude .DS_Store, shared/). Compare against documented count in CLAUDE.md, README.md, docs/system.md, docs/components/skills.md.
+2. **Hook count:** Count .sh files in hooks/ (exclude .DS_Store). Compare against documented count in CLAUDE.md, README.md, docs/system.md, docs/components/hooks.md.
 3. **Agent count:** Count .md files in .claude/agents/. Compare against documented count.
 4. **Rule count:** Count .md files in .claude/rules/. Compare against documented count.
 5. **Symlink health:** Verify these symlinks resolve correctly:
@@ -40,7 +40,7 @@ Audit the Task Management system inventory. Check:
    - ~/.claude/CLAUDE.md → Task Management/GLOBAL-CLAUDE.md
    - ~/.claude/statusline-command.sh → Task Management/.claude/statusline-command.sh
 6. **MCP server tool count:** The MCP server in packages/mcp-desktop/server.py registers tools as `skill-<name>` and `agent-<name>`. Count the cached skills and agents it discovers (read the discovery functions in server.py). Compare against actual skill/agent counts.
-7. **Undocumented items:** Any skills/hooks/agents/rules that exist on disk but aren't listed in their respective docs file (docs/skills.md, docs/hooks.md, docs/agents.md, docs/rules.md).
+7. **Undocumented items:** Any skills/hooks/agents/rules that exist on disk but aren't listed in their respective docs file (docs/components/skills.md, docs/components/hooks.md, docs/components/agents.md, docs/components/rules.md).
 8. **MCP server alignment:** Compare MCP servers between Claude Code (.mcp.json in project root) and Claude Desktop (~/Library/Application Support/Claude/claude_desktop_config.json). Check:
    - Servers present in both configs use the same name for the same service
    - Servers that should be in both are not missing from either (bibliography, context7)
@@ -113,9 +113,9 @@ Audit:
    - CLAUDE.md: skill count, hook count, agent count, rule count
    - README.md: same counts
    - docs/system.md: same counts, file tree accuracy
-   - docs/skills.md: total skill count, category counts, skill catalogue completeness
+   - docs/components/skills.md: total skill count, category counts, skill catalogue completeness
 
-2. **Broken internal links:** Check markdown links in CLAUDE.md, README.md, docs/system.md, docs/skills.md, docs/hooks.md, docs/agents.md, docs/rules.md — do the referenced files actually exist?
+2. **Broken internal links:** Check markdown links in CLAUDE.md, README.md, docs/system.md, docs/components/skills.md, docs/components/hooks.md, docs/components/agents.md, docs/components/rules.md — do the referenced files actually exist?
 
 3. **Outdated statuses in .context/:**
    - current-focus.md: when was it last modified? (check file stat or git log)
@@ -175,14 +175,14 @@ Run these 4 checks:
    - If zero references found: flag as INFO (dead code, candidate for archive)
    For each hook in hooks/:
    - Check if registered in .claude/settings.json (unregistered hook = orphan)
-   - Search for the hook filename across skills, agents, docs/hooks.md
+   - Search for the hook filename across skills, agents, docs/components/hooks.md
    - If not registered AND not documented: flag as INFO
    For each agent in .claude/agents/:
    - Search for the agent name across skills, CLAUDE.md, docs/
    - If zero references found: flag as INFO
    For each rule in .claude/rules/:
    - Search for the rule filename across CLAUDE.md, docs/, skills/
-   - Rules are auto-loaded so they're never truly orphaned, but flag if undocumented in docs/rules.md
+   - Rules are auto-loaded so they're never truly orphaned, but flag if undocumented in docs/components/rules.md
    For each script in .scripts/:
    - Search for the script name across skills, hooks, CLAUDE.md, docs/
    - If zero references found: flag as INFO
@@ -261,27 +261,27 @@ Only flag genuine overlaps — a rule mentioning "use uv" and a hook enforcing "
 Keep total output under 500 words. Write details to /tmp/system-audit/sa-6.md if needed.
 ```
 
-## Sub-Agent 7: Santi Repo Health
+## Sub-Agent 7: Friends Repo Health
 
 **Prompt:**
 ```
-Quick health check of Santiago's starter kit at:
-$TM/public/santi-repo/
+Quick health check of the friends starter kit at:
+$TM/public/friends-repo/
 
 This is a downstream copy of skills/rules for Santiago. Check:
 
-1. **Skill count:** Count directories in santi-repo/skills/ that contain a SKILL.md. Compare against the count stated in README.md and ADAPTATION-NEEDED.md.
+1. **Skill count:** Count directories in friends-repo/skills/ that contain a SKILL.md. Compare against the count stated in README.md and ADAPTATION-NEEDED.md.
 
-2. **Rule count:** Count .md files in santi-repo/rules/. Compare against the count stated in README.md.
+2. **Rule count:** Count .md files in friends-repo/rules/. Compare against the count stated in README.md.
 
-3. **Skill freshness (sample):** Pick 5 random skills from santi-repo/skills/ and diff their SKILL.md against the upstream version in $TM/skills/. Flag any with substantive upstream changes not reflected in santi-repo (ignoring anonymisation differences like "the user" → "the user").
+3. **Skill freshness (sample):** Pick 5 random skills from friends-repo/skills/ and diff their SKILL.md against the upstream version in $TM/skills/. Flag any with substantive upstream changes not reflected in friends-repo (ignoring anonymisation differences like "the user" → "the user").
 
-4. **Rule freshness:** For each rule in santi-repo/rules/, compare against the upstream version in $TM/.claude/rules/. Flag substantive differences (ignoring anonymisation).
+4. **Rule freshness:** For each rule in friends-repo/rules/, compare against the upstream version in $TM/.claude/rules/. Flag substantive differences (ignoring anonymisation).
 
-5. **Anonymisation spot-check:** Grep all .md files in santi-repo/ for leaked personal details:
+5. **Anonymisation spot-check:** Grep all .md files in friends-repo/ for leaked personal details:
    - "the user" (case-sensitive, excluding "Made by the user" in README.md)
    - "$HOME" (macOS path)
-   - "Warwick", "Southampton", "Bath", "LSE" (institution names)
+   - "[University 1]", "[University 2]", "[University 3]", "[Teaching]" (institution names)
    Exclude GitHub URLs containing "user" (intentional).
 
 6. **README accuracy:** Does the skill count in README.md match the actual count? Does the rule count match?

@@ -3,7 +3,16 @@
 ## Format
 
 ```
-[LEARN:category] Incorrect → Correct
+[LEARN:category] Incorrect → Correct — applies when: {context}
+```
+
+The `— applies when:` suffix is **required** for `code`, `method`, and `domain` categories (where context determines applicability). It is **optional** for `notation` and `citation` (which are typically universal).
+
+Examples with context:
+```
+[LEARN:code] Growing a list in a loop → Pre-allocate or use list comprehension — applies when: Python loops over >1000 items
+[LEARN:method] TWFE → CS or Sun-Abraham — applies when: staggered treatment adoption with heterogeneous effects
+[LEARN:domain] "grades" → "marks" — applies when: UK university context
 ```
 
 ## Categories
@@ -22,6 +31,16 @@
 - When the user corrects something during a session
 - When a compilation error reveals a recurring mistake
 - When a reviewer/supervisor flags an issue
+
+## Dedup Check (before writing)
+
+Before appending a new entry to MEMORY.md, **grep the file for the key terms** in your learning (variable name, function name, concept). If an existing entry covers the same topic:
+
+- **Same correction:** Skip — it's already recorded.
+- **Updated correction:** Replace the old entry with the new one (don't append a duplicate).
+- **Contradictory:** Replace the old entry, add `[SUPERSEDED YYYY-MM-DD]` note explaining what changed.
+
+This prevents MEMORY.md from growing with redundant or contradictory entries.
 
 ## Where to Write
 

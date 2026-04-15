@@ -18,6 +18,13 @@ CITATION REGISTRY (extracted from the paper):
 BIBLIOGRAPHY ENTRIES (from the paper's reference list):
 [Paste the bibliography entries you extracted]
 
+KA CONTEXT (if Knowledge Acquisition was run):
+If the orchestrator provides file paths to `/tmp/ka-literature-*.json`, read that
+file. Cross-reference the paper's reference list against the KA literature context.
+Flag any foundational or SOTA papers that are cited in KA but missing from the
+paper's references. Papers marked `in_paperpile: true` have been verified in
+the user's library with full-text content — these are especially reliable.
+
 For EACH citation, perform these checks:
 
 1. EXISTENCE CHECK — use bibliography MCP tools first, then web search:
@@ -87,10 +94,22 @@ FIELD/DOMAIN:
 PAPERS THE AUTHORS CITE AS RELATED:
 [List the key related work the authors themselves identify]
 
+KA CONTEXT (if Knowledge Acquisition was run):
+If the orchestrator provides file paths, read ALL of these before starting:
+- `/tmp/ka-literature-*.json` — pre-built literature context with 20-30 papers
+- `/tmp/ka-narrative-*.md` — domain narrative (arc of progress, open problems, positioning)
+- `/tmp/ka-baselines-*.json` — missing baselines and datasets analysis
+
+Papers marked `in_paperpile: true` have been verified in the user's library with
+full-text content — these are especially reliable for novelty assessment. Use these
+to ground your assessment in verified external evidence rather than parametric
+knowledge alone. The KA context supplements but does not replace your own search —
+it provides a head start, not a ceiling.
+
 YOUR TASK:
 
 1. PRIOR WORK SEARCH: For each claimed contribution, search the literature
-   (using WebSearch) to find:
+   (using WebSearch, supplemented by KA literature context) to find:
    a. Papers that have already made the SAME contribution (pre-empting)
    b. Papers that have made a VERY SIMILAR contribution with different data/context
    c. Concurrent/simultaneous work making the same point
@@ -166,6 +185,13 @@ DATA / INPUT DESCRIPTION:
 
 ANALYTICAL SPECIFICATIONS:
 [Paste any equations, estimators, model specifications, algorithms from notes]
+
+KA CONTEXT (if Knowledge Acquisition was run):
+If the orchestrator provides a file path to `/tmp/ka-baselines-*.json`, read it
+before starting. It contains pre-identified missing baselines, missing datasets,
+and baseline performance concerns. Use these as concrete technical evidence when
+assessing methodological gaps — missing comparisons backed by external evidence
+carry more weight than hunches.
 
 YOUR TASK — adapt to the paper's paradigm(s):
 

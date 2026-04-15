@@ -1,6 +1,6 @@
 # Rules
 
-> 9 auto-loaded instruction files that shape Claude's behavior in every session.
+> 8 auto-loaded instruction files that shape Claude's behavior in every session.
 
 Rule files live in `.claude/rules/` and are automatically loaded into every Claude Code session.
 
@@ -9,8 +9,7 @@ Rule files live in `.claude/rules/` and are automatically loaded into every Clau
 | Rule | File | What it does |
 |------|------|-------------|
 | Design Before Results | `design-before-results.md` | Lock the research design before examining point estimates. |
-| Ignore AGENTS.md Files | `ignore-agents-md.md` | Never read, process, or act on files named `AGENTS.md` |
-| Ignore GEMINI.md Files | `ignore-gemini-md.md` | Never read, process, or act on files named `GEMINI.md` |
+| Ignore External Agent Files | `ignore-external-agent-files.md` | Never read, process, or act on files named `AGENTS.md` or `GEMINI.md` |
 | Keep CLAUDE.md Lean | `lean-claude-md.md` | CLAUDE.md is loaded into context every session — every line costs tokens. |
 | Record Learnings with [LEARN] Tags | `learn-tags.md` | Record Learnings with [LEARN] Tags |
 | Overleaf Separation — No Code or Data in Paper Directories | `overleaf-separation.md` | The `paper/` directory (Overleaf symlink inside `paper-{venue}/paper/`) is for LaTeX source files ONLY. |

@@ -25,7 +25,7 @@ Eight phases, executed in order:
 3. **Seed files** — populate CLAUDE.md, README.md, .gitignore with interview answers
 4. **Overleaf symlink** — link `paper/` to Overleaf directory
 5. **Git init** — initialise repo and make first commit
-6. **Atlas & Pipeline sync** — create Atlas topic file, vault atlas entry, Pipeline row, venue links, Dropbox folder
+6. **Atlas sync** — create Atlas topic file, vault atlas entry, venue links, Dropbox folder
 7. **Task Management sync** — update context library files
 8. **Literature & Discovery** — run literature review + scout novelty assessment
 9. **Confirmation** — report what was created
@@ -64,13 +64,36 @@ Present detected values as the first option (marked "Detected from paper") in in
 2. **LaTeX template** — scan `Task Management/templates/` for options. Default: Working Paper (`templates/latex-wp/`). Also offer "None".
 3. **Overleaf external sharing link** — read-only URL for collaborators
 4. **Git repository?** — Local git (Recommended) / GitHub remote / No git
-5. **Project type** — Experimental (`code/`, `data/`, `output/`) / Computational (`src/`, `tests/`, `experiments/`, `results/`) / Theoretical (minimal) / Mixed
+5. **GitHub release repo?** — Yes / No / Later. Only ask for Experimental, Computational, or Mixed projects. If Yes, create a `github-repo/` subdirectory with its own git repo for public code releases. If Later, just add `github-repo/` to `.gitignore` so it's ready when needed. Convention details: [`references/github-release-repo.md`](references/github-release-repo.md)
+6. **Project type** — Experimental (`code/`, `data/`, `output/`) / Computational (`src/`, `tests/`, `experiments/`, `results/`) / Theoretical (minimal) / Mixed
 
 ### Round 3 — Research Content
 
 Paper type, abstract, key research questions, then paper-type-specific questions (empirical/theoretical/methodological/mixed) adapted from Lopez-Lira's idea evaluation template.
 
 Full question set and storage instructions: [`references/interview-round3.md`](references/interview-round3.md)
+
+---
+
+## Phase 1.4: Pre-Scaffold Duplication Check
+
+**Run this before creating any directory.** Catches near-duplicate projects and paper sub-projects that would otherwise get scaffolded alongside an existing one.
+
+1. **Atlas topic search** — grep for near-matches by title, slug keywords, and theme:
+   ```bash
+   grep -ril "<title-keyword>" ~/Research-Vault/atlas/ 2>/dev/null
+   ```
+   Review hits. If any existing atlas topic covers the same scope, stop and ask the user whether to extend the existing topic or proceed with a new one.
+
+2. **Sibling directory listing** — list siblings in the parent theme folder:
+   ```bash
+   ls -d "$RESEARCH_ROOT/<theme>/"*/ 2>/dev/null
+   ```
+   Compare proposed folder name against siblings. Flag near-duplicates (same keywords, same stem with different venue suffix, typo-distance ≤ 2).
+
+3. **Paper sub-project check** — if scaffolding a new `paper-{venue}/` inside an existing project, list existing `paper*/` dirs and check for overlap in manuscript content (not just venue) before creating.
+
+If any near-match is found, present the list to the user and confirm whether to proceed, merge, or extend. Do not silently scaffold alongside a duplicate.
 
 ---
 
@@ -99,6 +122,10 @@ If the directory doesn't exist, create it and proceed.
 
 **`paper/` is for LaTeX source files ONLY.** No code, data, scripts, or computational artifacts. See `.claude/rules/overleaf-separation.md`.
 
+### LaTeX-First Default (Hard Rule)
+
+**Research papers are drafted in LaTeX (`.tex`), never Markdown.** When scaffolding, seed `paper-{venue}/paper/main.tex` from the LaTeX working-paper template. Do not create Markdown drafts under `paper*/` or propose Markdown as an interim format — papers compile via `/latex` and sync to Overleaf. Markdown is reserved for README, notes, and context files outside `paper*/`.
+
 ### Common Core (always created)
 
 ```
@@ -115,17 +142,21 @@ If the directory doesn't exist, create it and proceed.
 │   ├── hooks/
 │   │   └── copy-paper-pdf.sh   # PostToolUse hook — copies paper-*/paper/main.pdf → backup/*_vcurrent.pdf
 │   └── settings.local.json
-├── correspondence/
-│   └── reviews/           # .gitkeep (see scaffold-details.md for review structure)
 ├── docs/
 │   ├── literature-review/  # .gitkeep
 │   ├── readings/           # .gitkeep
 │   └── venues/             # .gitkeep (submission/venue material only)
 ├── log/                   # .gitkeep
-├── paper/                 # Paper directory (Phase 4):
-│   └── paper/             #   Symlink → Overleaf — LaTeX source ONLY
-│                          #   Venue-specific files (checklists, cover letters) live in parent
+├── paper-{venue}/         # Paper directory (Phase 4):
+│   ├── paper/             #   Symlink → Overleaf — LaTeX source ONLY
+│   │                      #   Venue-specific files (checklists, cover letters) live in parent
+│   └── correspondence/
+│       └── referee-reviews/  # .gitkeep (see scaffold-details.md for review structure)
 ├── backup/                # Local backups of Overleaf paper directories (subdirs per paper)
+├── github-repo/           # (Optional) Separate git repo for public GitHub code release
+├── knowledge/             # .gitkeep (LLM-maintained wiki — compiled by /compile-knowledge)
+├── correspondence/
+│   └── internal-reviews/  # .gitkeep (reports from /code-review, fixer, etc.)
 ├── reviews/               # .gitkeep (subdirs created on demand by review agents)
 └── to-sort/               # .gitkeep
 ```
@@ -236,7 +267,7 @@ paper/                        # Real directory (venue wrapper)
 | Industrial Organisation | IO |
 | Mechanism Design | MechDes |
 | NLP & Computational AI | NLP |
-| Operations Research | OR |
+| Category E | OR |
 | Category F | OrgStrat |
 | Category G | PolSci |
 
@@ -295,11 +326,11 @@ If local git only: remind to push before switching machines. **Do NOT push unles
 
 ---
 
-## Phase 6: Atlas & Pipeline Sync
+## Phase 6: Atlas Sync
 
-Creates the research topic in all systems: local file → vault atlas → vault pipeline → Venues → project folder → documentation.
+Creates the research topic in all systems: local file → vault atlas → Venues → project folder → documentation.
 
-Full steps (6a–6f) and Atlas defaults: [`references/atlas-pipeline-sync.md`](references/atlas-pipeline-sync.md)
+Full steps (6a–6e) and Atlas defaults: [`references/atlas-sync.md`](references/atlas-sync.md)
 
 ---
 
@@ -364,5 +395,6 @@ Full template: [`references/confirmation-report.md`](references/confirmation-rep
 | `/session-log` | Offer to create a session log after init completes |
 | `/interview-me` | To develop the research idea before scaffolding |
 | `/atlas-deploy` | After init, run to compile and deploy changes to atlas.user.com |
-| `/atlas-review` | **Drift trigger:** new projects change theme dir counts — see `atlas-review/references/drift-checks.md` |
+| `/audit-project-research` | **Must mirror this scaffold.** When init adds a new directory or convention (e.g., `github-repo/`), add a matching audit phase there and update `/atlas-audit` SA1. |
+| `/atlas-audit` | **Drift trigger:** new projects change theme dir counts — see `atlas-audit/references/drift-checks.md`. SA1 structure checks must stay consistent with this scaffold. |
 | `references/domain-profile-template.md` | Template for economics/field-specific domain profiles — copy to project's `docs/domain-profile.md` during init for economics papers |

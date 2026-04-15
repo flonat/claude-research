@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Unlock Mac Mini keychain, Secrets sparsebundle, and encrypted SSD.
+# Run from MacBook — SSHes into Mac Mini via Tailscale.
+set -euo pipefail
+
+ssh -tt user-mini '
+  echo "1/3  Unlocking login keychain..."
+  security unlock-keychain ~/Library/Keychains/login.keychain-db
+
+  echo "2/3  Mounting Secrets sparsebundle..."
+  security find-generic-password -s secrets-sparsebundle -a user -w \
+    | tr -d "\n" \
+    | hdiutil attach ~/secrets.sparsebundle -stdinpass -nobrowse -quiet
+  echo "     Secrets volume mounted"
+
+  echo "3/3  Unlocking encrypted SSD..."
+  security find-generic-password -s ssd-encrypted -a user -w \
+    | diskutil apfs unlockVolume D4F5D5BC-361B-4DB9-A056-2491EBFC5138 -stdinpassphrase
+
+  echo ""
+  echo "All done — keychain, credentials, and SSD unlocked."
+'

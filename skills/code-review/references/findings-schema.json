@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Output schema for code review persona sub-agents",
+  "type": "object",
+  "required": ["reviewer", "findings"],
+  "properties": {
+    "reviewer": {
+      "type": "string",
+      "description": "Persona name (e.g., correctness, reproducibility)"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "severity", "file", "line", "why_it_matters", "confidence"],
+        "properties": {
+          "title": { "type": "string", "description": "Short issue title" },
+          "severity": { "enum": ["P0", "P1", "P2", "P3"], "description": "P0=blocker, P1=critical, P2=major, P3=minor" },
+          "file": { "type": "string", "description": "Relative file path" },
+          "line": { "type": "integer", "description": "Line number (0 if file-wide)" },
+          "why_it_matters": { "type": "string", "description": "Impact if not fixed" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1, "description": "0.0-1.0 confidence" },
+          "evidence": { "type": "array", "items": { "type": "string" }, "description": "Code snippets or references supporting the finding" },
+          "suggested_fix": { "type": "string", "description": "How to fix (optional)" },
+          "category": { "type": "string", "description": "Maps to checklist category (e.g., Reproducibility, Domain Correctness)" }
+        }
+      }
+    },
+    "residual_risks": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Risks that cannot be verified from code alone"
+    }
+  }
+}

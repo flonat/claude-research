@@ -17,9 +17,11 @@ from mcp.types import Tool, TextContent
 
 from biblio_sources import (
     AltmetricClient,
+    ArxivSource,
     CoreSource,
     CrossrefSource,
     DblpSource,
+    ExaClient,
     OpenCitationsClient,
     OpenReviewClient,
     UnpaywallClient,
@@ -172,6 +174,19 @@ log("DBLP source: active (no auth required)")
 # OpenReview — conference submissions and reviews, always available (no auth)
 _openreview_client = OpenReviewClient()
 log("OpenReview client: active (no auth required)")
+
+# arXiv — preprints, always available (no auth)
+_arxiv_source = ArxivSource()
+log("arXiv source: active (no auth required)")
+
+# Exa — semantic web search, optional API key
+_exa_key = os.environ.get("EXA_API_KEY", "")
+_exa_client = None
+if _exa_key:
+    _exa_client = ExaClient(api_key=_exa_key)
+    log("Exa client: active (semantic search + research papers)")
+else:
+    log("Exa client: no API key (set EXA_API_KEY)")
 
 # ---------- Utility: BibTeX key generation ----------
 

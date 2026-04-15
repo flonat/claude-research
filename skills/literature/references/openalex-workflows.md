@@ -222,7 +222,7 @@ Always use the polite pool.
 
 ## MCP Server (Preferred Over Python Client)
 
-**Always prefer MCP tools when available.** The bibliography MCP server (`packages/mcp-bibliography/`) exposes all OpenAlex functionality plus cross-source search — no Python boilerplate needed.
+**Always prefer MCP tools when available.** The bibliography MCP server (`packages/mcp-scholarly/`) exposes all OpenAlex functionality plus cross-source search — no Python boilerplate needed.
 
 | Task | MCP tool (preferred) | Python client (fallback) |
 |------|---------------------|-------------------------|
@@ -237,7 +237,7 @@ Always use the polite pool.
 | Forward citations | `openalex_citing_works` | Manual `cited_by_api_url` fetch |
 | Check active sources | `scholarly_source_status` | N/A |
 
-Use the Python client below only for workflows not yet exposed via MCP (custom filter combinations, batch entity lookups by non-DOI IDs). See [`docs/mcp-servers.md`](../../../docs/mcp-servers.md) for full MCP documentation.
+Use the Python client below only for workflows not yet exposed via MCP (custom filter combinations, batch entity lookups by non-DOI IDs). See [`docs/components/mcp-servers.md`](../../../docs/components/mcp-servers.md) for full MCP documentation.
 
 ---
 

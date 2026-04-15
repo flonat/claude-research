@@ -29,15 +29,16 @@ RESOURCE_REPOS = 43  # 15 academics + 23 general + 5 bibliography
 
 def get_ground_truth(root: Path) -> dict[str, int]:
     """Derive infrastructure counts from the filesystem."""
-    skills = len(list((root / "skills").glob("*/SKILL.md")))
+    skills = len(list((root / "skills").glob("**/SKILL.md")))
     # Also count skill.md (lowercase) to avoid missing any
-    skills += len([p for p in (root / "skills").glob("*/skill.md")
+    skills += len([p for p in (root / "skills").glob("**/skill.md")
                    if not any(s.name == "SKILL.md" for s in p.parent.iterdir())])
     agents = len(list((root / ".claude" / "agents").glob("*.md")))
-    rules = len(list((root / ".claude" / "rules").glob("*.md")))
+    rules = len(list((root / "rules").glob("*.md")))
     hooks_sh = len(list((root / "hooks").glob("*.sh")))
     hooks_py = len(list((root / "hooks").glob("*.py")))
-    hooks = hooks_sh + hooks_py
+    hooks_mjs = len(list((root / "hooks").glob("*.mjs")))
+    hooks = hooks_sh + hooks_py + hooks_mjs
     return {
         "skills": skills,
         "agents": agents,
@@ -52,16 +53,16 @@ def get_ground_truth(root: Path) -> dict[str, int]:
 SCAN_FILES = [
     "CLAUDE.md",
     "README.md",
-    "docs/skills.md",
-    "docs/rules.md",
-    "docs/hooks.md",
-    "docs/agents.md",
+    "docs/components/skills.md",
+    "docs/components/rules.md",
+    "docs/components/hooks.md",
+    "docs/components/agents.md",
     "docs/system.md",
-    "docs/installation.md",
+    "docs/guides/installation.md",
     ".context/projects/_index.md",
     "skills/shared/skill-index.md",
-    "docs/user-manual/user-manual.tex",
-    "docs/setup-overview/setup-overview.tex",
+    "docs/reference/user-manual/user-manual.tex",
+    "docs/setup/setup-overview/setup-overview.tex",
 ]
 
 # Lines matching these patterns are EXCLUDED from replacement.
@@ -78,6 +79,7 @@ EXCLUDE_LINE_PATTERNS = [
     re.compile(r"Referee.2 agent performs"),  # prose about what an agent does
     re.compile(r"Referee.2 agent .+never"),  # prose about agent behavior
     re.compile(r"Referee.2 Agent", re.IGNORECASE),  # section title "The Referee~2 Agent"
+    re.compile(r"Trail of Bits|linters? for agent", re.IGNORECASE),  # external tool counts
 ]
 
 

@@ -189,7 +189,7 @@ No strict template — structure follows the content. But follow these conventio
 - Architecture docs should include ASCII diagrams for data flow and system overview
 - API/configuration docs should use tables for parameter lists
 
-### Component Catalogues (`docs/skills.md`, `docs/hooks.md`, etc.)
+### Component Catalogues (`docs/components/skills.md`, `docs/components/hooks.md`, etc.)
 
 The Task Management `docs/` folder uses a consistent pattern for documenting collections of infrastructure components (skills, hooks, agents, rules, resources, scripts).
 
@@ -225,11 +225,11 @@ What it does, when it applies, and how it works.
 
 | Catalogue | Required columns |
 |-----------|-----------------|
-| Skills (`docs/skills.md`) | Skill, Category, Description |
-| Hooks (`docs/hooks.md`) | Hook, Event, Matcher, Script, What it does |
-| Agents (`docs/agents.md`) | Agent, Purpose |
-| Rules (`docs/rules.md`) | Rule, File, What it does |
-| Resources (`docs/resources.md`) | Category, Author, Repo, What it provides |
+| Skills (`docs/components/skills.md`) | Skill, Category, Description |
+| Hooks (`docs/components/hooks.md`) | Hook, Event, Matcher, Script, What it does |
+| Agents (`docs/components/agents.md`) | Agent, Purpose |
+| Rules (`docs/components/rules.md`) | Rule, File, What it does |
+| Resources (`docs/reference/resources.md`) | Category, Author, Repo, What it provides |
 
 ### System Overview (`docs/system.md`)
 

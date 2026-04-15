@@ -1,6 +1,6 @@
 # Bibliometric API Structured Queries
 
-> Four bibliometric sources are available. The **bibliography MCP server** (`packages/mcp-bibliography/`) is the preferred interface — `scholarly_search` queries all enabled sources in one call with automatic DOI-based dedup; `scholarly_verify_dois` batch-verifies DOIs across all sources.
+> Four bibliometric sources are available. The **bibliography MCP server** (`packages/mcp-scholarly/`) is the preferred interface — `scholarly_search` queries all enabled sources in one call with automatic DOI-based dedup; `scholarly_verify_dois` batch-verifies DOIs across all sources.
 
 ## Bibliography MCP Tools (preferred)
 

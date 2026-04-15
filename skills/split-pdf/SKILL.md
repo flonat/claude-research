@@ -1,7 +1,7 @@
 ---
 name: split-pdf
 description: "Use when you need to download, split, and deeply read an academic PDF."
-allowed-tools: Bash(python*), Bash(uv*), Bash(curl*), Bash(wget*), Bash(mkdir*), Bash(ls*), Read, Write, Edit, WebSearch, WebFetch, mcp__refpile__parse_pdf_fulltext, mcp__refpile__parse_pdf_metadata
+allowed-tools: Bash(python*), Bash(uv*), Bash(curl*), Bash(wget*), Bash(mkdir*), Bash(ls*), Read, Write, Edit, WebSearch, WebFetch, mcp__paperpile__get_pdf_text, mcp__paperpile__get_item
 argument-hint: [pdf-path-or-search-query]
 ---
 
@@ -139,19 +139,18 @@ By the time all splits are read, the notes should contain specific data sources,
 
 ## Structured Mode (GROBID)
 
-If the paper is a **Zotero item** (user provides a key), try GROBID-powered extraction before splitting:
+If the paper is a **Paperpile item** (user provides a citekey), try structured extraction before splitting:
 
-1. Call `mcp__refpile__parse_pdf_metadata(key=KEY)` — get title, authors, abstract, affiliations
-2. Call `mcp__refpile__parse_pdf_fulltext(key=KEY)` — get sections with headings and paragraphs
+1. Call `mcp__paperpile__get_item(citekey=KEY)` — get title, authors, abstract, affiliations
+2. Call `mcp__paperpile__get_pdf_text(citekey=KEY)` — get full text from the PDF in Google Drive
 
-If GROBID succeeds, you get **semantically structured sections** (Introduction, Methods, Results, etc.) instead of arbitrary 4-page chunks. This is better for reading notes because:
-- Sections don't split mid-paragraph
-- Headings give natural structure for `notes.md`
-- Figures and tables are identified with captions
+If the PDF is found and text extraction succeeds, you get the full paper text which can be structured by section headings. This is better for reading notes because:
+- Natural section boundaries for `notes.md`
+- Headings give structure to the extraction
 
-**Use structured mode when:** the paper is in Zotero and GROBID returns sections. Still write to `notes.md` with the same 8-dimension extraction.
+**Use structured mode when:** the paper is in Paperpile and `get_pdf_text` succeeds. Still write to `notes.md` with the same 8-dimension extraction.
 
-**Fall back to page splits when:** GROBID is unavailable, returns an error, or the paper isn't in Zotero (local PDF only). The 4-page split workflow remains the default for local-only PDFs.
+**Fall back to page splits when:** Paperpile MCP is unavailable, the PDF is not found in Google Drive, or the paper isn't in Paperpile (local PDF only). The 4-page split workflow remains the default for local-only PDFs.
 
 ## When NOT to Split
 

@@ -66,7 +66,8 @@ These skills should reference this pattern:
 | `task-management` | vault | Daily planning, task creation, pipeline queries |
 | `init-project-research` | vault | Pipeline entry creation |
 | `literature` | OpenAlex, Scholarly | Citation search, DOI verification |
-| `atlas-review` | vault | Pipeline cross-reference |
+| `scout` | OpenAlex, Scholarly | Bibliometric queries |
+| `atlas-audit` | vault | Pipeline cross-reference |
 
 ## When to Apply
 

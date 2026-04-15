@@ -1,3 +1,9 @@
+---
+paths:
+  - "**/CLAUDE.md"
+  - "**/GLOBAL-CLAUDE.md"
+---
+
 # Rule: Keep CLAUDE.md Lean
 
 ## Principle

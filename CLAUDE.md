@@ -59,7 +59,7 @@ Just say these naturally:
 <!-- CONVENTIONS:START -->
 <!-- synced from private CLAUDE.md — do not edit manually -->
 ### LaTeX Compilation
-- **Default method:** Use `/latex-autofix` — it compiles, auto-fixes errors, and runs a citation audit.
+- **Default method:** Use `/latex` — it compiles, auto-fixes errors, and runs a citation audit.
 - Build artifacts go to `out/`, but the PDF is copied back to the source directory.
 - Use `.latexmkrc` with `$out_dir = 'out'` and `an `END {}` block to copy the PDF back`.
 - Never leave build artifacts (`.aux`, `.log`, etc.) in the source directory.
@@ -116,30 +116,30 @@ IDs are filename slugs (e.g., `cancel-leap-water-in-rugby`), not integers.
 <!-- synced from private CLAUDE.md — do not edit manually -->
 Detailed instructions in `.context/workflows/`:
 - `daily-review.md` — How to help with daily planning
-- `meeting-actions.md` — How to extract action items
+- `meeting-actions.md` — How to extract action items (see also [`docs/guides/minutes.md`](docs/guides/minutes.md) for full meeting system architecture)
 - `weekly-review.md` — Weekly reflection template
 - `replication-protocol.md` — 4-phase protocol for replicating paper results
+- Feedback loop (skill improvement pipeline): [`docs/feedback-loop.md`](docs/feedback-loop.md)
 <!-- WORKFLOWS-POINTER:END -->
 
 <!-- COMPONENTS:START -->
 ## Skills Available
 
-38 skills in `skills/` folder. See [`docs/skills.md`](docs/skills.md) for the full catalogue.
+45 skills in `skills/` folder. See [`docs/components/skills.md`](docs/components/skills.md) for the full catalogue.
 
 ## Agents
 
-6 agents in `.claude/agents/`. See [`docs/agents.md`](docs/agents.md) for when to use each.
+6 agents in `.claude/agents/`. See [`docs/components/agents.md`](docs/components/agents.md) for when to use each.
 
-## Rules (9 Auto-Loaded)
+## Rules (8 Auto-Loaded)
 
-In `.claude/rules/` — these apply automatically to every session. See [`docs/rules.md`](docs/rules.md) for documentation.
+In `.claude/rules/` — these apply automatically to every session. See [`docs/components/rules.md`](docs/components/rules.md) for documentation.
 
 <!-- RULES-TABLE:START -->
 | Rule | Purpose |
 |------|---------|
 | `design-before-results.md` | Lock the research design before examining point estimates. |
-| `ignore-agents-md.md` | Never read, process, or act on files named `AGENTS.md` |
-| `ignore-gemini-md.md` | Never read, process, or act on files named `GEMINI.md` |
+| `ignore-external-agent-files.md` | Never read, process, or act on files named `AGENTS.md` or `GEMINI.md` |
 | `lean-claude-md.md` | CLAUDE.md is loaded into context every session — every line costs tokens. |
 | `learn-tags.md` | Record Learnings with [LEARN] Tags |
 | `overleaf-separation.md` | The `paper/` directory (Overleaf symlink inside `paper-{venue}/paper/`) is for LaTeX source files ONLY. |
@@ -150,7 +150,7 @@ In `.claude/rules/` — these apply automatically to every session. See [`docs/r
 
 ## Hooks
 
-8 hook scripts in `hooks/`. See [`docs/hooks.md`](docs/hooks.md) for the full table.
+9 hook scripts in `hooks/`. See [`docs/components/hooks.md`](docs/components/hooks.md) for the full table.
 <!-- COMPONENTS:END -->
 
 ## After Every Session
@@ -162,7 +162,7 @@ In `.claude/rules/` — these apply automatically to every session. See [`docs/r
 - Where things were left off
 - What's coming next
 
-**Standard closing sequence:** commit → push → deploy (if needed) → `/general-session-recap` or `/research-session-recap`.
+**Standard closing sequence:** commit → push → deploy (if needed) → `/session-close`.
 
 This helps me (Claude) pick up where we left off next time.
 <!-- AFTER-SESSION:END -->
@@ -184,14 +184,14 @@ This helps me (Claude) pick up where we left off next time.
 |------|-----------------|
 | `.context/` | AI context library (profile, focus, projects, workflows, preferences) |
 | `.claude/agents/` | Agent definitions (6 agents) |
-| `.claude/rules/` | Auto-loaded rules (9 rules) |
-| `skills/` | 38 skill definitions |
-| `hooks/` | 8 hook scripts |
-| `mcp-bibliography/` | Multi-source scholarly search MCP server (OpenAlex + Scopus + WoS) |
-| `.scripts/` | CLI tools for vault task management |
+| `.claude/rules/` | Auto-loaded rules (8 rules) |
+| `skills/` | 45 skill definitions |
+| `hooks/` | 9 hook scripts |
+| `mcp-scholarly/` | Multi-source scholarly search MCP server (OpenAlex + Scopus + WoS) |
+| `.scripts/` | CLI tools for Notion task management |
 | `packages/cli-council/` | Multi-model council via local CLI tools |
 | `packages/llm-council/` | Multi-model council via OpenRouter API |
-| `packages/mcp-bibliography/` | mcp-bibliography |
+| `packages/mcp-scholarly/` | mcp-scholarly |
 | `log/` | Session logs |
 | `docs/` | Documentation |
 <!-- FILE-STRUCTURE:END -->

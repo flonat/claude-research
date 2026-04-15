@@ -137,7 +137,7 @@ When both formats exist, structural parity is required: every `##` heading in th
 
 ## Beamer Presentation Docs
 
-Projects may include Beamer decks in `docs/` (e.g., `docs/scout-overview/`, `docs/setup-overview/`). These are outward-facing documentation, not just slides.
+Projects may include Beamer decks in `docs/` (e.g., `docs/scout-overview/`, `docs/setup/setup-overview/`). These are outward-facing documentation, not just slides.
 
 ### Standard Setup
 

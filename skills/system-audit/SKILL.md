@@ -7,7 +7,7 @@ argument-hint: "[no arguments — runs full sweep]"
 
 # Maintenance Sweep
 
-> System-wide health check using agnix lint + 7 parallel sub-agents. Produces a consolidated report at `audits/system-audit-YYYY-MM-DD.md`. **Report-only — never modifies any files.**
+> System-wide health check using agnix lint + 7 parallel sub-agents. Produces a consolidated report at `log/audits/system-audit-YYYY-MM-DD.md`. **Report-only — never modifies any files.**
 
 ## When to Use
 
@@ -60,7 +60,7 @@ Sub-agents at a glance:
 | 4 | Documentation Freshness | Stale counts, broken links, .context/ freshness |
 | 5 | Ecosystem Health | MCP server refs, staleness, orphans, CLI tools |
 | 6 | Skill Quality & Overlap | Bloat, staleness, cross-component overlap |
-| 7 | Santi Repo Health | Skill/rule freshness vs upstream, anonymisation, install script |
+| 7 | Friends Repo Health | Skill/rule freshness vs upstream, anonymisation, install script |
 
 ---
 
@@ -70,7 +70,7 @@ After all 7 sub-agents return, merge their findings into a single report.
 
 ### Report Template
 
-Write to `audits/system-audit-YYYY-MM-DD.md`:
+Write to `log/audits/system-audit-YYYY-MM-DD.md`:
 
 ```markdown
 # Maintenance Sweep — YYYY-MM-DD
@@ -86,7 +86,7 @@ Write to `audits/system-audit-YYYY-MM-DD.md`:
 | Documentation | <OK/WARN/FAIL> | <count> |
 | Ecosystem Health | <OK/WARN/FAIL> | <count> |
 | Skill Quality & Overlap | <OK/WARN/FAIL> | <count> |
-| Santi Repo Health | <OK/WARN/FAIL> | <count> |
+| Friends Repo Health | <OK/WARN/FAIL> | <count> |
 
 ## agnix Lint
 <Phase 0 results: error count, warning count, any specific errors>
@@ -109,7 +109,7 @@ Write to `audits/system-audit-YYYY-MM-DD.md`:
 ## Skill Quality & Cross-Component Overlap
 <Sub-agent 6 findings>
 
-## Santi Repo Health
+## Friends Repo Health
 <Sub-agent 7 findings>
 
 ## Recommended Actions
@@ -151,7 +151,7 @@ Show the user:
 | `/audit-project-research` | Complements Convention Compliance with deeper per-project checks |
 | `/update-project-doc` | Fix documentation staleness found by Documentation Freshness |
 | `/sync-permissions` | Fix symlink issues found by Inventory Auditor |
-| `/atlas-review` | Full cross-system audit (local + vault + Zotero + pipeline) — deeper than this sweep |
+| `/atlas-audit` | Full cross-system audit (local + vault + Paperpile + pipeline) — deeper than this sweep |
 | `/insights-deck` | Maintenance findings can feed into system insights presentations |
-| `/audit-doc santi` | Dedicated deep audit for santi-repo — Sub-agent 7 is a quick health check; the audit skill is the full version |
-| `/sync-santi-repo` | Fix freshness issues found by Sub-agent 7 |
+| `/repo-doc-audit friends` | Dedicated deep audit for friends-repo — Sub-agent 7 is a quick health check; the audit skill is the full version |
+| `/sync-friends-repo` | Fix freshness issues found by Sub-agent 7 |

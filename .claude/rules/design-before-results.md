@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/*.tex"
+  - "**/*.py"
+  - "**/*.R"
+  - "**/*.do"
+---
+
 # Rule: Design Before Results
 
 ## Principle

@@ -12,36 +12,38 @@
 | `interview-me` | Interactive interview to formalise a research idea into a structured spec |
 | `devils-advocate` | Multi-turn debate to challenge assumptions and stress-test arguments |
 | `multi-perspective` | Parallel agents with distinct disciplinary lenses explore a question |
-| `scout-audit` | Batch novelty checks with venue and idea iteration |
-| `scout-discover` | Topic discovery and idea generation via Scout CLI |
-| `scout-evaluate` | Novelty scoring and idea ranking via Scout CLI |
-| `scout-develop` | Iterative idea development and Lopez-Lira refinement via Scout CLI |
-| `scout-position` | Venue suggestion, framing, and acceptance assessment via Scout CLI |
+| `scout-batch` | Batch novelty checks with venue and idea iteration |
 | `atlas-coherence` | Map portfolio as a network: clusters, bridges, orphans, sequencing |
 | `atlas-novelty` | Score atlas topics by novelty via batch Scout checks |
 | `interdisciplinary-bridge` | Import concepts from adjacent fields to solve open problems |
 | `future-research-agenda` | Generate provocative, fundable future research directions |
+| `scout` | Topic discovery, novelty, framing, venue suggestion, idea generation and ranking via bibliometric APIs + LLMs |
+| `atlas-audit` | Full audit of all topics across 4 systems |
+| `atlas-deploy` | Compile atlas.json from topic files, commit, and deploy atlas web app to Fly.io |
 
-### Literature (9)
+### Literature (12)
 
 | Skill | Purpose |
 |-------|---------|
-| `literature` | Academic search, citation verification, .bib management, OpenAlex API |
+| `literature` | Academic search, citation verification, .bib management, OpenAlex API, end-to-end literature pipeline |
 | `split-pdf` | Deep-read papers via 4-page chunks with structured notes |
-| `gather-readings` | Copy PDFs from Zotero into project articles/ folder |
+| `gather-readings` | Copy PDFs from Paperpile into project articles/ folder |
 | `theory-mapper` | Map theoretical landscape across a corpus of papers |
 | `method-audit` | Compare data collection methods and spot biases |
 | `evolution-timeline` | Chronological narrative of field evolution |
 | `quote-mining` | Extract exact quotes with page numbers and argument mapping |
 | `weakness-scanner` | Find weakest arguments and logical flaws across a literature |
 | `replication-audit` | Audit replication status of key findings |
+| `compile-knowledge` | Compile raw inputs (literature, meetings, logs) into a per-project knowledge wiki |
+| `knowledge-lint` | Check compiled knowledge for contradictions, uncited claims, missing connections |
+| `store-insight` | File a single research finding or insight into the project's knowledge wiki |
 
 ### Writing (1)
 
 | Skill | Purpose |
 |-------|---------|
 | `proofread` | 7-category LaTeX proofreading scorecard (report only) |
-| `claim-audit` | Verify cited claims against actual source papers |
+| `claim-verify` | Verify cited claims against actual source papers |
 | `voice-analyzer` | Analyze writing samples to create a portable voice profile (VOICE.md) |
 | `voice-editor` | Edit content to match a voice profile (6-pass workflow, 4 editing modes) |
 | `journal-voice` | Extract journal writing patterns and conventions into JOURNAL-VOICE.md |
@@ -60,19 +62,17 @@
 | `translate-to-quarto` | Translate Beamer LaTeX slides to Quarto RevealJS |
 | `pptx` | Create, read, edit, or manipulate PowerPoint files |
 
-### LaTeX & Bibliography (10)
+### LaTeX & Bibliography (8)
 
 | Skill | Purpose |
 |-------|---------|
-| `latex` | Basic LaTeX compilation with latexmk |
-| `latex-autofix` | **Default compiler** — auto-fixes errors, citation audit on success |
+| `latex` | **Default compiler** — autonomous error resolution, citation audit, quality scoring |
 | `latex-health-check` | Compile all projects, auto-fix, check cross-project consistency |
 | `latex-template` | Compare preamble against working paper template (report + apply) |
 | `bib-validate` | Cross-reference \cite{} keys against .bib files (report only) |
 | `bib-filter` | Filter a .bib file to only entries actually cited in a .tex project |
 | `bib-parse` | Extract citations from a PDF and generate a validated `.bib` file |
-| `bib-coverage` | Compare a project .bib against a Zotero collection to find uncited papers |
-| `bib-migrate` | Compare Paperpile and Zotero libraries to find items missing from each |
+| `bib-coverage` | Compare a project .bib against a Paperpile label to find uncited papers |
 | `latex-scaffold` | Convert Markdown draft into buildable LaTeX project (md→tex) |
 
 ### Submission (5)
@@ -81,11 +81,11 @@
 |-------|---------|
 | `pre-submission-report` | All quality checks in one dated report |
 | `retarget-journal` | Switch paper to different journal (rename, reformat, rekey) |
-| `process-reviews` | Referee comments PDF into tracking files |
+| `parse-reviews` | Referee comments PDF into tracking files |
 | `synthesise-reviews` | Synthesise parallel review reports into a prioritised revision plan |
 | `brief-compliance-check` | Check LaTeX submission against assessment brief (deliverables, word limits, required files) |
 
-### Project Setup & Session (17)
+### Project Setup & Session (18)
 
 | Skill | Purpose |
 |-------|---------|
@@ -95,16 +95,16 @@
 | `init-project-orchestration` | Add project agents, commands, and planning to a research project |
 | `project-safety` | Safety rules and folder structures to prevent data loss |
 | `session-log` | Timestamped progress logs for session continuity |
-| `general-session-recap` | End-of-session checklist for any project type |
-| `research-session-recap` | Research session close with atlas/vault checks |
+| `session-close` | End-of-session closing protocol with auto-detection (general or research) |
 | `update-focus` | Structured update to current-focus.md |
-| `context-status` | On-demand session health check |
+| `session-health` | On-demand session health check |
 | `save-context` | Save information to context library files |
 | `task-management` | Daily planning, weekly reviews, meeting actions, vault |
 | `ideas` | Capture improvement ideas for the infrastructure |
-| `consolidate-memory` | Prune, merge, and abstract MEMORY.md entries |
+| `memory-cleanup` | Prune, merge, and abstract MEMORY.md entries |
 | `update-project-doc` | Update a project's own docs to reflect current state |
-| `vault sync` | Sync project state to context library and vault |
+| `checkpoint` | Save session state to survive context compaction or handoff between sessions |
+| `restore` | Restore session state from a checkpoint after compaction or in a new session |
 | `email-digest` | Email digest from Gmail |
 | `decision-toolkit` | Structured decision-making for methodology, venue, or framework choices |
 
@@ -113,6 +113,7 @@
 | Skill | Purpose |
 |-------|---------|
 | `code-review` | 11-category scorecard for R/Python scripts (report only) |
+| `cross-language-check` | Replicate analysis in a second language (R↔Python↔Stata↔Julia) to verify correctness |
 | `code-archaeology` | Review and document old code, data, and analysis files |
 | `pipeline-manifest` | Map scripts to inputs, outputs, and paper figures/tables |
 | `python-env` | Python environment management (enforces uv) |
@@ -121,7 +122,7 @@
 | `webapp-testing` | Playwright-based web app testing with server lifecycle management. *From Anthropic.* |
 | `frontend-design` | Distinctive, production-grade frontend interfaces. *From Anthropic.* |
 
-### Experimental & Data (11)
+### Experimental & Data (12)
 
 | Skill | Purpose |
 |-------|---------|
@@ -136,41 +137,58 @@
 | `r-econometrics` | R regression and econometrics: OLS, IV, panel, RDD, robust SEs |
 | `event-studies` | DiD and event study implementation in R (TWFE vs modern estimators) |
 | `code-paper-audit` | Systematic 6-phase code-paper consistency audit |
+| `ethics-review` | Assess ethical risks: participant safety, data privacy, GDPR, AI ethics, ethics committee readiness |
 
-### Infrastructure (30)
+### Sync & Deploy (8)
 
 | Skill | Purpose |
 |-------|---------|
-| `learn` | Extract session knowledge into a new persistent skill |
-| `creation-guard` | Pre-flight duplicate check before creating new skills/agents |
-| `lessons-learned` | Structured post-mortem for incidents and stuck sessions |
-| `system-audit` | Parallel audits across skills, hooks, agents, rules, docs |
-| `atlas-review` | Full audit of all topics across 4 systems |
-| `atlas-deploy` | Compile atlas.json from topic files, commit, and deploy atlas web app to Fly.io |
-| `rename-project-research` | Rename an Atlas topic slug across all systems |
-| `sync-atlas` | Sync between Atlas topic files and vault |
-| `atlas-drift-check` | Verify Atlas schema, vault sync, disk paths, and frontmatter consistency |
-| `scout-drift-check` | Check CLI-web parity, route coverage, and taxonomy consistency in Scout |
-| `sync-repo` | Sync docs with system state for atlas, scout, refpile, or private repos |
+| `sync-repo` | Sync docs with system state for atlas, scout, biblio, taskflow, or private repos |
 | `sync-public-repo` | Sync private infrastructure to the public repo (claude-research) |
 | `sync-public-review` | Interactive review and editing of public sync allowlists |
-| `sync-santi-repo` | Regenerate the santi-repo starter kit from private rules |
+| `sync-friends-repo` | Regenerate the friends-repo starter kit from private rules |
 | `sync-resources` | Pull latest from cloned resource repos |
 | `sync-permissions` | Sync global permissions into projects |
-| `full-commit` | Commit and push all 8 global repos with leak guard |
-| `publish` | Full publication pipeline: sync, bump, commit, tag, publish |
-| `refpile-development` | Update and manage RefPile development topic documents |
-| `skill-creator` | Create, iterate, and benchmark skills with eval viewer. *From Anthropic.* |
+| `full-commit` | Commit and push all 11 global repos with leak guard |
+| `release` | Full publication pipeline: sync, bump, commit, tag, publish |
+
+### Audit & Quality (6)
+
+| Skill | Purpose |
+|-------|---------|
+| `system-audit` | Parallel audits across skills, hooks, agents, rules, docs |
+| `external-audit` | External LLM audit of any repo (atlas, scout, biblio, taskflow, private, public, friends, paperpile, scholarly, biblio-sources, council) |
+| `repo-doc-audit` | Documentation quality audit for any repo (atlas, scout, biblio, taskflow, private, public, friends, paperpile, scholarly, biblio-sources, council) |
+| `docs-consistency` | Cross-cutting doc review: count consistency, component coverage, stale refs, public-private sync, user manual |
+| `scout-drift-check` | Check CLI-web parity, route coverage, and taxonomy consistency in Scout |
 | `skill-health` | Skill health dashboard: invocation counts, success rates, health status |
-| `mcp-builder` | Guide for creating MCP servers (Python/FastMCP or TypeScript). *From Anthropic.* |
-| `external-audit` | External LLM audit of any repo (atlas, scout, refpile, private, public, santi) |
-| `audit-doc` | Documentation quality audit for any repo (atlas, scout, refpile, private, public, santi) |
-| `docs-review` | Cross-cutting doc review: count consistency, component coverage, stale refs, public-private sync, user manual |
-| `machine-audit` | Audit machine environment (Homebrew, dotfiles, credentials, dev tools, nested repos, MCP) |
-| `machine-review` | Holistic review of machine setup from snapshots: missing tools, redundant apps, cross-machine parity |
+
+### Skill Lifecycle (3)
+
+| Skill | Purpose |
+|-------|---------|
+| `skill-extract` | Extract session knowledge into a new persistent skill |
+| `skill-preflight` | Pre-flight duplicate check before creating new skills/agents |
+| `skill-creator` | Create, iterate, and benchmark skills with eval viewer. *From Anthropic.* |
+
+### Machine & Radar (4)
+
+| Skill | Purpose |
+|-------|---------|
+| `machine-inventory` | Audit machine environment (Homebrew, dotfiles, credentials, dev tools, nested repos, MCP) |
+| `machine-evaluation` | Holistic review of machine setup from snapshots: missing tools, redundant apps, cross-machine parity |
 | `radar` | Search the web for Claude Code updates, AI workflow patterns, and MCP ecosystem news |
 | `radar-integrate` | Convert saved radar tips into infrastructure changes |
+
+### Infrastructure (5)
+
+| Skill | Purpose |
+|-------|---------|
+| `postmortem` | Structured post-mortem for incidents and stuck sessions |
+| `rename-project-research` | Rename an Atlas topic slug across all systems |
+| `mcp-builder` | Guide for creating MCP servers (Python/FastMCP or TypeScript). *From Anthropic.* |
 | `wire-shared-package` | Wire a shared Python package as an editable dependency across projects |
+| `scheduled-job` | Create, diagnose, or manage scheduled launchd jobs on the Mac Mini |
 
 ### Document Formats (3)
 
@@ -198,7 +216,7 @@
 
 ---
 
-**Total: 139 skills across 12 categories.**
+**Total: 142 skills across 16 categories.**
 
 ---
 
@@ -225,7 +243,7 @@ Files in `skills/shared/` that multiple skills and agents reference. These are n
 | `skill-design-patterns.md` | Structural patterns for skill architecture |
 | `rhetoric-principles.md` | Presentation rhetoric for deck skills |
 | `multi-language-conventions.md` | R/Python/Stata/Julia conventions for analysis skills |
-| `reference-resolution.md` | Logic for resolving Zotero collections and topic references |
+| `reference-resolution.md` | Logic for resolving Paperpile labels and topic references |
 | `research-quality-rubric.md` | Research quality rubric for review agents |
 | `council-protocol.md` | Multi-model council deliberation protocol |
 | `external-audit-protocol.md` | Protocol for external LLM audits |

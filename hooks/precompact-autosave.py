@@ -173,8 +173,9 @@ def main():
     }
     print(json.dumps(output))
 
-    # Exit code 2 = message visible in transcript
-    sys.exit(2)
+    # Exit 0 = success, allow compaction to proceed.
+    # (Previously sys.exit(2), which Claude Code interprets as a blocking error.)
+    sys.exit(0)
 
 
 if __name__ == "__main__":

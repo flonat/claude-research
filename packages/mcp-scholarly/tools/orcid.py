@@ -95,7 +95,7 @@ if _orcid_client:
             description=(
                 "Search the ORCID registry for researchers by name, affiliation, or keyword. "
                 "Returns ORCID iDs with names and institutional affiliations. "
-                "Query syntax: family-name:Smith, given-names:John, affiliation-org-name:Warwick, keyword:MCDM. "
+                "Query syntax: family-name:Smith, given-names:John, affiliation-org-name:Example, keyword:MCDM. "
                 "Combine with AND/OR. Use this to find a researcher's ORCID iD for disambiguation."
             ),
             inputSchema={

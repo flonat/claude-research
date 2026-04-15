@@ -1,14 +1,14 @@
 {
-  "name": "flonat-research",
+  "name": "user-research",
   "version": "0.1.1",
   "description": "Claude Code infrastructure for academic research — skills, agents, hooks, and rules for LaTeX, bibliography, proofreading, and project management workflows.",
-  "author": "Florian Burnat",
+  "author": "the user",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/flonat/claude-research.git"
+    "url": "https://github.com/user/claude-research.git"
   },
-  "homepage": "https://github.com/flonat/claude-research",
+  "homepage": "https://github.com/user/claude-research",
   "keywords": [
     "claude-code",
     "academic",
@@ -22,10 +22,10 @@
     "hooks"
   ],
   "bin": {
-    "flonat-research": "scripts/setup.sh"
+    "user-research": "scripts/setup.sh"
   },
   "scripts": {
-    "postinstall": "echo '\\nRun: npx flonat-research\\nto create symlinks for skills, agents, hooks, and rules.\\n'",
+    "postinstall": "echo '\\nRun: npx user-research\\nto create symlinks for skills, agents, hooks, and rules.\\n'",
     "setup": "bash scripts/setup.sh"
   },
   "files": [

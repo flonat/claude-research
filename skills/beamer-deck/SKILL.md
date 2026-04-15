@@ -27,12 +27,12 @@ Create polished, zero-warning Beamer decks for academic contexts: seminars, conf
 
 ## Critical Rules
 
-1. **Build artifacts go to `out/`, PDF stays in the source directory.** Create `.latexmkrc` with `$out_dir = 'out'` and an `END {}` block to copy the PDF back if missing. Use `/latex-autofix` for compilation — it handles error resolution automatically. See `/latex` for manual config details.
+1. **Build artifacts go to `out/`, PDF stays in the source directory.** Create `.latexmkrc` with `$out_dir = 'out'` and an `END {}` block to copy the PDF back if missing. Use `/latex` for compilation — it handles error resolution automatically. See `/latex` for manual config details.
 2. **Python:** Always use `uv run python`. Never bare `python`, `python3`, `pip`, or `pip3`.
 2. **Fix ALL warnings.** Overfull hbox, underfull hbox, overfull vbox, underfull vbox — no matter how small. Parse the `.log` file. Recompile until clean.
 3. **Titles are assertions, not labels.** "Distance increases abortion rates" — not "Results". Every frame title states a claim.
 4. **One idea per slide.** Not a guideline. A law. If a slide has two ideas, split it.
-5. **Original themes only.** Never use default Beamer themes (Warsaw, Madrid, etc.) as-is. Define colours and templates inline in the `.tex` file — no separate `.sty` files.
+5. **Use the unified template.** Always use `\usepackage[<institution>]{user-beamer}` from `templates/beamer/`. Options: `warwick`, `southampton`, `bath`, `lse`, `plain`. Never use default Beamer themes (Warsaw, Madrid, etc.) as-is, and never create one-off preambles. See [`templates/beamer/README.md`] for available custom commands and how to add institutions.
 6. **Code-first figures.** Generate figures via R or Python scripts before inserting. Never use placeholder images. **Always save the script alongside the figures** — never generate a figure without preserving the code that created it.
 7. **If a `.bib` file is used, validate it.** Cross-reference all `\cite{}` keys against the bibliography file. See `/bib-validate` for the full protocol.
 
@@ -89,8 +89,8 @@ Check for existing `.bib` files in the project. If citations are needed, note th
 
 1. **Choose rhetoric balance** based on audience (see table above)
 2. **Outline slide sequence** with assertion titles — write each title as a claim
-3. **Plan narrative arc** — identify Act I/II/III transitions
-4. **Choose colour palette** — original, appropriate to audience tone (see Reference Palettes below for starting points)
+3. **Plan narrative arc** — consult [`docs/reference/talk-design.md`](../../docs/reference/talk-design.md) for format-specific arcs (empirical, structural, theory, descriptive) and audience calibration
+4. **Choose institution option** for `user-beamer` — colours and fonts are set by the template
 5. **Identify figures needed** — which need to be generated via code?
 
 Present the outline to the user for approval before building.
@@ -98,15 +98,15 @@ Present the outline to the user for approval before building.
 ### Phase 3: Build Deck (Direct)
 
 1. **Generate figures first** — run R/Python scripts, save to `figures/`
-2. **Write `.tex` file** with inline theme (colours, templates, fonts — all in one file, no `.sty`)
-3. **Use 16:9 aspect ratio** (`\documentclass[aspectratio=169,11pt]{beamer}`)
+2. **Write `.tex` file** using the unified template: `\documentclass[aspectratio=169,11pt]{beamer}` + `\usepackage[warwick]{user-beamer}` (or other institution option). Use `\fbinstitute` and `\fbemail` for metadata. Custom commands: `\contribcard`, `\phasecircle`, `\accentbox`, `\highlightbox`, `standoutframe` environment.
+3. **Use 16:9 aspect ratio** (already in the documentclass above)
 4. **Create `.latexmkrc`** if not present (`$out_dir = 'out'` + `END {}` block to copy PDF back)
-5. **Compile using `/latex-autofix`** — this handles missing packages, font conflicts, citation key mismatches, and stale cache automatically
+5. **Compile using `/latex`** — this handles missing packages, font conflicts, citation key mismatches, and stale cache automatically
 6. **If using citations**: add `\addbibresource{references.bib}` or `\bibliography{}` as appropriate
 
 ### Phase 4: Fix All Warnings (Direct)
 
-After `/latex-autofix` resolves errors, address remaining **warnings** (which autofix does not fix):
+After `/latex` resolves errors, address remaining **warnings** (which autofix does not fix):
 
 1. Parse `out/*.log` for overfull/underfull hbox/vbox warnings
 2. Fix every single one — adjust text, resize figures, tweak `\parbox`, etc.
@@ -157,7 +157,7 @@ A completed deck directory should contain:
 
 ```
 project/
-├── deck.tex              # Main Beamer file (inline theme)
+├── deck.tex              # Main Beamer file (uses user-beamer.sty)
 ├── deck.pdf              # Compiled PDF (copied from out/ by .latexmkrc)
 ├── .latexmkrc            # Output directory config
 ├── out/                  # Build artifacts only
@@ -186,7 +186,7 @@ project/
 | Skill | When to use instead/alongside |
 |-------|-------------------------------|
 | `/project-deck` | For project status updates (supervisor meetings, coauthor handoffs) |
-| `/latex-autofix` | **Default compiler** — used in Phase 3 for error resolution and citation audit |
+| `/latex` | **Default compiler** — used in Phase 3 for error resolution and citation audit |
 | `/latex` | For manual compilation config details, `.latexmkrc` setup, engine selection |
 | `/proofread` | For post-hoc review of text quality in the deck |
 | `/bib-validate` | For thorough bibliography cross-referencing when citations are used |

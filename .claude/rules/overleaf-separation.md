@@ -1,3 +1,9 @@
+---
+paths:
+  - "**/*.tex"
+  - "**/*.bib"
+---
+
 # Rule: Overleaf Separation — No Code or Data in Paper Directories
 
 ## Principle

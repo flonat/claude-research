@@ -58,11 +58,11 @@
 
 ## Reference Manager Cross-Reference
 
-| Key | .bib | Zotero | Paperpile | Status |
-|-----|------|--------|-----------|--------|
-| `smith2020` | Yes | Yes | Yes | HEALTHY |
-| `jones2019` | Yes | No | Yes | MIGRATE_TO_ZOTERO |
-| `doe2021` | Yes | No | No | MISSING |
+| Key | .bib | Paperpile | Status |
+|-----|------|-----------|--------|
+| `smith2020` | Yes | Yes | HEALTHY |
+| `jones2019` | Yes | No | DRIFT |
+| `doe2021` | No | Yes | EXPORT_GAP |
 
 ## Fix Mode Actions
 
@@ -70,11 +70,10 @@
 
 | Action | Key | Result |
 |--------|-----|--------|
-| Added to Zotero | `doe2021` | Filed → [Topic Collection] + _Needs Review |
-| Migrated to Zotero | `jones2019` | Copied from Paperpile → [Topic Collection] + _Needs Review |
+| Staged for import | `doe2021` | `paperpile-stage-YYYY-MM-DD-HHMM.bib` |
 | Metadata corrected | `smith2020` | Updated year: 2019 → 2020 |
 
-**Post-fix:** Updated `zotero-collections.md` item counts for [collection].
+**Post-fix:** Import `paperpile-stage-*.bib` into Paperpile to complete the sync.
 
 ## Limitations
 

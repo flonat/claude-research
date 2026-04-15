@@ -12,8 +12,8 @@ When a target venue is known from the interview, seed the venue folder and corre
 docs/venues/<venue-slug>/      # e.g., docs/venues/ejor/, docs/venues/mcdm-2026/
 └── submission/                # .gitkeep — for initial submission materials
 
-correspondence/
-└── referee-reviews/            # .gitkeep — for review rounds (seeded by /process-reviews)
+paper-<venue>/correspondence/
+└── referee-reviews/            # .gitkeep — for review rounds (seeded by /parse-reviews)
 ```
 
 As the project progresses through submission and revision cycles, material splits across two locations:
@@ -27,9 +27,9 @@ docs/venues/<venue-slug>/
 └── camera-ready/              # Final accepted version
 ```
 
-**`correspondence/referee-reviews/`** — reviewer exchanges per round:
+**`paper-<venue>/correspondence/referee-reviews/`** — reviewer exchanges per round:
 ```
-correspondence/referee-reviews/<venue>-round<N>/
+paper-<venue>/correspondence/referee-reviews/<venue>-round<N>/
 ├── reviews-original.pdf       # What reviewers sent
 ├── rebuttal.md                # What we send back
 └── analysis/                  # Our work on their feedback
@@ -123,7 +123,7 @@ Used in Phase 6 when creating `.context/projects/papers/<short-name>.md`:
 - [x] Project folder structure + Overleaf symlink
 - [x] Git initialised
 - [x] Context library entries created
-- [x] vault research pipeline entry
+- [x] atlas topic outputs configured
 
 ## Action Items
 - [ ] Literature review
@@ -142,7 +142,7 @@ Projects naturally grow beyond the initial scaffold. These items are **not** cre
 | `experiments/configs/` | Sub-directory for sweep YAML/JSON files | Parameter sweep definitions |
 | `scripts/` | When utility scripts accumulate | One-off data processing, plotting scripts |
 | `legacy/` | After refactoring or restructuring | Preserves old code/data safely (per `/project-safety`) |
-| `correspondence/referee-reviews/<venue>-roundN/` | After receiving R&R | Reviewer comments, rebuttal, analysis |
+| `paper-<venue>/correspondence/referee-reviews/<venue>-roundN/` | After receiving R&R | Reviewer comments, rebuttal, analysis |
 | `docs/<venue>/internal-reviews/` | After running referee2 agent | Internal review reports (not round-specific) |
 | `docs/venues/<venue>/camera-ready/` | After acceptance | Final camera-ready version |
 | `notes.md` | Early research phase | Quick research notes, meeting summaries |

@@ -216,7 +216,7 @@ Based on the synthesis:
 
 ### Phase 5: Output
 
-Write the report to the project directory as `PERSPECTIVES-REPORT.md` (or print to console for quick use).
+Create `correspondence/internal-reviews/` if it does not exist (`mkdir -p`). Write the report to `correspondence/internal-reviews/PERSPECTIVES-REPORT.md` (or print to console for quick use).
 
 ## Output Format
 

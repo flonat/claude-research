@@ -25,6 +25,23 @@ add_section() {
   fi
 }
 
+# --- Path Registry (canonical roots for all data) ---
+CONFIG_DIR="$HOME/.config/task-mgmt"
+PATH_REGISTRY=""
+for entry in path:Task-Management research-root:Research-Projects vault:Research-Vault overleaf-root:Overleaf; do
+  file="${entry%%:*}"
+  label="${entry#*:}"
+  if [ -f "$CONFIG_DIR/$file" ]; then
+    val="$(head -1 "$CONFIG_DIR/$file" | tr -d '\n')"
+    if [ -n "$val" ]; then
+      PATH_REGISTRY="${PATH_REGISTRY}\n- ${label}: ${val}"
+    fi
+  fi
+done
+if [ -n "$PATH_REGISTRY" ]; then
+  CONTEXT="## Path Registry${PATH_REGISTRY}"
+fi
+
 # --- Current focus (Task Management context) ---
 add_section "Current Focus" "$TASK_MGMT/.context/current-focus.md" 25
 
@@ -55,16 +72,39 @@ if [ "$CWD" != "$TASK_MGMT" ]; then
   add_section "Project Planning State" "$PROJECT_ROOT/.planning/state.md" 30
 fi
 
-# --- Latest session log ---
+# --- Latest session log (skip if >7 days old) ---
 if [ -d "$TASK_MGMT/log" ]; then
   LATEST_LOG=$(find "$TASK_MGMT/log" -maxdepth 1 -name "*.md" -type f | sort -r | head -1)
-  add_section "Latest Session Log ($(basename "$LATEST_LOG" 2>/dev/null))" "$LATEST_LOG" 30
+  if [ -n "$LATEST_LOG" ]; then
+    LOG_AGE=$(( ( $(date +%s) - $(stat -f %m "$LATEST_LOG" 2>/dev/null || echo 0) ) / 86400 ))
+    if [ "$LOG_AGE" -le 7 ] 2>/dev/null; then
+      add_section "Latest Session Log ($(basename "$LATEST_LOG"))" "$LATEST_LOG" 30
+    else
+      if [ -n "$CONTEXT" ]; then CONTEXT="$CONTEXT\n\n"; fi
+      CONTEXT="${CONTEXT}## Latest Session Log\nLast log is ${LOG_AGE} days old ($(basename "$LATEST_LOG")). Read it if resuming prior work."
+    fi
+  fi
 fi
 
-# --- Latest plan (if any) ---
+# --- Latest plan (skip if >14 days old) ---
 if [ -d "$TASK_MGMT/log/plans" ]; then
   LATEST_PLAN=$(find "$TASK_MGMT/log/plans" -maxdepth 1 -name "*.md" -type f | sort -r | head -1)
-  add_section "Latest Plan ($(basename "$LATEST_PLAN" 2>/dev/null))" "$LATEST_PLAN" 25
+  if [ -n "$LATEST_PLAN" ]; then
+    PLAN_AGE=$(( ( $(date +%s) - $(stat -f %m "$LATEST_PLAN" 2>/dev/null || echo 0) ) / 86400 ))
+    if [ "$PLAN_AGE" -le 14 ] 2>/dev/null; then
+      add_section "Active Plan ($(basename "$LATEST_PLAN"))" "$LATEST_PLAN" 25
+    fi
+    # >14 days: silently skip — plan is likely completed or abandoned
+  fi
+fi
+
+# --- Pending agent messages ---
+AGENT_MSG_FILE="$TASK_MGMT/.context/agent-messages.md"
+if [ -f "$AGENT_MSG_FILE" ]; then
+  PENDING_COUNT=$(grep -c '^\## \[pending\]' "$AGENT_MSG_FILE" 2>/dev/null) || PENDING_COUNT=0
+  if [ "$PENDING_COUNT" -gt 0 ] 2>/dev/null; then
+    add_section "Pending Agent Messages ($PENDING_COUNT)" "$AGENT_MSG_FILE" 40
+  fi
 fi
 
 # --- Skill observations: weekly review check ---
@@ -79,6 +119,18 @@ if [ -f "$REVIEW_DATE_FILE" ]; then
     CONTEXT="${CONTEXT}## Skill Observations\nWeekly review overdue (last: ${LAST_REVIEW}, ${DAYS_SINCE} days ago). Consider running \`/skill-health\` to review."
   fi
 fi
+
+# --- Session type detection ---
+SESSION_TYPE="general"
+if [ "$CWD" = "$TASK_MGMT" ]; then
+  SESSION_TYPE="infrastructure"
+elif [ -d "$PROJECT_ROOT/paper" ] || [ -d "$PROJECT_ROOT/paper-"* ] 2>/dev/null || ls "$PROJECT_ROOT"/paper-*/paper 2>/dev/null | head -1 >/dev/null 2>&1; then
+  SESSION_TYPE="research"
+elif echo "$CWD" | grep -qi "teaching\|course\|module\|teaching\|workshop"; then
+  SESSION_TYPE="teaching"
+fi
+if [ -n "$CONTEXT" ]; then CONTEXT="$CONTEXT\n\n"; fi
+CONTEXT="${CONTEXT}## Session Type\nDetected: **${SESSION_TYPE}** (from CWD: $(basename "$CWD"))"
 
 if [ -z "$CONTEXT" ]; then
   exit 0

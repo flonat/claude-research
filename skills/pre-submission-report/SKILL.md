@@ -59,13 +59,13 @@ Fix these and re-run /pre-submission-report.
 
 Run these sequentially (each depends on a clean state):
 
-1. **Compilation** — invoke `/latex-autofix` on the main `.tex` file. Record pass/fail and any remaining warnings.
+1. **Compilation** — invoke `/latex` on the main `.tex` file. Record pass/fail and any remaining warnings.
 2. **Citation audit** — invoke `/bib-validate` (full mode — deep verify). Record missing, unused, and suspect keys.
 3. **Adversarial review** — launch `paper-critic` agent (via Task tool). Capture the CRITIC-REPORT.md score and findings.
 
 ### 4. Aggregate Report
 
-Save to `audits/quality-reports/YYYY-MM-DD_<project-name>.md`:
+Save to `log/audits/quality-reports/YYYY-MM-DD_<project-name>.md`:
 
 ```markdown
 # Pre-Submission Quality Report
@@ -139,7 +139,7 @@ Display the report path and the summary table to the user. If the recommendation
 
 ## Error Handling
 
-- If compilation fails after `/latex-autofix`, still run the remaining checks. Mark compilation as FAIL in the report.
+- If compilation fails after `/latex`, still run the remaining checks. Mark compilation as FAIL in the report.
 - If `paper-critic` agent fails, note it in the report and base the overall score on compilation + citations only.
 - Always produce the report file, even if some checks failed.
 
@@ -147,7 +147,7 @@ Display the report path and the summary table to the user. If the recommendation
 
 | Skill/Agent | Role in this workflow |
 |-------------|---------------------|
-| `/latex-autofix` | Compilation + auto-fix |
+| `/latex` | Compilation + auto-fix |
 | `/bib-validate` | Citation cross-reference |
 | `paper-critic` agent | Adversarial content review |
 | `quality-scoring.md` | Verdict thresholds |

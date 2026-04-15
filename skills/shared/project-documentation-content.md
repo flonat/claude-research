@@ -60,7 +60,7 @@ tool-name subcommand "another example" --flag value
 
 | Document | What it covers |
 |----------|---------------|
-| [`docs/user-manual.md`](docs/user-manual.md) | Full user guide |
+| [`docs/reference/user-manual.md`](docs/reference/user-manual.md) | Full user guide |
 | [`docs/architecture.md`](docs/architecture.md) | Technical internals |
 | ... | ... |
 
@@ -340,7 +340,7 @@ When a project has a web UI, the user manual should be accessible directly withi
 ### Architecture
 
 ```
-docs/user-manual.md  ──→  help_content.py  ──→  /help page (full manual)
+docs/reference/user-manual.md  ──→  help_content.py  ──→  /help page (full manual)
                                 │
                                 └──→  WORKFLOW_TIPS  ──→  contextual tips (per page)
 ```

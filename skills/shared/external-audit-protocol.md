@@ -156,7 +156,7 @@ If there are **new changes not present before**:
 
 ## Phase 5: Write Report
 
-Write the model output to the skill-specified report path (typically `audits/{model}-audit-{scope}-YYYY-MM-DD.md`).
+Write the model output to the skill-specified report path (typically `log/audits/{model}-audit-{scope}-YYYY-MM-DD.md`).
 
 Add a header:
 
@@ -201,5 +201,5 @@ Ask if he wants to address any findings now.
 |-------|-------------|
 | `/system-audit` | Mechanical checks (counts, symlinks) — complementary, not overlapping |
 | `/audit-project-research` | Per-project structural audit — external audits are cross-cutting |
-| `/lessons-learned` | Critical findings can feed into post-mortems |
+| `/postmortem` | Critical findings can feed into post-mortems |
 | `/ideas` | Recommendations can be captured as improvement ideas |

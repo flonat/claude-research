@@ -93,7 +93,7 @@ Follow the `lean-claude-md` rule. Include only:
 
 ## Phase 5: Seed MEMORY.md
 
-Create `MEMORY.md` using the appropriate template (student or instructor). Templates, settings.local.json, and vault pipeline sync details: [references/memory-and-settings.md](references/memory-and-settings.md)
+Create `MEMORY.md` using the appropriate template (student or instructor). Templates, settings.local.json, and vault entry details: [references/memory-and-settings.md](references/memory-and-settings.md)
 
 ---
 
@@ -103,9 +103,9 @@ Create `.claude/settings.local.json` if missing. Full details: [references/memor
 
 ---
 
-## Phase 7: vault pipeline Sync
+## Phase 7: Vault Sync
 
-Offer to create a row in the appropriate Modules Pipeline (Student or Instructor). Database IDs and field mappings: [references/memory-and-settings.md](references/memory-and-settings.md)
+Offer to create entries in the vault tracking for this module (Student or Instructor). Database IDs and field mappings: [references/memory-and-settings.md](references/memory-and-settings.md)
 
 ---
 

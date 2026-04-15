@@ -115,6 +115,7 @@ The main session invokes the `llm-council` package (via CLI or Python script). T
 2. Each model independently produces a JSON assessment
 3. All calls are parallel (async)
 4. Failed models are logged and skipped — the council proceeds with available responses
+5. **Minimum viable council:** ≥2 of N models must succeed. If only 1 succeeds, skip peer review (Stage 2) and return the single assessment with a degradation warning. If all fail, report the error — do not produce output
 
 **Default models:** `anthropic/claude-sonnet-4.5`, `openai/gpt-5`, `google/gemini-2.5-pro`
 

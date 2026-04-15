@@ -14,7 +14,7 @@ A modular, opinionated system for using Claude Code to develop academic lecture 
 CLAUDE.md                  — Project memory (~150 lines, links to detailed rules)
 .claude/agents/ (10)       — Specialized reviewers (proofreader, slide-auditor, pedagogy, R, TikZ, etc.)
 .claude/skills/ (13)       — Slash commands (/compile-latex, /translate-to-quarto, /qa-quarto, etc.)
-.claude/rules/ (12)        — Auto-loaded enforcement protocols
+rules/ (39)                — Auto-loaded enforcement protocols
 quality_reports/            — Plans and session logs (survive context compression)
 ```
 

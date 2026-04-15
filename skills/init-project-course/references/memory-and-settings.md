@@ -1,6 +1,6 @@
 # Phase 5-7: MEMORY.md Templates, Settings & Vault Sync
 
-> Templates for seeding MEMORY.md, settings.local.json, and vault pipeline sync for `/init-project-course`.
+> Templates for seeding MEMORY.md, settings.local.json, and vault entries for `/init-project-course`.
 
 ---
 
@@ -75,16 +75,16 @@ If `.claude/settings.local.json` exists, leave it. If not, create one:
 
 ---
 
-## vault pipeline Sync
+## Vault Sync
 
-Offer to create a row in the appropriate vault pipeline. If the user accepts:
+Offer to create entries in the appropriate vault submissions/tracking. If the user accepts:
 
-### Student module → Modules Pipeline (Student)
+### Student module → Vault Module Entry (Student)
 
 - **Database data source ID:** `YOUR-MODULES-STUDENT-DATABASE-ID-HERE`
 - Set: Module Name, Module Code, University, Programme, Term, Year, Status, Assessment Type, Credits, Instructor, Folder Path, Has CLAUDE.md = `__YES__`
 
-### Instructor module → Modules Pipeline (Instructor)
+### Instructor module → Vault Module Entry (Instructor)
 
 - **Database data source ID:** `YOUR-MODULES-INSTRUCTOR-DATABASE-ID-HERE`
 - Set: Module Name, Module Code, University, Term, Year, Role, Status, Module Leader, Folder Path, Has CLAUDE.md = `__YES__`

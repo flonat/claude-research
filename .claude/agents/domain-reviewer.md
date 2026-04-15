@@ -8,6 +8,7 @@ tools:
 model: opus
 color: cyan
 memory: project
+initialPrompt: "Read the shared references (escalation protocol, method probing questions, validation tiers, distribution diagnostics, intercoder reliability), then find all .tex files in the project, identify the main document, and begin the substantive correctness audit."
 ---
 
 # Domain Reviewer: Substantive Correctness Auditor

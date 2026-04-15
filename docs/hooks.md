@@ -1,6 +1,6 @@
 # Hooks
 
-> 8 hook scripts that run automatically at key moments in Claude Code sessions.
+> 9 hook scripts that run automatically at key moments in Claude Code sessions.
 
 Hook scripts live in `hooks/` and are configured in `~/.claude/settings.json` under the `"hooks"` key.
 
@@ -10,6 +10,7 @@ Hook scripts live in `hooks/` and are configured in `~/.claude/settings.json` un
 |------|---------|-------------|
 | `block-destructive-git.sh` | Before Bash | catches dangerous git/shell commands |
 | `context-monitor.py` | After tool use | tracks tool call count as a heuristic for context usage |
+| `handoff-read.sh` | SessionStart | if handoff.md exists in cwd, read it into additionalContext |
 | `postcompact-restore.py` | After compact | restores state after context compression |
 | `precompact-autosave.py` | Before compact | saves state before context compression |
 | `promise-checker.sh` | Session stop | catches "performative compliance": Claude says it remembered/noted/saved |

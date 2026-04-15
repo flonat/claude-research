@@ -2,7 +2,7 @@
 """Generate ~/.codex/AGENTS.md from Claude Code agents and rules.
 
 Reads agent definitions (.claude/agents/*.md) and rule files
-(.claude/rules/*.md), then produces a single AGENTS.md for Codex CLI.
+(~/Task-Management/rules/*.md), then produces a single AGENTS.md for Codex CLI.
 
 Usage:
     uv run python .scripts/generate-codex-agents-md.py \
@@ -67,8 +67,7 @@ def read_rule(path: Path) -> dict[str, str]:
 SKIP_RULES = {
     "agents-vs-skills.md",  # Claude-specific agent/skill distinction
     "break-the-glass.md",  # Claude infrastructure protection
-    "ignore-agents-md.md",  # Ironic — Codex *needs* AGENTS.md
-    "ignore-gemini-md.md",  # Claude-specific
+    "ignore-external-agent-files.md",  # Ironic — Codex *needs* AGENTS.md; also skips GEMINI.md
     "lean-claude-md.md",  # Claude-specific
     "public-repo-sync.md",  # Claude infrastructure
     "read-docs-first.md",  # Claude context system
@@ -113,7 +112,7 @@ def generate_agents_md(
 
 - **User:** the user
 - **Role:** PhD Researcher (Year 1)
-- **Affiliations:** [University 1], [University 2], [University 3] (research) + LSE (teaching)
+- **Affiliations:** [University 1], [University 2], [University 3] (research) + [Teaching]
 - **Research:** [your research areas]
 
 ## Conventions

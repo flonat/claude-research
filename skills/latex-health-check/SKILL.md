@@ -93,7 +93,7 @@ For each error, apply the known fix from the database:
 
 After each fix, recompile. Max 3 iterations per project.
 
-**Why 3 iterations (not 5)?** `/latex-autofix` runs up to 5 iterations on a single project with deep error analysis. This skill trades depth for breadth — 3 iterations is enough to catch the common fleet-wide issues (missing packages, broken symlinks, stale cache) without spending excessive time on any one project. If a project still has errors after 3 iterations, mark it as ERROR and recommend running `/latex-autofix` on it directly for deeper diagnosis.
+**Why 3 iterations (not 5)?** `/latex` runs up to 5 iterations on a single project with deep error analysis. This skill trades depth for breadth — 3 iterations is enough to catch the common fleet-wide issues (missing packages, broken symlinks, stale cache) without spending excessive time on any one project. If a project still has errors after 3 iterations, mark it as ERROR and recommend running `/latex` on it directly for deeper diagnosis.
 
 ### 2e. Record result
 ```json
@@ -154,7 +154,7 @@ Print to stdout. If `--save` flag or 10+ projects scanned, also write to `log/la
 
 | Skill | Relationship |
 |-------|-------------|
-| `/latex-autofix` | Single-project deep fix (5 iterations). This skill runs a lighter version (3 iterations) at fleet scale. For ERROR projects, recommend running `/latex-autofix` directly. |
+| `/latex` | Single-project deep fix (5 iterations). This skill runs a lighter version (3 iterations) at fleet scale. For ERROR projects, recommend running `/latex` directly. |
 | `/latex` | Manual compilation config and `.latexmkrc` reference — health-check creates `.latexmkrc` files using the conventions defined there. |
 | `/audit-project-research` | Checks project structure (directories, files). This skill checks build health. |
 | `/bib-validate` | Validates bibliography entries. This skill checks if citations compile. |

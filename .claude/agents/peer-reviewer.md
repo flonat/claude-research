@@ -155,9 +155,27 @@ This lets the user decide how deep to go.
 
 ---
 
+## Phase 1.5: Knowledge Acquisition (Dynamic Literature Context)
+
+**After reading all splits and before spawning sub-agents**, run the Knowledge Acquisition protocol to construct dynamic external context. This grounds the review in verified literature rather than parametric knowledge alone.
+
+1. Read `skills/shared/knowledge-acquisition.md` and execute the 5-step KA protocol.
+2. **Input:** Use the paper summary from Phase 1 running notes — title, abstract, claimed contributions, method name, datasets, reported baselines.
+3. **Cutoff date:** Derive from the paper's stated submission date, or the year of the latest cited reference. All literature searches are constrained to this date to prevent temporal leakage.
+4. **All MCP calls happen here** (orchestrator context) — sub-agents cannot call MCP.
+5. **Output:** Three files at `/tmp/ka-literature-{timestamp}.json`, `/tmp/ka-baselines-{timestamp}.json`, `/tmp/ka-narrative-{timestamp}.md`.
+
+Report to the user: "KA complete: found N papers (M from Paperpile), K missing baselines. Proceeding to sub-agents."
+
+**When to skip:** the user says "skip KA", the paper is a short informal draft, or this is a repeat review (R&R) where Round 1 KA is still valid.
+
+---
+
 ## Phase 2: Parallel Sub-Agent Deployment
 
-After reading all splits, spawn three sub-agents in parallel. Read `references/peer-reviewer/sa-prompts.md` for the full prompt templates for Citation Validator, Novelty & Literature Assessor, and Methodology Reviewer. **Launch all three in a SINGLE message.**
+After reading all splits and completing KA (if run), spawn three sub-agents in parallel. Read `references/peer-reviewer/sa-prompts.md` for the full prompt templates for Citation Validator, Novelty & Literature Assessor, and Methodology Reviewer. **Launch all three in a SINGLE message.**
+
+When KA was run, include the file paths in each sub-agent's prompt so they can read the KA outputs. See `sa-prompts.md` for the KA Context additions to each sub-agent template.
 
 ---
 

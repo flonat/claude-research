@@ -1,13 +1,13 @@
 ---
 name: code-review
-description: "Use when you need a quality review of R or Python research scripts."
-allowed-tools: Read, Glob, Grep
-argument-hint: [script-path or project-path]
+description: "Use when you need a quality review of R, Python, or Julia research scripts. Multi-persona orchestrator with parallel specialist reviewers."
+allowed-tools: Read, Glob, Grep, Agent, Bash(wc*)
+argument-hint: "[script-path or project-path]"
 ---
 
 # Research Code Review
 
-**Report-only skill.** Never edit source files — produce `CODE-REVIEW-REPORT.md` only.
+**Report-only skill.** Never edit source files — produce `correspondence/internal-reviews/CODE-REVIEW-REPORT.md` only.
 
 ## When to Use
 
@@ -22,16 +22,36 @@ argument-hint: [script-path or project-path]
 - **Formal verification** — use the Referee 2 agent for cross-language replication
 - **General software projects** — this is for research scripts, not applications
 
-## Workflow
+---
 
-1. **Locate scripts**: Find all `.R`, `.py`, `.do`, `.jl` files in the project
-2. **Read each script** carefully
-3. **Score each category** (Pass / Fail / N/A)
-4. **Produce report**: Write `CODE-REVIEW-REPORT.md` in the project directory
+## Architecture
 
-## 11 Review Categories
+**Orchestrator + parallel specialist reviewers.** The main context runs a baseline checklist, then spawns 3-6 specialist sub-agents in parallel. Each reviewer produces structured JSON findings. The orchestrator deduplicates, merges, and synthesizes a single report.
 
-### 1. Reproducibility
+```
+Phase 1: Scope → Phase 2: Baseline Checklist → Phase 3: Spawn Reviewers
+→ Phase 4: Merge & Dedup → Phase 5: Synthesize Report
+```
+
+---
+
+## Phase 1: Scope Detection
+
+1. **Locate scripts:** Find all `.R`, `.py`, `.jl`, `.do` files in the project (or the specified path)
+2. **Count and classify:** Report file count, languages, total lines of code
+3. **Read project CLAUDE.md** (if it exists) for domain context, estimand, methodology
+
+If no code files found, stop: "No code files found at [path]."
+
+---
+
+## Phase 2: Baseline Checklist (main context, fast pass)
+
+Run through all 11 categories as a quick structural check. This catches mechanical issues that don't need specialist reviewers.
+
+### 11 Checklist Categories
+
+#### 1. Reproducibility
 
 | Check | Pass Criteria |
 |-------|--------------|
@@ -40,7 +60,7 @@ argument-hint: [script-path or project-path]
 | Working directory | Script does not `setwd()` / `os.chdir()` — uses project-relative paths |
 | Session info | Script prints session info at end (`sessionInfo()` / `sys.version`) or documents environment |
 
-### 2. Script Structure
+#### 2. Script Structure
 
 | Check | Pass Criteria |
 |-------|--------------|
@@ -49,7 +69,7 @@ argument-hint: [script-path or project-path]
 | Imports at top | All `library()` / `import` statements at the top of the file |
 | Reasonable length | Single script < 500 lines; longer scripts should be split |
 
-### 3. Output Hygiene
+#### 3. Output Hygiene
 
 | Check | Pass Criteria |
 |-------|--------------|
@@ -57,7 +77,7 @@ argument-hint: [script-path or project-path]
 | Outputs saved | Key results saved to files, not just printed |
 | Clean console | Running the script does not produce walls of text |
 
-### 4. Function Quality
+#### 4. Function Quality
 
 | Check | Pass Criteria |
 |-------|--------------|
@@ -66,7 +86,7 @@ argument-hint: [script-path or project-path]
 | Defaults | Reasonable defaults for optional parameters |
 | No side effects | Functions don't modify global state |
 
-### 5. Domain Correctness
+#### 5. Domain Correctness
 
 | Check | Pass Criteria |
 |-------|--------------|
@@ -76,7 +96,7 @@ argument-hint: [script-path or project-path]
 | Sample restrictions | Filters match the paper's sample description |
 | Variable construction | Variables constructed as described in the paper |
 
-### 6. Figure Quality
+#### 6. Figure Quality
 
 | Check | Pass Criteria |
 |-------|--------------|
@@ -86,7 +106,7 @@ argument-hint: [script-path or project-path]
 | Labels | Axes labelled, legend present where needed, title informative |
 | Colour | Colourblind-friendly palette; not relying on red/green distinction |
 
-### 7. Data Persistence
+#### 7. Data Persistence
 
 | Check | Pass Criteria |
 |-------|--------------|
@@ -94,7 +114,7 @@ argument-hint: [script-path or project-path]
 | Load before recompute | Script checks for saved objects before rerunning expensive operations |
 | Output format | Final outputs in portable format (CSV, parquet — not just `.RData`) |
 
-### 8. Dependencies
+#### 8. Dependencies
 
 | Check | Pass Criteria |
 |-------|--------------|
@@ -103,7 +123,7 @@ argument-hint: [script-path or project-path]
 | No unnecessary packages | Each loaded package is actually used |
 | Installation instructions | README or comment explains how to set up the environment |
 
-### 9. Python-Specific
+#### 9. Python-Specific
 
 *Score N/A if no Python files.*
 
@@ -114,7 +134,7 @@ argument-hint: [script-path or project-path]
 | uv usage | Uses `uv` for environment management (per project conventions) |
 | f-strings | Uses f-strings, not `.format()` or `%` formatting |
 
-### 10. R-Specific
+#### 10. R-Specific
 
 *Score N/A if no R files.*
 
@@ -125,93 +145,110 @@ argument-hint: [script-path or project-path]
 | Boolean values | Uses `TRUE`/`FALSE`, not `T`/`F` |
 | Pipe consistency | Uses one pipe style consistently (`%>%` or `|>`) |
 
-### 11. Cross-Language Verification
+#### 11. Cross-Language Verification
 
 *Score N/A if the project has no numerical results or only uses one language.*
 
 | Check | Pass Criteria |
 |-------|--------------|
 | Replication directory | `code/replication/` (or equivalent) exists with cross-language scripts |
-| Two-language coverage | Key numerical results reproduced in a second language (e.g., R results verified in Python or vice versa) |
-| Result comparison | Scripts compare outputs and report discrepancies (tolerance-based, not exact match) |
-| Precision threshold | Numerical outputs compared to 6+ decimal places — discrepancies at lower precision indicate real bugs |
-| Documentation | README or comments explain what is being replicated and acceptable tolerance |
+| Two-language coverage | Key numerical results reproduced in a second language |
+| Result comparison | Scripts compare outputs and report discrepancies (tolerance-based) |
+| Precision threshold | Numerical outputs compared to 6+ decimal places |
+| Documentation | README explains what is being replicated and acceptable tolerance |
 
-#### Why Cross-Language Replication Works
+Record checklist results (Pass/Fail/N/A per category) for the report. Continue to Phase 3 regardless of results.
 
-Different languages produce different hallucination patterns when AI-assisted. An error in a Python implementation is unlikely to appear identically in R (or vice versa), making discrepancies easy to spot. This is the core insight from Scott Cunningham's Referee 2 protocol.
+---
 
-#### How to Set Up
+## Phase 3: Spawn Specialist Reviewers
 
-1. Create `code/replication/` with scripts that independently implement key numerical results in a second language
-2. Write a comparison script that loads outputs from both languages and reports discrepancies at 6+ decimal places
-3. Document what is being replicated, which results are covered, and the acceptable tolerance (e.g., 1e-6 for coefficients, 1e-4 for standard errors)
+Read `references/persona-catalog.md` for the full persona definitions and selection logic.
 
-## Confidence Filtering
+### 3a. Select Reviewers
 
-- Only report issues where you are >80% confident they are genuine problems
-- Consolidate similar findings (e.g., 5 instances of the same naming issue = 1 finding with count)
-- For borderline cases, note uncertainty: "Possible issue (medium confidence): ..."
-- Never pad the report with low-confidence observations to appear thorough
+**Always spawn (3 reviewers):**
+- `correctness-reviewer` — logic errors, bugs, state issues
+- `reproducibility-reviewer` — seeds, paths, environment, portability
+- `design-reviewer` — structure, naming, dead code, complexity
 
-## Scorecard
+**Conditionally spawn (scan code to decide):**
+- `domain-reviewer` — if statistical/econometric methods detected
+- `performance-reviewer` — if loops over data, DB queries, or expensive operations detected
+- `security-reviewer` — if user input handling, HTTP, SQL, shell commands, or credentials detected
 
-| # | Category | Result | Notes |
-|---|----------|--------|-------|
-| 1 | Reproducibility | Pass/Fail | |
-| 2 | Script structure | Pass/Fail | |
-| 3 | Output hygiene | Pass/Fail | |
-| 4 | Function quality | Pass/Fail | |
-| 5 | Domain correctness | Pass/Fail | |
-| 6 | Figure quality | Pass/Fail | |
-| 7 | Data persistence | Pass/Fail | |
-| 8 | Dependencies | Pass/Fail | |
-| 9 | Python-specific | Pass/Fail/N/A | |
-| 10 | R-specific | Pass/Fail/N/A | |
-| 11 | Cross-language verification | Pass/Fail/N/A | |
+### 3b. Announce Team
 
-**Overall: X/11 Pass** (adjust denominator for N/A categories)
+Before spawning, list the team:
 
-## Quality Scoring
+```
+Review team: correctness, reproducibility, design, domain (detected: lm() with cluster SEs)
+```
 
-Apply numeric quality scoring using the shared framework and skill-specific rubric:
+### 3c. Spawn in Parallel
 
-- **Framework:** [`../shared/quality-scoring.md`](../shared/quality-scoring.md) — severity tiers, thresholds, verdict rules
-- **Rubric:** [`references/quality-rubric.md`](references/quality-rubric.md) — issue-to-deduction mappings for this skill
+For each selected reviewer, launch a sub-agent (subagent_type: "general-purpose", model: "haiku") with:
 
-Start at 100, deduct per issue found, apply verdict. Insert the Score Block into the report after the scorecard.
+1. Read `references/subagent-template.md` — substitute `{persona_name}` and `{persona_content}` from the catalog
+2. Pass the file list and instruct the agent to read each file
+3. Instruct: return ONLY JSON matching `references/findings-schema.json`
 
-## Report Format
+**All reviewers run in parallel** — launch them in a single message with multiple Agent tool calls.
+
+---
+
+## Phase 4: Merge & Deduplicate
+
+After all reviewers return:
+
+### 4a. Validate
+
+- Parse each reviewer's JSON output
+- Drop malformed findings (note count of dropped findings)
+- Drop findings with confidence < 0.60 (exception: P0 at 0.50+ survives)
+
+### 4b. Deduplicate
+
+Fingerprint each finding:
+
+```
+fingerprint = normalize(file) + line_bucket(line, ±3) + normalize(title)
+```
+
+Where:
+- `normalize()` = lowercase, strip whitespace
+- `line_bucket(line, ±3)` = any line within ±3 of another is considered the same location
+
+When fingerprints match across reviewers:
+- Keep the **highest severity**
+- Keep the **highest confidence** + union all evidence
+- Record which reviewers agreed (e.g., "correctness, domain")
+- **Cross-reviewer agreement bonus:** +0.10 confidence (capped at 1.0)
+
+### 4c. Map to Quality Rubric
+
+Map each merged finding to the closest entry in `references/quality-rubric.md` to determine the deduction. If no exact match, classify by severity tier and use the midpoint deduction.
+
+### 4d. Sort
+
+Sort findings: P0 first → P1 → P2 → P3, then by confidence (descending), then by file, then by line.
+
+---
+
+## Phase 5: Synthesize Report
+
+Create `correspondence/internal-reviews/` if it does not exist (`mkdir -p`). Write `correspondence/internal-reviews/CODE-REVIEW-REPORT.md` in the project directory.
+
+### Report Format
 
 ```markdown
 # Code Review Report
 
 **Project:** [path]
 **Date:** YYYY-MM-DD
-**Scripts reviewed:** [list]
-**Languages:** R / Python / Both
-
-## Scorecard
-
-[Table above, filled in]
-
-## Detailed Findings
-
-### Category 1: Reproducibility
-**Result: Pass/Fail**
-
-[Specific findings with file:line references]
-
-### Category 2: Script Structure
-...
-
-[Continue for all 11 categories]
-
-## Priority Fixes
-
-1. [Most important issue — what to fix first]
-2. [Second most important]
-3. [Third]
+**Scripts reviewed:** [list with line counts]
+**Languages:** R / Python / Julia / Both
+**Review team:** [list of reviewers with conditional justifications]
 
 ## Quality Score
 
@@ -222,15 +259,83 @@ Start at 100, deduct per issue found, apply verdict. Insert the Score Block into
 
 ### Deductions
 
-| # | Issue | Tier | Deduction | Category |
-|---|-------|------|-----------|----------|
-| 1 | [description] | [tier] | -X | [category] |
-| | **Total deductions** | | **-XX** | |
+| # | Issue | Tier | Deduction | Category | Reviewer(s) | Confidence |
+|---|-------|------|-----------|----------|-------------|------------|
+| 1 | [title] | P0 | -25 | Domain Correctness | domain, correctness | 0.92 |
+| 2 | [title] | P1 | -15 | Reproducibility | reproducibility | 0.85 |
+| ... | | | | | | |
+| | **Total deductions** | | **-XX** | | | |
+
+## Checklist Scorecard
+
+| # | Category | Result | Notes |
+|---|----------|--------|-------|
+| 1 | Reproducibility | Pass/Fail | |
+| 2 | Script structure | Pass/Fail | |
+| ... | | | |
+| 11 | Cross-language verification | Pass/Fail/N/A | |
+
+**Checklist: X/11 Pass** (adjust denominator for N/A categories)
+
+## Detailed Findings
+
+### P0 — Blocker
+
+| # | File | Issue | Reviewer(s) | Confidence | Evidence |
+|---|------|-------|-------------|------------|----------|
+| 1 | path:line | [title + why_it_matters] | [reviewers] | 0.92 | [evidence] |
+
+### P1 — Critical
+[same format, omit if empty]
+
+### P2 — Major
+[same format, omit if empty]
+
+### P3 — Minor
+[same format, omit if empty]
+
+## Residual Risks
+
+[Union of residual_risks from all reviewers — things that can't be verified from code alone]
+
+## Priority Fixes
+
+1. [Most impactful issue — what to fix first]
+2. [Second]
+3. [Third]
 
 ## Positive Observations
 
 [Things done well — important for morale and learning]
+
+## Review Metadata
+
+- Reviewers spawned: [N]
+- Findings before dedup: [N]
+- Findings after dedup: [N]
+- Findings suppressed (low confidence): [N]
+- Cross-reviewer agreements: [N]
 ```
+
+---
+
+## Confidence Filtering
+
+- Suppress findings below 0.60 confidence (exception: P0 at 0.50+)
+- Consolidate identical patterns: 5 instances of the same issue = 1 finding with count in evidence
+- Cross-reviewer agreement boosts confidence by +0.10 (capped at 1.0)
+- Never pad the report with low-confidence observations
+
+## Quality Scoring
+
+Apply numeric quality scoring using the shared framework and skill-specific rubric:
+
+- **Framework:** [`../shared/quality-scoring.md`](../shared/quality-scoring.md) — severity tiers, thresholds, verdict rules
+- **Rubric:** [`references/quality-rubric.md`](references/quality-rubric.md) — issue-to-deduction mappings for this skill
+
+Start at 100, deduct per issue found, apply verdict.
+
+---
 
 ## Council Mode (Optional)
 
@@ -241,25 +346,17 @@ For complex codebases or high-stakes replication packages, run the code review a
 **How it works:**
 1. Each model independently scores all 11 categories against the same scripts
 2. Cross-review: models evaluate each other's findings — catching false positives and missed issues
-3. Chairman synthesis: produces a single `CODE-REVIEW-REPORT.md` with the union of confirmed findings
-
-**Invocation (CLI backend):**
-```bash
-cd packages/cli-council
-uv run python -m cli_council \
-    --prompt-file /tmp/code-review-prompt.txt \
-    --context-file /tmp/scripts-content.txt \
-    --output-md /tmp/code-review-council.md \
-    --chairman claude \
-    --timeout 180
-```
+3. Chairman synthesis: produces a single `correspondence/internal-reviews/CODE-REVIEW-REPORT.md` with the union of confirmed findings
 
 See `skills/shared/council-protocol.md` for the full orchestration protocol.
 
-**Value:** Moderate to high — most valuable for domain correctness (Category 5) and cross-language verification (Category 11), where different models may catch different statistical or logical errors.
+---
 
 ## Cross-References
 
 - **`/code-archaeology`** — For understanding unfamiliar code before reviewing it
-- **Referee 2 agent** — For formal cross-language replication and verification (Category 11 flags the absence; Referee 2 does the actual replication)
+- **Referee 2 agent** — For formal cross-language replication and verification
 - **`/proofread`** — For the paper that accompanies this code
+- **`references/persona-catalog.md`** — Reviewer persona definitions and selection logic
+- **`references/findings-schema.json`** — JSON output contract for sub-agents
+- **`references/subagent-template.md`** — Prompt template for spawning reviewers
