@@ -187,11 +187,10 @@ This helps me (Claude) pick up where we left off next time.
 | `.claude/rules/` | Auto-loaded rules (8 rules) |
 | `skills/` | 45 skill definitions |
 | `hooks/` | 9 hook scripts |
-| `mcp-scholarly/` | Multi-source scholarly search MCP server (OpenAlex + Scopus + WoS) |
 | `.scripts/` | CLI tools for Notion task management |
 | `packages/cli-council/` | Multi-model council via local CLI tools |
 | `packages/llm-council/` | Multi-model council via OpenRouter API |
-| `packages/mcp-scholarly/` | mcp-scholarly |
+| `packages/mcp-scholarly/` | Multi-source scholarly search MCP server (OpenAlex + Scopus + WoS) |
 | `log/` | Session logs |
 | `docs/` | Documentation |
 <!-- FILE-STRUCTURE:END -->

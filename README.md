@@ -210,11 +210,10 @@ claude-research/
 │   ├── workflows/               # Process guides (daily review, etc.)
 │   └── resources/               # Reference data (journal rankings, etc.)
 ├── .scripts/                    # CLI tools for Notion task management
-├── mcp-scholarly/               # Multi-source scholarly search (OpenAlex + Scopus + WoS)
 ├── packages/
 │   ├── cli-council/             # Multi-model council via local CLI tools
 │   ├── llm-council/             # Multi-model council via OpenRouter API
-│   └── mcp-scholarly/             # mcp-scholarly
+│   └── mcp-scholarly/             # Multi-source scholarly search MCP (OpenAlex + Scopus + WoS)
 ├── docs/                        # Component documentation
 ├── log/                         # Session logs (auto-created)
 └── scripts/
