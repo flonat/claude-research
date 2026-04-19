@@ -101,4 +101,4 @@ Fully automated a paper end-to-end: idea generation → shift-share IV → web d
 - The "binding constraint shifts from production to evaluation" thesis
 - 75 working papers on a website = "lottery player" signal, not "serious researcher"
 - Refine.ink as a verification service that gets paid multiple times per paper (polishing → submission → desk screen → R&R)
-- For the user: the institutional response to AI-generated research volume is a research topic in itself (org behaviour, mechanism design)
+- For the user: the institutional response to auto-generated research volume is a research topic in itself (org behaviour, mechanism design)

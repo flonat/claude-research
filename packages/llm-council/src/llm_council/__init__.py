@@ -1,7 +1,12 @@
-"""llm-council: Multi-model LLM council via OpenRouter."""
+"""llm-council: Multi-model LLM council across OpenRouter + native providers."""
 
 from llm_council.checkpoint import CouncilCheckpointer
-from llm_council.client import LLMClient, LLMResponseFormatError, LLMServiceError
+from llm_council.client import (
+    PROVIDERS,
+    LLMClient,
+    LLMResponseFormatError,
+    LLMServiceError,
+)
 from llm_council.council import CouncilService
 from llm_council.models import (
     CouncilAssessment,
@@ -15,6 +20,7 @@ __all__ = [
     "LLMClient",
     "LLMResponseFormatError",
     "LLMServiceError",
+    "PROVIDERS",
     "CouncilService",
     "CouncilAssessment",
     "CouncilMeta",

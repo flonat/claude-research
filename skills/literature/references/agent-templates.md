@@ -52,29 +52,32 @@ prompt: |
   Target: [N] papers.
 ```
 
-### Agent 2 (recommended): Cross-Source Search via Pre-Fetched Biblio Data
+### Agent 2 (recommended): Cross-Source Bibliometric Search
 
-**This is the primary structured search agent.** The orchestrator (main context) calls `scholarly_search` via the bibliography MCP before spawning this agent, and writes results to a temp file.
+**This is the primary structured search agent.** The `scholarly` CLI works inside sub-agents — agents can shell out to `scholarly scholarly-search --json` directly. Alternatively, the orchestrator can pre-fetch results to `/tmp/` and pass file paths.
 
-**MCP tools are NOT available in sub-agents.** The orchestrator must pre-fetch search results.
+**Two patterns (both valid):**
 
-**Orchestrator pre-fetch step (run in main context before spawning Agent 2):**
-1. Call `scholarly_search` with query, year_from, year_to, sort_by, limit: 50
-2. If sub-themes exist, run additional `scholarly_search` calls
-3. Optionally call `scholarly_similar_works` for related papers
-4. Write all results to `/tmp/lit-search/bibliography-results.json`
+- **Agent shells out directly:** Simpler, no pre-fetch step. The agent calls `scholarly scholarly-search`, `scholarly scholarly-similar-works`, etc. Best when the agent needs to adapt queries based on initial results.
+- **Orchestrator pre-fetches:** Better when multiple agents need the same base results. Orchestrator writes to `/tmp/lit-search/bibliography-results.json`, agents read it.
 
 ```
 subagent_type: Explore
 prompt: |
-  Read pre-fetched bibliography search results from:
-    /tmp/lit-search/bibliography-results.json
+  Search for academic papers on: [TOPIC]
 
-  This file contains structured results from OpenAlex, Scopus, and WoS
-  for papers on: [TOPIC]
+  You have access to the `scholarly` CLI — use it directly:
+    scholarly scholarly-search "[QUERY]" --limit 50 [--year-from YEAR_MIN] [--year-to YEAR_MAX] --json
+    scholarly scholarly-similar-works --text "[TOPIC DESCRIPTION]" --limit 20 --json
+
+  Year filters: if [YEAR_MIN] / [YEAR_MAX] are set (from Phase 1.5 search plan), apply them to every
+  scholarly-search, scholarly-search-scopus, and scholarly-search-wos call. Omit the flag when blank.
+
+  [OPTIONAL: If pre-fetched results exist]
+  Also read pre-fetched results from: /tmp/lit-search/bibliography-results.json
 
   Your tasks:
-  1. Parse the results and extract: title, authors, year, journal, DOI, citation count
+  1. Run scholarly CLI searches and extract: title, authors, year, journal, DOI, citation count
   2. Supplement with WebSearch for papers that may be missing from bibliometric databases
      (very recent papers, working papers, interdisciplinary work)
   3. Search Semantic Scholar (site:semanticscholar.org) for additional coverage
@@ -107,12 +110,12 @@ prompt: |
 
 ## Phase 4: Verification
 
-### Step 1: Batch DOI Pre-Verification via MCP (Direct — No Sub-Agent)
+### Step 1: Batch DOI Pre-Verification via CLI (Direct — No Sub-Agent)
 
-Before spawning verification agents, collect all DOIs from Phase 3 candidates and call the bibliography MCP tool directly:
+Before spawning verification agents, collect all DOIs from Phase 3 candidates and run the `scholarly` CLI directly:
 
 ```
-Call `scholarly_verify_dois` with:
+Call `scholarly scholarly-verify-dois` with:
   dois: ["10.1016/j.ejor.2024.01.001", "10.1287/mnsc.2022.4321", ...]
 
 Results: each DOI gets a status AND a resolved title:
@@ -150,7 +153,7 @@ prompt: |
         `curl -sL "https://api.crossref.org/works?query.bibliographic=TITLE+AUTHOR&rows=3"`
         Parse the JSON response — the first result's `DOI` field is the correct DOI.
         This uses publisher metadata and is far more reliable than web search or MCP tools.
-        **Do NOT use MCP `scholarly_search` for specific known papers** — it returns
+        **Do NOT use MCP `scholarly scholarly-search` for specific known papers** — it returns
         noisy, irrelevant results. Crossref is the gold standard for targeted lookups.
      b. **Publisher page:** Visit the journal's website and search for the paper.
      c. **Web search (last resort):** Search for the paper + "DOI". But DOIs from
@@ -165,8 +168,9 @@ prompt: |
   7. **Preprint check:** If the paper was found on arXiv, SSRN, NBER, or any
      working paper series, search for a published journal or conference version.
      Check Google Scholar, the DOI, and the author's publication page.
-     Use Crossref API or WebSearch — do NOT call MCP tools (scholarly_search,
-     scholarly_verify_dois, etc.) as MCP tools are not available in sub-agents.
+     Use the `scholarly` CLI (`scholarly scholarly-search "<title>" --json`),
+     Crossref API, or WebSearch. The CLI works inside sub-agents; the legacy
+     MCP tool bindings do not.
      - If a published version exists: use that version's metadata instead
        (journal, year, volume, pages, DOI)
      - If no published version exists: keep the preprint, but note it as
@@ -253,13 +257,13 @@ For each gap, provide:
 - **Gap:** What is missing (be specific)
 - **Why it matters:** Why this gap weakens the review
 - **Search query:** A targeted query to find papers filling this gap
-- **Best source:** Which MCP tool to use (scholarly_search, arxiv_search,
-  exa_search_papers, dblp_search, core_search_fulltext)
+- **Best source:** Which `scholarly` CLI subcommand to use (`scholarly-search`, `arxiv-search`,
+  `exa-search-papers`, `dblp-search`, `core-search-fulltext`)
 ```
 
 ### Refined Search Agent (targets specific gaps)
 
-Spawned as sub-agents with pre-fetched results from MCP.
+Spawned as sub-agents. Agents can call `scholarly` CLI directly or read pre-fetched results.
 
 ```
 subagent_type: Explore
@@ -269,11 +273,14 @@ prompt: |
   The initial search found {N} papers but has this gap:
   **Gap:** [SPECIFIC GAP STATEMENT]
 
-  Pre-fetched search results for this gap are in:
-    /tmp/lit-deep-loop/gap-{N}-results.json
+  You have access to the `scholarly` CLI:
+    scholarly scholarly-search "[GAP-SPECIFIC QUERY]" --limit 30 [--year-from YEAR_MIN] [--year-to YEAR_MAX] --json
+
+  [OPTIONAL: If orchestrator pre-fetched results]
+  Also read pre-fetched results from: /tmp/lit-deep-loop/gap-{N}-results.json
 
   Your tasks:
-  1. Read the pre-fetched results
+  1. Search for papers addressing this gap using `scholarly` CLI and/or pre-fetched results
   2. Supplement with WebSearch for papers the bibliometric databases may miss:
      - Working papers, policy reports, grey literature
      - Very recent publications (last 6 months)
@@ -297,8 +304,10 @@ prompt: |
 
   **Gap:** [SPECIFIC GAP STATEMENT]
 
-  Pre-fetched arXiv results are in:
-    /tmp/lit-deep-loop/arxiv-gap-{N}-results.json
+  Use `scholarly arxiv-search "[GAP QUERY]" --json` to search arXiv directly.
+
+  [OPTIONAL: If orchestrator pre-fetched results]
+  Also read pre-fetched results from: /tmp/lit-deep-loop/arxiv-gap-{N}-results.json
 
   Also search the web for:
   - SSRN working papers (site:ssrn.com)
@@ -460,7 +469,7 @@ uv run python -m cli_council \
 | 20-25 papers | 2-3 | Recommended | 1 call | 1-2 waves | 2 waves |
 | 30+ papers | 3 | Recommended | 1 call (50 DOI limit) | 2+ waves | 3+ waves |
 
-For small requests (< 5 papers), skip sub-agents entirely — call `scholarly_search` and `scholarly_verify_dois` directly, then do verification inline.
+For small requests (< 5 papers), skip sub-agents entirely — call `scholarly scholarly-search` and `scholarly scholarly-verify-dois` directly, then do verification inline.
 
 **Between waves:** write collected results to the `.bib` file or a scratch markdown file on disk, then proceed to the next wave. This prevents context overflow.
 

@@ -1,7 +1,7 @@
 ---
 name: memory-cleanup
 description: "Use when you need to prune duplicates and merge overlapping entries in MEMORY.md files."
-allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
 argument-hint: "[project-path or 'all' for global consolidation]"
 ---
 
@@ -173,6 +173,56 @@ Before writing, show a summary:
 #### 3.3 Confirmation
 
 **Always show the full proposed MEMORY.md before writing.** Wait for explicit approval. The user may want to keep entries flagged as stale, adjust abstractions, or revert merges.
+
+### Phase 4: Propagate to Shared Auto-Memory
+
+**Why:** `scripts/sync-push-memory.sh` append-merges `MEMORY.md` and has no deletion logic. Without this phase, the next `/full-commit` would pull deleted entries and stale files back into local from the shared copy.
+
+**When to run:** Whenever this skill deletes files or shortens `MEMORY.md` (not needed for pure additions). If only adding entries, the normal append-merge sync handles it.
+
+**What to do:**
+
+1. Identify the shared copy location(s) that correspond to the local scope:
+   - Task Management auto-memory (`~/.claude/projects/-Users-user-*Task-Management/memory/`) → `$TM/.context/auto-memory/task-management/`
+   - Global auto-memory (`~/.claude/projects/*/memory/` for non-TM projects) → `$TM/.context/auto-memory/global/`
+
+2. Mirror local → shared for each location:
+   - **MEMORY.md and MEMORY-ARCHIVE.md:** force-copy from local to shared (overwrites, bypasses append-merge)
+   - **Individual entry files:** copy any local file that's newer; delete any shared file that no longer exists locally
+
+3. Commit the shared-copy changes to the Task Management repo with a message explaining it's a cleanup propagation (so the log is clear about why entries vanished).
+
+**Example (Task Management scope):**
+
+```bash
+local_dir=~/.claude/projects/-Users-user-Task-Management/memory
+shared_dir="$TM/.context/auto-memory/task-management"
+
+# Mirror MEMORY.md and MEMORY-ARCHIVE.md (force overwrite, not append-merge)
+cp "$local_dir/MEMORY.md" "$shared_dir/MEMORY.md"
+[ -f "$local_dir/MEMORY-ARCHIVE.md" ] && cp "$local_dir/MEMORY-ARCHIVE.md" "$shared_dir/MEMORY-ARCHIVE.md"
+
+# Delete any shared entry files that no longer exist locally
+for f in "$shared_dir"/*.md; do
+  name=$(basename "$f")
+  [ "$name" = "MEMORY.md" ] || [ "$name" = "MEMORY-ARCHIVE.md" ] && continue
+  [ ! -f "$local_dir/$name" ] && rm "$f"
+done
+
+# Copy any locally-newer entry files
+for f in "$local_dir"/*.md; do
+  name=$(basename "$f")
+  [ "$name" = "MEMORY.md" ] || [ "$name" = "MEMORY-ARCHIVE.md" ] && continue
+  if [ ! -f "$shared_dir/$name" ] || [ "$f" -nt "$shared_dir/$name" ]; then
+    cp "$f" "$shared_dir/$name"
+  fi
+done
+
+# Commit
+cd "$TM" && git add .context/auto-memory/task-management/ && git commit -m "memory: propagate cleanup to shared auto-memory"
+```
+
+**Skip Phase 4 if:** the consolidation only added entries (no deletions, no line removals from MEMORY.md). Append-merge handles additions correctly on its own.
 
 ## MEMORY.md Sections (Reference)
 

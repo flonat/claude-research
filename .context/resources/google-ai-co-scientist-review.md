@@ -44,8 +44,8 @@ Expert-in-the-loop results (Fig 6): AI-augmented expert hypotheses eventually su
 
 ### For human-AI collaboration research
 - Concrete case study of human-AI complementarity (citable: Fig 6 shows AI+expert > either alone)
-- Expert-in-the-loop design: scientists refine goals, provide manual reviews, contribute hypotheses that compete alongside AI-generated ones
-- Gap in their framework: no MCDM perspective on how scientists should *decide* which AI-generated hypotheses to pursue (novelty vs. feasibility vs. resource cost vs. alignment)
+- Expert-in-the-loop design: scientists refine goals, provide manual reviews, contribute hypotheses that compete alongside auto-generated ones
+- Gap in their framework: no MCDM perspective on how scientists should *decide* which auto-generated hypotheses to pursue (novelty vs. feasibility vs. resource cost vs. alignment)
 
 ### For multi-agent systems research
 - Well-documented architecture with emergent capabilities through orchestration

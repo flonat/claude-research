@@ -1,14 +1,14 @@
 [project]
 name = "llm-council"
-version = "0.1.0"
-description = "Multi-model LLM council: independent assessments, anonymised peer review, chairman synthesis. Via OpenRouter."
+version = "0.2.0"
+description = "Multi-model LLM council: independent assessments, anonymised peer review, chairman synthesis. Routes across OpenRouter, OpenAI, Anthropic, Gemini, and Mistral."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 authors = [
     { name = "the user" },
 ]
-keywords = ["llm", "council", "multi-model", "openrouter", "peer-review", "ai"]
+keywords = ["llm", "council", "multi-model", "openrouter", "anthropic", "openai", "gemini", "mistral", "peer-review", "ai"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

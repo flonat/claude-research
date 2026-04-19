@@ -1,17 +1,16 @@
 """ORCID tools (2 tools, conditional on credentials)."""
 
-from mcp.types import Tool, TextContent
+from tools._registry import Tool, ToolResult, register
 
 from _app import _orcid_client
-from tools._registry import register
 
 
 # ---------- Handlers ----------
 
 
-async def _handle_orcid_search(args: dict) -> list[TextContent]:
+async def _handle_orcid_search(args: dict) -> ToolResult:
     if not _orcid_client:
-        return [TextContent(type="text", text="**Error:** ORCID not configured (set ORCID_CLIENT_ID + ORCID_CLIENT_SECRET)")]
+        return ToolResult(text="**Error:** ORCID not configured (set ORCID_CLIENT_ID + ORCID_CLIENT_SECRET)")
 
     query = args["query"]
     limit = min(args.get("limit", 10), 100)
@@ -19,7 +18,7 @@ async def _handle_orcid_search(args: dict) -> list[TextContent]:
     results = await _orcid_client.search(query, limit=limit)
 
     if not results:
-        return [TextContent(type="text", text=f"No ORCID profiles found for: {query}")]
+        return ToolResult(text=f"No ORCID profiles found for: {query}")
 
     lines = [f"## ORCID Search: {query}\n"]
     lines.append(f"| # | ORCID iD | Name | Affiliations |")
@@ -31,12 +30,12 @@ async def _handle_orcid_search(args: dict) -> list[TextContent]:
         lines.append(f"| {i} | [{r.orcid_id}](https://orcid.org/{r.orcid_id}) | {name} | {institutions} |")
 
     lines.append(f"\n*{len(results)} result(s) from ORCID registry*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
-async def _handle_orcid_get_researcher(args: dict) -> list[TextContent]:
+async def _handle_orcid_get_researcher(args: dict) -> ToolResult:
     if not _orcid_client:
-        return [TextContent(type="text", text="**Error:** ORCID not configured (set ORCID_CLIENT_ID + ORCID_CLIENT_SECRET)")]
+        return ToolResult(text="**Error:** ORCID not configured (set ORCID_CLIENT_ID + ORCID_CLIENT_SECRET)")
 
     orcid_id = args["orcid_id"]
     include_works = args.get("include_works", True)
@@ -49,7 +48,7 @@ async def _handle_orcid_get_researcher(args: dict) -> list[TextContent]:
     )
 
     if not researcher:
-        return [TextContent(type="text", text=f"ORCID profile not found: {orcid_id}")]
+        return ToolResult(text=f"ORCID profile not found: {orcid_id}")
 
     lines = [f"## {researcher.display_name}\n"]
     lines.append(f"**ORCID:** [{researcher.orcid_id}]({researcher.profile_url})")
@@ -83,7 +82,7 @@ async def _handle_orcid_get_researcher(args: dict) -> list[TextContent]:
             lines.append(f"| {year} | {title} | {doi_link} | {wtype} |")
 
     lines.append(f"\n*Source: ORCID Public API v3.0*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
 # ---------- Registration (conditional) ----------

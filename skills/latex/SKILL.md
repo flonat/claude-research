@@ -326,3 +326,24 @@ Runs from Phase 2 directly (pre-flight can be skipped if `.latexmkrc` and `out/`
 > "My paper won't compile — something about Bbbk"
 
 Identifies as Pattern 2 (font conflict), applies the `\let\Bbbk\relax` fix, recompiles.
+
+---
+
+## Output Verification (Guard)
+
+This skill writes files. Before any auto-commit, emit an outputs manifest and run the shared verifier. See [`skills/_shared/verify-outputs.md`](../_shared/verify-outputs.md) for the full protocol.
+
+**Required tail steps** (before `git commit`):
+
+1. Write manifest to `<project>/.claude/state/outputs-manifest-<UTC-timestamp>.json` listing every file this skill claims to have written in this invocation (paths relative to the project root).
+2. Run:
+
+   ```bash
+   python3 "$HOME/.claude/skills/_shared/verify_outputs.py" \
+       --manifest "$MANIFEST" \
+       --project-root "$PROJECT_ROOT"
+   ```
+
+3. If the verifier exits non-zero, **do not commit** — surface the missing-files list to the user and stop. The verifier has already logged an `error` entry to `~/.claude/ecc/skill-outcomes.jsonl`, which feeds the launcher dashboard.
+
+**Why:** closes the "hallucinated outputs" failure class (commit `b2cff75`, 2026-04-18).

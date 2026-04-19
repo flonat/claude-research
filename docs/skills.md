@@ -1,6 +1,6 @@
 # Skills
 
-> 45 reusable workflow definitions available across all projects.
+> 46 reusable workflow definitions available across all projects.
 
 Skills are structured instruction sets (`SKILL.md` files) that turn Claude into a specialised tool for specific tasks — from compiling LaTeX to bootstrapping research projects.
 
@@ -46,7 +46,8 @@ Skills are structured instruction sets (`SKILL.md` files) that turn Claude into 
 | `session-log` | Use when you need to create a timestamped progress log for a research session |
 | `skill-extract` | Extract reusable knowledge from the current session into a persistent skill.\nUse when you discover something non-obvious, create a workaround, or develop\na multi-step workflow that future sessions would benefit from |
 | `skill-preflight` | Use when you need a pre-flight duplicate check before creating new skills or agents |
-| `split-pdf` | Use when you need to download, split, and deeply read an academic PDF |
+| `split-pdf` | Use when you need to download, split, and deeply read an academic PDF that is NOT in Paperpile (for Paperpile items, prefer paperpile get-pdf-text directly) |
+| `strategic-revision` | Use when you receive referee comments for a paper (R&R, revise-and-resubmit) and need a DAG-validated revision master plan — atomic task extraction, dependency mapping, computational critical-path analysis, execution blocks, venue strategy. Merges /parse-reviews ingestion with Sihvonen's strategic-revision architecture |
 | `sync-notion` | Use when you need to sync the current project's state to the context library and Notion |
 | `system-audit` | Use when you need to run parallel audits across skills, hooks, agents, rules, and conventions |
 | `task-management` | Use when you need help with daily planning, weekly reviews, meeting actions, or vault task queries |

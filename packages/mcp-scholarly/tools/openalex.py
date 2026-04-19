@@ -2,7 +2,7 @@
 
 import asyncio
 
-from mcp.types import Tool, TextContent
+from tools._registry import Tool, ToolResult, register
 
 from _app import (
     client,
@@ -16,13 +16,12 @@ from _app import (
     format_trends,
     format_work_detail,
 )
-from tools._registry import register
 
 
 # ---------- Handlers ----------
 
 
-async def _handle_search_works(args: dict) -> list[TextContent]:
+async def _handle_search_works(args: dict) -> ToolResult:
     query = args["query"]
     limit = min(args.get("limit", 25), 50)
     sort = args.get("sort", "cited_by_count:desc")
@@ -49,19 +48,19 @@ async def _handle_search_works(args: dict) -> list[TextContent]:
 
     text = format_works_table(works, title=f"Search: {query}")
     text += f"\n\n*{total:,} total results in OpenAlex (showing top {len(works)})*"
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_author_works(args: dict) -> list[TextContent]:
+async def _handle_author_works(args: dict) -> ToolResult:
     author_name = args["author_name"]
     limit = min(args.get("limit", 50), 100)
 
     works = await asyncio.to_thread(find_author_works, author_name, client, limit)
     text = format_works_table(works, title=f"Works by {author_name}")
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_author_profile(args: dict) -> list[TextContent]:
+async def _handle_author_profile(args: dict) -> ToolResult:
     author_name = args["author_name"]
     years = args.get("years", ">2020")
 
@@ -69,10 +68,10 @@ async def _handle_author_profile(args: dict) -> list[TextContent]:
         analyze_research_output, "author", author_name, client, years
     )
     text = format_author_profile(analysis)
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_institution_output(args: dict) -> list[TextContent]:
+async def _handle_institution_output(args: dict) -> ToolResult:
     institution_name = args["institution_name"]
     years = args.get("years", ">2020")
 
@@ -80,28 +79,28 @@ async def _handle_institution_output(args: dict) -> list[TextContent]:
         analyze_research_output, "institution", institution_name, client, years
     )
     text = format_author_profile(analysis)
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_trends(args: dict) -> list[TextContent]:
+async def _handle_trends(args: dict) -> ToolResult:
     query = args["query"]
 
     trends = await asyncio.to_thread(get_publication_trends, query, None, client)
     text = format_trends(trends, search_term=query)
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_lookup_doi(args: dict) -> list[TextContent]:
+async def _handle_lookup_doi(args: dict) -> ToolResult:
     doi = args["doi"]
     if not doi.startswith("https://doi.org/"):
         doi = f"https://doi.org/{doi}"
 
     work = await asyncio.to_thread(client.get_entity, "works", doi)
     text = format_work_detail(work)
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_citing_works(args: dict) -> list[TextContent]:
+async def _handle_citing_works(args: dict) -> ToolResult:
     doi = args["doi"]
     limit = min(args.get("limit", 25), 50)
 
@@ -112,7 +111,7 @@ async def _handle_citing_works(args: dict) -> list[TextContent]:
     cited_by_url = work.get("cited_by_api_url")
 
     if not cited_by_url:
-        return [TextContent(type="text", text="No citation data available for this work.")]
+        return ToolResult(text="No citation data available for this work.")
 
     import requests
 
@@ -132,15 +131,15 @@ async def _handle_citing_works(args: dict) -> list[TextContent]:
     title_text = (work.get("title") or "this work")[:60]
     text = format_works_table(citing_works, title=f"Papers citing: {title_text}")
     text += f"\n\n*{total:,} total citing works (showing {len(citing_works)})*"
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_crossref_lookup_doi(args: dict) -> list[TextContent]:
+async def _handle_crossref_lookup_doi(args: dict) -> ToolResult:
     doi = args["doi"]
     paper = await _crossref_source.verify_doi(doi)
 
     if not paper:
-        return [TextContent(type="text", text=f"DOI not found in Crossref: {doi}")]
+        return ToolResult(text=f"DOI not found in Crossref: {doi}")
 
     lines = [f"## {paper.title}\n"]
     lines.append(f"**Authors:** {', '.join(paper.authors)}")
@@ -154,7 +153,7 @@ async def _handle_crossref_lookup_doi(args: dict) -> list[TextContent]:
         lines.append(f"\n**Abstract:** {paper.abstract}")
 
     lines.append(f"\n*Source: Crossref (authoritative DOI registry) | Verified: Yes*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
 # ---------- Tool definitions + registration ----------

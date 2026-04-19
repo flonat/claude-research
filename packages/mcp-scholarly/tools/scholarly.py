@@ -22,8 +22,7 @@ from _app import (
     format_verification_table,
     format_source_status,
 )
-from mcp.types import Tool, TextContent
-from tools._registry import register
+from tools._registry import Tool, ToolResult, register
 
 
 # ---------- Search cascade helpers ----------
@@ -106,7 +105,7 @@ def _dedup_papers(all_papers: list, seen_dois: set) -> list:
 # ---------- Handlers ----------
 
 
-async def _handle_scholarly_search(args: dict) -> list[TextContent]:
+async def _handle_scholarly_search(args: dict) -> ToolResult:
     query = args["query"]
     limit = min(args.get("limit", 25), 50)
     year_from = args.get("year_from")
@@ -227,13 +226,13 @@ async def _handle_scholarly_search(args: dict) -> list[TextContent]:
     if len(strategies_used) > 1:
         text += f"\n*Cascade: {len(strategies_used)} strategies used ({', '.join(strategies_used)}) in {elapsed:.1f}s*"
 
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_scholarly_verify_dois(args: dict) -> list[TextContent]:
+async def _handle_scholarly_verify_dois(args: dict) -> ToolResult:
     dois = args["dois"]
     if len(dois) > 50:
-        return [TextContent(type="text", text="**Error:** Maximum 50 DOIs per request.")]
+        return ToolResult(text="**Error:** Maximum 50 DOIs per request.")
 
     results = await _multi_source.batch_verify_dois(dois)
     text = format_verification_table(results)
@@ -241,10 +240,10 @@ async def _handle_scholarly_verify_dois(args: dict) -> list[TextContent]:
     active_names = [s["name"] for s in _source_info if s["active"]]
     text += f"\n\n*Checked against: {', '.join(active_names)}*"
 
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_scholarly_similar_works(args: dict) -> list[TextContent]:
+async def _handle_scholarly_similar_works(args: dict) -> ToolResult:
     text_query = args["text"]
     limit = min(args.get("limit", 20), 50)
 
@@ -253,42 +252,42 @@ async def _handle_scholarly_similar_works(args: dict) -> list[TextContent]:
     text = format_papers_table(papers, title=f"Similar to: {preview}")
     text += f"\n\n*{len(papers)} results*"
 
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_scholarly_source_status(args: dict) -> list[TextContent]:
+async def _handle_scholarly_source_status(args: dict) -> ToolResult:
     text = format_source_status(_source_info)
     active_count = sum(1 for s in _source_info if s["active"])
     text += f"\n\n*{active_count}/{len(_source_info)} sources active*"
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_scholarly_citations(args: dict) -> list[TextContent]:
+async def _handle_scholarly_citations(args: dict) -> ToolResult:
     paper_id = args["paper_id"]
     limit = min(args.get("limit", 50), 1000)
 
     papers = await _s2_source.get_paper_citations(paper_id, limit=limit)
     text = format_papers_table(papers, title=f"Papers citing: {paper_id}")
     text += f"\n\n*{len(papers)} citing papers (via Semantic Scholar Graph API)*"
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_scholarly_references(args: dict) -> list[TextContent]:
+async def _handle_scholarly_references(args: dict) -> ToolResult:
     paper_id = args["paper_id"]
     limit = min(args.get("limit", 50), 1000)
 
     papers = await _s2_source.get_paper_references(paper_id, limit=limit)
     text = format_papers_table(papers, title=f"References of: {paper_id}")
     text += f"\n\n*{len(papers)} references (via Semantic Scholar Graph API)*"
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_scholarly_paper_detail(args: dict) -> list[TextContent]:
+async def _handle_scholarly_paper_detail(args: dict) -> ToolResult:
     paper_id = args["paper_id"]
 
     paper = await _s2_source.get_paper_detail(paper_id)
     if not paper:
-        return [TextContent(type="text", text=f"Paper not found: {paper_id}")]
+        return ToolResult(text=f"Paper not found: {paper_id}")
 
     # Generate standardised BibTeX key
     bib_key = generate_bibtex_key(paper.authors, paper.publication_year, paper.title)
@@ -331,16 +330,16 @@ async def _handle_scholarly_paper_detail(args: dict) -> list[TextContent]:
         lines.append(f"\n**BibTeX:**\n```bibtex\n{paper.bibtex}\n```")
 
     lines.append(f"\n*Source: Semantic Scholar ({paper.source_id})*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
-async def _handle_scholarly_author_papers(args: dict) -> list[TextContent]:
+async def _handle_scholarly_author_papers(args: dict) -> ToolResult:
     author_name = args["author_name"]
     limit = min(args.get("limit", 50), 100)
 
     authors = await _s2_source.search_author(author_name, limit=5)
     if not authors:
-        return [TextContent(type="text", text=f"Author not found: {author_name}")]
+        return ToolResult(text=f"Author not found: {author_name}")
 
     author = authors[0]
     author_id = author.get("authorId", "")
@@ -355,10 +354,10 @@ async def _handle_scholarly_author_papers(args: dict) -> list[TextContent]:
             text += f"- {a.get('name', '?')} (S2 ID: {a.get('authorId', '?')})\n"
 
     text += f"\n*{len(papers)} papers (via Semantic Scholar Graph API)*"
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_scholarly_search_scopus(args: dict) -> list[TextContent]:
+async def _handle_scholarly_search_scopus(args: dict) -> ToolResult:
     query = args["query"]
     limit = min(args.get("limit", 25), 50)
     year_from = args.get("year_from")
@@ -370,10 +369,10 @@ async def _handle_scholarly_search_scopus(args: dict) -> list[TextContent]:
     text = format_papers_table(papers, title=f"Scopus: {query}")
     text += f"\n\n*{len(papers)} results from Scopus*"
 
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_scholarly_search_wos(args: dict) -> list[TextContent]:
+async def _handle_scholarly_search_wos(args: dict) -> ToolResult:
     query = args["query"]
     limit = min(args.get("limit", 25), 50)
     year_from = args.get("year_from")
@@ -385,7 +384,7 @@ async def _handle_scholarly_search_wos(args: dict) -> list[TextContent]:
     text = format_papers_table(papers, title=f"Web of Science: {query}")
     text += f"\n\n*{len(papers)} results from WoS*"
 
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
 # ---------- Tool definitions + registration ----------

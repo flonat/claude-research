@@ -2,18 +2,17 @@
 
 import json
 
-from mcp.types import Tool, TextContent
+from tools._registry import Tool, ToolResult, register
 
 from _app import _altmetric_client
-from tools._registry import register
 
 
 # ---------- Handlers ----------
 
 
-async def _handle_altmetric_search(args: dict) -> list[TextContent]:
+async def _handle_altmetric_search(args: dict) -> ToolResult:
     if not _altmetric_client:
-        return [TextContent(type="text", text="**Error:** Altmetric not configured (set ALTMETRIC_API_KEY + ALTMETRIC_API_PASSWORD)")]
+        return ToolResult(text="**Error:** Altmetric not configured (set ALTMETRIC_API_KEY + ALTMETRIC_API_PASSWORD)")
 
     query = args["query"]
     timeframe = args.get("timeframe", "all")
@@ -22,7 +21,7 @@ async def _handle_altmetric_search(args: dict) -> list[TextContent]:
     outputs = await _altmetric_client.search(query, timeframe=timeframe, limit=limit)
 
     if not outputs:
-        return [TextContent(type="text", text=f"No Altmetric results for: {query}")]
+        return ToolResult(text=f"No Altmetric results for: {query}")
 
     lines = [f"## Altmetric Search: {query}\n"]
     lines.append("| Score | Title | Tweets | News | Policy | Blogs | Wikipedia | Readers |")
@@ -41,12 +40,12 @@ async def _handle_altmetric_search(args: dict) -> list[TextContent]:
         lines.append(f"| {score} | {title} | {tweets} | {news} | {policy} | {blogs} | {wiki} | {readers} |")
 
     lines.append(f"\n*{len(outputs)} results from Altmetric Explorer (timeframe: {timeframe})*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
-async def _handle_altmetric_attention_summary(args: dict) -> list[TextContent]:
+async def _handle_altmetric_attention_summary(args: dict) -> ToolResult:
     if not _altmetric_client:
-        return [TextContent(type="text", text="**Error:** Altmetric not configured")]
+        return ToolResult(text="**Error:** Altmetric not configured")
 
     query = args["query"]
     timeframe = args.get("timeframe", "all")
@@ -54,12 +53,12 @@ async def _handle_altmetric_attention_summary(args: dict) -> list[TextContent]:
     data = await _altmetric_client.get_attention_summary(query, timeframe=timeframe)
 
     if not data:
-        return [TextContent(type="text", text=f"No attention data for: {query}")]
+        return ToolResult(text=f"No attention data for: {query}")
 
     lines = [f"## Attention Summary: {query}\n"]
     lines.append(f"```json\n{json.dumps(data, indent=2)[:2000]}\n```")
     lines.append(f"\n*Source: Altmetric Explorer (timeframe: {timeframe})*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
 # ---------- Registration (conditional) ----------

@@ -13,10 +13,13 @@
 
 ## Lookup — find the published version:
 
-1. **Biblio MCP `scholarly_search` first** (preferred — queries OpenAlex + Scopus + WoS with dedup):
-   Call `scholarly_search` with the paper title as query. Check if any result has a journal/venue and is not itself a preprint. Cross-source search increases the chance of finding the published version.
+1. **`scholarly scholarly-search` first** (preferred — queries OpenAlex + Scopus + WoS with dedup):
+   ```bash
+   scholarly scholarly-search "<paper title>" --limit 5 --json
+   ```
+   Check if any result has a journal/venue and is not itself a preprint. Cross-source search increases the chance of finding the published version.
 2. **DOI resolution fallback**: If the preprint has a DOI, check if it redirects to or links to a published version.
-3. **Web search last resort**: Search for the paper title + "published" or "journal" if MCP returns nothing.
+3. **Web search last resort**: Search for the paper title + "published" or "journal" if the CLI returns nothing.
 
 ## Classification:
 

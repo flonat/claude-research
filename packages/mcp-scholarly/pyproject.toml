@@ -1,7 +1,11 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "biblio-mcp"
+name = "mcp-scholarly"
 version = "0.2.0"
-description = "Multi-source scholarly search MCP server: OpenAlex + Scopus + Web of Science"
+description = "Multi-source scholarly search — MCP server + CLI across 15 providers (OpenAlex, S2, Crossref, Scopus, WoS, …)"
 requires-python = ">=3.12"
 dependencies = [
     "mcp>=1.0.0",
@@ -10,6 +14,21 @@ dependencies = [
     "biblio-sources @ git+https://github.com/user/biblio-sources.git@9cff529",
 ]
 
+[project.scripts]
+scholarly = "cli:main"
+
+[tool.setuptools]
+py-modules = [
+    "_app",
+    "cli",
+    "formatters",
+    "mcp_adapter",
+    "scholarly_formatters",
+    "server",
+]
+
+[tool.setuptools.packages.find]
+include = ["tools*"]
+
 [tool.uv.sources]
 biblio-sources = { path = "../biblio-sources", editable = true }
-

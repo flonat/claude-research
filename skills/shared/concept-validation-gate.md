@@ -93,7 +93,7 @@ Beyond the checklist, assess intellectual depth (0.0–1.0):
 
 | Score | Assessment |
 |-------|-----------|
-| < 0.2 | Generic — likely AI-generated or insufficiently developed |
+| < 0.2 | Generic — likely auto-generated or insufficiently developed |
 | 0.2–0.4 | Surface-level — needs more critical engagement |
 | 0.4–0.6 | Adequate — meets minimum for proceeding |
 | 0.6–0.8 | Strong — shows genuine intellectual engagement |
@@ -103,7 +103,7 @@ Beyond the checklist, assess intellectual depth (0.0–1.0):
 
 ## Red Flags
 
-Flag these phrases — they signal generic or AI-generated concepts:
+Flag these phrases — they signal generic or auto-generated concepts:
 
 | Red Flag | Problem |
 |----------|---------|

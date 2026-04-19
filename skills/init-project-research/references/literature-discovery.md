@@ -2,7 +2,6 @@
 
 > Referenced from: `init-project-research/SKILL.md` Phase 8
 
-After scaffolding and syncing, automatically run a literature review and scout novelty assessment. These run in parallel via sub-agents to save time.
 
 ## 8a. Literature Review
 
@@ -18,7 +17,7 @@ Launch `/literature` targeting the project's research topic. Uses the working ti
 
 ## 8b. Scout Discovery Audit
 
-Launch `/scout` in novelty mode to assess the topic's competitive landscape.
+Launch  in novelty mode to assess the topic's competitive landscape.
 
 ```bash
 scout novelty "<working-title-or-research-question>" --source multi
@@ -39,5 +38,4 @@ After both complete:
 ## Error Handling
 
 - If literature search returns no results: note in report, continue (topic may be too novel or too niche for API coverage)
-- If scout CLI is not installed or fails: skip with warning, suggest running `/scout` manually later
 - These phases should NOT block project creation — if they fail, the project is still fully scaffolded

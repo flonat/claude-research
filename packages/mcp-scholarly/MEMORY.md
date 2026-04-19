@@ -1,4 +1,4 @@
-# Bibliography MCP — Known Issues & Learnings
+# mcp-scholarly — Known Issues & Learnings
 
 ## Known Issues
 

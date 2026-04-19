@@ -1,19 +1,19 @@
 # Bibliometric API Structured Queries
 
-> Four bibliometric sources are available. The **bibliography MCP server** (`packages/mcp-scholarly/`) is the preferred interface — `scholarly_search` queries all enabled sources in one call with automatic DOI-based dedup; `scholarly_verify_dois` batch-verifies DOIs across all sources.
+> Four bibliometric sources are available. The **`scholarly` CLI** (`packages/mcp-scholarly/`) is the preferred interface — `scholarly scholarly-search "<query>" --json` queries all enabled sources in one call with automatic DOI-based dedup; `scholarly scholarly-verify-dois --dois D1,D2 --json` batch-verifies DOIs across all sources.
 
-## Bibliography MCP Tools (preferred)
+## Scholarly CLI Tools (preferred)
 
 | Tool | What it does | When to use |
 |------|-------------|-------------|
-| `scholarly_search` | Cross-source keyword search (OpenAlex + S2 + Scopus + WoS) with dedup | Phase 2 pre-fetch |
-| `scholarly_similar_works` | ML-based recommendations (S2 Recommendations API) | Phase 2 pre-fetch — finds papers beyond keyword matches |
-| `scholarly_verify_dois` | Batch DOI verification across all sources | Phase 4 verification |
-| `scholarly_citations` | Forward citation graph (papers citing a given paper) | Phase 2.5 snowball — find follow-up work |
-| `scholarly_references` | Backward citation graph (papers referenced by a given paper) | Phase 2.5 snowball — find foundational works |
-| `scholarly_paper_detail` | Full metadata + TLDR + BibTeX + OA PDF link | Phase 3 screening, Phase 6 BibTeX assembly |
-| `scholarly_author_papers` | All papers by an author | Phase 2 pre-fetch — author-based search |
-| `scholarly_source_status` | Check which sources are active | Phase 1 |
+| `scholarly scholarly-search` | Cross-source keyword search (OpenAlex + S2 + Scopus + WoS) with dedup | Phase 2 pre-fetch |
+| `scholarly scholarly-similar-works` | ML-based recommendations (S2 Recommendations API) | Phase 2 pre-fetch — finds papers beyond keyword matches |
+| `scholarly scholarly-verify-dois` | Batch DOI verification across all sources | Phase 4 verification |
+| `scholarly scholarly-citations` | Forward citation graph (papers citing a given paper) | Phase 2.5 snowball — find follow-up work |
+| `scholarly scholarly-references` | Backward citation graph (papers referenced by a given paper) | Phase 2.5 snowball — find foundational works |
+| `scholarly scholarly-paper-detail` | Full metadata + TLDR + BibTeX + OA PDF link | Phase 3 screening, Phase 6 BibTeX assembly |
+| `scholarly scholarly-author-papers` | All papers by an author | Phase 2 pre-fetch — author-based search |
+| `scholarly scholarly-source-status` | Check which sources are active | Phase 1 |
 
 ## OpenAlex (always available)
 

@@ -12,12 +12,9 @@
 | `interview-me` | Interactive interview to formalise a research idea into a structured spec |
 | `devils-advocate` | Multi-turn debate to challenge assumptions and stress-test arguments |
 | `multi-perspective` | Parallel agents with distinct disciplinary lenses explore a question |
-| `scout-batch` | Batch novelty checks with venue and idea iteration |
 | `atlas-coherence` | Map portfolio as a network: clusters, bridges, orphans, sequencing |
-| `atlas-novelty` | Score atlas topics by novelty via batch Scout checks |
 | `interdisciplinary-bridge` | Import concepts from adjacent fields to solve open problems |
 | `future-research-agenda` | Generate provocative, fundable future research directions |
-| `scout` | Topic discovery, novelty, framing, venue suggestion, idea generation and ranking via bibliometric APIs + LLMs |
 | `atlas-audit` | Full audit of all topics across 4 systems |
 | `atlas-deploy` | Compile atlas.json from topic files, commit, and deploy atlas web app to Fly.io |
 
@@ -81,7 +78,7 @@
 |-------|---------|
 | `pre-submission-report` | All quality checks in one dated report |
 | `retarget-journal` | Switch paper to different journal (rename, reformat, rekey) |
-| `parse-reviews` | Referee comments PDF into tracking files |
+| `strategic-revision` | Referee comments PDF into DAG-validated revision master plan |
 | `synthesise-reviews` | Synthesise parallel review reports into a prioritised revision plan |
 | `brief-compliance-check` | Check LaTeX submission against assessment brief (deliverables, word limits, required files) |
 
@@ -143,7 +140,7 @@
 
 | Skill | Purpose |
 |-------|---------|
-| `sync-repo` | Sync docs with system state for atlas, scout, biblio, taskflow, or private repos |
+| `sync-repo` | Sync docs with system state for atlas, biblio, taskflow, or private repos |
 | `sync-public-repo` | Sync private infrastructure to the public repo (claude-research) |
 | `sync-public-review` | Interactive review and editing of public sync allowlists |
 | `sync-friends-repo` | Regenerate the friends-repo starter kit from private rules |
@@ -157,10 +154,9 @@
 | Skill | Purpose |
 |-------|---------|
 | `system-audit` | Parallel audits across skills, hooks, agents, rules, docs |
-| `external-audit` | External LLM audit of any repo (atlas, scout, biblio, taskflow, private, public, friends, paperpile, scholarly, biblio-sources, council) |
-| `repo-doc-audit` | Documentation quality audit for any repo (atlas, scout, biblio, taskflow, private, public, friends, paperpile, scholarly, biblio-sources, council) |
+| `external-audit` | External LLM audit of any repo (atlas, biblio, taskflow, private, public, friends, paperpile, scholarly, biblio-sources, council) |
+| `repo-doc-audit` | Documentation quality audit for any repo (atlas, biblio, taskflow, private, public, friends, paperpile, scholarly, biblio-sources, council) |
 | `docs-consistency` | Cross-cutting doc review: count consistency, component coverage, stale refs, public-private sync, user manual |
-| `scout-drift-check` | Check CLI-web parity, route coverage, and taxonomy consistency in Scout |
 | `skill-health` | Skill health dashboard: invocation counts, success rates, health status |
 
 ### Skill Lifecycle (3)
@@ -216,7 +212,7 @@
 
 ---
 
-**Total: 142 skills across 16 categories.**
+**Total: 156 skills across 16 categories.**
 
 ---
 

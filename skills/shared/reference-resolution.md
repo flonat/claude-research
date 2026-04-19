@@ -6,12 +6,12 @@ Canonical lookup and filing sequence for all bibliography skills (`/literature`,
 
 When resolving a reference (checking if it exists, finding metadata, verifying DOIs), search in this order:
 
-1. **Paperpile** (primary reference manager) — `mcp__paperpile__search_library` or `mcp__paperpile__lookup_by_doi` if DOI is known. If found, reuse its `citekey`.
-2. **Bibliography MCP** (scholarly sources) — `scholarly_search` across OpenAlex + Scopus + WoS for metadata enrichment.
+1. **Paperpile** (primary reference manager) — `paperpile search-library` or `paperpile lookup-by-doi` if DOI is known. If found, reuse its `citekey`.
+2. **Bibliography MCP** (scholarly sources) — `scholarly scholarly-search` across OpenAlex + Scopus + WoS for metadata enrichment.
 3. **Crossref API** (DOI fallback) — `curl -sL "https://api.crossref.org/works?query.bibliographic=[URL-encoded title+author]&rows=3"` for DOI resolution.
 4. **Web search** (last resort) — `WebSearch` for papers not found in any structured source.
 
-**Graceful degradation:** If Paperpile MCP is unavailable, skip it with a warning and continue with external sources.
+**Graceful degradation:** If the `paperpile` CLI is unavailable, skip it with a warning and continue with external sources.
 
 ## Status Categories
 
@@ -30,7 +30,7 @@ When a skill needs to add a reference, follow this sequence:
 
 ### 1. Stage as BibTeX
 
-Call `mcp__paperpile__write_bib` with full metadata to generate a `.bib` file. The user imports this into Paperpile manually (Paperpile's BibTeX import handles deduplication).
+Call `paperpile write-bib` with full metadata to generate a `.bib` file. The user imports this into Paperpile manually (Paperpile's BibTeX import handles deduplication).
 
 **Naming convention:** `paperpile-stage-YYYY-MM-DD-HHMM.bib` — written to the project's root directory. The `paperpile-stage-` prefix distinguishes staging files from project bibliographies (`references.bib`). Timestamp prevents collisions across multiple runs.
 
@@ -45,7 +45,7 @@ Present a summary table of what was staged:
 
 ### 3. Fallback
 
-If `write_bib` fails or Paperpile MCP is unavailable, write a standard `.bib` file to disk and instruct the user to import it manually.
+If `write_bib` fails or the `paperpile` CLI is unavailable, write a standard `.bib` file to disk and instruct the user to import it manually.
 
 ## Post-Run Maintenance
 

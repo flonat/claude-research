@@ -53,13 +53,13 @@ Each cached result is a JSON file named by query hash:
 ### Before any search
 
 ```python
-# Pseudocode — the skill checks cache before calling MCP
+# Pseudocode — the skill checks cache before calling the `scholarly` CLI
 cache_key = sha256(f"{source}:{query}:{json.dumps(params, sort_keys=True)}")
 cached = read_cache(project_cache, source, cache_key) or read_cache(central_cache, source, cache_key)
 if cached and not expired(cached):
     use cached["results"]
 else:
-    results = call_mcp_tool(source, query, params)
+    results = run_scholarly_cli(source, query, params)
     write_cache(project_cache, source, cache_key, results)
     write_cache(central_cache, source, cache_key, results)  # also populate central
 ```
@@ -74,8 +74,8 @@ Since skills run as markdown instructions (not code), the caching is implemented
    mkdir -p .cache/literature/scholarly_search
    echo '<json>' > .cache/literature/scholarly_search/<hash>.json
    ```
-3. **On cache hit:** Read the cached file instead of calling the MCP tool
-4. **On cache miss or expired:** Call the MCP tool, then write to cache
+3. **On cache hit:** Read the cached file instead of calling the `scholarly` CLI
+4. **On cache miss or expired:** Call `scholarly <subcommand> ... --json`, then write to cache
 
 ### Simplified flow for most skills
 
@@ -93,7 +93,7 @@ This is lighter than full caching but prevents redundant within-session searches
 |---------|--------|
 | Manual: user says "fresh search" or "ignore cache" | Skip cache, overwrite with new results |
 | TTL expired | Treat as cache miss |
-| MCP server updated (new sources, schema changes) | Clear central cache: `rm -rf ~/.cache/claude-literature/` |
+| `scholarly` CLI updated (new sources, schema changes) | Clear central cache: `rm -rf ~/.cache/claude-literature/` |
 | Project `.bib` updated significantly | Clear project cache for that topic |
 
 ## Gitignore Setup
@@ -111,7 +111,7 @@ The central cache is outside any repo, so no gitignore needed.
 |-------|-----------|---------------|
 | `/literature` | Project + Central | Search results, paper metadata |
 | `/bib-validate` | Central | DOI verification results |
-| `/scout` | Central | Novelty search results, venue data |
+|  | Central | Novelty search results, venue data |
 | `/gather-readings` | Project | PDF availability checks |
 | `/radar` | Central | Topic monitoring searches |
 

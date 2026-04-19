@@ -1,6 +1,8 @@
 # LLM Council
 
-A Python package for multi-model LLM deliberation via OpenRouter. Orchestrates independent assessments from multiple AI models, conducts anonymous peer review, and synthesises consensus through a chairman model.
+A Python package for multi-model LLM deliberation. Orchestrates independent assessments from multiple AI models, conducts anonymous peer review, and synthesises consensus through a chairman model.
+
+Routes across **OpenRouter, OpenAI, Anthropic, Gemini, and Mistral** via OpenAI-compatible endpoints — use a single OpenRouter key for everything, or mix native provider keys.
 
 ## The 3-Stage Protocol
 
@@ -89,24 +91,51 @@ asyncio.run(main())
 
 ### LLMClient
 
-Generic async LLM client for OpenRouter.
+Generic async LLM client supporting multiple providers.
 
 ```python
 client = LLMClient(
-    api_key: str,                    # OpenRouter API key
-    model: str = "anthropic/claude-sonnet-4.5",  # Default model
-    max_tokens: int = 4096,          # Max completion tokens
-    json_retry_attempts: int = 2,    # Retries on JSON parse failure
+    api_key: str | None = None,
+    model: str = "anthropic/claude-sonnet-4.5",
+    max_tokens: int = 4096,
+    json_retry_attempts: int = 2,
+    *,
+    provider: str | None = None,     # "openrouter"|"openai"|"anthropic"|"gemini"|"mistral"
+    base_url: str | None = None,     # Override the provider's base URL
 )
+```
+
+**Provider resolution** (when `provider` is not set explicitly):
+
+1. Model-prefix match — `anthropic/claude-*` → Anthropic if `ANTHROPIC_API_KEY` set
+2. Priority fallback — OpenRouter > OpenAI > Anthropic > Gemini > Mistral (first available key)
+
+Or use the `from_env()` factory for pure environment-driven auto-detection:
+
+```python
+client = LLMClient.from_env(model="anthropic/claude-opus-4-7")
+# Honours LLM_PROVIDER (with REVIEW_PROVIDER fallback for back-compat)
 ```
 
 **Methods:**
 
 | Method | Returns | Description |
 |--------|---------|-------------|
-| `chat_json(system, user_msg, *, model=None)` | `dict` | Send message, parse JSON response (with retries) |
-| `chat_text(system, user_msg, *, model=None)` | `str` | Send message, return raw text |
+| `chat_json(system, user_msg, *, model=None, max_tokens=None, reasoning_effort=None)` | `dict` | Send message, parse JSON response (with retries) |
+| `chat_text(system, user_msg, *, model=None, max_tokens=None, reasoning_effort=None)` | `str` | Send message, return raw text |
 | `close()` | `None` | Close the async HTTP client |
+
+**Reasoning tokens** (`reasoning_effort` = `"low"` | `"medium"` | `"high"`) are mapped to each provider's native parameter:
+
+| Provider | Parameter |
+|----------|-----------|
+| OpenRouter | `extra_body.reasoning.max_tokens` (budget computed from ratio) |
+| Anthropic | `extra_body.thinking.budget_tokens` |
+| OpenAI | `reasoning_effort` string |
+| Gemini | `extra_body.thinking.budget_tokens` |
+| Mistral | not supported (silently ignored) |
+
+If reasoning consumes all output tokens (empty response), the client auto-retries up to 3 times with doubled `max_tokens`.
 
 **JSON parsing** is robust — it tries three extraction strategies in order:
 1. Parse the full response as JSON
@@ -435,7 +464,7 @@ llm_council/
 
 ## Design Decisions
 
-- **OpenRouter, not direct APIs** — single API key accesses Anthropic, OpenAI, and Google models. No need for 3 separate accounts.
+- **OpenRouter default, native providers available** — one `OPENROUTER_API_KEY` accesses all models. Pass `provider="anthropic"` (or set `LLM_PROVIDER=anthropic`) to route to native APIs when you want lower latency, larger context windows, or direct billing.
 - **Schema-agnostic** — the council doesn't know what JSON schema you're using. It passes through whatever Stage 1 returns. Your application defines the schema via the system prompt.
 - **Anonymous peer review** — assessments are labeled "Assessment A/B/C" during Stage 2. Model identities are only revealed in metadata.
 - **Parallel execution** — Stage 1 and Stage 2 queries run concurrently via `asyncio.gather`. Wall-clock time is limited by the slowest model, not the sum.

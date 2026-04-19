@@ -25,7 +25,7 @@ Main orchestrator context (has MCP tools + WebSearch)
         Sub-agents read /tmp/ka-* via Read tool (no MCP needed)
 ```
 
-**Critical constraint:** MCP tools are only available in the main orchestrator context. Sub-agents spawned via Task/Agent tool cannot call MCP. This protocol runs entirely in the orchestrator, producing files that sub-agents consume.
+**Note on tool access:** Most MCP tools are only available in the main orchestrator context — sub-agents cannot call them. **Exception:** `scholarly` and `paperpile` CLIs work in sub-agents (shell out directly). This protocol still runs in the orchestrator for efficiency, producing files that sub-agents consume.
 
 ---
 
@@ -58,10 +58,10 @@ The `submission_date` becomes `{cutoff_date}` — all literature searches are co
 |----------|------|---------|
 | 0 | `search_library` (RefPile MCP) | Search the user's indexed PDFs (~28K papers, full-text vectorized) |
 | 0 | `get_paper` (RefPile MCP) | Retrieve full content for known citekeys |
-| 1 | `scholarly_search` | Multi-source broad search (papers NOT in Paperpile) |
-| 2 | `openalex_search_works` | Structured metadata + citation counts |
-| 3 | `dblp_search` | CS venue-specific search |
-| 4 | `scholarly_verify_dois` | Batch DOI verification |
+| 1 | `scholarly scholarly-search` | Multi-source broad search (papers NOT in Paperpile) |
+| 2 | `scholarly openalex-search-works` | Structured metadata + citation counts |
+| 3 | `scholarly dblp-search` | CS venue-specific search |
+| 4 | `scholarly scholarly-verify-dois` | Batch DOI verification |
 | 5 | WebSearch | Fallback for preprints, blogs, GitHub |
 
 **Why Paperpile first:** It contains full-text content, not just abstracts. When assessing novelty or methodology, having the actual paper content produces richer context than metadata-only results from scholarly APIs.
@@ -70,7 +70,7 @@ The `submission_date` becomes `{cutoff_date}` — all literature searches are co
 
 1. **Paperpile sweep:** Use `search_library` with the paper's research question, method name, and key terms. For each hit, use `get_paper` to retrieve detailed content. Mark these as `in_paperpile: true`.
 
-2. **External sweep:** Use `scholarly_search` + `openalex_search_works` for papers NOT found in Paperpile. Target 15-20 additional papers. Constrain to `{cutoff_date}`.
+2. **External sweep:** Use `scholarly scholarly-search` + `scholarly openalex-search-works` for papers NOT found in Paperpile. Target 15-20 additional papers. Constrain to `{cutoff_date}`.
 
 3. **Expansion pass:** Check for gaps:
    - Foundational papers (high-citation seminal works) — present?
@@ -109,7 +109,7 @@ The `submission_date` becomes `{cutoff_date}` — all literature searches are co
 
 2. **Check Paperpile first:** Use `search_library` with task + benchmark keywords. the user may already have SOTA papers for these benchmarks.
 
-3. **External search:** Use `openalex_search_works` + `dblp_search` for methods not found in Paperpile. Search for:
+3. **External search:** Use `scholarly openalex-search-works` + `scholarly dblp-search` for methods not found in Paperpile. Search for:
    - SOTA methods on the paper's benchmarks (are there stronger baselines?)
    - The paper's method applied to other benchmarks (are they cherry-picking datasets?)
    - Related benchmarks the paper doesn't use (standard in the field but omitted?)

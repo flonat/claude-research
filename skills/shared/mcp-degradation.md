@@ -9,10 +9,12 @@
 Before any MCP-dependent work, test connectivity:
 
 ```
-Try a lightweight read operation (e.g., mcp__taskflow__search_tasks with a known term,
-openalex_search_works with a trivial query). If it times out or errors,
+Try a lightweight read operation (e.g., `taskflow-cli search-tasks --query <term> --json`,
+or `scholarly source-status --json` for the scholarly stack). If it times out or errors,
 mark that server as unavailable for the session.
 ```
+
+**Note:** `scholarly`, `paperpile`, and `taskflow` now run as CLI shims (not MCP). Probe them with the matching CLI command. Only the genuinely MCP-backed servers (Gmail, Calendar, GitHub, agent-memory, etc.) need the `mcp__*` probe.
 
 Do this **once**, at the beginning of the skill — not before every call.
 
@@ -44,7 +46,7 @@ For each skipped phase, suggest what the user can do manually:
 |-------------|----------|
 | taskflow MCP | "Run `vault sync (edit vault files directly)` later when vault is accessible" |
 | OpenAlex MCP | "Use `/literature` with web search mode instead" |
-| Scholarly MCP | "Use `/literature` with web search mode instead" |
+| `scholarly` CLI | "Use `/literature` with web search mode instead" |
 
 ### Step 5: Summarize at End
 
@@ -65,8 +67,7 @@ These skills should reference this pattern:
 | `vault sync` | vault | Steps 3, 5 (search + update) |
 | `task-management` | vault | Daily planning, task creation, pipeline queries |
 | `init-project-research` | vault | Pipeline entry creation |
-| `literature` | OpenAlex, Scholarly | Citation search, DOI verification |
-| `scout` | OpenAlex, Scholarly | Bibliometric queries |
+| `literature` | `scholarly` CLI | Citation search, DOI verification |
 | `atlas-audit` | vault | Pipeline cross-reference |
 
 ## When to Apply

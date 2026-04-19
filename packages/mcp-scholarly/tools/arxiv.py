@@ -1,15 +1,14 @@
 """arXiv tools (3 tools, always available — no auth required)."""
 
-from mcp.types import Tool, TextContent
+from tools._registry import Tool, ToolResult, register
 
 from _app import _arxiv_source, format_papers_table
-from tools._registry import register
 
 
 # ---------- Handlers ----------
 
 
-async def _handle_arxiv_search(args: dict) -> list[TextContent]:
+async def _handle_arxiv_search(args: dict) -> ToolResult:
     query = args["query"]
     limit = min(args.get("limit", 25), 200)
     year_from = args.get("year_from")
@@ -26,19 +25,19 @@ async def _handle_arxiv_search(args: dict) -> list[TextContent]:
         )
 
     if not papers:
-        return [TextContent(type="text", text=f"No arXiv results for: {query}")]
+        return ToolResult(text=f"No arXiv results for: {query}")
 
     text = format_papers_table(papers, title=f"arXiv: {query}")
     text += f"\n\n*{len(papers)} results from arXiv*"
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_arxiv_get_paper(args: dict) -> list[TextContent]:
+async def _handle_arxiv_get_paper(args: dict) -> ToolResult:
     arxiv_id = args["arxiv_id"]
     paper = await _arxiv_source.get_paper(arxiv_id)
 
     if not paper:
-        return [TextContent(type="text", text=f"arXiv paper not found: {arxiv_id}")]
+        return ToolResult(text=f"arXiv paper not found: {arxiv_id}")
 
     lines = [
         f"# {paper.title}",
@@ -57,10 +56,10 @@ async def _handle_arxiv_get_paper(args: dict) -> list[TextContent]:
     if paper.abstract:
         lines.append(f"\n**Abstract:**\n{paper.abstract}")
 
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
-async def _handle_arxiv_search_category(args: dict) -> list[TextContent]:
+async def _handle_arxiv_search_category(args: dict) -> ToolResult:
     query = args["query"]
     category = args["category"]
     limit = min(args.get("limit", 25), 200)
@@ -68,14 +67,11 @@ async def _handle_arxiv_search_category(args: dict) -> list[TextContent]:
     papers = await _arxiv_source.search_by_category(query, category, limit=limit)
 
     if not papers:
-        return [TextContent(
-            type="text",
-            text=f"No arXiv results for '{query}' in category {category}",
-        )]
+        return ToolResult(text=f"No arXiv results for '{query}' in category {category}")
 
     text = format_papers_table(papers, title=f"arXiv [{category}]: {query}")
     text += f"\n\n*{len(papers)} results from arXiv [{category}]*"
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
 # ---------- Registration ----------

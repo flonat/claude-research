@@ -1,21 +1,20 @@
 """Unpaywall tools (1 tool, always available)."""
 
-from mcp.types import Tool, TextContent
+from tools._registry import Tool, ToolResult, register
 
 from _app import _unpaywall_client
-from tools._registry import register
 
 
 # ---------- Handler ----------
 
 
-async def _handle_unpaywall(args: dict) -> list[TextContent]:
+async def _handle_unpaywall(args: dict) -> ToolResult:
     doi = args["doi"]
 
     result = await _unpaywall_client.lookup(doi)
 
     if not result:
-        return [TextContent(type="text", text=f"DOI not found in Unpaywall: {doi}")]
+        return ToolResult(text=f"DOI not found in Unpaywall: {doi}")
 
     lines = [f"## Unpaywall: {doi}\n"]
 
@@ -38,7 +37,7 @@ async def _handle_unpaywall(args: dict) -> list[TextContent]:
     else:
         lines.append("\n*No open access version found.*")
 
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
 # ---------- Registration ----------

@@ -1,7 +1,7 @@
 ---
 name: init-project-research
 description: "Use when you need to bootstrap a full research project with directory scaffold and Overleaf symlink."
-allowed-tools: Bash(mkdir*), Bash(ln*), Bash(ls*), Bash(git*), Bash(touch*), Bash(jq*), Bash(uv*), Bash(scout *), Bash(curl*), Bash(wget*), Read, Write, Edit, Glob, Grep, Task, WebSearch, WebFetch, AskUserQuestion
+allowed-tools: Bash(mkdir*), Bash(ln*), Bash(ls*), Bash(git*), Bash(touch*), Bash(jq*), Bash(uv*), Bash(curl*), Bash(wget*), Read, Write, Edit, Glob, Grep, Task, WebSearch, WebFetch, AskUserQuestion
 argument-hint: "[project-name or no arguments for guided setup]"
 ---
 
@@ -14,7 +14,6 @@ argument-hint: "[project-name or no arguments for guided setup]"
 - Starting a new research paper or project from scratch
 - When the user says "new project", "set up a project", "init project", "bootstrap project"
 - After deciding to pursue a new research idea that needs its own folder
-- When scaffolding ideas from Scout reports, brainstorming, or supervisor meetings
 
 ## Overview
 
@@ -27,7 +26,6 @@ Eight phases, executed in order:
 5. **Git init** — initialise repo and make first commit
 6. **Atlas sync** — create Atlas topic file, vault atlas entry, venue links, Dropbox folder
 7. **Task Management sync** — update context library files
-8. **Literature & Discovery** — run literature review + scout novelty assessment
 9. **Confirmation** — report what was created
 
 ---
@@ -126,64 +124,22 @@ If the directory doesn't exist, create it and proceed.
 
 **Research papers are drafted in LaTeX (`.tex`), never Markdown.** When scaffolding, seed `paper-{venue}/paper/main.tex` from the LaTeX working-paper template. Do not create Markdown drafts under `paper*/` or propose Markdown as an interim format — papers compile via `/latex` and sync to Overleaf. Markdown is reserved for README, notes, and context files outside `paper*/`.
 
-### Common Core (always created)
+### Common Core + Conditional Structure
 
-```
-<Folder Name>/
-├── CLAUDE.md
-├── README.md
-├── MEMORY.md
-├── .gitignore
-├── .context/
-│   ├── current-focus.md
-│   ├── field-calibration.md
-│   └── project-recap.md
-├── .claude/
-│   ├── hooks/
-│   │   └── copy-paper-pdf.sh   # PostToolUse hook — copies paper-*/paper/main.pdf → backup/*_vcurrent.pdf
-│   └── settings.local.json
-├── docs/
-│   ├── literature-review/  # .gitkeep
-│   ├── readings/           # .gitkeep
-│   └── venues/             # .gitkeep (submission/venue material only)
-├── log/                   # .gitkeep
-├── paper-{venue}/         # Paper directory (Phase 4):
-│   ├── paper/             #   Symlink → Overleaf — LaTeX source ONLY
-│   │                      #   Venue-specific files (checklists, cover letters) live in parent
-│   └── correspondence/
-│       └── referee-reviews/  # .gitkeep (see scaffold-details.md for review structure)
-├── backup/                # Local backups of Overleaf paper directories (subdirs per paper)
-├── github-repo/           # (Optional) Separate git repo for public GitHub code release
-├── knowledge/             # .gitkeep (LLM-maintained wiki — compiled by /compile-knowledge)
-├── correspondence/
-│   └── internal-reviews/  # .gitkeep (reports from /code-review, fixer, etc.)
-├── reviews/               # .gitkeep (subdirs created on demand by review agents)
-└── to-sort/               # .gitkeep
-```
+**Common core** (always created): `CLAUDE.md`, `README.md`, `MEMORY.md`, `.gitignore`, `.context/`, `.claude/`, `docs/` (literature-review, readings, venues), `log/`, `paper-{venue}/` (with symlink + `correspondence/referee-reviews/`), `backup/`, `github-repo/` (optional), `knowledge/`, `correspondence/internal-reviews/`, `reviews/`, `to-sort/`.
 
-### Conditional Structure
+| Project type | Adds |
+|--------------|------|
+| Experimental | `code/python/`, `code/R/`, `data/raw/`, `data/processed/`, `output/{figures,tables,logs}/` |
+| Computational | `src/<project>/`, `tests/`, `experiments/configs/`, `results/`, `pyproject.toml`, `.python-version` |
+| Theoretical | — |
+| Mixed | Prompt user |
 
-**Experimental** — add: `code/python/`, `code/R/`, `data/raw/`, `data/processed/`, `output/figures/`, `output/tables/`, `output/logs/`
+**Venues:** seed `docs/venues/<venue-slug>/submission/`; conference venues also get a submission checklist.
 
-**Computational** — add: `src/<project-name>/` (with `__init__.py`), `tests/`, `experiments/configs/`, `results/`, `output/logs/`, `pyproject.toml`, `.python-version`
+**Python tooling:** always `uv` — never bare `pip`, `python`, or `requirements.txt`.
 
-**Theoretical** — nothing extra.
-
-**Mixed** — present elements and ask which to include.
-
-**Venues:** When a target venue is known, seed `docs/venues/<venue-slug>/submission/`. For conference venues, also seed a submission checklist. Full venue structure and checklist template: [references/scaffold-details.md](references/scaffold-details.md).
-
-### Python Tooling
-
-**Always use `uv` — never bare `pip`, `python`, or `requirements.txt`.** For computational projects, init with `uv init`. For experimental projects, add `pyproject.toml` when dependencies are first needed.
-
-### Implementation
-
-```bash
-mkdir -p <dir> && touch <dir>/.gitkeep  # Create all directories
-mkdir -p .claude/hooks                   # Create hook, chmod +x
-mkdir -p .claude/state                   # Machine-specific memory (gitignored)
-```
+**Full scaffold tree** (directory comments, hook details, .gitkeep placement) and implementation commands: [`references/scaffold-tree.md`](references/scaffold-tree.md).
 
 ---
 
@@ -216,99 +172,21 @@ Full templates: [`templates/seed-files.md`](templates/seed-files.md)
 
 ### Permissions Sync
 
-After writing `.claude/settings.local.json` (with hook config), merge global permissions into it so the new project starts with full permissions from day one:
-
-1. Read `~/.claude/settings.json` → extract `permissions.allow` array
-2. Read the newly created `.claude/settings.local.json`
-3. Compute the union: `local_permissions ∪ global_permissions`
-4. Write the merged `permissions.allow` back to `.claude/settings.local.json` (preserving the `hooks` key)
-
-```bash
-# Merge global permissions into the new project's settings
-jq -s '.[0].permissions.allow as $global |
-  .[1] | .permissions.allow = ((.permissions.allow // []) + $global | unique | sort)' \
-  ~/.claude/settings.json .claude/settings.local.json > .claude/settings.local.json.tmp \
-  && mv .claude/settings.local.json.tmp .claude/settings.local.json
-```
-
-Also merge the `permissions.deny` array using the same logic.
+After writing `.claude/settings.local.json` (with hook config), merge global permissions from `~/.claude/settings.json` into it so the new project starts with full permissions from day one. `jq` union command and deny-array handling: [`references/paper-directory.md`](references/paper-directory.md) § Permissions Sync.
 
 ---
 
 ## Phase 4: Overleaf Symlink & Template
 
-### Paper Directory Convention (Nested Pattern)
+**Nested pattern:** each paper submission is a real directory at project root (e.g., `paper/`, `paper-ccs/`) containing a `paper/` **symlink** to the Overleaf folder. Venue-specific files (checklists, cover letters, R&R responses) live alongside the symlink without being synced to Overleaf.
 
-Each paper submission gets its own **real directory** at project root (e.g., `paper/`, `paper-ccs/`, `paper-rg/`). Inside that directory, a `paper/` **symlink** points to the Overleaf folder. This nesting allows venue-specific files (submission checklists, cover letters, response documents, reviewer correspondence) to live alongside the Overleaf content without being synced to Overleaf.
+**Overleaf naming:** `Paper {THEME_PREFIX} {Title Cased Slug}` — theme prefix is a short abbreviation (ASG, BDS, EnvEcon, HAI, IO, MechDes, NLP, OR, OrgStrat, PolSci). For multi-venue: append venue in parentheses.
 
-**Structure:**
-```
-paper-ccs/                    # Real directory (venue wrapper)
-├── paper/                    # Symlink → Overleaf directory
-├── submission-checklist.md   # Venue-specific (not in Overleaf)
-├── cover-letter.tex          # Venue-specific
-└── response-to-reviewers.tex # Added after R&R
-```
+**Create the Overleaf folder via `mkdir`** (Overleaf auto-creates a project from a new folder in the Overleaf root read from `~/.config/task-mgmt/overleaf-root`). Never rename or delete Overleaf folders — see `.claude/rules/overleaf-separation.md`.
 
-**Single-paper projects** use the same pattern:
-```
-paper/                        # Real directory (venue wrapper)
-└── paper/                    # Symlink → Overleaf directory
-```
+**Backup:** create `backup/<paper-dir-name>/` subdirectories for each paper. The daily `backup-overleaf-papers.sh` script populates them.
 
-**Naming convention:** `Paper {THEME_PREFIX} {Title Cased Slug}` — e.g., `Paper ASG Privacy Compliance Gaming`, `Paper BDS Identity Belief Alignment`. The theme prefix is a short abbreviation of the research theme:
-
-| Theme | Prefix |
-|-------|--------|
-| Category A | ASG |
-| Category B | BDS |
-| Category C | EnvEcon |
-| Category D | HAI |
-| Industrial Organisation | IO |
-| Mechanism Design | MechDes |
-| NLP & Computational AI | NLP |
-| Category E | OR |
-| Category F | OrgStrat |
-| Category G | PolSci |
-
-For multi-venue submissions, append the venue abbreviation in parentheses: `Paper ASG Privacy Compliance Gaming (CCS)`.
-
-**Commands:**
-```bash
-# Create the Overleaf project folder if it doesn't exist yet
-# (creating a folder in the Overleaf root automatically creates an Overleaf project)
-overleaf_root="$(cat ~/.config/task-mgmt/overleaf-root 2>/dev/null || echo ~/Apps/Overleaf)"
-mkdir -p "$overleaf_root/Paper ASG Privacy Compliance Gaming (CCS)"
-
-# For each venue:
-mkdir -p paper-ccs
-ln -s "$overleaf_root/Paper ASG Privacy Compliance Gaming (CCS)" paper-ccs/paper
-
-# Single paper:
-mkdir -p paper
-ln -s "$overleaf_root/Paper BDS Identity Belief Alignment" paper/paper
-```
-
-**Important:** Never rename or delete Overleaf folders — see `.claude/rules/overleaf-separation.md` (Overleaf Folder Lifecycle).
-
-Ensure `.latexmkrc` exists inside the Overleaf target (the symlink destination), not in the wrapper directory. Full template setup: [references/scaffold-details.md](references/scaffold-details.md#overleaf-symlink-commands-phase-4).
-
-### Backup Directory
-
-After creating paper directories, create a `backup/` directory with one subdirectory per paper:
-
-```bash
-mkdir -p backup/
-for d in paper*/; do
-  mkdir -p "backup/$(basename "$d")"
-done
-```
-
-**Convention:** One `backup/` directory at project root, with subdirectories matching each `paper*` directory name. The daily `backup-overleaf-papers.sh` script copies `.tex`/`.bib`/style files from the Overleaf symlink targets into these subdirectories.
-
-**Examples:**
-- Single paper: `backup/paper/`
-- Multi-paper: `backup/paper-ccs/`, `backup/paper-rg/`
+**Full nested structure, theme-prefix table, symlink commands, and backup loop:** [`references/paper-directory.md`](references/paper-directory.md)
 
 ---
 
@@ -354,7 +232,6 @@ Add to Top 3 Active Projects or as an Open Loop. Use targeted `Edit` — do NOT 
 
 ## Phase 8: Literature & Discovery
 
-After scaffolding and syncing, automatically run a literature review (`/literature`) and scout novelty assessment (`/scout`) in parallel via sub-agents.
 
 Full steps (8a–8c) and error handling: [`references/literature-discovery.md`](references/literature-discovery.md)
 
@@ -389,7 +266,7 @@ Full template: [`references/confirmation-report.md`](references/confirmation-rep
 | Skill | Relationship |
 |-------|-------------|
 | `/literature` | Runs automatically in Phase 8a — initial literature review |
-| `/scout` | Runs automatically in Phase 8b — novelty assessment |
+|  | Runs automatically in Phase 8b — novelty assessment |
 | `/project-safety` | Already handled — .gitignore and settings created during init |
 | `/save-context` | Context library entries created during Phase 7 |
 | `/session-log` | Offer to create a session log after init completes |

@@ -12,9 +12,6 @@ import sys
 import unicodedata
 from pathlib import Path
 
-from mcp.server import Server
-from mcp.types import Tool, TextContent
-
 from biblio_sources import (
     AltmetricClient,
     ArxivSource,
@@ -235,7 +232,4 @@ def generate_bibtex_key(authors: list[str], year: int | None, title: str | None)
     return f"{surname}{year_str}{first_word}"
 
 
-# ---------- Server instance ----------
-
-server = Server("bibliography")
-log("Server initialized")
+log("Shared scholarly runtime initialized")

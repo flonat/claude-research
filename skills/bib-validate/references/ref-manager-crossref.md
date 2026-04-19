@@ -8,15 +8,15 @@ After the disk-based cross-reference, check each cited key against Paperpile usi
 
 Cross-reference via the `paperpile` MCP server. For each citation key:
 
-1. Call `mcp__paperpile__search_library` with the citation key as query
-2. If a DOI is available, also try `mcp__paperpile__lookup_by_doi` for exact matching
+1. Call `paperpile search-library` with the citation key as query
+2. If a DOI is available, also try `paperpile lookup-by-doi` for exact matching
 3. Match on the `citekey` field in results
-4. For entries with issues, call `mcp__paperpile__get_item` for full metadata
-5. Use `mcp__paperpile__export_bib` to generate correct BibTeX for missing/outdated entries
+4. For entries with issues, call `paperpile get-item` for full metadata
+5. Use `paperpile export-bib` to generate correct BibTeX for missing/outdated entries
 
 **Additional checks:**
-- Call `mcp__paperpile__get_labels` to verify label organisation matches project themes
-- For projects with a known Paperpile label, call `mcp__paperpile__get_items_by_label` to find papers in the label but not cited (potential missing citations)
+- Call `paperpile get-labels` to verify label organisation matches project themes
+- For projects with a known Paperpile label, call `paperpile get-items-by-label` to find papers in the label but not cited (potential missing citations)
 
 ## Status Categories
 
@@ -29,4 +29,4 @@ Cross-reference via the `paperpile` MCP server. For each citation key:
 
 Include this as a "Reference Manager Sync" section in the report, after cross-reference results and before quality checks.
 
-**Graceful degradation:** If Paperpile MCP is unavailable, skip with a warning and continue with disk-only validation.
+**Graceful degradation:** If the `paperpile` CLI is unavailable, skip with a warning and continue with disk-only validation.

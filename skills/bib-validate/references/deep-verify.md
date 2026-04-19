@@ -6,25 +6,25 @@ This mode spawns parallel sub-agents that each verify a batch of entries and wri
 
 ## Architecture
 
-**MCP constraint:** MCP tools (`scholarly_verify_dois`, `scholarly_search`, etc.) are NOT available inside sub-agents — they are permission-scoped to the main conversation context only. The orchestrator must handle all MCP calls, and sub-agents must use Crossref REST API and WebFetch for DOI verification.
+Sub-agents shell out to the `scholarly` CLI (`uv run scholarly ...` or the `~/.local/bin/scholarly` shim) — the CLI works in both the main context and sub-agents, unlike MCP tools which are permission-scoped to the main context only.
 
 ```
 You (orchestrator)
 +-- Read .bib file, extract all entries
-+-- **Pre-verify all DOIs via MCP (main context):**
-|   +-- Call `scholarly_verify_dois` with all DOIs (max 50 per call)
-|   +-- Write results to verification_results/mcp_preverify.json
++-- **Pre-verify all DOIs via CLI:**
+|   +-- Run: scholarly scholarly-verify-dois --dois D1,D2,... --json (max 50 per call)
+|   +-- Write results to verification_results/preverify.json
 +-- Create verification_results/ directory in project root
 +-- Batch entries into groups of 5
 +-- Spawn parallel agents (max 5 concurrent), each:
-|   +-- Read mcp_preverify.json for pre-verified DOI status
+|   +-- Read preverify.json for pre-verified DOI status
 |   +-- For each entry in batch:
 |   |   +-- If DOI pre-verified as VERIFIED: check title match only
-|   |   +-- If DOI NOT_FOUND or SINGLE_SOURCE: verify via Crossref API (curl)
+|   |   +-- If DOI NOT_FOUND or SINGLE_SOURCE: verify via `scholarly` CLI or Crossref API (curl)
 |   |   +-- Check title matches DOI metadata
 |   |   +-- Check author consistency
 |   |   +-- Check year correctness
-|   |   +-- Check for published version if preprint (via WebSearch, NOT MCP)
+|   |   +-- Check for published version if preprint (via `scholarly scholarly-search` or WebSearch)
 |   +-- Write results to verification_results/batch_N.json
 +-- Wait for all agents to complete
 +-- Read all batch JSON files
@@ -58,8 +58,8 @@ Each sub-agent receives:
 - The batch of .bib entries (raw text)
 - The batch number
 - The output path: `verification_results/batch_N.json`
-- The path to `verification_results/mcp_preverify.json` (pre-verified DOI results from orchestrator)
-- Instructions to use **Crossref REST API** (`curl -sL "https://api.crossref.org/works?query.bibliographic=..."`) and **WebFetch** for DOI verification — **NOT** MCP tools (MCP is unavailable in sub-agents)
+- The path to `verification_results/preverify.json` (pre-verified DOI results from orchestrator)
+- Instructions to use the **`scholarly` CLI** (`scholarly scholarly-verify-dois --dois ... --json`, `scholarly scholarly-search "<title>" --json`) for DOI and title verification; fall back to **Crossref REST API** (`curl -sL "https://api.crossref.org/works?query.bibliographic=..."`) and **WebFetch** for sources not covered by the CLI
 - Instruction to write results to disk only -- never return large payloads
 
 ## Assembly & Report

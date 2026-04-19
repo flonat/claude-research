@@ -30,16 +30,15 @@ For each iteration:
      - Convert each gap into 1-2 targeted search queries
      - Include negative terms to avoid re-finding existing papers
      - Choose appropriate source per query:
-       • scholarly_search — general academic
-       • arxiv_search — preprints, CS/econ working papers
-       • exa_search_papers — grey literature, working papers, reports
-       • dblp_search — CS conferences/venues
-       • core_search_fulltext — OA full-text search
+       • `scholarly scholarly-search` — general academic
+       • `scholarly arxiv-search` — preprints, CS/econ working papers
+       • `scholarly exa-search-papers` — grey literature, working papers, reports
+       • `scholarly dblp-search` — CS conferences/venues
+       • `scholarly core-search-fulltext` — OA full-text search
 
   3. TARGETED SEARCH (sub-agents, parallel)
-     - Pre-fetch via MCP in main context (MCP not available in sub-agents)
-     - Write results to /tmp/ files
-     - Sub-agents read results and filter for relevance
+     - Sub-agents shell out to `scholarly` CLI directly (works inside sub-agents), OR orchestrator pre-fetches and writes results to /tmp/
+     - Sub-agents filter for relevance
      - Each sub-agent targets 1-2 gaps
 
   4. MERGE + DEDUP (main context)
@@ -49,7 +48,7 @@ For each iteration:
 
   5. VERIFY NEW PAPERS (main context)
      - Same Phase 4 protocol but only for new papers
-     - Batch DOI verification via scholarly_verify_dois
+     - Batch DOI verification via `scholarly scholarly-verify-dois --dois D1,D2 --json`
 ```
 
 ## Convergence Criteria (any triggers exit)
@@ -65,13 +64,13 @@ For each iteration:
 
 | Gap type | Primary source | Secondary |
 |----------|---------------|-----------|
-| Missing time period | `scholarly_search` with year filter | `arxiv_search` |
-| Missing methodology | `exa_search_papers` (semantic) | `scholarly_search` |
-| Missing geography/context | `scholarly_search` with context terms | `exa_search` |
-| Missing theoretical lens | `exa_search_papers` (semantic) | `scholarly_search` |
-| Key cited papers not in set | `scholarly_paper_detail` (by DOI) | `crossref_lookup_doi` |
-| Preprints / working papers | `arxiv_search` | `exa_search_papers` |
-| Grey literature / reports | `exa_search` (no category filter) | `core_search_fulltext` |
+| Missing time period | `scholarly scholarly-search` with year filter | `scholarly arxiv-search` |
+| Missing methodology | `scholarly exa-search-papers` (semantic) | `scholarly scholarly-search` |
+| Missing geography/context | `scholarly scholarly-search` with context terms | `scholarly exa-search` |
+| Missing theoretical lens | `scholarly exa-search-papers` (semantic) | `scholarly scholarly-search` |
+| Key cited papers not in set | `scholarly scholarly-paper-detail` (by DOI) | `scholarly crossref-lookup-doi` |
+| Preprints / working papers | `scholarly arxiv-search` | `scholarly exa-search-papers` |
+| Grey literature / reports | `scholarly exa-search` (no category filter) | `scholarly core-search-fulltext` |
 
 ## Gap Analysis Prompt Template
 

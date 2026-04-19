@@ -1,15 +1,14 @@
 """Zenodo tools (2 tools, always available)."""
 
-from mcp.types import Tool, TextContent
+from tools._registry import Tool, ToolResult, register
 
 from _app import _zenodo_client
-from tools._registry import register
 
 
 # ---------- Handlers ----------
 
 
-async def _handle_zenodo_search(args: dict) -> list[TextContent]:
+async def _handle_zenodo_search(args: dict) -> ToolResult:
     query = args["query"]
     resource_type = args.get("resource_type")
     limit = min(args.get("limit", 25), 100)
@@ -17,7 +16,7 @@ async def _handle_zenodo_search(args: dict) -> list[TextContent]:
     records = await _zenodo_client.search(query, resource_type=resource_type, limit=limit)
 
     if not records:
-        return [TextContent(type="text", text=f"No Zenodo results for: {query}")]
+        return ToolResult(text=f"No Zenodo results for: {query}")
 
     lines = [f"## Zenodo: {query}\n"]
     if resource_type:
@@ -38,16 +37,16 @@ async def _handle_zenodo_search(args: dict) -> list[TextContent]:
         lines.append(f"| {i} | [{title}]({r.zenodo_url}) | {rtype} | {doi_link} | {file_count}: {file_names} | {access} |")
 
     lines.append(f"\n*{len(records)} results from Zenodo*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
-async def _handle_zenodo_get_record(args: dict) -> list[TextContent]:
+async def _handle_zenodo_get_record(args: dict) -> ToolResult:
     record_id = args["record_id"]
 
     record = await _zenodo_client.get_record(record_id)
 
     if not record:
-        return [TextContent(type="text", text=f"Zenodo record not found: {record_id}")]
+        return ToolResult(text=f"Zenodo record not found: {record_id}")
 
     lines = [f"## {record.title}\n"]
     lines.append(f"**Zenodo:** [{record.zenodo_url}]({record.zenodo_url})")
@@ -77,7 +76,7 @@ async def _handle_zenodo_get_record(args: dict) -> list[TextContent]:
             lines.append(f"- `{f.filename}` ({size_str}){dl}")
 
     lines.append(f"\n*Source: Zenodo (CERN Open Repository)*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
 # ---------- Registration ----------

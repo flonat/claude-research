@@ -1,7 +1,7 @@
 # arXiv API Reference
 
 > For use by the `/literature` skill — Phase 2 pre-fetch and Phase 4.5 deep loop.
-> arXiv is now available as an MCP tool (`arxiv_search`, `arxiv_get_paper`, `arxiv_search_category`).
+> arXiv is now available as an MCP tool (`scholarly arxiv-search`, `scholarly arxiv-get-paper`, `scholarly arxiv-search-category`).
 
 ## MCP Tools (Preferred)
 
@@ -9,9 +9,9 @@ Use these instead of raw WebFetch — they handle XML parsing and return Paper o
 
 | Tool | Use case |
 |------|----------|
-| `arxiv_search` | General search with optional category filter |
-| `arxiv_get_paper` | Fetch by arXiv ID (e.g., `2301.07041`) |
-| `arxiv_search_category` | Search within a specific category |
+| `scholarly arxiv-search` | General search with optional category filter |
+| `scholarly arxiv-get-paper` | Fetch by arXiv ID (e.g., `2301.07041`) |
+| `scholarly arxiv-search-category` | Search within a specific category |
 
 ## Category Codes (Common)
 
@@ -33,7 +33,7 @@ Use these instead of raw WebFetch — they handle XML parsing and return Paper o
 
 ## Query Syntax (for MCP tool `query` parameter)
 
-The `arxiv_search` tool accepts natural language queries. For advanced use, arXiv operators are passed through:
+The `scholarly arxiv-search` tool accepts natural language queries. For advanced use, arXiv operators are passed through:
 
 ```
 ti:keyword        — title search
@@ -64,6 +64,6 @@ au:smith AND abs:"reinforcement learning"             → author + abstract
 |------|--------|
 | Latest preprints (not yet peer-reviewed) | arXiv |
 | CS/AI conference papers | DBLP (better venue metadata) |
-| Peer-reviewed publications | `scholarly_search` (multi-source) |
-| Specific arXiv paper by ID | `arxiv_get_paper` |
-| Category-specific preprint scan | `arxiv_search_category` |
+| Peer-reviewed publications | `scholarly scholarly-search` (multi-source) |
+| Specific arXiv paper by ID | `scholarly arxiv-get-paper` |
+| Category-specific preprint scan | `scholarly arxiv-search-category` |

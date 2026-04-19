@@ -1,22 +1,21 @@
 """OpenCitations tools (2 tools, always available)."""
 
-from mcp.types import Tool, TextContent
+from tools._registry import Tool, ToolResult, register
 
 from _app import _opencitations_client
-from tools._registry import register
 
 
 # ---------- Handlers ----------
 
 
-async def _handle_opencitations_citations(args: dict) -> list[TextContent]:
+async def _handle_opencitations_citations(args: dict) -> ToolResult:
     doi = args["doi"]
     limit = args.get("limit")
 
     citations = await _opencitations_client.get_citations(doi, limit=limit)
 
     if not citations:
-        return [TextContent(type="text", text=f"No citations found in OpenCitations for: {doi}")]
+        return ToolResult(text=f"No citations found in OpenCitations for: {doi}")
 
     count = await _opencitations_client.get_citation_count(doi)
 
@@ -34,17 +33,17 @@ async def _handle_opencitations_citations(args: dict) -> list[TextContent]:
         lines.append(f"\n*Showing 50 of {len(citations)} citations*")
 
     lines.append(f"\n*Source: OpenCitations COCI (fully open citation index)*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
-async def _handle_opencitations_references(args: dict) -> list[TextContent]:
+async def _handle_opencitations_references(args: dict) -> ToolResult:
     doi = args["doi"]
     limit = args.get("limit")
 
     references = await _opencitations_client.get_references(doi, limit=limit)
 
     if not references:
-        return [TextContent(type="text", text=f"No references found in OpenCitations for: {doi}")]
+        return ToolResult(text=f"No references found in OpenCitations for: {doi}")
 
     lines = [f"## OpenCitations: References of {doi}\n"]
     lines.append("| # | Referenced DOI | Date |")
@@ -56,7 +55,7 @@ async def _handle_opencitations_references(args: dict) -> list[TextContent]:
         lines.append(f"| {i} | [{cited_doi}](https://doi.org/{cited_doi}) | {date} |")
 
     lines.append(f"\n*{len(references)} references (Source: OpenCitations COCI)*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
 # ---------- Registration ----------

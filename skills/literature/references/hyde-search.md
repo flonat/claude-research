@@ -28,7 +28,7 @@ Standard keyword search misses papers that use different terminology for the sam
 
 ### Step 1: Generate Hypothetical Papers (Main Context)
 
-Before the Phase 2 MCP pre-fetch, generate 3-5 hypothetical paper descriptions:
+Before the Phase 2 CLI pre-fetch, generate 3-5 hypothetical paper descriptions:
 
 ```
 Given this research question:
@@ -53,13 +53,13 @@ From each `<hypothetical>` block, extract:
 - 2-3 key phrases that differ from the original query
 - Any discipline-specific terms not in the original
 
-### Step 3: Augment MCP Pre-Fetch
+### Step 3: Augment CLI Pre-Fetch
 
-Add the hypothetical-derived queries to the existing Phase 2 MCP calls:
+Add the hypothetical-derived queries to the existing Phase 2 CLI calls:
 
-1. Call `scholarly_search` with the **original query** (as before)
-2. Call `scholarly_search` with each **hypothetical-derived query** (2-3 additional calls)
-3. Call `scholarly_similar_works` with the best hypothetical abstract as `text` input
+1. Call `scholarly scholarly-search` with the **original query** (as before)
+2. Call `scholarly scholarly-search` with each **hypothetical-derived query** (2-3 additional calls)
+3. Call `scholarly scholarly-similar-works` with the best hypothetical abstract as `text` input
 4. Merge all results before deduplication
 
 ### Step 4: Pass to Sub-Agents
@@ -89,4 +89,4 @@ These queries capture terminology (algorithm aversion, verification cascade, Par
 
 ## Provenance
 
-Adapted from `pre_retrieval_processing()` in SciSciGPT's `backend/tools/literature.py`. The original uses HyDE with Pinecone vector search; our adaptation uses the hypothetical texts as query expansions for API-based search (scholarly MCP, WebSearch). The principle is identical — bridge the vocabulary gap between research questions and paper abstracts.
+Adapted from `pre_retrieval_processing()` in SciSciGPT's `backend/tools/literature.py`. The original uses HyDE with Pinecone vector search; our adaptation uses the hypothetical texts as query expansions for API-based search (`scholarly` CLI, WebSearch). The principle is identical — bridge the vocabulary gap between research questions and paper abstracts.

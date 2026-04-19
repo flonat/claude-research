@@ -20,36 +20,14 @@ Static CSV data for programmatic lookups:
 |------|----------|---------|
 | `.context/resources/venue-rankings/abs_ajg_2024.csv` | CABS AJG 2024 journal rankings | 1,822 journals |
 | `.context/resources/venue-rankings/core_2026.csv` | CORE ICORE 2026 conference rankings (A*–C) | ~800 conferences |
+| `.context/resources/venue-rankings/scimagojr-2025.csv` | Scimago Journal Rank 2025 (SJR score, quartile, 2yr citations/doc, ISSNs) | ~30k journals |
 | `.context/resources/venue-rankings/CABS-AJG-2024.xlsx` | Original CABS spreadsheet (reference only) | — |
 
-**SJR has no static file** — use the Elsevier Serial Title API for live lookups (requires `SCOPUS_API_KEY`).
+### SJR CSV schema
 
-### SJR Live Lookup
+`scimagojr-2025.csv` is semicolon-delimited, European decimal format. Key columns: `Issn` (space-separated, no hyphens), `SJR`, `SJR Best Quartile` (Q1–Q4), `Citations / Doc. (2years)` (IF-like metric, Scopus-based), `Categories` (category-scoped quartiles).
 
-Query the Elsevier Serial Title API to get SJR score and CiteScore quartile for any journal:
-
-```python
-import httpx, json
-
-async def lookup_sjr(title: str, api_key: str) -> dict | None:
-    """Returns {"sjr": float, "quartile": "Q1"|"Q2"|"Q3"|"Q4"} or None."""
-    r = await httpx.AsyncClient(headers={
-        "X-ELS-APIKey": api_key, "Accept": "application/json",
-    }).get("https://api.elsevier.com/content/serial/title",
-           params={"title": title, "view": "CITESCORE"})
-    if r.status_code != 200:
-        return None
-    entries = r.json().get("serial-metadata-response", {}).get("entry", [])
-    # Match exact title (Elsevier does substring search)
-    norm = lambda s: s.lower().strip().replace(".", "").replace(",", "").replace(":", "").replace("&", "and")
-    entry = next((e for e in entries if norm(e.get("dc:title", "")) == norm(title)), None)
-    if not entry:
-        return None
-    sjr_list = entry.get("SJRList", {}).get("SJR", [])
-    return {"sjr": float(sjr_list[0]["$"]), "quartile": "..."} if sjr_list else None
-```
-
-The Scout app (`packages/scout/src/scout/services/rankings.py`) has a full implementation with quartile extraction.
+Backfill script: `.scripts/venue-metrics/backfill-venues.py` — populates `scimago:` and `impact_factor:` fields on vault venue files.
 
 ---
 

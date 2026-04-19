@@ -1,9 +1,8 @@
 """Exa tools (3 tools, conditional — requires EXA_API_KEY)."""
 
-from mcp.types import Tool, TextContent
+from tools._registry import Tool, ToolResult, register
 
 from _app import _exa_client, format_papers_table, log
-from tools._registry import register
 
 
 if _exa_client is None:
@@ -12,7 +11,7 @@ else:
 
     # ---------- Handlers ----------
 
-    async def _handle_exa_search(args: dict) -> list[TextContent]:
+    async def _handle_exa_search(args: dict) -> ToolResult:
         query = args["query"]
         num_results = min(args.get("num_results", 10), 50)
         search_type = args.get("search_type", "deep")
@@ -32,7 +31,7 @@ else:
         )
 
         if not results:
-            return [TextContent(type="text", text=f"No Exa results for: {query}")]
+            return ToolResult(text=f"No Exa results for: {query}")
 
         lines = [f"# Exa Search: {query}", ""]
         for i, r in enumerate(results, 1):
@@ -52,9 +51,9 @@ else:
             lines.append("")
 
         lines.append(f"*{len(results)} results from Exa ({search_type} search)*")
-        return [TextContent(type="text", text="\n".join(lines))]
+        return ToolResult(text="\n".join(lines))
 
-    async def _handle_exa_search_papers(args: dict) -> list[TextContent]:
+    async def _handle_exa_search_papers(args: dict) -> ToolResult:
         query = args["query"]
         num_results = min(args.get("num_results", 10), 50)
 
@@ -63,20 +62,20 @@ else:
         )
 
         if not papers:
-            return [TextContent(type="text", text=f"No Exa paper results for: {query}")]
+            return ToolResult(text=f"No Exa paper results for: {query}")
 
         text = format_papers_table(papers, title=f"Exa Papers: {query}")
         text += f"\n\n*{len(papers)} papers from Exa (deep search, research paper category)*"
-        return [TextContent(type="text", text=text)]
+        return ToolResult(text=text)
 
-    async def _handle_exa_get_contents(args: dict) -> list[TextContent]:
+    async def _handle_exa_get_contents(args: dict) -> ToolResult:
         urls = args["urls"]
         max_characters = args.get("max_characters", 20000)
 
         results = await _exa_client.get_contents(urls, max_characters=max_characters)
 
         if not results:
-            return [TextContent(type="text", text="No content retrieved for the given URLs.")]
+            return ToolResult(text="No content retrieved for the given URLs.")
 
         lines = [f"# Exa Content Retrieval ({len(results)} URLs)", ""]
         for r in results:
@@ -86,7 +85,7 @@ else:
                 lines.append(f"\n{r.text[:max_characters]}")
             lines.append("")
 
-        return [TextContent(type="text", text="\n".join(lines))]
+        return ToolResult(text="\n".join(lines))
 
     # ---------- Registration ----------
 

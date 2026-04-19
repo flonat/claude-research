@@ -220,24 +220,24 @@ Always use the polite pool.
 
 ---
 
-## MCP Server (Preferred Over Python Client)
+## `scholarly` CLI (Preferred Over Python Client)
 
-**Always prefer MCP tools when available.** The bibliography MCP server (`packages/mcp-scholarly/`) exposes all OpenAlex functionality plus cross-source search — no Python boilerplate needed.
+**Always prefer the `scholarly` CLI.** It exposes all OpenAlex functionality plus cross-source search — no Python boilerplate needed, and it works in both main context and sub-agents.
 
-| Task | MCP tool (preferred) | Python client (fallback) |
+| Task | `scholarly` CLI (preferred) | Python client (fallback) |
 |------|---------------------|-------------------------|
-| Search papers by topic | `scholarly_search` (all sources) | `find_highly_cited_recent_papers()` |
-| Look up a DOI | `openalex_lookup_doi` | `client.get_entity()` |
-| Batch DOI verification | `scholarly_verify_dois` | Manual loop |
-| Find similar papers | `scholarly_similar_works` | N/A |
-| Author publications | `openalex_author_works` | `find_author_works()` |
-| Author profile | `openalex_author_profile` | `analyze_research_output()` |
-| Institution output | `openalex_institution_output` | `analyze_research_output()` |
-| Publication trends | `openalex_trends` | `get_publication_trends()` |
-| Forward citations | `openalex_citing_works` | Manual `cited_by_api_url` fetch |
-| Check active sources | `scholarly_source_status` | N/A |
+| Search papers by topic | `scholarly scholarly-search` (all sources) | `find_highly_cited_recent_papers()` |
+| Look up a DOI | `scholarly openalex-lookup-doi` | `client.get_entity()` |
+| Batch DOI verification | `scholarly scholarly-verify-dois` | Manual loop |
+| Find similar papers | `scholarly scholarly-similar-works` | N/A |
+| Author publications | `scholarly openalex-author-works` | `find_author_works()` |
+| Author profile | *(Python only)* | `analyze_research_output()` |
+| Institution output | *(Python only)* | `analyze_research_output()` |
+| Publication trends | *(Python only)* | `get_publication_trends()` |
+| Forward citations | *(Python only)* | Manual `cited_by_api_url` fetch |
+| Check active sources | `scholarly scholarly-source-status` | N/A |
 
-Use the Python client below only for workflows not yet exposed via MCP (custom filter combinations, batch entity lookups by non-DOI IDs). See [`docs/components/mcp-servers.md`](../../../docs/components/mcp-servers.md) for full MCP documentation.
+Use the Python client below only for workflows not yet exposed via the CLI (custom filter combinations, batch entity lookups by non-DOI IDs).
 
 ---
 

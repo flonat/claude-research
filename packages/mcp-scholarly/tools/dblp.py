@@ -1,15 +1,14 @@
 """DBLP tools (1 tool, always available)."""
 
-from mcp.types import Tool, TextContent
+from tools._registry import Tool, ToolResult, register
 
 from _app import _dblp_source, format_papers_table
-from tools._registry import register
 
 
 # ---------- Handler ----------
 
 
-async def _handle_dblp_search(args: dict) -> list[TextContent]:
+async def _handle_dblp_search(args: dict) -> ToolResult:
     query = args["query"]
     limit = min(args.get("limit", 25), 1000)
     year_from = args.get("year_from")
@@ -20,11 +19,11 @@ async def _handle_dblp_search(args: dict) -> list[TextContent]:
     )
 
     if not papers:
-        return [TextContent(type="text", text=f"No DBLP results for: {query}")]
+        return ToolResult(text=f"No DBLP results for: {query}")
 
     text = format_papers_table(papers, title=f"DBLP: {query}")
     text += f"\n\n*{len(papers)} results from DBLP*"
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
 # ---------- Registration ----------

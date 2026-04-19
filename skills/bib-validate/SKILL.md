@@ -1,13 +1,13 @@
 ---
 name: bib-validate
 description: "Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Fix mode auto-adds missing entries to Paperpile."
-allowed-tools: Read, Glob, Grep, Task, Write, Bash(mkdir*), Bash(ls*), Bash(rm*), mcp__paperpile__write_bib, mcp__paperpile__search_library, mcp__paperpile__export_bib
+allowed-tools: Read, Glob, Grep, Task, Write, Bash(mkdir*), Bash(ls*), Bash(rm*), Bash(paperpile*)
 argument-hint: [project-path or tex-file]
 ---
 
 # Bibliography Validation
 
-**LIBRARY-FIRST RULE: ALWAYS cross-reference cited keys against Paperpile (`mcp__paperpile__search_library`) during validation.** This catches drift between the `.bib` file and the reference manager. See the Reference Manager Cross-Reference section.
+**LIBRARY-FIRST RULE: ALWAYS cross-reference cited keys against Paperpile (`paperpile search-library`) during validation.** This catches drift between the `.bib` file and the reference manager. See the Reference Manager Cross-Reference section.
 
 **Citation key rule:** Existing keys in the project always take precedence. They come from the user's reference management system and are canonical. When suggesting replacements (typo corrections, preprint upgrades, metadata fixes), always keep the user's key and update the `.bib` entry metadata around it — never suggest renaming a key to match some "standard" format.
 
@@ -161,7 +161,13 @@ Full steps, MCP calls, and status categories: [`references/ref-manager-crossref.
 
 ### DOI Resolution (optional — triggered by `--verify-dois` flag or when issues are suspected)
 
-**Preferred method: bibliography MCP `scholarly_verify_dois`.** Collect all DOIs from the `.bib` file and call `scholarly_verify_dois` (up to 50 per call). This batch-verifies each DOI against all enabled sources (OpenAlex, Scopus, WoS). Results:
+**Preferred method: `scholarly scholarly-verify-dois`.** Collect all DOIs from the `.bib` file and run the CLI (up to 50 per call):
+
+```bash
+scholarly scholarly-verify-dois --dois DOI1,DOI2,DOI3 --json
+```
+
+This batch-verifies each DOI against all enabled sources (OpenAlex, Scopus, WoS). Results:
 - **VERIFIED** (2+ sources confirm) — DOI is valid, metadata can be trusted
 - **SINGLE_SOURCE** (1 source only) — DOI exists but warrants a manual spot-check
 - **NOT_FOUND** — DOI not found in any source; resolve manually via WebFetch
@@ -209,18 +215,17 @@ Full report template with all sections: [`references/report-template.md`](refere
 
 Sections: Summary table → Critical (missing entries) → Warning (typos, unused, missing fields, DOI mismatches, stale preprints) → Info (year issues) → Limitations (for embedded bibliographies).
 
-## Optional: Metadata Verification via MCP Tools
+## Optional: Metadata Verification
 
 When missing entries or suspicious metadata are flagged, check these sources in order:
 
-1. **Paperpile** (paperpile MCP) — call `mcp__paperpile__search_library` by title. If found, use `mcp__paperpile__export_bib` to get correct BibTeX.
-2. **Paperpile library** (Paperpile MCP) — call `search_library` by title. The user may already have the reference but with a different key.
-3. **Bibliography MCP** (scholarly sources):
-   - **`scholarly_search`** — search by title to find the correct entry across OpenAlex + S2 + Scopus + WoS
-   - **`scholarly_verify_dois`** — batch-verify DOIs across all sources (preferred over manual DOI resolution)
-   - **`scholarly_paper_detail`** — get full metadata including pre-formatted BibTeX (via S2 `citationStyles`), TLDR summary, and open access PDF link. Use for auto-generating BibTeX entries for missing references.
-   - **`scholarly_citations`** / **`scholarly_references`** — check citation context (how many papers cite this? what does it cite?) to assess relevance when deciding whether to keep or drop questionable entries
-   - **`openalex_lookup_doi`** — look up full metadata for a specific DOI
+1. **Paperpile** — call `paperpile search-library` by title. If found, use `paperpile export-bib` to get correct BibTeX.
+3. **`scholarly` CLI** (multi-source scholarly search — shells out, works in main context AND sub-agents):
+   - **`scholarly scholarly-search "<title>" --json`** — search by title across OpenAlex + S2 + Scopus + WoS
+   - **`scholarly scholarly-verify-dois --dois D1,D2,... --json`** — batch-verify DOIs across all sources (preferred over manual DOI resolution)
+   - **`scholarly scholarly-paper-detail <paper_id> --json`** — get full metadata including pre-formatted BibTeX (via S2 `citationStyles`), TLDR summary, and open access PDF link. Use for auto-generating BibTeX entries for missing references.
+   - **`scholarly scholarly-citations <paper_id> --json`** / **`scholarly scholarly-references <paper_id> --json`** — check citation context (how many papers cite this? what does it cite?) to assess relevance when deciding whether to keep or drop questionable entries
+   - **`scholarly openalex-lookup-doi <doi> --json`** — look up full metadata for a specific DOI
 
 For Python client fallback (citation networks, institution analysis): [`references/openalex-verification.md`](references/openalex-verification.md)
 

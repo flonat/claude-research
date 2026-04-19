@@ -1,17 +1,16 @@
 """CORE tools (2 tools, conditional on API key)."""
 
-from mcp.types import Tool, TextContent
+from tools._registry import Tool, ToolResult, register
 
 from _app import _core_source, format_papers_table
-from tools._registry import register
 
 
 # ---------- Handlers ----------
 
 
-async def _handle_core_search(args: dict) -> list[TextContent]:
+async def _handle_core_search(args: dict) -> ToolResult:
     if not _core_source:
-        return [TextContent(type="text", text="**Error:** CORE not configured (set CORE_API_KEY)")]
+        return ToolResult(text="**Error:** CORE not configured (set CORE_API_KEY)")
 
     query = args["query"]
     limit = min(args.get("limit", 25), 100)
@@ -23,30 +22,30 @@ async def _handle_core_search(args: dict) -> list[TextContent]:
     )
 
     if not papers:
-        return [TextContent(type="text", text=f"No CORE results for: {query}")]
+        return ToolResult(text=f"No CORE results for: {query}")
 
     text = format_papers_table(papers, title=f"CORE Search: {query}")
 
     with_text = sum(1 for p in papers if p.open_access_url)
     text += f"\n\n*{len(papers)} results from CORE ({with_text} with full text available)*"
     text += "\n*Use `core_get_fulltext` with the CORE ID to retrieve full paper text.*"
-    return [TextContent(type="text", text=text)]
+    return ToolResult(text=text)
 
 
-async def _handle_core_get_fulltext(args: dict) -> list[TextContent]:
+async def _handle_core_get_fulltext(args: dict) -> ToolResult:
     if not _core_source:
-        return [TextContent(type="text", text="**Error:** CORE not configured (set CORE_API_KEY)")]
+        return ToolResult(text="**Error:** CORE not configured (set CORE_API_KEY)")
 
     core_id = args["core_id"]
     full_text = await _core_source.get_full_text(core_id)
 
     if not full_text:
-        return [TextContent(type="text", text=f"No full text available for CORE ID: {core_id}")]
+        return ToolResult(text=f"No full text available for CORE ID: {core_id}")
 
     if len(full_text) > 50000:
         full_text = full_text[:50000] + f"\n\n... [truncated, {len(full_text)} chars total]"
 
-    return [TextContent(type="text", text=f"## Full Text (CORE ID: {core_id})\n\n{full_text}")]
+    return ToolResult(text=f"## Full Text (CORE ID: {core_id})\n\n{full_text}")
 
 
 # ---------- Registration (conditional) ----------

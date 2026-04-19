@@ -71,7 +71,7 @@ If a topic uses methods not in this list (e.g., "Mechanism Design", "Cryptograph
 
 - Topic file: `kebab-case-slug.md` in `~/Research-Vault/atlas/{theme-dir}/`
 - Theme directories: `operations-research/`, `behavioural-decision-science/`, `ai-safety-governance/`, `human-ai-interaction/`, `mechanism-design/`, `nlp-computational-ai/`, `political-science/`, `organisation-strategy/`, `environmental-economics/`, `industrial-organisation/`
-- Atlas tooling (schema.py, generate_recap.py, compile_atlas.py): `$TM/packages/atlas/`
+- Atlas tooling (schema.py, generate_recap.py, compile_atlas.py): `$TM/packages/atlas-tools/`
 
 ## Research Project Path
 

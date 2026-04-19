@@ -2,16 +2,16 @@
 
 > Reference file for `/bib-validate`. Use when missing entries or suspicious metadata are found.
 
-## Preferred: Biblio MCP Tools
+## Preferred: `scholarly` CLI
 
-**Always prefer MCP tools over the Python client** — they're faster, require no boilerplate, and query multiple sources.
+**Always prefer the `scholarly` CLI over the Python client** — it's faster, requires no boilerplate, queries multiple sources, and works in both the main context and sub-agents.
 
-| Tool | Use for |
-|------|---------|
-| `scholarly_verify_dois` | Batch-verify DOIs across OpenAlex + Scopus + WoS (up to 50 per call) |
-| `scholarly_search` | Find a paper by title across all sources — useful when a cited key is missing |
-| `openalex_lookup_doi` | Look up full metadata for a single DOI |
-| `scholarly_similar_works` | Find related papers when a title search doesn't match exactly |
+| Command | Use for |
+|---------|---------|
+| `scholarly scholarly-verify-dois --dois D1,D2 --json` | Batch-verify DOIs across OpenAlex + Scopus + WoS (up to 50 per call) |
+| `scholarly scholarly-search "<title>" --json` | Find a paper by title across all sources — useful when a cited key is missing |
+| `scholarly openalex-lookup-doi <doi> --json` | Look up full metadata for a single DOI |
+| `scholarly scholarly-similar-works <paper_id> --json` | Find related papers when a title search doesn't match exactly |
 
 ## Fallback: Python Client
 
@@ -40,6 +40,6 @@ results = client.search_works(search='decision making under uncertainty', per_pa
 - A cited key is missing and you want to confirm whether the paper exists
 - Year or author formatting looks suspicious and you want to cross-check
 - The user asks to enrich `.bib` entries with verified metadata
-- Batch DOI verification (use `scholarly_verify_dois` first)
+- Batch DOI verification (use `scholarly scholarly-verify-dois` first)
 
 Do NOT use this by default — only when the report flags issues worth verifying.

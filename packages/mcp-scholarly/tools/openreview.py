@@ -1,22 +1,21 @@
 """OpenReview tools (3 tools, always available)."""
 
-from mcp.types import Tool, TextContent
+from tools._registry import Tool, ToolResult, register
 
 from _app import _openreview_client, format_papers_table
-from tools._registry import register
 
 
 # ---------- Handlers ----------
 
 
-async def _handle_openreview_venue(args: dict) -> list[TextContent]:
+async def _handle_openreview_venue(args: dict) -> ToolResult:
     venue_id = args["venue_id"]
     limit = min(args.get("limit", 25), 1000)
 
     papers = await _openreview_client.get_venue_submissions(venue_id, limit=limit)
 
     if not papers:
-        return [TextContent(type="text", text=f"No submissions found for venue: {venue_id}")]
+        return ToolResult(text=f"No submissions found for venue: {venue_id}")
 
     lines = [f"## OpenReview: {venue_id}\n"]
     lines.append("| # | Title | Authors | Keywords | Area | Forum ID |")
@@ -32,16 +31,16 @@ async def _handle_openreview_venue(args: dict) -> list[TextContent]:
         lines.append(f"| {i} | [{title}](https://openreview.net/forum?id={p.forum_id}) | {authors} | {kw} | {area} | `{p.forum_id}` |")
 
     lines.append(f"\n*{len(papers)} submissions from OpenReview*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
-async def _handle_openreview_reviews(args: dict) -> list[TextContent]:
+async def _handle_openreview_reviews(args: dict) -> ToolResult:
     forum_id = args["forum_id"]
 
     paper = await _openreview_client.get_paper_with_reviews(forum_id)
 
     if not paper:
-        return [TextContent(type="text", text=f"Paper not found: {forum_id}")]
+        return ToolResult(text=f"Paper not found: {forum_id}")
 
     lines = [f"## {paper.title}\n"]
     lines.append(f"**Forum:** [openreview.net/forum?id={forum_id}](https://openreview.net/forum?id={forum_id})")
@@ -81,10 +80,10 @@ async def _handle_openreview_reviews(args: dict) -> list[TextContent]:
         lines.append("\n*No reviews available.*")
 
     lines.append(f"\n*Source: OpenReview API v2*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
-async def _handle_openreview_search(args: dict) -> list[TextContent]:
+async def _handle_openreview_search(args: dict) -> ToolResult:
     query = args["query"]
     venue_id = args.get("venue_id")
     limit = min(args.get("limit", 25), 100)
@@ -92,7 +91,7 @@ async def _handle_openreview_search(args: dict) -> list[TextContent]:
     papers = await _openreview_client.search(query, venue_id=venue_id, limit=limit)
 
     if not papers:
-        return [TextContent(type="text", text=f"No OpenReview results for: {query}")]
+        return ToolResult(text=f"No OpenReview results for: {query}")
 
     lines = [f"## OpenReview Search: {query}\n"]
     if venue_id:
@@ -110,7 +109,7 @@ async def _handle_openreview_search(args: dict) -> list[TextContent]:
         lines.append(f"| {i} | [{title}](https://openreview.net/forum?id={p.forum_id}) | {authors} | {venue} | `{p.forum_id}` |")
 
     lines.append(f"\n*{len(papers)} results from OpenReview*")
-    return [TextContent(type="text", text="\n".join(lines))]
+    return ToolResult(text="\n".join(lines))
 
 
 # ---------- Tool definitions + registration ----------

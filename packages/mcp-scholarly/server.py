@@ -13,33 +13,28 @@ Architecture:
 
 import asyncio
 
-from _app import server, log  # noqa: F401 — triggers client initialization
+from mcp.server import Server
+
+from _app import log  # noqa: F401 — triggers client initialization
+
+server = Server("scholarly")
+log("MCP server initialized")
 
 # Importing `tools` triggers side-effect registration of all tool modules
 import tools  # noqa: F401
-from tools._registry import TOOL_DEFINITIONS, TOOL_REGISTRY
+from mcp_adapter import call_mcp_tool, list_mcp_tools
 
 
 @server.list_tools()
 async def list_tools():
-    return TOOL_DEFINITIONS
+    return list_mcp_tools()
 
 
 @server.call_tool()
 async def call_tool(name: str, arguments: dict):
     log(f"call_tool: {name} {arguments}")
 
-    handler = TOOL_REGISTRY.get(name)
-    if handler is None:
-        from mcp.types import TextContent
-        return [TextContent(type="text", text=f"Unknown tool: {name}")]
-
-    try:
-        return await handler(arguments)
-    except Exception as e:
-        log(f"Error in {name}: {e}")
-        from mcp.types import TextContent
-        return [TextContent(type="text", text=f"**Error:** {e}")]
+    return await call_mcp_tool(name, arguments, log=log)
 
 
 async def main():

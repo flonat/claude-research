@@ -13,7 +13,7 @@ docs/venues/<venue-slug>/      # e.g., docs/venues/ejor/, docs/venues/mcdm-2026/
 └── submission/                # .gitkeep — for initial submission materials
 
 paper-<venue>/correspondence/
-└── referee-reviews/            # .gitkeep — for review rounds (seeded by /parse-reviews)
+└── referee-reviews/            # .gitkeep — for review rounds (seeded by /strategic-revision)
 ```
 
 As the project progresses through submission and revision cycles, material splits across two locations:
