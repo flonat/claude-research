@@ -64,6 +64,7 @@ Present detected values as the first option (marked "Detected from paper") in in
 4. **Git repository?** — Local git (Recommended) / GitHub remote / No git
 5. **GitHub release repo?** — Yes / No / Later. Only ask for Experimental, Computational, or Mixed projects. If Yes, create a `github-repo/` subdirectory with its own git repo for public code releases. If Later, just add `github-repo/` to `.gitignore` so it's ready when needed. Convention details: [`references/github-release-repo.md`](references/github-release-repo.md)
 6. **Project type** — Experimental (`code/`, `data/`, `output/`) / Computational (`src/`, `tests/`, `experiments/`, `results/`) / Theoretical (minimal) / Mixed
+7. **HPC scaffold?** — Only ask for Experimental, Computational, or Mixed. "Will this need Warwick Avon (GPU, long sweeps, large state spaces)?" Yes / No / Later. If Yes, scaffold `hpc/` with `submit.sbatch` + `sweep.sbatch` + `sync-up.sh` + `sync-down.sh` + `env-setup.sh` (+ `prestage-models.sh` for LLM projects) from `templates/slurm/` and reference implementations under `Projects/NLP/{adversarial-benchmark-detection,benchmark-gaming-llm-safety}/hpc/`. If Later, add `hpc/` to `.gitignore` placeholder — scaffold on demand. See [`docs/guides/hpc.md`](../../docs/guides/hpc.md) in Task Management.
 
 ### Round 3 — Research Content
 
@@ -134,6 +135,8 @@ If the directory doesn't exist, create it and proceed.
 | Computational | `src/<project>/`, `tests/`, `experiments/configs/`, `results/`, `pyproject.toml`, `.python-version` |
 | Theoretical | — |
 | Mixed | Prompt user |
+
+**HPC scaffold** (optional, when Round 2 Q7 answered Yes): adds `hpc/{submit.sbatch,sweep.sbatch,env-setup.sh,sync-up.sh,sync-down.sh,README.md}` — entry point matches the project's `src/` package. For LLM projects also add `prestage-models.sh`. All sbatch files log `git-sha.txt` + `git-status.txt` to `OUT_DIR` before `srun`. See Task Management `templates/slurm/` + [`docs/guides/hpc.md`](../../docs/guides/hpc.md).
 
 **Venues:** seed `docs/venues/<venue-slug>/submission/`; conference venues also get a submission checklist.
 

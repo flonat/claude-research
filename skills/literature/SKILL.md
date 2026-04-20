@@ -19,6 +19,8 @@ argument-hint: "[topic-query] or <topic-slug> for full pipeline"
 
 **PREPRINT RULE: Always prefer the published version.** If a paper is found on arXiv, SSRN, NBER, or any working paper series, search for a published journal/conference version using `scholarly scholarly-search`. Only cite a preprint if no published version can be found. This applies at every phase: Phase 2 (discovery), Phase 4 (verification), and Phase 6b (bib-validate runs the full preprint staleness check from `bib-validate/references/preprint-check.md`).
 
+**OUTPUT LOCATION RULE: The narrative synthesis ALWAYS lives at `docs/literature-review/literature_summary.md` — NEVER in `paper/`, `paper-*/`, or any Overleaf-synced directory.** The `paper/` directory is LaTeX-only (`.tex`, `.bib`, `.sty`, `.cls`, figures). Markdown synthesis files, notes, or scratch documents in `paper/` leak onto Overleaf and pollute the submission folder. Canonical filename: `literature_summary.md` (never `_synthesis.md`, `synthesis.md`, or ad-hoc names). This applies to every sub-agent writing synthesis output.
+
 **CAUSAL LANGUAGE RULE: Match the strength of language to the study design.** Reserve causal verbs ("causes", "increases", "reduces", "leads to") for findings from designs that warrant causal inference (experiments, RCTs, credible quasi-experiments with clear identification). For observational/correlational work, use: "is associated with", "predicts", "correlates with". When summarising a paper in the narrative or bibliography annotations, match the language to the design — not to the authors' own claims. State disagreements precisely: who claims what, on what evidence. Do not flatten into "the literature is mixed."
 
 > Comprehensive academic literature workflow: discover, verify, organize, synthesize.
@@ -198,9 +200,11 @@ Full BibTeX format, rules, and connection-note protocol: [`references/bibliograp
 
 ---
 
-## Phase 6b: Validate Bibliography (Mandatory)
+## Phase 6b: Validate Bibliography (HARD GATE — blocks Phase 7)
 
-After assembling the `.bib`, always run `/bib-validate`. Phase 4 verifies papers exist; `/bib-validate` catches a different class of issues (missing BibTeX fields, preprint staleness, DOI problems, author formatting, unused entries). Not optional — run every time new entries are added.
+**DO NOT proceed to Phase 7 (synthesis) until `/bib-validate` has been invoked and the report reviewed.** Phase 4 verifies papers exist; `/bib-validate` catches a different class of issues (missing BibTeX fields, preprint staleness, DOI problems, author formatting, unused entries). Running synthesis before validation means the narrative may reference entries with broken metadata that then survive into the paper.
+
+Invocation: call the `/bib-validate` skill directly — do not wait for the user to prompt. This is mandatory on every `/literature` invocation (standalone, pipeline, and deep) every time new entries are added.
 
 ---
 
@@ -222,6 +226,8 @@ Full steps (taskflow commands, knowledge filing, commit template, final summary 
 
 ## Phase 7: Synthesize Narrative (Direct or CLI Council)
 
+**Output: `docs/literature-review/literature_summary.md`.** Never write synthesis to `paper/` — see OUTPUT LOCATION RULE at top of skill. If `docs/literature-review/` does not exist, `mkdir -p` it first.
+
 Seven steps: (1) identify themes, (2) map intellectual lineage, (3) note current debates, (4) structured gap analysis (methodological / population-context / conceptual, each with "why it matters"), (5) negative evidence per cluster (mandatory — state explicitly if absent), (6) cross-cluster synthesis (tensions + implications), (7) Priority Reading Order (5–7 papers: review → foundational → frontier → gap/controversy).
 
 Output types: narrative summary, literature deck, annotated bibliography, concise field synthesis (~400 words for "quick synthesis" requests). Use `[VERIFY]` tags for uncertain attributions (resolve before publication). For comprehensive reviews, run through `cli-council` for multi-model synthesis.
@@ -241,42 +247,7 @@ Full protocol (seven steps, concise field synthesis structure, [VERIFY] tags, mu
 6. **Right agent type:** `Explore` for search, `general-purpose` for verification, `Bash` for downloads
 7. **Tolerate partial failures** — continue with what you have
 
----
-
-## Bibliometric API Structured Queries
-
-Four bibliometric sources available via the `scholarly` CLI (and direct APIs as fallback). Includes CLI command table, OpenAlex workflows, Scopus query syntax, and WoS API tiers.
-
-Full reference: [`references/bibliometric-apis.md`](references/bibliometric-apis.md) | API guides: [OpenAlex](references/openalex-api-guide.md), [Scopus](references/scopus-api-guide.md), [WoS](references/wos-api-guide.md)
-
----
-
-## Reading Full Paper Text from arXiv
-
-Download arXiv LaTeX source for full-text reading (equations, methodology, exact phrasing). Only works for arXiv papers with source available — for journal-only papers, use `/split-pdf`.
-
-**Full instructions:** [references/cli-council-search.md](references/cli-council-search.md#reading-full-paper-text-from-arxiv)
-
----
-
-## Cross-References
-
-| Skill / Package | When to use instead/alongside |
-|-------|-------------------------------|
-| `/interview-me` | Develop a specific idea before searching |
-| `/bib-validate` | **Mandatory** after assembling `.bib` (Phase 6b) — metadata quality, preprint staleness, DOI checks |
-| `/bib-coverage` | Compare project `.bib` vs Paperpile label — find uncited papers and unfiled references |
-| `/split-pdf` | Deep-read a paper found during search |
-| `/gather-readings` | Run after literature to download PDFs for new papers |
-| `/bib-coverage` | Run after literature to check uncited papers |
-| `cli-council` | Multi-model search (Phase 2b) and synthesis (Phase 7) — `packages/cli-council/` |
-| `paperpile` CLI | Search personal Paperpile library, extract PDF text/annotations, export BibTeX. Use in Phase 1 to check what's already in the library before searching externally. GROBID tools (`parse_pdf_metadata`, `parse_pdf_references`) extract structured metadata and bibliographies from PDFs — use after downloading to auto-extract refs without manual reading |
-| `shared/reference-resolution.md` | Canonical lookup + filing sequence used by Phase 1 and Phase 6c |
-| arXiv MCP tools | `scholarly arxiv-search`, `scholarly arxiv-get-paper`, `scholarly arxiv-search-category` — preprint search. See [references/arxiv-api-guide.md](references/arxiv-api-guide.md) |
-| Exa MCP tools | `scholarly exa-search`, `scholarly exa-search-papers`, `scholarly exa-get-contents` — semantic web search, grey literature. Requires `EXA_API_KEY` |
-| Deep loop protocol | [references/deep-loop-protocol.md](references/deep-loop-protocol.md) — iterative gap analysis + targeted search |
-| `shared/worker-critic-protocol.md` | Inline review of synthesis output before reporting done |
-| `shared/sources-cache.md` | Cache search results to avoid redundant API calls across sessions |
+See [`references/related-skills.md`](references/related-skills.md) for cross-references, bibliometric API guides, and arXiv full-text reading instructions.
 
 ---
 

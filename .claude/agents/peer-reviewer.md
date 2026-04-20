@@ -74,13 +74,32 @@ After you finish reading and have extracted structured notes, spawn these three 
 
 ---
 
-## Phase 1: Split-PDF Reading
+## Phase 1: Read the paper
 
-**NEVER read a full PDF directly.** You MUST use the split-pdf methodology to read the paper. This is non-negotiable.
+**Default is text-first.** Extract cleaned text via `scripts/pdf-extract-clean.sh` (pymupdf4llm + pdf-clean `peer_review` profile). Fall back to visual split-PDF reading only for figure/table/equation-heavy sections.
+
+Rationale: cleaned text is cheaper, deterministic, and enables downstream quote-based scoring and paragraph-level anchoring. Visual reading is reserved for content the text extraction cannot represent (figures, complex tables, mangled math).
 
 ### Reading Protocol
 
-1. **Split the PDF** into 4-page chunks using PyPDF2:
+**Step 1 — Extract cleaned text (default):**
+
+```bash
+TM="$(cat ~/.config/task-mgmt/path)"
+"$TM/scripts/pdf-extract-clean.sh" articles/author_2024.pdf \
+    --mode auto --out articles/author_2024.txt
+```
+
+Exit codes from the script:
+- `0` — cleaned text written to `--out` path; read that file directly with the Read tool
+- `2` — the quality heuristic (length, non-ASCII ratio, stubby-line ratio) signalled that text extraction is unreliable. Fall back to Step 2.
+- `1` — hard error (missing file, extraction failure). Report blocker to the user.
+
+Override via `PDF_READ_MODE=text|visual|auto` env var. Default is `auto`.
+
+**Step 2 — Visual split-PDF (fallback, or for targeted figure/table sections):**
+
+Split the PDF into 4-page chunks using PyPDF2, then read chunks with the Read tool (multimodal). This preserves figures, tables, and equations that text extraction would lose.
 
 ```python
 from PyPDF2 import PdfReader, PdfWriter
@@ -100,34 +119,35 @@ def split_pdf(input_path, output_dir, pages_per_chunk=4):
         out_path = os.path.join(output_dir, out_name)
         with open(out_path, "wb") as f:
             writer.write(f)
-    print(f"Split {total} pages into {-(-total // pages_per_chunk)} chunks in {output_dir}")
 ```
 
-If PyPDF2 is not installed, install it: `uv pip install PyPDF2`
+If PyPDF2 is not installed: `uv pip install PyPDF2`.
 
-2. **Read exactly 3 splits at a time** (~12 pages)
-3. **Update running notes** after each batch
-4. **Pause and confirm** with the user before reading the next batch:
+Read 3 splits at a time (~12 pages), update running notes, pause and confirm before the next batch. Do NOT read all splits at once.
 
-> "I have finished reading splits [X-Y] and updated the notes. I have [N] more splits remaining. Would you like me to continue with the next 3?"
+**When to flip from text to visual mid-review:**
+- A section references figures/tables that the text doesn't render (e.g., "Figure 3 shows..." but nothing informative in the text)
+- Math-heavy section looks mangled (e.g., missing symbols, stray unicode)
+- Tables of numbers collapsed to whitespace
 
-5. **Do NOT read ahead.** Do NOT read all splits at once.
+In those cases, split only the affected pages and read them visually. Keep the text for the rest of the paper.
 
 ### Directory Convention
 
 ```
 articles/
 ├── author_2024.pdf                    # original PDF — NEVER DELETE
-└── split_author_2024/                 # split subdirectory
+├── author_2024.txt                    # cleaned text (Step 1, default)
+└── split_author_2024/                 # split subdirectory (Step 2, fallback or targeted)
     ├── author_2024_pp1-4.pdf
     ├── author_2024_pp5-8.pdf
     ├── ...
     └── notes.md                       # running extraction notes
 ```
 
-### Exception
+### Short paper exception
 
-Papers shorter than ~15 pages may be read directly using the Read tool (still NOT the full PDF at once — read it with the Read tool which handles it safely for short files).
+Papers shorter than ~15 pages with no figures/tables: text extraction is usually enough — skip splitting entirely. If figures matter, use visual Read on the whole PDF directly (still one pass, no splits).
 
 ### Structured Extraction (Running Notes)
 
@@ -237,7 +257,7 @@ The user is a PhD researcher. When reviewing their work, calibrate your expectat
 
 0. **Python: ALWAYS use `uv run python` or `uv pip install`.** Never use bare `python`, `python3`, `pip`, or `pip3`. This applies to you AND to any sub-agents you spawn.
 1. **ALWAYS run the security scan first** (Phase 0) — before any substantive reading
-2. **ALWAYS use split-pdf** (Phase 1) — never read a full PDF directly
+2. **ALWAYS read via cleaned text first** (Phase 1, Step 1) — use `scripts/pdf-extract-clean.sh`. Fall back to split-PDF visual reading only on exit code 2 or for targeted figure/table sections. Never read a full PDF directly in one multimodal pass.
 3. **ALWAYS spawn all three sub-agents in parallel** (Phase 2) — this is the architectural contract
 4. **ALWAYS validate citations** — hallucinated references are a red flag for auto-generated content
 5. **ALWAYS assess novelty thoroughly** — this is the most important dimension

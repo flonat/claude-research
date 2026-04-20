@@ -300,6 +300,68 @@ Write the report to `reviews/paper-critic/YYYY-MM-DD_CRITIC-REPORT.md` in the **
 
 ---
 
+## JSON Output Schema (Phase 11 — anchor-compatible)
+
+In addition to the markdown report, write a machine-readable companion to `reviews/paper-critic/YYYY-MM-DD_findings.json` alongside the `CRITIC-REPORT.md`. This schema aligns with `pdf_clean.Comment` / `pdf_clean.ReviewResult` so downstream consumers (anchor tooling, Phase 12 viz, synthesise-reviews) can merge findings across agents without re-parsing prose.
+
+**Canonical types live in `packages/pdf-clean/src/pdf_clean/models.py`.** Do not invent a parallel schema — extend the `Comment` dataclass with the project-specific fields below.
+
+```json
+{
+  "method": "paper-critic",
+  "paper_slug": "<project-dir basename>",
+  "model": "<opus|sonnet|...>",
+  "anchor_version": 1,
+  "round": 1,
+  "verdict": "APPROVED | NEEDS REVISION | BLOCKED",
+  "score": 87,
+  "overall_feedback": "<one-paragraph summary; same prose as the markdown report's top section>",
+  "comments": [
+    {
+      "id": "C1",
+      "tier": "C",
+      "category": "Notation",
+      "title": "Inconsistent treatment indicator",
+      "quote": "<exact verbatim text from the source .tex — load-bearing for anchor recovery>",
+      "explanation": "<what is wrong, stated factually>",
+      "fix": "<precise instruction for the fixer>",
+      "comment_type": "logical",
+      "location": "main.tex:42",
+      "deduction": -15,
+      "paragraph_index": null
+    }
+  ],
+  "num_comments": 1
+}
+```
+
+**Field rules:**
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `method` | string | Always `"paper-critic"` for this agent |
+| `paper_slug` | string | Basename of the project directory containing the `.tex` files |
+| `anchor_version` | int | `1` for Phase 11+ output. Never emit `0` (reserved for legacy unpatched artefacts) |
+| `comments[].id` | string | Matches the markdown ID (`C1`, `M3`, `m7`) |
+| `comments[].tier` | string | `"C"` / `"M"` / `"m"` — the single-letter prefix from the ID |
+| `comments[].category` | string | One of the 9 check dimensions (Grammar, Notation, Citation, Tone, LaTeX, TikZ, Internal Consistency, Tables & Figures, Causal Overclaiming) |
+| `comments[].quote` | string | **Exact verbatim text from the source.** Never paraphrase. Post-hoc anchor recovery (`pdf_clean.assign_paragraph_indices`) relies on this matching cleaned PDF prose — paraphrased quotes break the anchor pipeline |
+| `comments[].comment_type` | string | `"technical"` or `"logical"` — maps to `pdf_clean.Comment.comment_type`. Use `"technical"` for math/formula/equation/proof/parameter issues; `"logical"` otherwise |
+| `comments[].location` | string | `file.tex:line` — matches the markdown Location field |
+| `comments[].deduction` | int | Negative integer matching the deductions table in the markdown report |
+| `comments[].paragraph_index` | int \| null | **Leave as `null`**. Derived post-hoc by `pdf_clean.assign_paragraph_indices(comments, cleaned_pdf_text)` at consumption time — agents have no access to the cleaned PDF's paragraph index space, only to LaTeX source. The exact `quote` is what enables the downstream recovery |
+
+**Why both markdown and JSON?**
+
+- Markdown (`CRITIC-REPORT.md`) is the human-facing artefact — the fixer agent and the user read this.
+- JSON (`findings.json`) is the machine-facing artefact — synthesise-reviews, Phase 12 viz, anchor tooling, and any future consumer read this.
+
+Both files must agree: same issue count, same IDs, same deductions, same quotes. Emit the JSON after the markdown so the markdown is the source of truth if they diverge during authoring.
+
+**Backward compatibility:** Pre-Phase-11 reports have no `findings.json`. Consumers detect this (missing file → `anchor_version=0` semantics) and skip anchor-dependent processing. Do not retroactively generate JSON for historical reports.
+
+---
+
 ## Issue Documentation Rules
 
 Every issue MUST have:

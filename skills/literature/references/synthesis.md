@@ -87,6 +87,8 @@ project/
 │   └── readings/
 │       ├── Smith2024.pdf              # Downloaded PDFs
 │       └── ...
-└── paper/
+└── paper/                              # LaTeX-ONLY (often Overleaf-synced symlink)
     └── references.bib                  # Canonical bib (merge if exists)
 ```
+
+**NEVER write markdown synthesis, notes, or scratch files to `paper/` (or `paper-*/paper/`).** That directory is LaTeX-only and is typically a symlink to an Overleaf folder — markdown files leak onto Overleaf and pollute the submission. The narrative synthesis is `docs/literature-review/literature_summary.md` — no other filename, no other location. If the directory does not exist, `mkdir -p` it first.

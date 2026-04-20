@@ -7,7 +7,7 @@ argument-hint: "[script-path or project-path]"
 
 # Research Code Review
 
-**Report-only skill.** Never edit source files — produce `correspondence/internal-reviews/CODE-REVIEW-REPORT.md` only.
+**Report-only skill.** Never edit source files — produce `reviews/code-review/YYYY-MM-DD_CODE-REVIEW-REPORT.md` only.
 
 ## When to Use
 
@@ -51,111 +51,7 @@ Run through all 11 categories as a quick structural check. This catches mechanic
 
 ### 11 Checklist Categories
 
-#### 1. Reproducibility
-
-| Check | Pass Criteria |
-|-------|--------------|
-| Random seeds | `set.seed()` / `random.seed()` / `np.random.seed()` set before any stochastic operation |
-| Relative paths | No hardcoded absolute paths (e.g., `/Users/username/...` or `C:\...`) |
-| Working directory | Script does not `setwd()` / `os.chdir()` — uses project-relative paths |
-| Session info | Script prints session info at end (`sessionInfo()` / `sys.version`) or documents environment |
-
-#### 2. Script Structure
-
-| Check | Pass Criteria |
-|-------|--------------|
-| Header | Script begins with comment block: purpose, author, date, inputs, outputs |
-| Sections | Code organised into labelled sections (comments or `# ---- Section ----`) |
-| Imports at top | All `library()` / `import` statements at the top of the file |
-| Reasonable length | Single script < 500 lines; longer scripts should be split |
-
-#### 3. Output Hygiene
-
-| Check | Pass Criteria |
-|-------|--------------|
-| No print pollution | No stray `print()` / `cat()` / `message()` dumping to console |
-| Outputs saved | Key results saved to files, not just printed |
-| Clean console | Running the script does not produce walls of text |
-
-#### 4. Function Quality
-
-| Check | Pass Criteria |
-|-------|--------------|
-| Documentation | Functions have comments explaining purpose, inputs, outputs |
-| Naming | Function names are descriptive verbs (`estimate_ate`, not `f1`) |
-| Defaults | Reasonable defaults for optional parameters |
-| No side effects | Functions don't modify global state |
-
-#### 5. Domain Correctness
-
-| Check | Pass Criteria |
-|-------|--------------|
-| Estimator matches paper | The estimator used matches what the paper claims |
-| Weights | If weighted: weights sum to expected value, correct application |
-| Standard errors | Clustering / HC / bootstrap matches paper specification |
-| Sample restrictions | Filters match the paper's sample description |
-| Variable construction | Variables constructed as described in the paper |
-
-#### 6. Figure Quality
-
-| Check | Pass Criteria |
-|-------|--------------|
-| Dimensions specified | Figure size set explicitly (not default) |
-| Transparency/resolution | Appropriate for publication (300+ DPI for raster, vector preferred) |
-| Saved to file | Figures saved with `ggsave()` / `plt.savefig()`, not just displayed |
-| Labels | Axes labelled, legend present where needed, title informative |
-| Colour | Colourblind-friendly palette; not relying on red/green distinction |
-
-#### 7. Data Persistence
-
-| Check | Pass Criteria |
-|-------|--------------|
-| Intermediate objects saved | Expensive computations saved (`saveRDS()` / `pickle.dump()` / `.parquet`) |
-| Load before recompute | Script checks for saved objects before rerunning expensive operations |
-| Output format | Final outputs in portable format (CSV, parquet — not just `.RData`) |
-
-#### 8. Dependencies
-
-| Check | Pass Criteria |
-|-------|--------------|
-| Declared at top | All `library()` / `import` at the start of the script |
-| Versions documented | `renv.lock` / `requirements.txt` / `pyproject.toml` exists |
-| No unnecessary packages | Each loaded package is actually used |
-| Installation instructions | README or comment explains how to set up the environment |
-
-#### 9. Python-Specific
-
-*Score N/A if no Python files.*
-
-| Check | Pass Criteria |
-|-------|--------------|
-| Type hints | Functions have type annotations for parameters and return values |
-| Docstrings | Functions have docstrings (not just comments) |
-| uv usage | Uses `uv` for environment management (per project conventions) |
-| f-strings | Uses f-strings, not `.format()` or `%` formatting |
-
-#### 10. R-Specific
-
-*Score N/A if no R files.*
-
-| Check | Pass Criteria |
-|-------|--------------|
-| tidyverse consistency | Doesn't mix base R and tidyverse for the same operation |
-| Assignment operator | Uses `<-` not `=` for assignment |
-| Boolean values | Uses `TRUE`/`FALSE`, not `T`/`F` |
-| Pipe consistency | Uses one pipe style consistently (`%>%` or `|>`) |
-
-#### 11. Cross-Language Verification
-
-*Score N/A if the project has no numerical results or only uses one language.*
-
-| Check | Pass Criteria |
-|-------|--------------|
-| Replication directory | `code/replication/` (or equivalent) exists with cross-language scripts |
-| Two-language coverage | Key numerical results reproduced in a second language |
-| Result comparison | Scripts compare outputs and report discrepancies (tolerance-based) |
-| Precision threshold | Numerical outputs compared to 6+ decimal places |
-| Documentation | README explains what is being replicated and acceptable tolerance |
+See [`references/checklist-categories.md`](references/checklist-categories.md) for detailed specifications of all 11 categories: Reproducibility, Script Structure, Output Hygiene, Function Quality, Domain Correctness, Figure Quality, Data Persistence, Dependencies, Python-Specific, R-Specific, and Cross-Language Verification.
 
 Record checklist results (Pass/Fail/N/A per category) for the report. Continue to Phase 3 regardless of results.
 
@@ -237,7 +133,7 @@ Sort findings: P0 first → P1 → P2 → P3, then by confidence (descending), t
 
 ## Phase 5: Synthesize Report
 
-Create `correspondence/internal-reviews/` if it does not exist (`mkdir -p`). Write `correspondence/internal-reviews/CODE-REVIEW-REPORT.md` in the project directory.
+Create `reviews/code-review/` if it does not exist (`mkdir -p`). Write `reviews/code-review/YYYY-MM-DD_CODE-REVIEW-REPORT.md` in the project directory (date-stamped so prior reports are preserved, matching the pattern used by `paper-critic`, `peer-reviewer`, `domain-reviewer`, `referee2-reviewer`, and `proofread`).
 
 ### Report Format
 
@@ -346,7 +242,7 @@ For complex codebases or high-stakes replication packages, run the code review a
 **How it works:**
 1. Each model independently scores all 11 categories against the same scripts
 2. Cross-review: models evaluate each other's findings — catching false positives and missed issues
-3. Chairman synthesis: produces a single `correspondence/internal-reviews/CODE-REVIEW-REPORT.md` with the union of confirmed findings
+3. Chairman synthesis: produces a single `reviews/code-review/YYYY-MM-DD_CODE-REVIEW-REPORT.md` with the union of confirmed findings
 
 See `skills/shared/council-protocol.md` for the full orchestration protocol.
 

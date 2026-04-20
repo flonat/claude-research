@@ -51,6 +51,7 @@ Use this template:
 ## Open loops
 - <file.py mid-edit at line N>
 - <background job: description>
+- <HPC job $SLURM_JOB_ID on warwick-avon: submitted/running/completed; OUT_DIR=~/projects/<name>/out/<jobid>/>
 - <pending user confirmation: question>
 
 ## Blockers / context the next session needs

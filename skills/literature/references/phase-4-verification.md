@@ -4,11 +4,17 @@
 
 ## Step 1 — Batch DOI Pre-Verification via CLI
 
-Collect all DOIs from Phase 3 candidates and run:
+**Single-call rule (permission-prompt minimization):** Collect ALL DOIs from Phase 3 candidates into one comma-separated list and pass them in a **single** `scholarly scholarly-verify-dois` invocation. Do NOT use `for`-loops, `while` loops, or shell pipelines that chain multiple verify calls — each compound-Bash construct triggers a separate permission prompt even when `scholarly:*` is globally allowed. One call can handle up to 50 DOIs.
 
 ```bash
-scholarly scholarly-verify-dois --dois D1,D2,... --json
+# CORRECT — single call, no loops, no pipes:
+scholarly scholarly-verify-dois --dois D1,D2,D3,...,D50 --json > verify-out.json
+
+# WRONG — for-loop triggers a permission prompt per iteration:
+for d in D1 D2 D3; do scholarly scholarly-verify-dois --dois "$d" --json; done
 ```
+
+If you have >50 DOIs, run two or three sequential single-call invocations (not a loop). Write output to disk (`> file.json`) and parse with a separate `uv run python` call rather than piping through `jq`/`tr` in the same command.
 
 This checks each DOI against all enabled sources (OpenAlex, Scopus, WoS). For each result:
 
