@@ -56,6 +56,6 @@ uv sync                           # Install dependencies
 uv run python .scripts/tasks      # Run CLI tools
 ```
 
-## On Warwick Avon HPC
+## On your HPC cluster HPC
 
-Avon uses **Miniconda3 + Lmod** (not uv) because cluster users need to compose with `module load CUDA/12.6.0` and other pre-built modules. The project-specific pattern is `hpc/env-setup.sh` (conda create + pip install) — see [`docs/guides/hpc.md`](../../docs/guides/hpc.md) and reference implementations under `Projects/NLP/{adversarial-benchmark-detection,benchmark-gaming-llm-safety}/hpc/env-setup.sh`. The local dev env still uses uv; HPC gets its own conda env with identical pins. Don't try to port uv to Avon — the module system assumes conda.
+Avon uses **Miniconda3 + Lmod** (not uv) because cluster users need to compose with `module load CUDA/12.6.0` and other pre-built modules. The project-specific pattern is `hpc/env-setup.sh` (conda create + pip install) — see [`docs/guides/hpc.md`](../../docs/guides/hpc.md) and reference implementations under `Projects/[your-project]/hpc/env-setup.sh`. The local dev env still uses uv; HPC gets its own conda env with identical pins. Don't try to port uv to Avon — the module system assumes conda.

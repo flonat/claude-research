@@ -10,7 +10,7 @@ Creates the research topic in all systems: local file → vault atlas → Venues
 2. Glob `~/Research-Vault/atlas/**/*.md` — existing slugs (avoid duplicates)
 3. Determine the **slug** (kebab-case, 2-5 words). Pattern: `{contribution}-{domain-object}`. Names the idea, not venue/output/method. Within clusters (e.g., carbon, elicitation), each slug needs a unique distinguishing word. Anti-patterns: acronyms (`efficient-pe`), bare fields (`smart-meters`), venue names (`facct-paper`). Good: `carbon-collusion`, `elicitation-cost-tradeoffs`.
 4. Write `~/Research-Vault/atlas/{theme-dir}/{slug}.md` using the YAML frontmatter template from [`atlas-schema.md`](atlas-schema.md). Include `## Description`, `## Key References`, `## Open Questions`.
-5. **Validate the topic file** before proceeding: run `uv run python packages/atlas-tools/schema.py ~/Research-Vault/atlas/{theme-dir}/{slug}.md` from `$TM/packages/atlas-tools/`. If validation fails, fix the file before syncing to vault.
+5. **Validate the topic file** before proceeding: run `uv run python packages/atlas-vault/schema.py ~/Research-Vault/atlas/{theme-dir}/{slug}.md` from `$TM/packages/atlas-vault/`. If validation fails, fix the file before syncing to vault.
 6. If new theme needed: create the theme directory under `~/Research-Vault/atlas/` and add a theme file at `~/Research-Vault/themes/{slug}.md`. The topic file created in step 4 is sufficient — no separate slug list to maintain.
 
 ## 6b. Create vault Atlas Entry (if syncing to vault)
@@ -62,12 +62,12 @@ Theme abbreviations: ASG, BDS, EnvEcon, HAI, IO, MechDes, NLP, OR, OrgStrat, Pol
 ## 6d. Regenerate RECAP.md
 
 ```bash
-cd "$TM/packages/atlas-tools" && uv run python generate_recap.py
+cd "$TM/packages/atlas-vault" && uv run python generate_recap.py
 ```
 
 ## 6e. Update Atlas Counts
 
-If topic or theme count changed, update `$TM/packages/atlas-tools/CLAUDE.md` topic/theme counts and theme directory listing.
+If topic or theme count changed, update `$TM/packages/atlas-vault/CLAUDE.md` topic/theme counts and theme directory listing.
 
 ## Atlas Defaults
 

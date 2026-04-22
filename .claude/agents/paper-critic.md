@@ -228,9 +228,37 @@ Use the exact deduction amounts from the proofread and latex rubrics. For issues
 
 ---
 
+## Output Order — findings.json FIRST
+
+**Write `reviews/paper-critic/YYYY-MM-DD_findings.json` before writing the markdown CRITIC-REPORT.md.** The JSON is small, cheap, and load-bearing for the anchor pipeline (Phase 11). Emitting it first guarantees downstream anchors survive a stall, watchdog, or context overflow during the longer markdown write.
+
+### Checkpoint protocol
+
+1. **At the start of the detailed audit**, write a stub `findings.json` with `comments: []` and the metadata fields (`method`, `paper_slug`, `anchor_version`, `round`, `verdict: "IN_PROGRESS"`). This commits intent to disk before any long analysis.
+2. **After each Critical or Major finding is identified**, append it to the in-memory comments list and rewrite `findings.json`. Do not batch all issues to the end.
+3. **After all checks complete**, finalise `findings.json` with `verdict`, `score`, `overall_feedback`, and `num_comments`.
+4. **Then** write the markdown CRITIC-REPORT.md as the human-facing companion.
+
+If the agent is interrupted mid-analysis, a partial `findings.json` is strictly better than no artefact at all — anchor tooling can still consume N issues rather than zero.
+
+### Hard caps on verbosity
+
+To keep total wall-clock within budget (≤8 minutes for a 25-page paper):
+
+| Cap | Limit |
+|-----|-------|
+| Per-issue `explanation` field | ≤40 words |
+| Per-issue `fix` field | ≤30 words |
+| Total issues reported | ≤15 (prioritise Critical > Major > Minor; drop Minor first when over budget) |
+| `overall_feedback` | ≤80 words |
+
+These caps trade editorial depth for artefact reliability. If a paper genuinely needs more than 15 distinct issues, that itself is a Critical finding ("paper requires extensive revision — top 15 issues listed; see structural notes in overall_feedback").
+
+---
+
 ## Report Format
 
-Write the report to `reviews/paper-critic/YYYY-MM-DD_CRITIC-REPORT.md` in the **project root** (the directory containing the `.tex` files, NOT the Task Management directory). Create the `reviews/paper-critic/` directory if it does not exist. Do NOT overwrite previous reports — each review is dated.
+Write the markdown report to `reviews/paper-critic/YYYY-MM-DD_CRITIC-REPORT.md` in the **project root** (the directory containing the `.tex` files, NOT the Task Management directory). Create the `reviews/paper-critic/` directory if it does not exist. Do NOT overwrite previous reports — each review is dated. **Write this AFTER `findings.json` is finalised.**
 
 ```markdown
 # Paper Critic Report
@@ -306,6 +334,38 @@ In addition to the markdown report, write a machine-readable companion to `revie
 
 **Canonical types live in `packages/pdf-clean/src/pdf_clean/models.py`.** Do not invent a parallel schema — extend the `Comment` dataclass with the project-specific fields below.
 
+### Schema enforcement — DO NOT rename fields
+
+The anchor pipeline (`pdf_clean.assign_paragraph_indices`), Phase 12 viz, and `synthesise-reviews` read the JSON with **exact** key names. Renaming even one field silently breaks every downstream consumer. Past incident (2026-04-21): an agent emitted `issues`/`problem`/`severity` instead of `comments`/`explanation`/`tier` — validator returned 0% coverage despite 4 legitimate findings being recorded.
+
+**Required top-level keys** (exact names): `method`, `paper_slug`, `anchor_version`, `round`, `verdict`, `score`, `overall_feedback`, `comments`, `num_comments`.
+
+**Required per-item keys inside `comments[]`** (exact names): `id`, `tier`, `category`, `title`, `quote`, `explanation`, `fix`, `comment_type`, `location`, `deduction`, `paragraph_index`.
+
+**Forbidden aliases** (do NOT use these, even if they feel more natural):
+
+| Wrong | Correct |
+|-------|---------|
+| `issues` | `comments` |
+| `issue_count` | `num_comments` |
+| `problem` | `explanation` |
+| `severity` | `tier` |
+| `"Blocker"` / `"Critical"` / `"Major"` / `"Minor"` (as `tier` value) | `"C"` / `"M"` / `"m"` (single-letter; Blocker is a verdict, not a tier) |
+| `hard_gates` as top-level object | Report hard gate failures as regular `comments[]` entries with `tier: "C"` and `category: "LaTeX-Specific"` or `"Citation"` |
+
+**Verdict vs tier:** `verdict` is document-level (`APPROVED`, `NEEDS REVISION`, `BLOCKED`). `tier` is per-comment (`C`, `M`, `m`). A BLOCKED verdict still requires the `comments[]` array populated — do not short-circuit the schema because one hard gate failed. List the gate failure as a Critical comment AND set `verdict: "BLOCKED"`.
+
+**Final pre-write checklist** (run mentally before writing `findings.json`):
+
+1. Top-level has `comments` (not `issues`)? ✓
+2. Every item has `explanation` (not `problem`) and `tier` (not `severity`)? ✓
+3. Every `tier` value is `"C"`, `"M"`, or `"m"` (not `"Critical"`/`"Major"`/`"Minor"`)? ✓
+4. Every item has `paragraph_index: null`? ✓
+5. Every item has `comment_type` set to `"technical"` or `"logical"`? ✓
+6. `anchor_version: 1`? ✓
+
+If any check fails, rewrite before finalising. The markdown CRITIC-REPORT.md is free to use human-readable tier names ("Critical"/"Major"/"Minor") in its headings — but the JSON is rigid.
+
 ```json
 {
   "method": "paper-critic",
@@ -356,7 +416,7 @@ In addition to the markdown report, write a machine-readable companion to `revie
 - Markdown (`CRITIC-REPORT.md`) is the human-facing artefact — the fixer agent and the user read this.
 - JSON (`findings.json`) is the machine-facing artefact — synthesise-reviews, Phase 12 viz, anchor tooling, and any future consumer read this.
 
-Both files must agree: same issue count, same IDs, same deductions, same quotes. Emit the JSON after the markdown so the markdown is the source of truth if they diverge during authoring.
+Both files must agree: same issue count, same IDs, same deductions, same quotes. **Emit `findings.json` FIRST** (machine-readable, small, cheap to write, anchor-critical) so stall/watchdog events still preserve the anchor artefacts. Write the markdown CRITIC-REPORT.md SECOND as the human-facing companion. If the two diverge during authoring, `findings.json` is the source of truth — the markdown should be rewritten to match, not the other way around.
 
 **Backward compatibility:** Pre-Phase-11 reports have no `findings.json`. Consumers detect this (missing file → `anchor_version=0` semantics) and skip anchor-dependent processing. Do not retroactively generate JSON for historical reports.
 
