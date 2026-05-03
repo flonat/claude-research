@@ -18,7 +18,7 @@ theme: '[[Theme Name]]'  # Must match a theme in ~/Research-Vault/themes/
 ---
 title: "Topic Name"
 theme: '[[Theme Name]]'  # Wiki-link to theme file
-status: "Idea"  # Idea | Exploring | Drafting | Submitted | R&R | Accepted | Rejected | Parked
+status: "Idea"  # Idea | Exploring | Drafting | Pre-submission | Submitted | R&R | Accepted | Rejected | Parked | Active Project
 institution: "[University]"  # [University 1] | [University 2] | [University 3] | [University 4] | None
 project_path: "ThemeAbbrev/slug"  # Relative to Projects/
 linked_projects: []

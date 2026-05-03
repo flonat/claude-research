@@ -1,126 +1,68 @@
 # LaTeX Configuration Reference
 
-> VS Code integration, engine auto-detection, manual overrides, and reference checking scripts.
+> VS Code integration, the canonical `.latexmkrc`, and reference checking scripts.
 > Referenced from `SKILL.md` — the parent file has a summary + pointer.
 
-## VS Code LaTeX Workshop Gotchas
+## Canonical `.latexmkrc`
 
-1. **`.latexmkrc` in subdirectories is NOT picked up.** LaTeX Workshop runs latexmk from the workspace root, not the `.tex` file's directory. Subdirectory `.latexmkrc` files are ignored. Fix: pass `-cd -lualatex -outdir=out` (or `-cd -pdf -outdir=out` for pdfLaTeX) explicitly in the VS Code tool args. The `-cd` flag makes latexmk change to the `.tex` file's directory before running.
-2. **`% !TEX program` magic comments override custom recipes.** LaTeX Workshop looks for a tool whose name matches the program (e.g., `lualatex`). If no match, it falls back to a default recipe that ignores `-outdir`. Fix: set `"latex-workshop.latex.build.forceRecipeUsage": true` in `.vscode/settings.json`.
+**Source of truth:** `templates/latexmkrc/.latexmkrc` in Task Management.
 
-### Recommended `.vscode/settings.json` for LuaLaTeX projects
+It auto-detects the engine, builds to `out/`, and copies the PDF back to the source dir. Drop it into any directory with `.tex` files — including Overleaf-symlinked paper folders (the file goes into the symlink target so it syncs to Overleaf's web compiler too):
 
-```json
-{
-  "latex-workshop.latex.tools": [
-    {
-      "name": "latexmk",
-      "command": "latexmk",
-      "args": [
-        "-cd",
-        "-lualatex",
-        "-outdir=out",
-        "-interaction=nonstopmode",
-        "-halt-on-error",
-        "-synctex=1",
-        "%DOC%"
-      ],
-      "env": {}
-    }
-  ],
-  "latex-workshop.latex.recipes": [
-    {
-      "name": "latexmk (LuaLaTeX → out/)",
-      "tools": ["latexmk"]
-    }
-  ],
-  "latex-workshop.latex.outDir": "%DIR%/out",
-  "latex-workshop.latex.build.forceRecipeUsage": true
-}
+```bash
+TM=$(cat ~/.config/task-mgmt/path)
+cp "$TM/templates/latexmkrc/.latexmkrc" <target-dir>/
 ```
 
-Swap `-lualatex` for `-pdf` (pdfLaTeX) or `-xelatex` as needed. The `.latexmkrc` remains the authority for terminal builds.
+See `templates/latexmkrc/README.md` for the full spec and rationale.
 
----
+## VS Code LaTeX Workshop Setup
 
-## Auto-detecting Engine
+Two gotchas to know:
 
-This config automatically uses XeLaTeX if the document or any `\input{}`/`\include{}` file contains `\usepackage{fontspec}`, otherwise falls back to pdfLaTeX:
+1. **`.latexmkrc` in subdirectories is NOT picked up by default.** LaTeX Workshop runs latexmk from the workspace root. Fix: pass `-cd` so latexmk changes to the `.tex` file's directory before running. The canonical VS Code config below already does this.
+2. **`% !TEX program` magic comments override custom recipes.** Set `latex-workshop.latex.build.forceRecipeUsage: true` (the canonical config does this).
 
-```perl
-# .latexmkrc
-$out_dir = 'out';
+### Canonical `.vscode/settings.json`
 
-# Copy PDF back to source directory after build
-END { system("cp $out_dir/*.pdf . 2>/dev/null") if defined $out_dir; }
+**Source of truth:** `templates/latexmkrc/vscode-settings.json`.
 
-# Recursively check for fontspec in main file and all \input{}/\include{} files
-sub needs_xelatex {
-    my ($file, $seen) = @_;
-    $seen //= {};
-
-    # Normalize and check if already visited
-    return 0 if $seen->{$file};
-    $seen->{$file} = 1;
-
-    # Try with and without .tex extension
-    my $filepath = -e $file ? $file : -e "$file.tex" ? "$file.tex" : undef;
-    return 0 unless $filepath;
-
-    open(my $fh, '<', $filepath) or return 0;
-    my $dir = $filepath =~ s|/[^/]*$||r;  # Directory of current file
-    $dir = '.' if $dir eq $filepath;
-
-    while (<$fh>) {
-        return 1 if /\\usepackage.*\{fontspec\}/;
-
-        # Recurse into \input{} and \include{} files
-        if (/\\(?:input|include)\{([^}]+)\}/) {
-            my $subfile = $1;
-            $subfile = "$dir/$subfile" unless $subfile =~ m|^/|;
-            return 1 if needs_xelatex($subfile, $seen);
-        }
-    }
-    close($fh);
-    return 0;
-}
-
-# Auto-detect engine
-$pdf_mode = 1;  # Default to pdflatex
-foreach my $file (@ARGV) {
-    if (needs_xelatex($file)) {
-        $pdf_mode = 5;  # Switch to xelatex
-        last;
-    }
-}
-
-$pdflatex = 'pdflatex -interaction=nonstopmode -halt-on-error %O %S';
-$xelatex = 'xelatex -interaction=nonstopmode -halt-on-error %O %S';
+```bash
+mkdir -p .vscode
+cp "$TM/templates/latexmkrc/vscode-settings.json" .vscode/settings.json
 ```
 
----
+This config delegates everything to `latexmk` with `-cd`, so the project's `.latexmkrc` is the single authority. No engine flag in the VS Code config — auto-detection happens in `.latexmkrc`.
 
-## Manual Override Configs
+## Manual Override (rare)
 
-If auto-detection doesn't suit a project, use one of these explicit configs:
+If a project needs a hard-coded engine instead of auto-detect, replace the canonical `.latexmkrc` with one of:
 
-**pdfLaTeX** (standard LaTeX fonts):
+**pdfLaTeX** (standard fonts):
 ```perl
-# .latexmkrc
 $out_dir = 'out';
 $pdf_mode = 1;
-$pdflatex = 'pdflatex -interaction=nonstopmode -halt-on-error %O %S';
+$pdflatex = 'pdflatex -interaction=nonstopmode -halt-on-error -synctex=1 %O %S';
 END { system("cp $out_dir/*.pdf . 2>/dev/null") if defined $out_dir; }
 ```
 
-**XeLaTeX** (system fonts, Unicode, OpenType features):
+**XeLaTeX** (system fonts via `fontspec`):
 ```perl
-# .latexmkrc
 $out_dir = 'out';
 $pdf_mode = 5;
-$xelatex = 'xelatex -interaction=nonstopmode -halt-on-error %O %S';
+$xelatex = 'xelatex -interaction=nonstopmode -halt-on-error -synctex=1 %O %S';
 END { system("cp $out_dir/*.pdf . 2>/dev/null") if defined $out_dir; }
 ```
+
+**LuaLaTeX** (`luacode`, `lua-ul`, `luamplib`):
+```perl
+$out_dir = 'out';
+$pdf_mode = 4;
+$lualatex = 'lualatex -interaction=nonstopmode -halt-on-error -synctex=1 %O %S';
+END { system("cp $out_dir/*.pdf . 2>/dev/null") if defined $out_dir; }
+```
+
+All three include the `END {}` block so the PDF lands next to the `.tex` source.
 
 ---
 

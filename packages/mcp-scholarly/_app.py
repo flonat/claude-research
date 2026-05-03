@@ -57,7 +57,7 @@ from scholarly_formatters import (  # noqa: E402
 
 
 def log(msg):
-    print(f"[bibliography-mcp] {msg}", file=sys.stderr, flush=True)
+    print(f"[mcp-scholarly] {msg}", file=sys.stderr, flush=True)
 
 
 # ---------- Client / source initialization ----------

@@ -188,6 +188,27 @@ This check catches:
 
 For manual WebFetch resolution, process in batches of 5 to avoid rate limiting. Only flag confirmed mismatches — if the DOI cannot be resolved (404, timeout), note it as "unresolvable" at Info level.
 
+#### Fabrication detection (LLM-drafted bibliographies)
+
+A `.bib` entry can be **internally consistent but externally false** — plausible-sounding title + plausible authors + plausible year, but no such paper exists. This pattern is common in bibliographies drafted with LLM assistance, where the model invents a citation that "would fit" the prose. Standard DOI checks miss it because the entry has no DOI to verify.
+
+**Detection rule.** When `scholarly scholarly-verify-dois` returns NOT_FOUND for a DOI, OR when an entry has no DOI at all, run `scholarly scholarly-search "<title>" --json` and apply this matrix to the top result:
+
+| Title agreement | First-author surname agreement | Year agreement | Verdict |
+|-----------------|--------------------------------|----------------|---------|
+| ✓ | ✓ | ✓ or ±1 | OK |
+| ✓ | ✗ | any | **likely fabricated** (right title, wrong authors → invented citation glued to a real paper's title) |
+| ✗ | ✓ | any | **likely fabricated** (right authors, wrong title → invented paper attributed to real researchers) |
+| ✗ | ✗ | any | **likely fabricated or severely miscited** |
+| no usable result (top score < 20) | — | — | **likely fabricated or unindexed** |
+
+Flag fabricated entries as:
+- **Major: likely fabricated reference** — entry has plausible structure but cannot be matched to a real publication. Common in LLM-drafted bibliographies. Verify the source manually before citing.
+
+**Discipline.** Do not force a weak match to fill the cell, and do not silently "correct" what looks like a citation error — the user needs to see the failure and judge. Budget at most one reworded query per entry; after that, record the verdict and move on. If a large share of entries (say >10%) flag as likely fabricated, surface a single-line warning above the report (e.g. `7 of 51 entries flag as likely fabricated — review before submission`).
+
+**What this catches that the existing DOI mismatch check misses:** entries that were never assigned a DOI (because they don't exist) but whose `title` / `author` / `year` happen to look reasonable.
+
 ### Preprint Staleness Check
 
 **For every entry that looks like a preprint**, check whether a peer-reviewed version has since been published. Full detection signals, lookup protocol, and classification: [`references/preprint-check.md`](references/preprint-check.md)
@@ -251,7 +272,7 @@ When producing a full validation report, apply numeric quality scoring using the
 
 Map validation findings to the framework tiers:
 - **Critical** (-15 to -25): Missing entry for a cited key (compilation error)
-- **Major** (-5 to -14): DOI mismatch, stale preprint with published version available, "et al." in author field
+- **Major** (-5 to -14): DOI mismatch, **likely fabricated reference** (LLM-drafted hallucination), stale preprint with published version available, "et al." in author field
 - **Minor** (-1 to -4): Missing optional fields, year oddities, unused entries
 
 Compute the score and include the Score Block in the report after the summary table.

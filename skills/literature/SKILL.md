@@ -1,263 +1,193 @@
 ---
 name: literature
 description: "Use when you need academic literature discovery, synthesis, or bibliography management. Supports standalone searches and end-to-end project pipelines with vault sync and auto-commit."
-allowed-tools: Bash(curl*), Bash(wget*), Bash(mkdir*), Bash(ls*), Bash(uv*), Bash(cd*), Bash(git*), Bash(cat*), Bash(date*), Bash(scholarly*), Bash(paperpile*), Bash(taskflow-cli*), Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Task, Agent, Skills_by_label
+allowed-tools: Bash(curl*), Bash(wget*), Bash(mkdir*), Bash(ls*), Bash(uv*), Bash(cd*), Bash(git*), Bash(cat*), Bash(date*), Bash(scholarly*), Bash(paperpile*), Bash(taskflow-cli*), Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Task, Agent
 argument-hint: "[topic-query] or <topic-slug> for full pipeline"
 ---
 
 # Literature Skill
 
-**CRITICAL RULE: Every citation must be verified to exist before inclusion.** Never include a paper you cannot find via web search. Hallucinated citations are worse than no citations.
+Comprehensive academic literature workflow: discover, verify, organise, synthesise. Uses parallel sub-agents to search multiple sources, verify citations, and fetch PDFs concurrently.
 
-**DOI INTEGRITY RULE: Every DOI must be programmatically verified before entering any `.bib` file.** Sub-agents hallucinate plausible-looking DOIs that resolve to wrong papers (e.g., correct journal prefix, wrong suffix). The ONLY reliable verification is `scholarly scholarly-verify-dois` with title-matching (see Phase 4). A DOI that resolves to a different title than expected is WRONG — treat it the same as a missing DOI.
+## Hard Rules
 
-**CITATION KEY RULE: ALWAYS use Better BibTeX-format keys (e.g., `Author2016-xx`).** When merging into an existing `.bib`, match existing keys. Never generate custom keys (`AuthorYear`, `AuthorKamenica2017`, etc.) or retain non-standard keys unless the user explicitly says otherwise.
+### Existential — block submission
 
-**Python:** Always use `uv run python`. Never bare `python`, `python3`, `pip`, or `pip3`.
+These rules protect against the highest-cost failure modes. Violation invalidates the output.
 
-**LIBRARY-FIRST RULE: ALWAYS check Paperpile BEFORE any external search.** Call `paperpile search-library` for the topic in Phase 1. Do not skip this even if no `.bib` file exists yet. Papers already in either library should be reused, not re-discovered.
+1. **Every citation must be verified to exist before inclusion.** Never include a paper you cannot find via web search. Hallucinated citations are worse than no citations.
+2. **Every DOI must be programmatically verified before entering any `.bib` file.** Sub-agents hallucinate plausible-looking DOIs that resolve to wrong papers (correct journal prefix, wrong suffix). The only reliable verification is `scholarly scholarly-verify-dois` with title-matching (Phase 3). A DOI that resolves to a different title is WRONG — treat it the same as a missing DOI.
+3. **The narrative synthesis ALWAYS lives at `docs/literature-review/literature_summary.md`.** Never in `paper/`, `paper-*/`, or any Overleaf-synced directory. The `paper/` directory is LaTeX-only. Markdown files there leak onto Overleaf and pollute the submission folder. Canonical filename: `literature_summary.md` (never `_synthesis.md`, `synthesis.md`, ad-hoc names).
 
-**PREPRINT RULE: Always prefer the published version.** If a paper is found on arXiv, SSRN, NBER, or any working paper series, search for a published journal/conference version using `scholarly scholarly-search`. Only cite a preprint if no published version can be found. This applies at every phase: Phase 2 (discovery), Phase 4 (verification), and Phase 6b (bib-validate runs the full preprint staleness check from `bib-validate/references/preprint-check.md`).
+---
 
-**OUTPUT LOCATION RULE: The narrative synthesis ALWAYS lives at `docs/literature-review/literature_summary.md` — NEVER in `paper/`, `paper-*/`, or any Overleaf-synced directory.** The `paper/` directory is LaTeX-only (`.tex`, `.bib`, `.sty`, `.cls`, figures). Markdown synthesis files, notes, or scratch documents in `paper/` leak onto Overleaf and pollute the submission folder. Canonical filename: `literature_summary.md` (never `_synthesis.md`, `synthesis.md`, or ad-hoc names). This applies to every sub-agent writing synthesis output.
+### Format — catch in review
 
-**CAUSAL LANGUAGE RULE: Match the strength of language to the study design.** Reserve causal verbs ("causes", "increases", "reduces", "leads to") for findings from designs that warrant causal inference (experiments, RCTs, credible quasi-experiments with clear identification). For observational/correlational work, use: "is associated with", "predicts", "correlates with". When summarising a paper in the narrative or bibliography annotations, match the language to the design — not to the authors' own claims. State disagreements precisely: who claims what, on what evidence. Do not flatten into "the literature is mixed."
+These rules govern style and consistency. Violation produces fixable artefacts, not invalid claims.
 
-> Comprehensive academic literature workflow: discover, verify, organize, synthesize.
-> Uses parallel sub-agents to search multiple sources, verify citations, and fetch PDFs concurrently.
-> Supports two modes: **standalone** (free-form query) and **pipeline** (topic-slug for full project-aware cycle with vault sync and auto-commit).
+4. **Library-first.** Always check Paperpile via `paperpile search-library` BEFORE any external search (Phase 1). Papers already held should be reused, not re-discovered.
+5. **Prefer the published version over preprints.** If a paper is found on arXiv, SSRN, NBER, or any working paper series, search for a published journal/conference version via `scholarly scholarly-search`. Cite a preprint only if no published version exists. Enforced in Phase 2 (discovery), Phase 3 (verify), and Phase 4 (`/bib-validate` runs the full preprint staleness check).
+6. **Better BibTeX-format keys** (e.g., `Author2016-xx`). When merging into an existing `.bib`, match existing keys. Never generate custom keys (`AuthorYear`, `AuthorKamenica2017`, etc.) unless explicitly told otherwise.
+7. **Match causal language to study design.** Reserve causal verbs ("causes", "increases", "reduces") for designs that warrant causal inference (experiments, RCTs, credible quasi-experiments). For observational work use "is associated with", "predicts", "correlates with". Match the language to the design — not the authors' own claims. State disagreements precisely; do not flatten into "the literature is mixed."
+8. **Python: always `uv run python`.** Never bare `python`, `python3`, `pip`, `pip3`.
+
+> Known corrections (notation, method, citation, domain) are auto-injected from `MEMORY.md` via the LEARN-tag-routing protocol at invocation. See `shared/learn-tag-routing.md`.
+
+---
 
 ## Modes
 
 | Mode | Invocation | What it does |
 |------|-----------|-------------|
 | **Standalone** | `/literature [topic query]` | Search + verify + bib + synthesis. No project context needed. |
-| **Pipeline** | `/literature <topic-slug>` | Full cycle: resolve project → search → verify → bib → bib-validate gate → vault sync → auto-commit |
-| **Deep** | `/literature --deep [query]` | Standalone or pipeline + iterative gap-filling loop (Phase 4.5). Also triggered by "deep", "thorough", or "comprehensive review" in the query. |
+| **Pipeline** | `/literature <topic-slug>` | Full cycle: resolve project → search → verify → bib → bib-validate gate → vault sync → auto-commit. |
+| **Deep** | `/literature --deep [query]` | Standalone or pipeline + iterative gap-filling loop after Phase 3. Also triggered by "deep", "thorough", or "comprehensive review" in the query. |
 
-**How to detect mode:** If the argument matches an atlas topic slug (check `~/Research-Vault/atlas/` for a matching `.md` file), run in Pipeline mode. Otherwise, run in Standalone mode. When in doubt, ask.
+**Mode detection:** if the argument matches an atlas topic slug (`~/Research-Vault/atlas/<slug>.md`), run in Pipeline mode. Otherwise, Standalone. When in doubt, ask. Deep is a flag on either base mode.
 
-## Shared References
-
-- Concept validation gate: `shared/concept-validation-gate.md` — validate concept before synthesis
-- Method-fitness gate: `shared/method-fitness-gate.md` — validate RQ-method alignment before search (pipeline mode only)
-- Integrity gates: `shared/integrity-gates.md` — pipeline-blocking verification checkpoints
-- Material passport: `shared/material-passport.md` — artifact provenance and staleness tracking
-- Checkpoint resumability: `shared/checkpoint-resumability.md` — save/resume on crash (pipeline mode)
-- LEARN tag routing: `shared/learn-tag-routing.md` — auto-inject corrections at invocation
-- Escalation protocol: `shared/escalation-protocol.md` — escalate when research question is vague
-
-## When to Use
-
-- Starting a new research project
-- Writing a literature review section
-- Building a reading list on a topic
-- Finding specific citations
-- Creating annotated bibliographies
-- End-to-end literature pipeline for a research topic (pipeline mode)
+**Pipeline mode — project context resolution:** find the atlas topic file (`find ~/Research-Vault/atlas/ -name "<topic-slug>.md"`), read frontmatter (`title`, `project_path`, `outputs`, `connected_topics`), resolve `PROJECT="$(cat ~/.config/task-mgmt/research-root)/<project_path>"`, locate the `.bib` file (ask if multiple). Report context and wait for confirmation before Phase 1.
 
 ---
 
-## Pipeline Mode: Project Context Resolution
+## Optional Enrichment
 
-**Only in pipeline mode** (topic slug argument). Skip entirely in standalone mode. Find the atlas topic file (`find ~/Research-Vault/atlas/ -name "<topic-slug>.md"`), read frontmatter (`title`, `project_path`, `outputs`, `connected_topics`), resolve `PROJECT="$(cat ~/.config/task-mgmt/research-root)/<project_path>"`, locate the `.bib` file (ask if multiple), report context and wait for confirmation before proceeding to Phase 0.
+Five enrichment passes that fire conditionally. They do not get their own phase headers — each integrates into a base phase as noted.
 
----
+| Enrichment | Trigger | Integrates after | Reference |
+|-----------|---------|-----------------|-----------|
+| **Perplexity grounding** | `OPENROUTER_API_KEY` set; advisory real-time grounding wanted | Phase 1.2 (pre-search) | [`references/perplexity-grounding.md`](references/perplexity-grounding.md) |
+| **CLI council search** | Broad reviews (20+ papers) or interdisciplinary topics | Phase 2.1 (parallel search) | [`references/cli-council-search.md`](references/cli-council-search.md) |
+| **Snowball search** | Phase 2 returned <15 papers OR broad review | Phase 2.1 (parallel search) | [`references/snowball-search.md`](references/snowball-search.md) |
+| **SciSciNet enrichment** | `curl -sf http://localhost:8500/health` succeeds | Phase 2.3 (rank), before Phase 3 | [`references/scisciinet-enrichment.md`](references/scisciinet-enrichment.md) |
+| **Iterative deep loop** | Deep mode (`--deep` or keyword); ≥5 verified papers | Phase 3 (verify), before Phase 4 | [`references/deep-loop-protocol.md`](references/deep-loop-protocol.md) |
 
-## Architecture: Orchestrator + Sub-Agents
-
-Phases: 0 session-log → 1 pre-search → 1.25 Perplexity (opt) → 1.5 search plan gate → 2 parallel search → 2b CLI council (opt) → 2.5 snowball (opt) → 3 dedup/rank → 3b SciSciNet (opt) → 4 parallel verification → 4.5 deep loop (opt) → 5 PDF download → 6 assemble bib → 6b validate → 6c sync → 6d pipeline completion → 7 synthesis.
-
-**Key principle:** Sub-agents handle independent, parallelizable work. Merging, deduplication, and synthesis stay with the orchestrator because they need the full picture.
-
-**Full agent prompt templates for all phases:** [`references/agent-templates.md`](references/agent-templates.md)
-
----
-
-## Phase 0: Session Log & Compact (Mandatory)
-
-Literature searches are context-heavy. **Always** run `/session-log` before starting to create a recovery checkpoint.
+Output from any enrichment must still pass the Phase 3 DOI gate before entering the `.bib`.
 
 ---
 
-## Phase 1: Pre-Search Check (Direct)
+## Architecture
 
-Check for existing `.bib` files in project root, `/references`, `/bib`, `/bibliography`:
-
-1. Parse existing entries to avoid duplicates and understand context
-2. Identify gaps — note if bibliography skews toward certain years/methods
-3. Compile list of existing citation keys to pass to sub-agents
-4. **MANDATORY: Check Paperpile library** — call `paperpile search-library` for the search topic. Also call `paperpile get-items-by-label` if a relevant label exists. This finds papers the user already has, preventing re-discovery of known work. Mark these as **ALREADY IN PAPERPILE** and reuse their citation keys. If the `paperpile` CLI is unavailable, log a warning and continue — but always attempt the call.
-5. **Resolve topic label** — call `paperpile get-labels` to find the label for the current topic. This label is used in Phase 6c for reporting.
-7. **Check source availability** — run `scholarly source-status --json` to see which sources are active (OpenAlex always; Scopus and WoS if API keys are set). Report this so search agents know what coverage to expect.
-
-**Steps 4 and 5 are NOT optional.** Every literature search must check both reference managers before external discovery. This prevents re-discovering papers already in the library and identifies migration candidates early.
+Sub-agents handle independent, parallelisable work (search, verification, PDF download). Merging, deduplication, and synthesis stay with the orchestrator because they need the full picture. Full agent prompt templates: [`references/agent-templates.md`](references/agent-templates.md).
 
 ---
 
-## Phase 1.25: Perplexity Real-Time Grounding (Optional)
+## Phase 1: Prep
 
-Advisory-only real-time grounding via Perplexity Sonar Pro (OpenRouter). Surfaces current terminology, named actors, and flashpoint debates that OpenAlex/Scopus/WoS miss due to indexing lag. **Hard gate:** skip silently if `OPENROUTER_API_KEY` is not set. Output feeds Phase 1.5 — never enters `.bib` directly. Every named paper must still pass the Phase 4 DOI gate.
+> standalone: yes (skip 1.3, 1.4) | pipeline: yes | deep: yes
 
-Full protocol (gate check, curl invocation, output usage, cost): [`references/perplexity-grounding.md`](references/perplexity-grounding.md)
+### 1.1 Session log + checkpoint
 
----
+Literature searches are context-heavy. Always run `/session-log` to create a recovery checkpoint per [`shared/checkpoint-resumability.md`](../shared/checkpoint-resumability.md). Pipeline mode writes a JSON checkpoint after each phase so a crash resumes from the last completed phase, not from scratch.
 
-## Phase 1.5: Search Plan & Confirmation Gate (Both Modes)
+### 1.2 Pre-search check
 
-Present a search plan and wait for confirmation before launching any searches. Restate the RQ, list 3-6 queries grouped by **Track A (Substantive)** / **Track B (Empirical comparanda)** / **Track C (Methodological precedents)**, list seed authors/venues, note scope boundaries, and propose optional `year_min` / `year_max` filters (propagated to every Phase 2/4.5 search call via `--year-from/--year-to`). Flag book coverage if topic has major book-length treatments (political theory, area studies, organisational behaviour) — API search underrepresents books.
+Find existing `.bib` files in project root, `/references`, `/bib`, `/bibliography`. Then:
 
-Full structure, presentation template, filter propagation, and book coverage rule: [`references/search-plan.md`](references/search-plan.md)
+1. Parse existing entries to avoid duplicates and understand context.
+2. Identify gaps — note if the bibliography skews toward certain years/methods.
+3. Compile the list of existing citation keys to pass to sub-agents.
+4. **Mandatory: check Paperpile.** Call `paperpile search-library` for the topic. Also call `paperpile get-items-by-label` if a relevant label exists. Mark hits as **ALREADY IN PAPERPILE** and reuse their citation keys. If `paperpile` CLI is unavailable, log a warning and continue.
+5. **Resolve topic label** via `paperpile get-labels` for the current topic. Used in Phase 4 sync reporting.
+6. **Check source availability** via `scholarly source-status --json` (OpenAlex always; Scopus/WoS if API keys are set). Report so search agents know coverage.
 
----
+Steps 4–6 are not optional — every literature search must check the library before external discovery.
 
-## Phase 2: Parallel Search (Sub-Agents)
+### 1.3 Concept validation gate (pipeline mode only)
 
-CLI pre-fetch via `scholarly` commands (search, similar-works, author-papers, arxiv-search, exa-search-papers) writing to `/tmp/lit-search/*.json`, then spawn 2-3 Explore agents in parallel (Google Scholar, bibliometric, S2/arXiv, domain-specific). Both `scholarly` and `paperpile` CLIs work inside sub-agents — pre-fetch or let agents shell out directly.
+Run [`shared/concept-validation-gate.md`](../shared/concept-validation-gate.md) on the topic concept plan. If the plan fails (missing RQ, no theoretical framing, generic AI voice, <300 words, <3 references), pause and request a stronger concept plan before proceeding. Standalone mode skips this — free-form queries don't have a concept plan to validate.
 
-Full CLI command list, output paths, and agent configuration: [`references/phase-2-search.md`](references/phase-2-search.md) | Agent prompt templates: [`references/agent-templates.md#phase-2-search-agent-templates`](references/agent-templates.md#phase-2-search-agent-templates)
+### 1.4 Search plan + method-fitness gate (pipeline mode only)
 
----
+Present the search plan and wait for confirmation: restate the RQ, list 3-6 queries grouped by **Track A (Substantive) / Track B (Empirical comparanda) / Track C (Methodological precedents)**, list seed authors/venues, propose `year_min` / `year_max` filters (propagated to every search call via `--year-from/--year-to`), flag book coverage if topic has major book-length treatments. Full structure: [`references/search-plan.md`](references/search-plan.md).
 
-## Phase 2b: CLI Council Search (Optional)
-
-Multi-model literature search via `cli-council` — runs the same query through Gemini, Codex, and Claude for maximum recall. Use for broad reviews (20+ papers) or interdisciplinary topics.
-
-**Full invocation, prompt template, and post-processing:** [references/cli-council-search.md](references/cli-council-search.md#phase-2b-cli-council-search-optional)
-
----
-
-## Phase 2.5: Snowball Search (Optional — Main Context)
-
-Uses S2's citation graph to expand the candidate pool. Pick 3-5 seed papers, run forward (`scholarly scholarly-citations`) and backward (`scholarly scholarly-references`) snowballing, filter to ≥5 citations, merge into Phase 3 pool. Use for broad reviews or when Phase 2 returned <15 papers. Enrich top candidates with `scholarly scholarly-paper-detail` for TLDR summaries.
-
-Full protocol: [`references/snowball-search.md`](references/snowball-search.md)
+After plan approval, run [`shared/method-fitness-gate.md`](../shared/method-fitness-gate.md). If the method does not fit the RQ, escalate per [`shared/escalation-protocol.md`](../shared/escalation-protocol.md) — do not proceed to expensive search until the gate passes. Standalone mode skips both: free-form queries imply exploratory intent.
 
 ---
 
-## Phase 3: Deduplicate, Classify, and Rank (Direct)
+## Phase 2: Search
 
-1. **Merge** results from all search agents (Phase 2 + Phase 2b if used)
-2. **Remove duplicates** — match on title similarity and DOI
-3. **Field-framework extraction** — for each candidate, extract structured fields (Setting / Population / Method / Data / DV / IV / Key finding / Mechanism / Boundary). Always, even partial — feeds ranking, gap analysis, synthesis, and `/hypothesis-generation`.
-4. **Rank** by relevance, citation count, and recency
-5. **Select top N** to verify (typically 25-30 candidates for 20-25 verified)
-6. **Assign batches** of ~5 for verification
+> standalone: yes | pipeline: yes | deep: yes (later expanded by 4.5 loop)
 
-Full field definitions, downstream uses, and breadcrumb format: [`references/field-framework.md`](references/field-framework.md)
+### 2.1 Parallel search
 
----
+CLI pre-fetch via `scholarly` commands (search, similar-works, author-papers, arxiv-search, exa-search-papers) writing to `/tmp/lit-search/*.json`, then spawn 2-3 Explore agents in parallel (Google Scholar, bibliometric, S2/arXiv, domain-specific). Both `scholarly` and `paperpile` CLIs work inside sub-agents — pre-fetch or let agents shell out. Full CLI list, output paths, configuration: [`references/phase-2-search.md`](references/phase-2-search.md). Agent prompts: [`references/agent-templates.md#phase-2-search-agent-templates`](references/agent-templates.md#phase-2-search-agent-templates).
 
-## Phase 3b: SciSciNet Enrichment (Direct — Optional)
+If CLI council enrichment fires here, run it as an additional parallel agent. If snowball enrichment fires, run it after primary search, before 2.2.
 
-Additive enrichment via local SciSciNet API — adds `disruption_score`, `novelty_score`, `conventionality_score`, `fields`, and `is_hit_1pct`/`is_hit_5pct` flags to each candidate. Skip silently if `curl -sf http://localhost:8500/health` fails. Re-rank: boost `is_hit_1pct` and high `disruption_score` papers; prioritise high-conventionality papers for background sections.
+### 2.2 Deduplicate, classify, rank
 
-Full protocol (curl invocation, re-ranking rules, coverage note, breadcrumb): [`references/scisciinet-enrichment.md`](references/scisciinet-enrichment.md)
+1. Merge results from all search agents.
+2. Remove duplicates — match on title similarity and DOI.
+3. **Field-framework extraction** for each candidate: Setting / Population / Method / Data / DV / IV / Key finding / Mechanism / Boundary. Always run, even if partial — feeds ranking, gap analysis, synthesis, and `/hypothesis-generation`. Definitions: [`references/field-framework.md`](references/field-framework.md).
+4. Rank by relevance, citation count, recency.
+5. Select top N to verify (typically 25-30 candidates for 20-25 verified).
+6. Assign batches of ~5 for verification.
 
----
-
-## Phase 4: Parallel Verification (Sub-Agents)
-
-Hard DOI gate. Six-step protocol:
-
-1. **Batch DOI pre-verification** via `scholarly scholarly-verify-dois --json` — title-match check is mandatory (off-by-one DOI suffix hallucinations are the dominant failure mode)
-2. **Find correct DOIs** for flagged papers via Crossref API → `scholarly-search` → web search (in order of reliability)
-3. **Manual verification** of remaining papers — spawn general-purpose agents in parallel, ~5 papers each, using [`references/agent-templates.md`](references/agent-templates.md#phase-4-verification-agent-template)
-4. **Final DOI gate** — re-run `scholarly-verify-dois` on all DOIs entering the `.bib`. Papers without DOIs flagged as `% NO DOI`.
-5. **Assign confidence grades** — A (DOI + full metadata), B (stable identifier, no DOI), C (single non-canonical source)
-6. **Working paper inclusion test** — include only if ≥2 of: high citations, established author, top venue, sole source for concept, verifiable forthcoming status
-
-Full six-step protocol, title-matching rules, confidence grade criteria, and WP inclusion test: [`references/phase-4-verification.md`](references/phase-4-verification.md)
+If SciSciNet enrichment fires, run it on the ranked pool: adds `disruption_score`, `novelty_score`, `is_hit_1pct` flags; re-rank to boost hits and high-disruption papers.
 
 ---
 
-## Phase 4.5: Iterative Deep Loop (Optional)
+## Phase 3: Verify
 
-**Trigger:** "deep", "--deep", "thorough", or "comprehensive review". Runs after Phase 4, before Phase 5. Prerequisites: ≥5 verified papers.
+> standalone: yes | pipeline: yes | deep: yes + iterative loop (4.5)
 
-Each iteration: (1) gap analysis with era-gated checks for terminology/paradigm shifts, (2) targeted search via `scholarly` CLI + Explore sub-agents, (3) merge + dedup, (4) verify new papers. Convergence: 3 iterations OR <3 genuinely new papers per iteration OR user says "enough".
+This phase IS the integrity gate per [`shared/integrity-gates.md`](../shared/integrity-gates.md). No reference may enter the `.bib` without passing here.
 
-Full protocol: [`references/deep-loop-protocol.md`](references/deep-loop-protocol.md) | Agent templates: [`references/agent-templates.md#phase-45-deep-loop-agent-templates`](references/agent-templates.md#phase-45-deep-loop-agent-templates)
+Six-step protocol:
 
----
+1. **Batch DOI pre-verification** via `scholarly scholarly-verify-dois --json` — title-match check is mandatory (off-by-one DOI suffix hallucinations are the dominant failure mode).
+2. **Find correct DOIs** for flagged papers via Crossref API → `scholarly-search` → web search (in order of reliability).
+3. **Manual verification** of remaining papers — spawn general-purpose agents in parallel, ~5 papers each. Template: [`references/agent-templates.md#phase-4-verification-agent-template`](references/agent-templates.md#phase-4-verification-agent-template).
+4. **Final DOI gate** — re-run `scholarly-verify-dois` on all DOIs entering the `.bib`. Papers without DOIs get `% NO DOI`.
+5. **Confidence grades** — A (DOI + full metadata), B (stable identifier, no DOI), C (single non-canonical source).
+6. **Working paper inclusion test** — include only if ≥2 of: high citations, established author, top venue, sole source for concept, verifiable forthcoming status.
 
-## Phase 5: Parallel PDF Download (Sub-Agents)
+Full protocol: [`references/phase-4-verification.md`](references/phase-4-verification.md).
 
-First, check Paperpile via `paperpile search-library` — mark papers with attached PDFs as SKIP, others as DOWNLOAD. Then spawn Bash agents in parallel (3-5 papers each) for the DOWNLOAD set. Best-effort — many papers are paywalled. Agent template: [`references/agent-templates.md#phase-5-pdf-download-agent-template`](references/agent-templates.md#phase-5-pdf-download-agent-template)
+### 3.5 Iterative deep loop (deep mode only)
 
----
-
-## Phase 6: Assemble Bibliography (Direct)
-
-**Two outputs required:**
-
-1. **`docs/literature-review/literature_summary.bib`** — always created, standalone, self-contained
-2. **Project canonical bib** (e.g. `paper/references.bib`) — merge into it if it exists
-
-Key rules: Better BibTeX-format keys (`Author2016-xx`); reuse Paperpile keys for entries already held; only VERIFIED papers; list ALL authors (never "et al."); seed each entry via `scholarly scholarly-paper-detail`; add `% Confidence: A/B/C` and `% WP criteria:` comments where applicable; every entry needs a connection note in `literature_summary.md`.
-
-Full BibTeX format, rules, and connection-note protocol: [`references/bibliography-format.md`](references/bibliography-format.md)
+Prerequisites: ≥5 verified papers. Each iteration: (1) gap analysis with era-gated checks for terminology/paradigm shifts, (2) targeted search via `scholarly` + Explore sub-agents, (3) merge + dedup, (4) verify new papers via the six-step protocol above. Convergence: 3 iterations OR <3 genuinely new papers per iteration OR user says "enough". Full protocol: [`references/deep-loop-protocol.md`](references/deep-loop-protocol.md). Agent prompts: [`references/agent-templates.md#phase-45-deep-loop-agent-templates`](references/agent-templates.md#phase-45-deep-loop-agent-templates).
 
 ---
 
-## Phase 6b: Validate Bibliography (HARD GATE — blocks Phase 7)
+## Phase 4: Finalise
 
-**DO NOT proceed to Phase 7 (synthesis) until `/bib-validate` has been invoked and the report reviewed.** Phase 4 verifies papers exist; `/bib-validate` catches a different class of issues (missing BibTeX fields, preprint staleness, DOI problems, author formatting, unused entries). Running synthesis before validation means the narrative may reference entries with broken metadata that then survive into the paper.
+> standalone: 4.1–4.4, 4.6 | pipeline: all | deep: same as base mode
 
-Invocation: call the `/bib-validate` skill directly — do not wait for the user to prompt. This is mandatory on every `/literature` invocation (standalone, pipeline, and deep) every time new entries are added.
+### 4.1 PDF download
 
----
+Check Paperpile via `paperpile search-library` — papers with attached PDFs are SKIP, others DOWNLOAD. Spawn Bash agents in parallel (3-5 papers each) for the DOWNLOAD set. Best-effort — many papers are paywalled. Template: [`references/agent-templates.md#phase-5-pdf-download-agent-template`](references/agent-templates.md#phase-5-pdf-download-agent-template).
 
-## Phase 6c: Sync to Reference Managers
+### 4.2 Assemble bibliography
 
-Sync new references to Paperpile (primary reference manager); handles migration candidates and post-run maintenance. Append a Phase 6c breadcrumb to `.planning/state.md` or `.context/current-focus.md`.
+Two outputs required:
 
-Full steps + breadcrumb format: [`references/reference-manager-sync.md`](references/reference-manager-sync.md)
+1. `docs/literature-review/literature_summary.bib` — always created, standalone, self-contained.
+2. Project canonical bib (e.g. `paper/references.bib`) — merge into it if it exists.
 
----
+Rules: Better BibTeX-format keys; reuse Paperpile keys for entries already held; only VERIFIED papers; list ALL authors (never "et al."); seed each entry via `scholarly scholarly-paper-detail`; add `% Confidence: A/B/C` and `% WP criteria:` comments where applicable; every entry needs a connection note in `literature_summary.md`. Full format: [`references/bibliography-format.md`](references/bibliography-format.md).
 
-## Phase 6d: Pipeline Completion (Pipeline Mode Only)
+Each output gets a [`shared/material-passport.md`](../shared/material-passport.md) header (origin skill, mode, version, produced timestamp) so downstream consumers can detect staleness.
 
-Skip entirely in standalone mode. After Phase 6b passes (bib-validate clean) and Phase 6c completes: (1) vault sync via `taskflow-cli`, (2) knowledge wiki filing (if `knowledge/` exists), (3) auto-commit hard gate (only if bib-validate clean), (4) final summary.
+### 4.3 Validate bibliography (HARD GATE)
 
-Full steps (taskflow commands, knowledge filing, commit template, final summary format): [`references/pipeline-completion.md`](references/pipeline-completion.md)
+**Do not proceed to 4.4 or Phase 5 until `/bib-validate` has been invoked and the report reviewed.** Phase 3 verifies papers exist; `/bib-validate` catches a different class (missing BibTeX fields, preprint staleness, DOI problems, author formatting, unused entries). Running synthesis before validation means the narrative may reference entries with broken metadata that survive into the paper.
 
----
+Mandatory on every `/literature` invocation (standalone, pipeline, deep) every time new entries are added.
 
-## Phase 7: Synthesize Narrative (Direct or CLI Council)
+### 4.4 Sync to reference managers
 
-**Output: `docs/literature-review/literature_summary.md`.** Never write synthesis to `paper/` — see OUTPUT LOCATION RULE at top of skill. If `docs/literature-review/` does not exist, `mkdir -p` it first.
+Sync new references to Paperpile (primary reference manager); handle migration candidates and post-run maintenance. Append a sync breadcrumb to `.planning/state.md` or `.context/current-focus.md`. Full steps + breadcrumb format: [`references/reference-manager-sync.md`](references/reference-manager-sync.md).
 
-Seven steps: (1) identify themes, (2) map intellectual lineage, (3) note current debates, (4) structured gap analysis (methodological / population-context / conceptual, each with "why it matters"), (5) negative evidence per cluster (mandatory — state explicitly if absent), (6) cross-cluster synthesis (tensions + implications), (7) Priority Reading Order (5–7 papers: review → foundational → frontier → gap/controversy).
+### 4.5 Pipeline completion (pipeline mode only)
 
-Output types: narrative summary, literature deck, annotated bibliography, concise field synthesis (~400 words for "quick synthesis" requests). Use `[VERIFY]` tags for uncertain attributions (resolve before publication). For comprehensive reviews, run through `cli-council` for multi-model synthesis.
+After 4.3 passes (bib-validate clean) and 4.4 completes: (1) vault sync via `taskflow-cli`, (2) knowledge wiki filing if `knowledge/` exists. Standalone mode skips this entirely. Full steps: [`references/pipeline-completion.md`](references/pipeline-completion.md).
 
-Full protocol (seven steps, concise field synthesis structure, [VERIFY] tags, multi-model invocation, `literature_summary.md` structure, output file tree): [`references/synthesis.md`](references/synthesis.md)
+### 4.6 Output verification (before commit)
 
----
+Before any auto-commit, emit an outputs manifest and run the shared verifier per [`_shared/verify-outputs.md`](../_shared/verify-outputs.md):
 
-## Sub-Agent Guidelines
-
-0. **Python: ALWAYS use `uv run python`.** Include this in every sub-agent prompt.
-1. **Launch independent agents in a single message** for parallelism
-2. **Be explicit in prompts** — sub-agents have no context
-3. **Include skip lists** of existing citation keys
-4. **Batch sizes:** 5 papers per verification agent, 3-5 per PDF agent
-5. **Maximum 3 parallel agents at a time** — spawn in waves, write results to disk between waves. Each agent should write to a temp file (e.g., `/tmp/lit-search/agent-N.json`) rather than returning large payloads in-context. Summarise from files to avoid context overflow.
-6. **Right agent type:** `Explore` for search, `general-purpose` for verification, `Bash` for downloads
-7. **Tolerate partial failures** — continue with what you have
-
-See [`references/related-skills.md`](references/related-skills.md) for cross-references, bibliometric API guides, and arXiv full-text reading instructions.
-
----
-
-## Output Verification (Guard)
-
-This skill writes files. Before any auto-commit, emit an outputs manifest and run the shared verifier. See [`skills/_shared/verify-outputs.md`](../_shared/verify-outputs.md) for the full protocol.
-
-**Required tail steps** (before `git commit`):
-
-1. Write manifest to `<project>/.claude/state/outputs-manifest-<UTC-timestamp>.json` listing every file this skill claims to have written in this invocation (paths relative to the project root).
+1. Write manifest to `<project>/.claude/state/outputs-manifest-<UTC-timestamp>.json` listing every file this skill claims to have written, paths relative to the project root.
 2. Run:
 
    ```bash
@@ -266,6 +196,39 @@ This skill writes files. Before any auto-commit, emit an outputs manifest and ru
        --project-root "$PROJECT_ROOT"
    ```
 
-3. If the verifier exits non-zero, **do not commit** — surface the missing-files list to the user and stop. The verifier has already logged an `error` entry to `~/.claude/ecc/skill-outcomes.jsonl`, which feeds the launcher dashboard.
+3. If the verifier exits non-zero, **do not commit**. Surface the missing-files list and stop. The verifier logs an `error` entry to `~/.claude/ecc/skill-outcomes.jsonl`.
 
-**Why:** closes the "hallucinated outputs" failure class (commit `b2cff75`, 2026-04-18).
+Closes the "hallucinated outputs" failure class (commit `b2cff75`, 2026-04-18).
+
+### 4.7 Auto-commit (pipeline mode only)
+
+Hard gate: commit only if 4.3 (bib-validate clean) and 4.6 (outputs manifest verified) both passed. Standalone mode skips. Commit template: [`references/pipeline-completion.md`](references/pipeline-completion.md).
+
+---
+
+## Phase 5: Synthesise
+
+> standalone: yes | pipeline: yes | deep: yes (informed by deep-loop findings)
+
+Output: `docs/literature-review/literature_summary.md`. Never write synthesis to `paper/` (Hard Rule 3). If `docs/literature-review/` does not exist, `mkdir -p` first.
+
+Seven steps: (1) identify themes, (2) map intellectual lineage, (3) note current debates, (4) structured gap analysis (methodological / population-context / conceptual, each with "why it matters"), (5) negative evidence per cluster (mandatory — state explicitly if absent), (6) cross-cluster synthesis (tensions + implications), (7) Priority Reading Order (5–7 papers: review → foundational → frontier → gap/controversy).
+
+Output types: narrative summary, literature deck, annotated bibliography, concise field synthesis (~400 words for "quick synthesis" requests). Use `[VERIFY]` tags for uncertain attributions (resolve before publication). For comprehensive reviews, run through `cli-council` for multi-model synthesis. Full protocol: [`references/synthesis.md`](references/synthesis.md).
+
+---
+
+## Sub-Agent Guidelines
+
+1. **Launch independent agents in a single message** for parallelism.
+2. **Be explicit in prompts** — sub-agents have no context. Include skip lists of existing citation keys.
+3. **Maximum 3 parallel agents at a time.** Spawn in waves, write results to disk between waves. Each agent writes to a temp file (e.g., `/tmp/lit-search/agent-N.json`) rather than returning large payloads in-context. Summarise from files to avoid context overflow.
+4. **Right agent type:** `Explore` for search, `general-purpose` for verification, `Bash` for downloads.
+5. **Batch sizes:** 5 papers per verification agent, 3-5 per PDF agent.
+6. **Tolerate partial failures** — continue with what you have.
+
+---
+
+## Cross-References
+
+See [`references/related-skills.md`](references/related-skills.md) for cross-references, bibliometric API guides, and arXiv full-text reading instructions.

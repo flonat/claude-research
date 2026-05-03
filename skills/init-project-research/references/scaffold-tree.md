@@ -1,6 +1,6 @@
 # Init Project Research — Scaffold Tree
 
-> Detailed reference extracted from `SKILL.md` Phase 2.
+> Detailed reference extracted from `SKILL.md` Phase 3.
 
 ## Common Core (always created)
 
@@ -23,7 +23,7 @@
 │   ├── readings/           # .gitkeep
 │   └── venues/             # .gitkeep (submission/venue material only)
 ├── log/                   # .gitkeep
-├── paper-{venue}/         # Paper directory (Phase 4):
+├── paper-{venue}/         # Paper directory (Phase 5):
 │   ├── paper/             #   Symlink → Overleaf — LaTeX source ONLY
 │   │                      #   Venue-specific files (checklists, cover letters) live in parent
 │   └── correspondence/

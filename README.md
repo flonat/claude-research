@@ -106,7 +106,7 @@ The MCP server's `load-context` tool gives Claude Desktop access to the context 
 **Skills** (`skills/`) — Slash commands invoked with `/<skill-name>` or natural language.
 <!-- SKILLS-SUMMARY:START -->
 <!-- auto-generated — do not edit manually -->
-46 skills available. Key examples: `/proofread`, `/latex-autofix`, `/literature`, `/bib-validate`, `/code-review`, `/init-project-research`, and more.
+46 skills available. Key examples: `/proofread`, `/latex-autofix`, `/literature`, `/bib-validate`, `/code-review`, `/session-recap`, and more.
 <!-- SKILLS-SUMMARY:END -->
 See [`docs/skills.md`](docs/skills.md) for the full catalogue.
 

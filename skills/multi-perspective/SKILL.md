@@ -55,7 +55,11 @@ For rules and templates, see [`references/perspective-templates.md`](references/
 
 Present the generated perspectives to the user and get approval before proceeding. The user may want to add, remove, or adjust perspectives.
 
-### Phase 3: Parallel Investigation
+### Phase 3: Investigate
+
+Three sub-steps — parallel investigation, then user check-in, then anonymised cross-evaluation. The check-in is what differentiates this skill from a passive multi-perspective analysis.
+
+#### 3.1 Parallel investigation
 
 Spawn one sub-agent per perspective using the Task tool. Each agent receives:
 
@@ -89,7 +93,7 @@ Write 300-500 words. Do not hedge — commit to your perspective's position.
 - Run all agents in parallel (up to 5 concurrent, per orchestration convention)
 - Each agent writes to a temp file; collect results after all complete
 
-### Phase 3.25: User Check-In (Interactive Mode)
+#### 3.2 User check-in (interactive mode)
 
 After collecting all perspective outputs, present them to the user as a structured summary and run an interactive check-in. This is the key differentiator from a passive multi-perspective analysis — the user participates as an active contributor, not a spectator.
 
@@ -111,9 +115,9 @@ After collecting all perspective outputs, present them to the user as a structur
 - If a perspective is marked as off-base, it is still included in cross-evaluation (for completeness) but flagged: "The researcher considers this direction less relevant because [reason]"
 - Challenges are posed directly to the relevant perspective in the cross-evaluation round as an additional evaluation criterion
 
-**When to skip:** If the user says "skip check-in", "just run it", or "non-interactive", proceed directly to Phase 3.5. The default is interactive.
+**When to skip:** If the user says "skip check-in", "just run it", or "non-interactive", proceed directly to 3.3. The default is interactive.
 
-### Phase 3.5: Anonymised Cross-Evaluation
+#### 3.3 Anonymised cross-evaluation
 
 Before synthesising, run a peer-review round where each perspective critiques all others — without knowing which lens produced which output. This forces content-based evaluation rather than tribal dismissal.
 
@@ -142,7 +146,7 @@ TASK: Evaluate each perspective on these criteria (1-5 scale):
 3. **Novelty** — Does it surface something the others miss?
 4. **Practicality** — Could the researcher act on this advice?
 
-[IF USER PROVIDED INPUT IN PHASE 3.25, ADD:]
+[IF USER PROVIDED INPUT IN PHASE 3.2, ADD:]
 Additional context from the researcher:
 - Constraints: [user-revealed constraints]
 - Challenges: [user's pushback on specific claims]
@@ -267,7 +271,7 @@ In standard mode, Phase 3 spawns Claude sub-agents with different personas — b
 
 **What changes in council mode:**
 - Phase 3 (Parallel Investigation): Each perspective is assigned to a different LLM provider via `cli-council`, not Claude sub-agents
-- Phase 3.5 (Cross-Evaluation): Each model evaluates the others' perspectives without knowing which model produced which — genuine blind review
+- Phase 3.3 (Cross-Evaluation): Each model evaluates the others' perspectives without knowing which model produced which — genuine blind review
 - Phase 4 (Synthesis): Chairman model reads all perspectives and cross-evaluations, weighted by peer scores
 
 **Invocation (CLI backend):**

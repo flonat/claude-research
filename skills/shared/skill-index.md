@@ -16,7 +16,7 @@
 | `interdisciplinary-bridge` | Import concepts from adjacent fields to solve open problems |
 | `future-research-agenda` | Generate provocative, fundable future research directions |
 | `atlas-audit` | Full audit of all topics across 4 systems |
-| `atlas-deploy` | Compile atlas.json from topic files, commit, and deploy atlas web app to Fly.io |
+| `atlas-deploy` | Manual-only schema validation + Mac Mini launchd restart for atlas-workspace (atlas.user.com). No compile/push step — atlas-workspace reads vault directly via Syncthing. |
 
 ### Literature (12)
 
@@ -212,7 +212,7 @@
 
 ---
 
-**Total: 156 skills across 16 categories.**
+**Total: 158 skills across 16 categories.**
 
 ---
 

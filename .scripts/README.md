@@ -1,161 +1,56 @@
 # Automation Scripts
 
-> Python utilities for task management automation.
+> Python utilities and shell helpers, mostly invoked by skills/agents/hooks.
 
-> **⚠️ DEPRECATED (March 2026):** The Notion-based CLI tools below are superseded by the Research Vault (`~/Research-Vault`) and the `taskflow` MCP server. They remain here for reference but are no longer the active workflow. Use `taskflow` MCP tools instead.
+The Notion-backed CLI tools that lived here previously (`task`, `tasks`,
+`done`, `inbox`, `query`, `week`, `conf`, plus `daily_digest.py`,
+`extract_meeting_actions.py`, `notion_helpers.py`, `config.py`,
+`generate-codex-agents-md.py`) were retired in 2026-04. The Research Vault
+(`~/Research-Vault`) and the `taskflow` MCP server replaced them.
 
-## Overview
+## Active scripts
 
-### CLI Tools (Legacy — Notion-based)
+| Script | Purpose |
+|--------|---------|
+| `ai_pattern_density.py` | Scans text/LaTeX for auto-generated writing patterns (CommScribe-style density score) |
+| `count_inventory.py` | Ground-truth count of skills / hooks / rules / agents; propagates corrected counts across docs |
+| `ensure-resources.sh` | Idempotent setup of resource directories |
+| `focus` | Quick-update wrapper for `.context/current-focus.md` (no Notion dependency) |
+| `mini-unlock` | Mac Mini SSH-tunnel unlock helper |
+| `regen-resource-manifest.sh` | Regenerate the resource manifest |
+| `session-history.py` | Query session-outcomes JSONL via SQLite |
+| `skill-health.py` | Skill health dashboard from `skill-outcomes.jsonl` |
+| `skill-log-miner.py` | Mine skill outcome logs for failure patterns |
+| `sync-resources.sh` | Pull latest from cloned resource repos |
+| `sync-template.sh` | Sync templates between locations |
+| `sync-to-codex.sh` | Sync infrastructure to the Codex CLI |
+| `venue-metrics` | Pull venue-level metrics |
 
-| Script | Purpose | Replacement |
-|--------|---------|-------------|
-| `task` | Create a new task | `mcp__taskflow__create_task` |
-| `tasks` | Query and list tasks | `mcp__taskflow__list_tasks` |
-| `done` | Mark tasks as completed | `mcp__taskflow__complete_task` |
-| `focus` | Update current focus file | Still active (no Notion dependency) |
-| `papers` | Research pipeline management | `mcp__taskflow__list_papers` |
-| `inbox` | Process tasks without dates | `mcp__taskflow__search_tasks` |
-| `week` | Weekly summary | Vault-based weekly review |
-| `conf` | Conference tracking | `mcp__taskflow__list_venues` |
-| `query` | Search context files | Still active (no Notion dependency) |
-
-### Helper Modules (Legacy)
-
-| Script | Purpose | Status |
-|--------|---------|--------|
-| `config.py` | Configuration (auto-loads `.env`) | Deprecated — vault needs no API token |
-| `notion_helpers.py` | Utility functions for Notion API | Deprecated — replaced by taskflow MCP |
-| `extract_meeting_actions.py` | Extract action items from meeting transcripts | Still useful (output now goes to vault) |
-| `daily_digest.py` | Generate daily planning briefings | Deprecated — use vault tasks directly |
-
-### Shared Libraries
+## Shared libraries
 
 | Directory | Purpose |
 |-----------|---------|
-| `openalex/` | OpenAlex scholarly API client — shared across `/literature`, `/bib-validate`, `/split-pdf`, and the OpenAlex MCP server |
+| `openalex/` | OpenAlex API client — shared across `/literature`, `/bib-validate`, `/split-pdf`, and the OpenAlex MCP server |
 
-## How They Work with Claude
+## Replacement map (for the deleted Notion CLIs)
 
-These scripts are designed for **Claude-assisted automation**, not fully autonomous execution. When you ask Claude to help with tasks like:
+| Deleted | Use instead |
+|---------|-------------|
+| `task`, `tasks`, `done`, `inbox` | `taskflow-cli` (Bash) or `taskflow` MCP tools |
+| `query` | `refpile search-library` (semantic) or `paperpile search-library` (exact) |
+| `week` | `/minutes-weekly` skill or vault-based weekly review |
+| `conf` | `conf-timeline list` (see [`docs/guides/conf-deadlines.md`](../docs/guides/conf-deadlines.md)) |
+| `daily_digest.py` | `/task-management` skill (vault-aware) |
+| `extract_meeting_actions.py` | `/minutes-recap` skill |
 
-- "Help me plan my day"
-- "Extract action items from yesterday's meeting"
-- "What tasks are overdue?"
+## Conventions
 
-Claude uses these scripts as reference for:
-1. **What to query** from Notion
-2. **How to format** results
-3. **What questions** to ask you
-4. **How to create** new tasks
-
-## Configuration
-
-### 1. Notion Integration
-
-The scripts auto-load the `.env` file from the project root.
-
-**Option A: Use .env (recommended)**
-```bash
-# .env file already exists with your token
-cd "Task Management"
-uv run python .scripts/tasks
-```
-
-**Option B: Environment variable**
-```bash
-export NOTION_TOKEN="your-token-here"
-```
-
-**Option C: Source .env manually**
-```bash
-source .env
-python .scripts/tasks
-```
-
-Make sure to share your databases with the integration in Notion.
-
-### 2. Database IDs
-
-The `config.py` file contains your database IDs:
-
-```python
-DATABASES = {
-    "tasks_tracker": "YOUR-TASKS-DATABASE-ID-HERE",
-    "research_pipeline": "YOUR-PIPELINE-DATABASE-ID-HERE",
-}
-```
-
-## Usage
-
-### With Claude/Cowork (Recommended)
-
-Just ask Claude naturally:
-
-```
-"Help me plan my day"
-→ Claude reads context, queries Notion, asks you questions, creates a plan
-
-"Extract actions from my meeting with [Supervisor] yesterday"
-→ Claude finds the transcript, extracts actions, creates tasks
-
-"What's overdue?"
-→ Claude queries Tasks Tracker and summarises
-```
-
-### Standalone (Advanced)
+These scripts are invoked from skills, agents, and hooks — they don't
+talk to external APIs unless explicitly noted. All Python scripts run
+under `uv` (per the `python-uv` global rule):
 
 ```bash
-# Daily digest
-python daily_digest.py --date "2026-01-29"
-
-# Meeting actions (dry run)
-python extract_meeting_actions.py --dry-run
-
-# Show Claude instructions
-python daily_digest.py --instructions
+uv run python .scripts/<name>.py
 ```
 
-## Extending
-
-### Adding a New Workflow
-
-1. Create a new script in `.scripts/`
-2. Add a corresponding workflow file in `.context/workflows/`
-3. Document how Claude should use it
-
-### Adding New Task Types
-
-Edit `config.py`:
-```python
-TASK_TYPES = [
-    # ... existing types
-    "🆕 New Type",
-]
-```
-
-Then update the Notion database to include the new option.
-
-## Troubleshooting
-
-### "NOTION_TOKEN not set"
-The scripts work best with Claude's built-in Notion integration. For standalone use, you need to set up a Notion integration token.
-
-### Tasks not appearing
-Make sure:
-1. The database is shared with your Notion integration
-2. The database IDs in `config.py` match your actual databases
-
-### Claude doesn't follow the workflow
-Point Claude to the specific workflow file:
-```
-"Read .context/workflows/daily-review.md and help me plan my day"
-```
-
-## Files Changed
-
-When running these scripts or using the workflows, the following may be updated:
-
-- `.context/current-focus.md` - Updated after planning sessions
-- Notion Tasks Tracker - New tasks created
-- Notion Research Pipeline - Paper status updates
+Shell scripts are POSIX-compatible bash with `set -euo pipefail` headers.

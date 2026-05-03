@@ -28,15 +28,27 @@ argument-hint: "[no arguments — runs full sweep]"
 
 ---
 
-## Phase 0: agnix Lint
+## Phase 0: Pre-flight Lints
 
-Run `npx agnix .` in the main context (no sub-agent needed — it's fast). Capture the summary line.
+Two fast lint passes run in the main context before sub-agent dispatch. Both are summary-only — full findings feed into the final report.
+
+### 0.1 agnix lint
+
+Run `npx agnix .` and capture the summary line.
 
 **Pass criteria:** 0 errors. Warnings are informational only.
 
 If errors > 0, list them in the report under an **agnix Lint** section. These are structural issues in skill/hook/agent frontmatter that should be fixed.
 
 Config lives in `.agnix.toml` at project root — known false positives are already suppressed.
+
+### 0.2 skill-numbering lint
+
+Run `uv run python scripts/lint-skills.py` and capture the summary line.
+
+**Pass criteria:** 0 findings. Findings indicate phase-numbering smells, frontmatter typos, or stale cross-skill phase references. Reference: [`skills/_shared/skill-template.md`](../_shared/skill-template.md) § Anti-patterns.
+
+If findings > 0, list them in the report under a **Skill-Numbering Lint** section. The linter explains each rule (R1–R9) inline.
 
 ---
 

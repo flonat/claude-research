@@ -44,6 +44,7 @@ Just say these naturally:
 | "Extract actions from my meeting with [name]" | Finds transcript, extracts tasks, creates in vault |
 | "Weekly review" | Guides you through reflection and planning |
 | "What's overdue?" | Queries vault tasks and summarises |
+| "Upcoming deadlines" / "What's due?" | Reads vault venue frontmatter via `conf-timeline list`. See [`docs/guides/conf-deadlines.md`](docs/guides/conf-deadlines.md) |
 | "Update my research pipeline" | Shows paper status, helps update stages |
 | "Find references on [topic]" | Academic search with verified citations |
 | "What did I accomplish this week?" | Summarises completed tasks |

@@ -1,7 +1,7 @@
 ---
 name: skill-extract
 description: "Extract reusable knowledge from the current session into a persistent skill.\nUse when you discover something non-obvious, create a workaround, or develop\na multi-step workflow that future sessions would benefit from."
-allowed_tools:
+allowed-tools:
   - Read
   - Write
   - Edit
@@ -86,7 +86,7 @@ Write `skills/{name}/SKILL.md`:
 ---
 name: {kebab-case-name}
 description: "{What it does. Concrete task types. Use when...}"
-allowed_tools:
+allowed-tools:
   - {minimum set of tools needed}
 ---
 ```

@@ -59,22 +59,9 @@ Learnings are routed to one of two files based on portability:
 
 **Decision rule:** "Would this help a collaborator on a different machine?" Yes → Generic. No → Machine-specific. **Default: Generic** (~95% of entries).
 
-Machine-specific examples:
-- `[LEARN:code] On this Mac, latexmk needs /Library/TeX path explicitly`
-- `[LEARN:code] uv 0.5.x on ARM has slow lock resolution — use --frozen`
-- `[LEARN:code] Zotero DB at ~/.local/share/user-papers/ not default path`
+Machine-specific examples: local paths (latexmk on `/Library/TeX`), tool version quirks (`uv 0.5.x` slow on ARM), non-default DB paths (Zotero at `~/.local/share/user-papers/`).
 
-If `.claude/state/personal-memory.md` does not exist, create it on first machine-specific entry (see `init-project-research` templates for the seed format). Create the directory too: `mkdir -p .claude/state`.
-
-## Examples
-
-```
-[LEARN:notation] In this paper, treatment is $D_i$ not $T_i$
-[LEARN:citation] Sant'Anna & Zhao (2020) key is santanna2020doubly not santanna2020
-[LEARN:code] R: use <- for assignment, not = (the user's preference)
-[LEARN:method] TWFE is biased with staggered treatment — use CS or Sun-Abraham
-[LEARN:domain] UK universities use "marks" not "grades" for assessment scores
-```
+If `.claude/state/personal-memory.md` does not exist, create it on first machine-specific entry: `mkdir -p .claude/state` and seed from `init-project-research` templates.
 
 ## Knowledge Base in MEMORY.md
 
@@ -105,14 +92,8 @@ For teaching or workshop projects, use these sections instead:
 
 ### How [LEARN] Tags Feed In
 
-When recording a `[LEARN]` tag, also add the correction to the appropriate table:
-- `[LEARN:notation]` → Notation Registry
-- `[LEARN:code]` → Code Pitfalls
-- `[LEARN:method]` or `[LEARN:domain]` → Anti-Patterns or Key Decisions
-- `[LEARN:citation]` → Citations section (one-liners)
+Each tag also lands in its corresponding table: notation → Notation Registry; code → Code Pitfalls; method/domain → Anti-Patterns or Key Decisions; citation → Citations.
 
 ## Important
 
-- Keep entries concise — one line per learning
-- Include the correction direction (wrong → right)
-- These accumulate over time and inform future sessions
+One line per learning, wrong → right direction explicit. Entries accumulate and inform future sessions.

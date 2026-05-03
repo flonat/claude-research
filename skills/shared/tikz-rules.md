@@ -284,6 +284,40 @@ available_width = right_boundary - left_boundary - 2 * inner_sep
 
 ---
 
+## Pass 6: Beamer Compilation Constraints (Rule 11)
+
+These rules cover TikZ inside Beamer frames specifically — not geometry, but how the TeX engines interact. Violating them produces compile errors that cascade and resist all downstream geometry fixes.
+
+### Rule 11: Never Define Parameterized TikZ Styles Inside a Beamer Frame
+
+In Beamer, `#` inside a frame body is consumed by the frame's argument parser **before TikZ sees it**. Defining a parameterized style inside a frame triggers `! Illegal parameter number in definition of \pgfk@...` errors that move around the file as you "fix" them and resist every downstream workaround (`##1`, `[fragile]`, `\catcode` hacks).
+
+**The fix is structural, not cosmetic:** define ALL parameterized styles in the preamble using `\tikzset{}`, then USE them inside frames.
+
+```latex
+% In the preamble — BEFORE \begin{document}:
+\tikzset{
+  mybox/.style={rectangle, draw=charcoal, thick, fill=lightbg,
+                minimum width=3.5cm, minimum height=1cm,
+                align=center, font=\small},
+  myarrow/.style={->, thick, #1},        % parameter is fine here
+}
+
+% Inside a frame — USE the style, never define parameterised ones:
+\begin{frame}{Title}
+\begin{tikzpicture}
+  \node[mybox] (a) at (0,0) {A};
+  \draw[myarrow=red] (a) -- (b);          % use, do not define
+\end{tikzpicture}
+\end{frame}
+```
+
+**Diagnostic signature:** if you see `Illegal parameter number` jumping between line numbers as you edit, the root cause is a `#` in a `\tikzset{...}` or `.style={..., #1}` *inside* a frame body. Move the definition to the preamble. The workarounds (`##1`, switching to `[fragile]`, escaping with `\catcode`) are themselves brittle and create new failure modes — they are not real fixes.
+
+**This is not optional.** It is a hard constraint of the Beamer/TikZ interaction.
+
+---
+
 ## 6-Pass Verification Workflow
 
 Run these passes **in order** after writing or editing any TikZ diagram or matplotlib figure:
@@ -295,7 +329,8 @@ Run these passes **in order** after writing or editing any TikZ diagram or matpl
 | **3. Label positioning** | 6, 7 | Estimate text width vs. available space. Verify edge labels account for curvature. | All labels fit; curved-arrow labels use `pos=` or manual placement |
 | **4. Shape boundaries** | 8 | Verify every label near a circle/rectangle/patch clears its computed boundary by 0.4cm. | All labels have documented clearance from nearest shape edge |
 | **5. Structural checks** | 9, 10 | Verify anchor consistency. Re-derive every coordinate from layout formula. | All anchors consistent; every coordinate has a comment |
-| **6. Visual PDF review** | All | Compile and inspect rendered output (use `pdf-to-images.py` if available). | No overlaps, no misalignment, no clipped text |
+| **6. Beamer interaction** | 11 | If diagram appears inside a Beamer frame, verify no `\tikzset{...}` or `.style={..., #1}` is defined inside the frame. All parameterized styles must live in the preamble. | No `#` inside a frame body in any `tikzset`/style definition |
+| **7. Visual PDF review** | All | Compile and inspect rendered output (use `pdf-to-images.py` if available). | No overlaps, no misalignment, no clipped text |
 
 ---
 

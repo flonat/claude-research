@@ -135,4 +135,6 @@ Tracked in [`MEMORY.md`](MEMORY.md). Highlights:
 
 ## Rollout status
 
-Moving skills from MCP tool calls to CLI invocations is tracked in [`log/plans/2026-04-15_mcp-scholarly-cli-rollout.md`](../../log/plans/2026-04-15_mcp-scholarly-cli-rollout.md).
+- **Skills migrated to CLI (2026-04-15):** 42 skill references moved from `mcp__scholarly__*` to `scholarly <command> --json`. See [`log/plans/2026-04-15_mcp-scholarly-cli-rollout.md`](../../log/plans/2026-04-15_mcp-scholarly-cli-rollout.md).
+- **MCP entry still active in `~/.claude.json`:** kept so Claude Desktop and any unmigrated flow continue to work.
+- **Trial-disable pending:** staged behind the taskflow MCP-disable trial (2026-04-16). If that stabilises, the scholarly MCP entry is the next candidate for removal from Code (Desktop keeps it).

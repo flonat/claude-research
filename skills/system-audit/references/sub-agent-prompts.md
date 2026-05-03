@@ -38,7 +38,7 @@ Audit the Task Management system inventory. Check:
    - ~/.claude/hooks/ → Task Management/hooks/
    - ~/.claude/settings.json → Task Management/.claude/settings.json
    - ~/.claude/CLAUDE.md → Task Management/GLOBAL-CLAUDE.md
-   - ~/.claude/statusline-command.sh → Task Management/.claude/statusline-command.sh
+   (Note: `statusline-command.sh` is no longer expected at ~/.claude/ — settings.json `statusLine.command` now invokes the `claude-hud` plugin directly. Do not flag its absence.)
 6. **MCP server tool count:** The MCP server in packages/mcp-desktop/server.py registers tools as `skill-<name>` and `agent-<name>`. Count the cached skills and agents it discovers (read the discovery functions in server.py). Compare against actual skill/agent counts.
 7. **Undocumented items:** Any skills/hooks/agents/rules that exist on disk but aren't listed in their respective docs file (docs/components/skills.md, docs/components/hooks.md, docs/components/agents.md, docs/components/rules.md).
 8. **MCP server alignment:** Compare MCP servers between Claude Code (.mcp.json in project root) and Claude Desktop (~/Library/Application Support/Claude/claude_desktop_config.json). Check:
@@ -87,7 +87,7 @@ Skip packages/scout/ (tooling, not a research project).
 
 For each project, check:
 
-1. **LaTeX output directory:** If .tex files exist (in project root or paper/), does an out/ directory exist? Is there a .latexmkrc file?
+1. **LaTeX output directory:** For each directory containing standalone `.tex` files (root, `paper*/`, `reviews/`, `presentations/`, etc. — NOT `backup/`, `archive/`, `output/`, `code/`, or other generated/archived locations), check for a colocated `out/` directory and `.latexmkrc`. Convention is per-tex-directory, not project-root. Skip directories where `.tex` files are clearly generated outputs (e.g., `output/LaTeX/M1_*.tex`, `code/results/table_*.tex`) — those are `\input{}` fragments, not standalone documents.
 2. **Overleaf separation:** If a paper/ directory exists, is it a symlink? Check that paper/ contains ONLY LaTeX source files (.tex, .sty, .cls, .bst, .bbl, .bib, .latexmkrc, out/) and figures (.pdf, .png, .eps, .jpg, .svg, .tikz). Flag any code files (.py, .R, .jl, .sh, .ipynb), data files (.csv, .xlsx, .json, .dta, .parquet), or other non-LaTeX artifacts found inside paper/.
 3. **Hook executability:** All .sh files in $TM/hooks/ should be executable (chmod +x).
 4. **Python environment:** If .py files exist in the project, is there a pyproject.toml? Any sign of bare pip usage (requirements.txt without pyproject.toml, pip in scripts)?
@@ -174,9 +174,14 @@ Run these 4 checks:
    - Search for the skill name across all other skills, agents, hooks, rules, CLAUDE.md, and docs/
    - If zero references found: flag as INFO (dead code, candidate for archive)
    For each hook in hooks/:
-   - Check if registered in .claude/settings.json (unregistered hook = orphan)
+   - Check ALL of these wiring paths (not just .claude/settings.json):
+     1. Registered in `.claude/settings.json` (Claude Code event hook)
+     2. Invoked by another hook or by `scripts/daily-maintenance.sh` / similar launchd-driven script (cron-style hook — `grep -l <hook-filename> hooks/*.sh scripts/*.sh`)
+     3. Wired as `.git/hooks/pre-commit` or other git hook
+     4. Sourced as a library by another hook (search for `source.*<hook>` or `\. .*<hook>`)
+     5. Delegated to from a wrapper hook (e.g., `skill-observer.sh` shells out to `skill-observer.py`)
    - Search for the hook filename across skills, agents, docs/components/hooks.md
-   - If not registered AND not documented: flag as INFO
+   - Flag as INFO only if NONE of the above paths reach it AND it's not documented as a manual utility
    For each agent in .claude/agents/:
    - Search for the agent name across skills, CLAUDE.md, docs/
    - If zero references found: flag as INFO

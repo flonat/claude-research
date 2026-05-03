@@ -1,7 +1,7 @@
 ---
 name: latex-health-check
 description: "Use when you need to compile all LaTeX projects and check cross-project consistency."
-allowed_tools:
+allowed-tools:
   - Read
   - Edit
   - Write
@@ -143,6 +143,23 @@ Warnings (not auto-fixed):
 
 Print to stdout. If `--save` flag or 10+ projects scanned, also write to `log/latex-health/YYYY-MM-DD.md`.
 
+### 4.1 Output verification (before commit)
+
+When writing the report file, emit an outputs manifest and run the shared verifier per [`_shared/verify-outputs.md`](../_shared/verify-outputs.md):
+
+1. Write manifest to `<project>/.claude/state/outputs-manifest-<UTC-timestamp>.json` listing every file written this invocation, paths relative to the project root.
+2. Run:
+
+   ```bash
+   python3 "$HOME/.claude/skills/_shared/verify_outputs.py" \
+       --manifest "$MANIFEST" \
+       --project-root "$PROJECT_ROOT"
+   ```
+
+3. If the verifier exits non-zero, **do not commit**. Surface the missing-files list and stop.
+
+Closes the "hallucinated outputs" failure class (commit `b2cff75`, 2026-04-18). Skip this sub-step entirely if `--save` was not passed and no log file was written.
+
 ## What This Skill Does NOT Do
 
 - Does NOT fix overfull/underfull boxes (requires human judgment on rewording)
@@ -159,24 +176,3 @@ Print to stdout. If `--save` flag or 10+ projects scanned, also write to `log/la
 | `/audit-project-research` | Checks project structure (directories, files). This skill checks build health. |
 | `/bib-validate` | Validates bibliography entries. This skill checks if citations compile. |
 | `/latex-template` | Checks preamble alignment with the working paper template. Complementary: run after health-check to ensure preamble consistency. |
-
----
-
-## Output Verification (Guard)
-
-This skill writes files. Before any auto-commit, emit an outputs manifest and run the shared verifier. See [`skills/_shared/verify-outputs.md`](../_shared/verify-outputs.md) for the full protocol.
-
-**Required tail steps** (before `git commit`):
-
-1. Write manifest to `<project>/.claude/state/outputs-manifest-<UTC-timestamp>.json` listing every file this skill claims to have written in this invocation (paths relative to the project root).
-2. Run:
-
-   ```bash
-   python3 "$HOME/.claude/skills/_shared/verify_outputs.py" \
-       --manifest "$MANIFEST" \
-       --project-root "$PROJECT_ROOT"
-   ```
-
-3. If the verifier exits non-zero, **do not commit** — surface the missing-files list to the user and stop. The verifier has already logged an `error` entry to `~/.claude/ecc/skill-outcomes.jsonl`, which feeds the launcher dashboard.
-
-**Why:** closes the "hallucinated outputs" failure class (commit `b2cff75`, 2026-04-18).

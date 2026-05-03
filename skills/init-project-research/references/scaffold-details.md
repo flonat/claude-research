@@ -88,7 +88,7 @@ For **conference venues**, seed a `submission-checklist.md` inside the venue fol
 
 ## Papers Context File Template
 
-Used in Phase 6 when creating `.context/projects/papers/<short-name>.md`:
+Used in Phase 8 when creating `.context/projects/papers/<short-name>.md`:
 
 ```markdown
 # <Working Title>
@@ -154,9 +154,9 @@ Projects naturally grow beyond the initial scaffold. These items are **not** cre
 
 ---
 
-## Overleaf Symlink Commands (Phase 4)
+## Overleaf Symlink Commands (Phase 5)
 
-### 4a. Create symlink
+### 5a. Create symlink
 
 ```bash
 OVERLEAF_PATH="$HOME/Library/CloudStorage/YOUR-CLOUD/Apps/Overleaf/<overleaf-name>"
@@ -174,7 +174,7 @@ ls "$PROJECT_PATH/paper/"
 
 If the Overleaf directory doesn't exist, warn the user but still create the symlink (it will resolve once Overleaf creates the folder).
 
-### 4b. Seed template files
+### 5b. Seed template files
 
 If a template was selected in Round 2 (not "None"):
 
@@ -187,11 +187,23 @@ TEMPLATE_PATH="<Task Management>/templates/<template-slug>"
 rsync -av --exclude='.git' --exclude='.gitignore' --exclude='out/' "$TEMPLATE_PATH/" "$PROJECT_PATH/paper/"
 ```
 
-### 4c. Ensure `.latexmkrc` exists
+### 5c. Ensure `.latexmkrc` exists
 
-Check whether `paper/.latexmkrc` exists. If not, create it:
+Drop the canonical `.latexmkrc` (auto-detects pdflatex/xelatex/lualatex, builds to `out/`, copies PDF back) into the paper directory. For Overleaf-symlinked papers, copy into the symlink **target** (the Overleaf folder), not the wrapper.
 
-```perl
-$out_dir = 'out';
-END { system("cp $out_dir/*.pdf . 2>/dev/null") if defined $out_dir; }
+```bash
+TM=$(cat ~/.config/task-mgmt/path)
+# Standalone paper dir:
+cp "$TM/templates/latexmkrc/.latexmkrc" "$PROJECT_PATH/paper/"
+# Overleaf-symlinked paper dir (resolves through symlink to the Overleaf folder):
+cp "$TM/templates/latexmkrc/.latexmkrc" "$PROJECT_PATH/paper-<venue>/paper/"
 ```
+
+Optionally drop VS Code settings so LaTeX Workshop respects the subdir `.latexmkrc`:
+
+```bash
+mkdir -p "$PROJECT_PATH/paper/.vscode"
+cp "$TM/templates/latexmkrc/vscode-settings.json" "$PROJECT_PATH/paper/.vscode/settings.json"
+```
+
+Canonical source and rationale: `templates/latexmkrc/README.md`.

@@ -35,6 +35,7 @@ Create polished, zero-warning Beamer decks for academic contexts: seminars, conf
 5. **Use the unified template.** Always use `\usepackage[<institution>]{user-beamer}` from `templates/beamer/`. Options: `warwick`, `southampton`, `bath`, `lse`, `plain`. Never use default Beamer themes (Warsaw, Madrid, etc.) as-is, and never create one-off preambles. See [`templates/beamer/README.md`] for available custom commands and how to add institutions.
 6. **Code-first figures.** Generate figures via R or Python scripts before inserting. Never use placeholder images. **Always save the script alongside the figures** — never generate a figure without preserving the code that created it.
 7. **If a `.bib` file is used, validate it.** Cross-reference all `\cite{}` keys against the bibliography file. See `/bib-validate` for the full protocol.
+8. **Never define parameterized TikZ styles inside a frame.** `#` inside a Beamer frame body is consumed by the frame parser before TikZ sees it, producing `Illegal parameter number` errors that cascade and resist all downstream fixes. Define ALL `\tikzset{...}` and `.style={..., #1}` entries in the preamble; use them inside frames. See [`../shared/tikz-rules.md`](../shared/tikz-rules.md) Rule 11.
 
 ---
 
@@ -112,6 +113,17 @@ After `/latex` resolves errors, address remaining **warnings** (which autofix do
 2. Fix every single one — adjust text, resize figures, tweak `\parbox`, etc.
 3. Recompile
 4. Repeat until the log is clean
+
+**Circuit breaker — do not spiral.** If the same compile error persists after **3 different fix attempts**, STOP. Do not try a fourth approach. Instead:
+
+1. Stop editing the `.tex` file.
+2. Quote the exact error line from the `.log`.
+3. List the 3 approaches tried and why each failed.
+4. Ask the user how to proceed.
+
+What counts as "the same error": any error that persists at the same line family after a fix (e.g., `Illegal parameter number` moving from line 568 to 572 is still the same error — that is the diagnostic signature in tikz-rules.md Rule 11). A fresh Overfull on a different slide after fixing the first is a *new* error — reset the counter.
+
+The cost of stopping is 2 minutes; the cost of spiraling is an hour of edits that progressively obscure the original cause. This rule overrides "recompile until clean" — zero tolerance for warnings does not mean infinite attempts on the same fix.
 
 **"Compilation success does not mean visual success."** Also check for silent visual errors:
 - TikZ: shape constraints forcing label misplacement, coordinate misalignment. **If the deck contains TikZ diagrams**, run the 6-pass verification from [`../shared/tikz-rules.md`](../shared/tikz-rules.md) — compute Bezier depths, check gaps, verify label fit, check shape boundary clearance.

@@ -1,6 +1,6 @@
 # Init Project Research — Paper Directory Convention
 
-> Detailed reference extracted from `SKILL.md` Phase 4.
+> Detailed reference extracted from `SKILL.md` Phase 5.
 
 ## Paper Directory Convention (Nested Pattern)
 
@@ -25,7 +25,9 @@ paper/                        # Real directory (venue wrapper)
 
 ## Overleaf Folder Naming Convention
 
-**Naming convention:** `Paper {THEME_PREFIX} {Title Cased Slug}` — e.g., `Paper ASG Privacy Compliance Gaming`, `Paper BDS Identity Belief Alignment`.
+**Naming convention:** `Paper {THEME_PREFIX} {Title Cased Slug} ({VENUE})` — venue suffix is **required**, even for single-venue papers. Examples: `Paper ASG Privacy Compliance Gaming (CCS)`, `Paper BDS Identity Belief Alignment (JBDM)`, `Paper MechDes Strategic Compliance (NeurIPS 26)`.
+
+Use the venue's standard abbreviation (CCS, NeurIPS, EAAMO, FAccT, ICSE, JBDM, [Journal], …). Append a 2-digit year if it disambiguates multiple submission cycles for the same venue (`(NeurIPS 26)` vs `(NeurIPS 27)`).
 
 | Theme | Prefix |
 |-------|--------|
@@ -40,7 +42,7 @@ paper/                        # Real directory (venue wrapper)
 | Category F | OrgStrat |
 | Category G | PolSci |
 
-For multi-venue submissions, append the venue abbreviation in parentheses: `Paper ASG Privacy Compliance Gaming (CCS)`.
+For multi-venue submissions, create one Overleaf folder per venue, each with its own venue suffix: `Paper ASG Privacy Compliance Gaming (CCS)`, `Paper ASG Privacy Compliance Gaming (RegGov)`.
 
 ## Commands
 
@@ -54,14 +56,21 @@ mkdir -p "$overleaf_root/Paper ASG Privacy Compliance Gaming (CCS)"
 mkdir -p paper-ccs
 ln -s "$overleaf_root/Paper ASG Privacy Compliance Gaming (CCS)" paper-ccs/paper
 
-# Single paper:
-mkdir -p paper
-ln -s "$overleaf_root/Paper BDS Identity Belief Alignment" paper/paper
+# Single paper (still uses venue suffix):
+mkdir -p paper-jbdm
+ln -s "$overleaf_root/Paper BDS Identity Belief Alignment (JBDM)" paper-jbdm/paper
 ```
 
 **Important:** Never rename or delete Overleaf folders — see `.claude/rules/overleaf-separation.md` (Overleaf Folder Lifecycle).
 
-Ensure `.latexmkrc` exists inside the Overleaf target (the symlink destination), not in the wrapper directory.
+Ensure `.latexmkrc` exists inside the Overleaf target (the symlink destination), not in the wrapper directory. Drop the canonical config:
+
+```bash
+TM=$(cat ~/.config/task-mgmt/path)
+cp "$TM/templates/latexmkrc/.latexmkrc" paper-<venue>/paper/
+```
+
+The canonical file (`templates/latexmkrc/.latexmkrc`) auto-detects pdflatex/xelatex/lualatex, builds to `out/`, and copies the PDF back to the source dir. It lives inside the Overleaf-synced folder so both local and Overleaf web compiles see it.
 
 ## Backup Directory
 
@@ -80,7 +89,7 @@ done
 - Single paper: `backup/paper/`
 - Multi-paper: `backup/paper-ccs/`, `backup/paper-rg/`
 
-## Permissions Sync (Phase 3)
+## Permissions Sync (Phase 4)
 
 After writing `.claude/settings.local.json` (with hook config), merge global permissions into it so the new project starts with full permissions from day one:
 

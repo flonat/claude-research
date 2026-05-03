@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Wrapper to launch the bibliography MCP server with API keys.
+# Wrapper to launch the mcp-scholarly server with API keys.
 #
 # Keys arrive via two mechanisms (belt-and-suspenders):
 #   1. The `env` dict in ~/.claude.json / claude_desktop_config.json

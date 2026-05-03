@@ -21,10 +21,7 @@ from pathlib import Path
 
 # ── Ground truth ─────────────────────────────────────────────────────────
 
-# Hardcoded constants (not derivable from filesystem)
-NOTION_DBS = 6
-RESOURCE_REPOS = 43  # 15 academics + 23 general + 5 bibliography
-# Note: skill count is derived from filesystem (skills/*/SKILL.md), not hardcoded
+# All counts derived from the filesystem — no hardcoded constants.
 
 
 def get_ground_truth(root: Path) -> dict[str, int]:
@@ -39,11 +36,31 @@ def get_ground_truth(root: Path) -> dict[str, int]:
     hooks_py = len(list((root / "hooks").glob("*.py")))
     hooks_mjs = len(list((root / "hooks").glob("*.mjs")))
     hooks = hooks_sh + hooks_py + hooks_mjs
+
+    # Resource repos: count top-level .git per category, not nested submodules.
+    # academics/<author>/<repo>/.git → depth 4
+    # general/<author>/<repo>/.git → depth 4
+    # bibliography/<author>/<repo>/.git → depth 4
+    # artifacts/<repo>/.git → depth 3
+    resource_repos = 0
+    resources_root = root / "resources"
+    if resources_root.is_dir():
+        # Two-level-deep categories
+        for sub in ("academics", "general", "bibliography"):
+            base = resources_root / sub
+            if base.is_dir():
+                resource_repos += sum(1 for p in base.glob("*/*/.git"))
+        # One-level-deep category
+        artifacts = resources_root / "artifacts"
+        if artifacts.is_dir():
+            resource_repos += sum(1 for p in artifacts.glob("*/.git"))
+
     return {
         "skills": skills,
         "agents": agents,
         "rules": rules,
         "hooks": hooks,
+        "resource_repos": resource_repos,
     }
 
 
@@ -226,10 +243,6 @@ def main() -> int:
     if args.json:
         data = {
             "ground_truth": truth,
-            "constants": {
-                "notion_dbs": NOTION_DBS,
-                "resource_repos": RESOURCE_REPOS,
-            },
             "mismatches": [asdict(m) for m in mismatches],
             "total_mismatches": len(mismatches),
         }

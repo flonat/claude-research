@@ -1,7 +1,7 @@
 ---
 name: skill-preflight
 description: "Use when you need a pre-flight duplicate check before creating new skills or agents."
-allowed_tools:
+allowed-tools:
   - Read
   - Glob
   - Grep

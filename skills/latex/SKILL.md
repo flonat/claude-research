@@ -83,6 +83,8 @@ Read `out/<filename>.log` in full. Parse for errors and warnings.
 
 Check the log against the known error patterns below. If an error matches, apply the fix and go to Step 2a. If no known pattern matches, record the error as **unresolved** and stop the loop.
 
+**Same-error circuit breaker.** Independent of the 5-iteration cap: if the same error (same line family, same pattern signature) survives **3 consecutive fix attempts**, stop the loop early. Continued attempts on a stuck error compound damage rather than resolve it. Report what was tried, quote the log line, and ask the user how to proceed. A common signature: `Illegal parameter number` jumping between line numbers as you edit — that is the diagnostic for a parameterized TikZ style defined inside a Beamer frame; see `skills/shared/tikz-rules.md` Rule 11.
+
 ---
 
 ### Known Error Patterns & Auto-Fixes
@@ -102,11 +104,9 @@ Check the log against these patterns. Full fix instructions: [`references/known-
 
 If an error matches, read the full fix from the reference and apply it. If no pattern matches, record as **unresolved** and stop the loop.
 
----
+#### 2.4 PDF backup (paper directories only)
 
-### Phase 2.5: PDF Backup (paper directories only)
-
-**Only run if Phase 2 ended with a successful compilation (PDF exists).**
+**Only run if the compile-fix loop above ended with a successful compilation (PDF exists).**
 
 If the `.tex` file is inside a `paper-{venue}/paper/` structure (where `paper/` is a symlink to Overleaf):
 
@@ -118,9 +118,10 @@ If the `.tex` file is inside a `paper-{venue}/paper/` structure (where `paper/` 
    ```
 
 **Detection logic:**
-- The project directory containing the `.tex` file is a symlink named `paper`
-- Its parent directory name starts with `paper-`
-- If either condition is false, skip this phase silently
+
+- The project directory containing the `.tex` file is a symlink named `paper`.
+- Its parent directory name starts with `paper-`.
+- If either condition is false, skip this sub-step silently.
 
 ---
 
@@ -205,6 +206,23 @@ After all phases complete, compute the quality score:
 | | **Total deductions** | | **-XX** | |
 ```
 
+#### 5.1 Output verification (before commit)
+
+When the compile produced a PDF (and any backup copy), emit an outputs manifest and run the shared verifier per [`_shared/verify-outputs.md`](../_shared/verify-outputs.md):
+
+1. Write manifest to `<project>/.claude/state/outputs-manifest-<UTC-timestamp>.json` listing every file written this invocation (PDF, backup PDF if 2.4 ran, log files).
+2. Run:
+
+   ```bash
+   python3 "$HOME/.claude/skills/_shared/verify_outputs.py" \
+       --manifest "$MANIFEST" \
+       --project-root "$PROJECT_ROOT"
+   ```
+
+3. If the verifier exits non-zero, **do not commit**. Surface the missing-files list and stop.
+
+Closes the "hallucinated outputs" failure class (commit `b2cff75`, 2026-04-18).
+
 ---
 
 ## Configuration Reference
@@ -275,24 +293,3 @@ Runs from Phase 2 directly (pre-flight can be skipped if `.latexmkrc` and `out/`
 > "My paper won't compile — something about Bbbk"
 
 Identifies as Pattern 2 (font conflict), applies the `\let\Bbbk\relax` fix, recompiles.
-
----
-
-## Output Verification (Guard)
-
-This skill writes files. Before any auto-commit, emit an outputs manifest and run the shared verifier. See [`skills/_shared/verify-outputs.md`](../_shared/verify-outputs.md) for the full protocol.
-
-**Required tail steps** (before `git commit`):
-
-1. Write manifest to `<project>/.claude/state/outputs-manifest-<UTC-timestamp>.json` listing every file this skill claims to have written in this invocation (paths relative to the project root).
-2. Run:
-
-   ```bash
-   python3 "$HOME/.claude/skills/_shared/verify_outputs.py" \
-       --manifest "$MANIFEST" \
-       --project-root "$PROJECT_ROOT"
-   ```
-
-3. If the verifier exits non-zero, **do not commit** — surface the missing-files list to the user and stop. The verifier has already logged an `error` entry to `~/.claude/ecc/skill-outcomes.jsonl`, which feeds the launcher dashboard.
-
-**Why:** closes the "hallucinated outputs" failure class (commit `b2cff75`, 2026-04-18).

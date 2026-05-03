@@ -1,10 +1,10 @@
-# Atlas Sync — Phase 6 Details
+# Atlas Sync — Phase 7 Details
 
-> Referenced from: `init-project-research/SKILL.md` Phase 6
+> Referenced from: `init-project-research/SKILL.md` Phase 7
 
 Creates the research topic in all systems: local file → vault atlas → Venues → project folder → documentation.
 
-## 6a. Create Atlas Topic File
+## 7a. Create Atlas Topic File
 
 1. Read theme files from `~/Research-Vault/themes/` — current themes and their metadata
 2. Glob `~/Research-Vault/atlas/**/*.md` — existing slugs (avoid duplicates)
@@ -13,7 +13,7 @@ Creates the research topic in all systems: local file → vault atlas → Venues
 5. **Validate the topic file** before proceeding: run `uv run python packages/atlas-vault/schema.py ~/Research-Vault/atlas/{theme-dir}/{slug}.md` from `$TM/packages/atlas-vault/`. If validation fails, fix the file before syncing to vault.
 6. If new theme needed: create the theme directory under `~/Research-Vault/atlas/` and add a theme file at `~/Research-Vault/themes/{slug}.md`. The topic file created in step 4 is sufficient — no separate slug list to maintain.
 
-## 6b. Create vault Atlas Entry (if syncing to vault)
+## 7b. Create vault Atlas Entry (if syncing to vault)
 
 Atlas entries in the vault are synced from the local markdown files via `/sync-atlas`. The vault Topic Inventory is a read-only downstream copy:
 
@@ -21,7 +21,7 @@ Atlas entries in the vault are synced from the local markdown files via `/sync-a
 2. The sync tool will map YAML fields to vault properties per the sync spec
 3. Only use valid Methods multi-select values (see `atlas-schema.md` reference)
 
-## 6b2. Create Vault Submission Entry (MANDATORY)
+## 7b2. Create Vault Submission Entry (MANDATORY)
 
 **Always create a submission entry — regardless of topic status (even Idea stage).** This makes the topic visible to taskflow MCP queries, deadline tracking, and portfolio views.
 
@@ -48,7 +48,7 @@ location: ''
 
 **Never skip this step.** A topic without a submission entry is invisible to the pipeline.
 
-## 6c. Create Project Folder
+## 7c. Create Project Folder
 
 Create the project directory under the research projects root:
 
@@ -59,13 +59,13 @@ mkdir -p "$RESEARCH_ROOT/{ThemeAbbrev}/{slug}"
 
 Theme abbreviations: ASG, BDS, EnvEcon, HAI, IO, MechDes, NLP, OR, OrgStrat, PolSci. Folder name must be the kebab-case slug (same as the atlas topic filename).
 
-## 6d. Regenerate RECAP.md
+## 7d. Regenerate RECAP.md
 
 ```bash
 cd "$TM/packages/atlas-vault" && uv run python generate_recap.py
 ```
 
-## 6e. Update Atlas Counts
+## 7e. Update Atlas Counts
 
 If topic or theme count changed, update `$TM/packages/atlas-vault/CLAUDE.md` topic/theme counts and theme directory listing.
 
@@ -78,3 +78,15 @@ If topic or theme count changed, update `$TM/packages/atlas-vault/CLAUDE.md` top
 | Data Availability | `None` | User specifies |
 | Feasibility | `Medium` | User specifies |
 | Institution | Infer from theme/co-author | User specifies |
+
+---
+
+## Never Do These (Atlas Anti-Patterns)
+
+These five anti-patterns silently break atlas tooling. Each has caused at least one prior incident.
+
+- **Never create a topic file without YAML frontmatter** — it breaks `RECAP.md` generation.
+- **Never hard-code vault theme paths** — always look them up. They change if recreated and the hard-coded path goes stale.
+- **Never use Methods values outside the valid multi-select options** — the API will reject the entry. Valid values live in [`atlas-schema.md`](atlas-schema.md).
+- **Never use venue or output names as slugs** — the slug names the **research idea**, not where it's submitted. `facct-paper` is wrong; `dark-patterns-ai-safety` is right.
+- **Never create a separate topic file for a companion paper of an existing idea** — add it as an output on the existing topic. One idea, one topic file, multiple outputs.

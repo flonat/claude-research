@@ -1,7 +1,7 @@
 ---
 name: postmortem
 description: "Use when you need a structured post-mortem after incidents, mistakes, or stuck sessions."
-allowed_tools:
+allowed-tools:
   - Read
   - Write
   - Edit

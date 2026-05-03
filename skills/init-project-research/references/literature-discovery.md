@@ -1,9 +1,9 @@
-# Literature & Discovery — Phase 8 Details
+# Literature & Discovery — Phase 9 Details
 
-> Referenced from: `init-project-research/SKILL.md` Phase 8
+> Referenced from: `init-project-research/SKILL.md` Phase 9
 
 
-## 8a. Literature Review
+## 9a. Literature Review
 
 Launch `/literature` targeting the project's research topic. Uses the working title, abstract, key research questions, and any references from the Atlas topic file as search seeds.
 
@@ -15,7 +15,7 @@ Launch `/literature` targeting the project's research topic. Uses the working ti
 2. Scope: foundational papers + recent work (last 3 years) + closest competitors
 3. Target: 15-25 papers for an initial literature map
 
-## 8b. Scout Discovery Audit
+## 9b. Scout Discovery Audit
 
 Launch  in novelty mode to assess the topic's competitive landscape.
 
@@ -27,7 +27,7 @@ scout novelty "<working-title-or-research-question>" --source multi
 2. If the novelty score is **below 5/10**, flag in the confirmation report: "Low novelty score — consider reframing before investing further"
 3. If the novelty score is **above 7/10**, note as a positive signal
 
-## 8c. Results Integration
+## 9c. Results Integration
 
 After both complete:
 

@@ -1,6 +1,6 @@
 # Seed File Templates
 
-> Templates for Phase 3 of `/init-project-research`. Replace `<placeholders>` with interview answers.
+> Templates for Phase 4 of `/init-project-research`. Replace `<placeholders>` with interview answers.
 
 ## CLAUDE.md
 

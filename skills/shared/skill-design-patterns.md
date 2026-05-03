@@ -147,7 +147,7 @@ Create `references/drift-checks.md` listing every drift-prone value:
 ```markdown
 | Value | Location | Source of Truth | Trigger |
 |-------|----------|-----------------|---------|
-| Topic count (~203) | SKILL.md Phase 1 | ls ~/Research-Vault/atlas/**/*.md | /scaffold-atlas-topics |
+| Topic count (~203) | SKILL.md Phase 1 | ls ~/Research-Vault/atlas/**/*.md | /init-project-research |
 | Theme list (9) | SKILL.md, sa-prompts.md, build_report.py | ls Projects/ | New theme dir |
 ```
 

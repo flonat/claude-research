@@ -1,7 +1,7 @@
 ---
 name: session-health
 description: "Use when you need to check current context status and session health."
-allowed_tools:
+allowed-tools:
   - Read
   - Glob
   - Bash(ls*, cat*)
