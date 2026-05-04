@@ -189,20 +189,20 @@ def format_entry_harvard(e: dict[str, str], variant: str) -> str:
 
     cite_line = " ".join(cite_parts)
 
-    # Footer: only the private-side link.
-    # Deployed RefPile is a Zotero-backed React SPA mounted at /. The Search
-    # tab reads the `?q=` query string param (URLSearchParams in App.jsx),
-    # so /?q=<citekey> lands on Search with the citekey pre-filled — the
-    # paper appears as the top result. Direct /?item=<zotero_key> deep-link
-    # would need a citekey→zotero_key resolver added to refpile's API
-    # (TODO for a future session).
-    # Paperpile dropped — closed-source SaaS with no public deeplink that
-    # works by citekey. The DOI link in the Harvard cite line above is
-    # the canonical publisher URL.
+    # Footer: private-side deep-link into RefPile.
+    # PDF↗ link is parked: deployed refpile has empty citations.db and
+    # no per-user Zotero connection for user@example.com, so the
+    # /pdf/by-doi/<doi> endpoint always 404s. Once those are fixed
+    # (separate session: populate citations.db via citation_enricher
+    # + complete Zotero OAuth in the SPA), the PDF link can be added
+    # back here without other changes — the routes are already
+    # registered on VPS.
     if variant == "private":
-        foot_line = (
-            f"<small>[Look up in RefPile↗](https://refpile.com/?q={key})</small>\n"
-        )
+        if doi:
+            link = f"https://refpile.com/by-doi/{doi}"
+        else:
+            link = f"https://refpile.com/by-citekey/{key}"
+        foot_line = f"<small>[Open in RefPile↗]({link})</small>\n"
     else:
         foot_line = ""
 

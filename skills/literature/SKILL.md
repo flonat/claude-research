@@ -89,8 +89,17 @@ Find existing `.bib` files in project root, `/references`, `/bib`, `/bibliograph
 4. **Mandatory: check Paperpile.** Call `paperpile search-library` for the topic. Also call `paperpile get-items-by-label` if a relevant label exists. Mark hits as **ALREADY IN PAPERPILE** and reuse their citation keys. If `paperpile` CLI is unavailable, log a warning and continue.
 5. **Resolve topic label** via `paperpile get-labels` for the current topic. Used in Phase 4 sync reporting.
 6. **Check source availability** via `scholarly source-status --json` (OpenAlex always; Scopus/WoS if API keys are set). Report so search agents know coverage.
+7. **Check scout-batch reports.** Glob `~/Research-Vault/reports/scout/portfolio/*<topic-slug>*.md` and `*<topic-keyword>*.md`. If a recent (≤90 days) report exists, parse the **Closest prior works** and **Most likely scoopers** sections — feed authors/papers/groups directly to Phase 2 search agents as seeds. This avoids re-discovering what scout already surfaced.
+8. **Cold-start branch.** If steps 4–7 yield <3 papers AND project status is `Idea` or `Drafting` (read from atlas topic frontmatter or skip if standalone), enter **scaffold-seeded mode**:
+   - Search the project for a canonical scaffold document (`to-sort/*scaffold*.md`, `to-sort/*sketch*.md`, or `docs/*scaffold*.md`). Read it for the canonical reference list.
+   - For canonical CS/ML references explicitly named in the scaffold (e.g. "Ghorbani-Zou Data Shapley ICML 2019"), use `scholarly arxiv-get-paper --arxiv-id <id>` directly when arXiv IDs are known — broad `scholarly-search` returns high-citation noise (climate, hydrogen) on generic ML queries like "data shapley".
+   - For DOI-only known references, use Crossref via `scholarly scholarly-verify-dois` (faster + more reliable than search for targeted lookups; see [`reference_mcp_scholarly_search.md`](../../memory/reference_mcp_scholarly_search.md)).
+   - **Flag synthesis output** in `literature_summary.md` with a header banner: `> **Phase-1 seed synthesis** — scaffold-derived references only; broader external discovery deferred to next iteration.` This signals to downstream consumers that the bib is intentionally narrow.
+   - Skip Phase 2's full parallel search; jump straight to Phase 3 verification on the scaffold-named references.
 
-Steps 4–6 are not optional — every literature search must check the library before external discovery.
+Steps 4–7 are not optional — every literature search must check the library AND scout reports before external discovery. Step 8 fires conditionally and bypasses Phase 2 noise for cold-start projects.
+
+For parsing `scholarly` CLI JSON output (mixes stderr log lines with stdout JSON), use the helper in [`references/scholarly-output-parsing.md`](references/scholarly-output-parsing.md).
 
 ### 1.3 Concept validation gate (pipeline mode only)
 
@@ -135,14 +144,18 @@ This phase IS the integrity gate per [`shared/integrity-gates.md`](../shared/int
 
 Six-step protocol:
 
-1. **Batch DOI pre-verification** via `scholarly scholarly-verify-dois --json` — title-match check is mandatory (off-by-one DOI suffix hallucinations are the dominant failure mode).
+1. **Batch DOI pre-verification** via `scholarly scholarly-verify-dois --json` — title-match check is mandatory (off-by-one DOI suffix hallucinations are the dominant failure mode). One CLI call accepts up to 50 DOIs; if you have more, see Dispatch Rule below before splitting.
 2. **Find correct DOIs** for flagged papers via Crossref API → `scholarly-search` → web search (in order of reliability).
 3. **Manual verification** of remaining papers — spawn general-purpose agents in parallel, ~5 papers each. Template: [`references/agent-templates.md#phase-4-verification-agent-template`](references/agent-templates.md#phase-4-verification-agent-template).
-4. **Final DOI gate** — re-run `scholarly-verify-dois` on all DOIs entering the `.bib`. Papers without DOIs get `% NO DOI`.
+4. **Final DOI gate** — re-run `scholarly-verify-dois` on all DOIs entering the `.bib`. Papers without DOIs get `% NO DOI`. Subject to the same Dispatch Rule.
 5. **Confidence grades** — A (DOI + full metadata), B (stable identifier, no DOI), C (single non-canonical source).
 6. **Working paper inclusion test** — include only if ≥2 of: high citations, established author, top venue, sole source for concept, verifiable forthcoming status.
 
 Full protocol: [`references/phase-4-verification.md`](references/phase-4-verification.md).
+
+#### Dispatch Rule (Steps 1 & 4)
+
+Per [`_shared/cli-dispatch-policy.md`](../_shared/cli-dispatch-policy.md): if Step 1 or Step 4 would require **2 or more** `scholarly-verify-dois` calls (i.e. >50 DOIs total), dispatch a single Bash sub-agent that runs all batched calls and writes merged JSON to `/tmp/lit-verify.json`. Main context reads only the merged result, never the raw CLI output. For the bulk-threshold rationale, see `~/.claude/rules/subagent-prompt-discipline.md` § Bulk-Operation Dispatch Rule.
 
 ### 3.5 Iterative deep loop (deep mode only)
 

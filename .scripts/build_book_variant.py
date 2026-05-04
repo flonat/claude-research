@@ -172,6 +172,31 @@ def main() -> None:
     for pdf in book_dir.glob("*.pdf"):
         shutil.copy(pdf, out_dir / "html" / pdf.name)
 
+    # Force light mode: inject a small script into every HTML file that strips
+    # mystmd's `dark` class on <html>, sets data-theme="light", clears any
+    # cached preference, and reapplies via MutationObserver in case React
+    # hydration tries to flip back. Runs synchronously before paint.
+    # Marker `<!--force-light-v1-->` is unique to this injection (mystmd's own
+    # output uses `myst:theme` for its localStorage key, so don't use that).
+    INJECT_MARKER = "<!--force-light-v1-->"
+    force_light = (
+        f'{INJECT_MARKER}<script>(function(){{var r=document.documentElement;'
+        'r.classList.remove("dark");r.setAttribute("data-theme","light");'
+        'try{localStorage.setItem("myst:theme","light");}catch(e){}'
+        'new MutationObserver(function(){'
+        'if(r.classList.contains("dark"))r.classList.remove("dark");'
+        'if(r.getAttribute("data-theme")!=="light")r.setAttribute("data-theme","light");'
+        '}).observe(r,{attributes:true,attributeFilter:["class","data-theme"]});'
+        '})();</script>'
+    )
+    n_patched = 0
+    for html_file in (out_dir / "html").rglob("*.html"):
+        text = html_file.read_text()
+        if "</head>" in text and INJECT_MARKER not in text:
+            html_file.write_text(text.replace("</head>", f"{force_light}</head>", 1))
+            n_patched += 1
+    print(f"[paper-book] injected force-light script into {n_patched} HTML file(s)")
+
     print(f"[paper-book] OK — output at {out_dir}/html/")
 
 

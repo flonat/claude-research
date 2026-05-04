@@ -126,7 +126,7 @@ Detailed instructions in `.context/workflows/`:
 <!-- COMPONENTS:START -->
 ## Skills Available
 
-46 skills in `skills/` folder. See [`docs/components/skills.md`](docs/components/skills.md) for the full catalogue.
+48 skills in `skills/` folder. See [`docs/components/skills.md`](docs/components/skills.md) for the full catalogue.
 
 ## Agents
 
@@ -186,7 +186,7 @@ This helps me (Claude) pick up where we left off next time.
 | `.context/` | AI context library (profile, focus, projects, workflows, preferences) |
 | `.claude/agents/` | Agent definitions (6 agents) |
 | `.claude/rules/` | Auto-loaded rules (8 rules) |
-| `skills/` | 46 skill definitions |
+| `skills/` | 48 skill definitions |
 | `hooks/` | 9 hook scripts |
 | `.scripts/` | CLI tools for Notion task management |
 | `packages/cli-council/` | Multi-model council via local CLI tools |

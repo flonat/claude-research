@@ -1,6 +1,6 @@
 # Skills
 
-> 46 reusable workflow definitions available across all projects.
+> 48 reusable workflow definitions available across all projects.
 
 Skills are structured instruction sets (`SKILL.md` files) that turn Claude into a specialised tool for specific tasks — from compiling LaTeX to bootstrapping research projects.
 
@@ -8,6 +8,7 @@ Skills are structured instruction sets (`SKILL.md` files) that turn Claude into 
 
 | Skill | Description |
 |-------|-------------|
+| `audit-paper-book` | Use when you need to detect drift between an existing paper-book companion and a revised version of its source paper, then sync the mechanical pieces (new bib entries, new/changed figures) and report the substantive drift (renamed sections, changed numbers, new theorems, new contributions) for the user to triage. Counterpart to /init-paper-book. Read-only by default; --apply flag opts in to mechanical fixes |
 | `beamer-deck` | Use when you need to create an academic Beamer presentation with original theme and multi-agent review |
 | `bib-validate` | Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Fix mode auto-adds missing entries to Paperpile |
 | `code-archaeology` | Use when you need to review and understand old code, data, or analysis files |
@@ -17,6 +18,7 @@ Skills are structured instruction sets (`SKILL.md` files) that turn Claude into 
 | `creation-guard` | Use when you need a pre-flight duplicate check before creating new skills or agents |
 | `devils-advocate` | Use when you need to challenge research assumptions or stress-test arguments |
 | `handoff` | Use when you need to pass state to the next session in the current working directory. Writes a handoff.md file that the next session's SessionStart hook will read and delete |
+| `init-paper-book` | Use when you need to scaffold a NEW educational companion book for a LaTeX paper. Reads the paper, drafts 8 substantive chapters into the vault at ~/Research-Vault/books/<slug>/, copies bib + figures, registers the book, and verifies atlas serves it. Source-of-truth is the paper PDF/tex; the book is a reading companion, never a re-statement of new claims. For syncing an existing book to a paper revision, use /audit-paper-book |
 | `init-project` | Bootstrap a new research project. Interview for details, scaffold directory structure, create Overleaf symlink, initialise git, and create project context files |
 | `init-project-course` | Use when you need to bootstrap a university course or module folder |
 | `init-project-light` | Use when you need to bootstrap a lightweight project with minimal structure |
