@@ -25,16 +25,33 @@ A `github-repo/` directory at the project root acts as a **separate git reposito
 └── ...
 ```
 
-## Naming Convention
+## Naming Convention — Two Modes
 
-GitHub repo name: `paper-{theme-abbrev}-{slug}`
+Same `github-repo/` folder is used for two distinct lifecycle modes. Pick the naming that matches what the artifact is for:
+
+### Mode A — Anonymous artifact (during double-blind review)
+
+Name: `<venue>-<year>-<slug>-artifact`
+
+Examples:
+- `neurips-2026-quotient-semivalues-artifact`
+- `neurips-2026-audit-gaming-artifact`
+- `ccs-2026-formal-verification-artifact`
+
+Use `/anonymous-artifact` to create the repo, sanitize content, push, and submit to anonymous.4open.science. Repo is **private**; visibility is mediated by the 4open.science mirror.
+
+### Mode B — Post-acceptance public release
+
+Name: `paper-{theme-abbrev}-{slug}`
 
 Examples:
 - `paper-or-cost-aware-simulation`
 - `paper-or-indifference-adjustments`
 - `paper-bds-identity-belief-alignment`
 
-Theme abbreviations follow the Overleaf naming convention (OR, BDS, ASG, etc.).
+Theme abbreviations follow the Overleaf naming convention (OR, BDS, ASG, etc.). After acceptance, either rename the Mode-A repo (`gh repo rename`) and flip visibility to public, or create a fresh Mode-B repo and copy content over.
+
+Mode A is the default for any pre-acceptance submission. Mode B applies after camera-ready.
 
 ## What Goes In `github-repo/`
 
@@ -57,6 +74,10 @@ Theme abbreviations follow the Overleaf naming convention (OR, BDS, ASG, etc.).
 
 ## Setup (during init or at release time)
 
+**For Mode A (anonymous artifact, double-blind submission):** prefer `/anonymous-artifact <slug>` — it scaffolds, sanitizes, pushes, submits to anonymous.4open.science, and writes back to vault + paper + atlas in one pass. Do not run the manual setup below for Mode A; it skips the sanitization gates.
+
+**For Mode B (post-acceptance public release):** the manual setup below is fine. Take care to follow the inclusion/exclusion table above.
+
 ```bash
 # 1. Create the directory
 mkdir -p github-repo
@@ -66,7 +87,7 @@ cd github-repo
 git init
 git branch -m main
 
-# 3. Create GitHub repo and set remote
+# 3. Create GitHub repo and set remote (Mode B naming shown)
 gh repo create "user/paper-{theme}-{slug}" --private --source=. --remote=origin
 
 # 4. Copy public-safe files (example for computational project)
