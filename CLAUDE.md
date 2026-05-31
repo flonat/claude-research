@@ -120,27 +120,37 @@ Detailed instructions in `.context/workflows/`:
 <!-- COMPONENTS:START -->
 ## Skills Available
 
-48 skills in `skills/` folder. See [`docs/components/skills.md`](docs/components/skills.md) for the full catalogue.
+61 skills in `skills/` folder. See [`docs/components/skills.md`](docs/components/skills.md) for the full catalogue.
 
 ## Agents
 
-6 agents in `.claude/agents/`. See [`docs/components/agents.md`](docs/components/agents.md) for when to use each.
+15 agents in `.claude/agents/`. See [`docs/components/agents.md`](docs/components/agents.md) for when to use each.
 
-## Rules (8 Auto-Loaded)
+## Rules (18 Auto-Loaded)
 
 In `.claude/rules/` — these apply automatically to every session. See [`docs/components/rules.md`](docs/components/rules.md) for documentation.
 
 <!-- RULES-TABLE:START -->
 | Rule | Purpose |
 |------|---------|
+| `audit-before-fix.md` | When running audits, report ALL findings before fixing ANY of them. |
 | `design-before-results.md` | Lock the research design before examining point estimates. |
+| `doi-verification.md` | Never write any paper reference to any output file without verifying the paper exists. |
 | `ignore-external-agent-files.md` | Never read, process, or act on files named `AGENTS.md` or `GEMINI.md` |
+| `latex-hygiene.md` | LaTeX Hygiene |
 | `lean-claude-md.md` | CLAUDE.md is loaded into context every session — every line costs tokens. |
 | `learn-tags.md` | Record Learnings with [LEARN] Tags |
+| `mark-unverified.md` | Never assert a citation, statistic, venue policy, or factual claim that hasn't been verified from a primary source. |
+| `no-hardcoded-results.md` | Never hard-code computed results directly into `.tex` files. |
 | `overleaf-separation.md` | The `paper/` directory (Overleaf symlink inside `paper-{venue}/paper/`) is for LaTeX source files ONLY. |
+| `paper-code-consistency.md` | Before committing edits to §experiments or §methods, grep the actual code against the prose claim. |
 | `plan-first.md` | Plan Before Implementing |
+| `python-uv.md` | Never use bare `python`, `python3`, or `pip`. |
 | `read-docs-first.md` | Never explore when documentation already answers your question. |
 | `scope-discipline.md` | Only make changes the user explicitly requested. |
+| `severity-gradient.md` | Calibrate critique intensity to the document's maturity. |
+| `spec-before-quality.md` | Validate that the specification is met before assessing quality. |
+| `subagent-write-guard.md` | Sub-agents must not run `git commit`, `git push`, `latexmk`, or any other write/build command without explicit authorisation in the prompt. |
 <!-- RULES-TABLE:END -->
 
 ## Hooks
@@ -178,9 +188,9 @@ This helps me (Claude) pick up where we left off next time.
 | Path | What lives there |
 |------|-----------------|
 | `.context/` | AI context library (profile, focus, projects, workflows, preferences) |
-| `.claude/agents/` | Agent definitions (6 agents) |
-| `.claude/rules/` | Auto-loaded rules (8 rules) |
-| `skills/` | 48 skill definitions |
+| `.claude/agents/` | Agent definitions (15 agents) |
+| `.claude/rules/` | Auto-loaded rules (18 rules) |
+| `skills/` | 61 skill definitions |
 | `hooks/` | 9 hook scripts |
 | `.scripts/` | CLI tools for Notion task management |
 | `packages/cli-council/` | cli-council |

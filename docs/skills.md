@@ -1,6 +1,6 @@
 # Skills
 
-> 48 reusable workflow definitions available across all projects.
+> 61 reusable workflow definitions available across all projects.
 
 Skills are structured instruction sets (`SKILL.md` files) that turn Claude into a specialised tool for specific tasks — from compiling LaTeX to bootstrapping research projects.
 
@@ -10,13 +10,19 @@ Skills are structured instruction sets (`SKILL.md` files) that turn Claude into 
 |-------|-------------|
 | `audit-paper-book` | Use when you need to detect drift between an existing paper-book companion and a revised version of its source paper, then sync the mechanical pieces (new bib entries, new/changed figures) and report the substantive drift (renamed sections, changed numbers, new theorems, new contributions) for the user to triage. Counterpart to /init-paper-book. Read-only by default; --apply flag opts in to mechanical fixes |
 | `beamer-deck` | Use when you need to create an academic Beamer presentation with original theme and multi-agent review |
+| `bib-coverage` | Use when you need to compare a project .bib against a Paperpile label to find uncited papers or unfiled entries |
+| `bib-filter` | Use when you need to filter a .bib file to only entries actually cited in a .tex project |
+| `bib-parse` | Extract citations from a PDF and generate a validated .bib file. Reads the PDF, identifies all referenced works, constructs BibTeX entries with metadata verification, then runs /bib-validate |
 | `bib-validate` | Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Fix mode auto-adds missing entries to Paperpile |
+| `causal-design` | Use when you need to design or audit an identification strategy for an observational study |
 | `code-archaeology` | Use when you need to review and understand old code, data, or analysis files |
 | `code-review` | Use when you need a quality review of R, Python, or Julia research scripts. Multi-persona orchestrator with parallel specialist reviewers |
 | `consolidate-memory` | Use when you need to prune duplicates and merge overlapping entries in MEMORY.md files |
 | `context-status` | Use when you need to check current context status and session health |
 | `creation-guard` | Use when you need a pre-flight duplicate check before creating new skills or agents |
 | `devils-advocate` | Use when you need to challenge research assumptions or stress-test arguments |
+| `docx` | Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files). Triggers include: any mention of 'Word doc', 'word document', '.docx', or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. Also use when extracting or reorganizing content from .docx files, inserting or replacing images in documents, performing find-and-replace in Word files, working with tracked changes or comments, or converting content into a polished Word document. If the user asks for a 'report', 'memo', 'letter', 'template', or similar deliverable as a Word or .docx file, use this skill. Do NOT use for PDFs, spreadsheets, Google Docs, or general coding tasks unrelated to document generation |
+| `experiment-design` | Use when you need power analysis, pre-analysis plans, QSF parsing, or survey design |
 | `handoff` | Use when you need to pass state to the next session in the current working directory. Writes a handoff.md file that the next session's SessionStart hook will read and delete |
 | `init-paper-book` | Use when you need to scaffold a NEW educational companion book for a LaTeX paper. Reads the paper, drafts 8 substantive chapters into the vault at ~/Research-Vault/books/{slug}/, copies bib + figures, registers the book, and verifies atlas serves it. Source-of-truth is the paper PDF/tex; the book is a reading companion, never a re-statement of new claims. For syncing an existing book to a paper revision, use /audit-paper-book |
 | `init-project` | Bootstrap a new research project. Interview for details, scaffold directory structure, create Overleaf symlink, initialise git, and create project context files |
@@ -28,12 +34,15 @@ Skills are structured instruction sets (`SKILL.md` files) that turn Claude into 
 | `latex` | Use when you need to compile a LaTeX document — includes autonomous error resolution, citation audit, and quality scoring |
 | `latex-autofix` | Use when you need to compile LaTeX with autonomous error resolution and citation audit |
 | `latex-health-check` | Use when you need to compile all LaTeX projects and check cross-project consistency |
+| `latex-scaffold` | Use when you need to convert a Markdown draft into a buildable LaTeX project |
+| `latex-template` | Use when you need to compare a project's LaTeX preamble against the working paper template |
 | `learn` | Extract reusable knowledge from the current session into a persistent skill.\nUse when you discover something non-obvious, create a workaround, or develop\na multi-step workflow that future sessions would benefit from |
 | `lessons-learned` | Use when you need a structured post-mortem after incidents, mistakes, or stuck sessions |
 | `literature` | Use when you need academic literature discovery, synthesis, or bibliography management. Supports standalone searches and end-to-end project pipelines with vault sync and auto-commit |
 | `memory-cleanup` | Use when you need to prune duplicates and merge overlapping entries in MEMORY.md files |
 | `multi-perspective` | Use when you need to explore a research question from multiple independent perspectives |
 | `parse-reviews` | Use when you need to process referee comments from a reviews PDF into tracking files |
+| `pdf` | Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill |
 | `pipeline-manifest` | Use when you need to map scripts to their inputs, outputs, and paper figures/tables |
 | `postmortem` | Use when you need a structured post-mortem after incidents, mistakes, or stuck sessions |
 | `pre-submission-report` | Use when you need all quality checks run before submission, producing a single dated report |
@@ -51,11 +60,15 @@ Skills are structured instruction sets (`SKILL.md` files) that turn Claude into 
 | `split-pdf` | Use when you need to download, split, and deeply read an academic PDF that is NOT in Paperpile (for Paperpile items, prefer paperpile get-pdf-text directly) |
 | `strategic-revision` | Use when you receive referee comments for a paper (R&R, revise-and-resubmit) and need a DAG-validated revision master plan — atomic task extraction, dependency mapping, computational critical-path analysis, execution blocks, venue strategy. Merges /parse-reviews ingestion with Sihvonen's strategic-revision architecture |
 | `sync-notion` | Use when you need to sync the current project's state to the context library and Notion |
+| `synthetic-data` | Use when you need to generate structurally realistic synthetic datasets for pilot testing or power analysis |
 | `system-audit` | Use when you need to run parallel audits across skills, hooks, agents, rules, and conventions |
 | `task-management` | Use when you need help with daily planning, weekly reviews, meeting actions, or vault task queries |
 | `update-focus` | Use when you need to update current-focus.md with a structured session summary |
 | `update-project-doc` | Use when you need to update a project's own CLAUDE.md, README.md, or docs/ to reflect current state |
 | `validate-bib` | Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Read-only in standard mode |
+| `voice-analyzer` | Use when you need to analyze writing samples to create a portable voice profile. Analyze writing samples to create a portable voice profile and style guide. Use when setting up voice-matched AI writing, onboarding to a new project, or refreshing an outdated style guide |
+| `voice-editor` | Use when you need to edit content to match a specific voice profile. Edit auto-generated or draft content to match a voice profile. Use when transforming generic AI output into authentic voice-matched content, or when editing drafts to sound more like you |
+| `xlsx` | Use this skill any time a spreadsheet file is the primary input or output. This means any task where the user wants to: open, read, edit, or fix an existing .xlsx, .xlsm, .csv, or .tsv file (e.g., adding columns, computing formulas, formatting, charting, cleaning messy data); create a new spreadsheet from scratch or from other data sources; or convert between tabular file formats. Trigger especially when the user references a spreadsheet file by name or path — even casually (like \"the xlsx in my downloads\") — and wants something done to it or produced from it. Also trigger for cleaning or restructuring messy tabular data files (malformed rows, misplaced headers, junk data) into proper spreadsheets. The deliverable must be a spreadsheet file. Do NOT trigger when the primary deliverable is a Word document, HTML report, standalone Python script, database pipeline, or Google Sheets API integration, even if tabular data is involved |
 
 ## Using Skills
 
