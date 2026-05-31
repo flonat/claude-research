@@ -4,7 +4,7 @@
 > Last updated: 10 March 2026
 > Sources: OpenAlex, Google Scholar profiles, CABS AJG 2024, CORE ICORE 2026
 
-## [Supervisor] [Supervisor]
+## a co-author
 
 | Venue | CABS | WBS 60 | FT 50 | Type |
 |-------|------|--------|-------|------|

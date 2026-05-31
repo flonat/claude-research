@@ -129,14 +129,14 @@ Tell the user what was saved and where:
 
 ## Examples
 
-**User:** "Remember that my supervisor is [Supervisor] [Supervisor], he specialises in multi-objective optimisation"
+**User:** "Remember that my supervisor is a co-author, he specialises in multi-objective optimisation"
 
 **Action:**
 1. Read `.context/people/supervisors.md`
 2. Find or create the Supervisor section
-3. Update with: Name: [Supervisor] [Supervisor], Focus: Multi-objective optimisation
+3. Update with: Name: a co-author, Focus: Multi-objective optimisation
 4. Save file
-5. Respond: "Saved to `.context/people/supervisors.md`: Added [Supervisor] [Supervisor] as your supervisor (multi-objective optimisation)"
+5. Respond: "Saved to `.context/people/supervisors.md`: Added a co-author as your supervisor (multi-objective optimisation)"
 
 ---
 

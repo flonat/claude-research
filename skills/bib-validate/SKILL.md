@@ -27,7 +27,7 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 |---|---|
 | `/bib-validate` | Standard: cross-reference \cite{} ↔ .bib, library check, preprint staleness |
 | `/bib-validate --verify-doi` | **Adds DOI resolution**: each `@article`/`@inproceedings` entry gets its DOI checked via `scholarly scholarly-verify-dois`. Bib entries with no DOI or unresolvable DOIs are flagged. Use before submission to catch fabricated/hallucinated entries. |
-| `/bib-validate --fix` | Auto-adds missing entries to Paperpile via `paperpile create-entry` |
+| `/bib-validate --fix` | Auto-fixes resolvable issues in the project `.bib` and stages missing entries as a `paperpile-stage-*.bib` for manual Paperpile import. The Paperpile CLI is read-only — it cannot write to the library, so additions are staged, not auto-inserted. |
 | Combine: `--verify-doi --fix` | Verify, then fix unverified entries by re-fetching from Crossref |
 
 ## When to Use
@@ -248,7 +248,7 @@ For high-stakes submissions. Trigger: "council bib-validate", "thorough bib chec
 
 ## Fix Mode
 
-After producing the validation report, automatically fix resolvable issues (DRIFT → stage as BibTeX for Paperpile import, MISSING → search + add, MIGRATE → auto-add, metadata → correct BibTeX).
+After producing the validation report, automatically fix resolvable issues in the project `.bib` (DRIFT → correct the BibTeX; MISSING → search + add to the `.bib`, then stage for Paperpile import via `paperpile write-bib`; MIGRATE → stage updated entry; metadata → correct BibTeX). Library additions are *staged* as a `paperpile-stage-*.bib` for manual import — the Paperpile CLI is read-only.
 
 Full auto-fix actions, post-fix maintenance, and skip conditions: [`references/fix-mode.md`](references/fix-mode.md)
 

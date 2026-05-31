@@ -147,6 +147,20 @@ Load `skills/shared/research-quality-rubric.md` and score all 8 dimensions (1-5)
 ## Recommendations
 [Prioritized list of what the author should do before resubmission]
 
+## Verification Ledger
+[**Grounded-mode only** — omit this section in default/deep/council mode runs.
+One row per Major+ finding, paired with the tool call(s) that grounded it.
+See `grounded-mode.md` for the full format.]
+
+| Finding | Tier | Claim | Tool | Query / Snippet | Result |
+|---|---|---|---|---|---|
+| M3 | Major | Paper cites Smith 2024 (ref [23]) | WebSearch | "Smith 2024 robust benchmark adaptation" | 0 results — citation may be fabricated; new finding |
+| M8 | Major | Paper claims integral = √π | code_exec (sympy) | `sympy.integrate(sp.exp(-x**2), (x, 0, sp.oo))` | √π/2 — off by factor 2; new finding |
+| C1 | Critical | Author code reports MAE = 10.70 pm | Bash | `python code/analysis/eval.py | grep MAE` | 10.70 pm — confirmed |
+| M14 | Major | Stackelberg setup from Tirole 1988 | budget-exhausted | — | not verified — downgraded to Minor |
+
+**Verification summary**: X / Y Major+ findings verified; Z failed (flagged as new findings); W budget-exhausted (downgraded); V inconclusive.
+
 =================================================================
                       END OF REFEREE REPORT
 =================================================================

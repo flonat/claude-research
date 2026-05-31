@@ -188,7 +188,16 @@ Before writing, show a summary:
 
 2. Mirror local → shared for each location:
    - **MEMORY.md and MEMORY-ARCHIVE.md:** force-copy from local to shared (overwrites, bypasses append-merge)
-   - **Individual entry files:** copy any local file that's newer; delete any shared file that no longer exists locally
+   - **Deletions:** delete from shared **only the entries this cleanup explicitly removed** (the user-confirmed removal set from Phase 3). Track those filenames as you go.
+   - **Reconcile UP:** any entry present in shared but NOT in local, and NOT in the removal set, is a legit entry this machine never pulled (shared aggregates across machines/sessions). **Pull it into local + flag it for indexing — never delete it.**
+   - **Mirror entry files:** copy any local entry file that's newer/missing into shared.
+
+> ⚠️ **Do NOT infer deletion from a local/shared set difference.** The naive
+> `[ ! -f local/$name ] && rm shared/$name` is a data-loss bug: shared is a
+> *union* across machines, so a shared-only file is usually a real entry local
+> is missing, not something to delete. Real incident 2026-05-31: that loop
+> silently deleted a legit `reference_hermes_vps.md` (created in another
+> session) before it was caught in git. Delete only what Phase 3 explicitly removed.
 
 3. Commit the shared-copy changes to the Task Management repo with a message explaining it's a cleanup propagation (so the log is clear about why entries vanished).
 
@@ -198,25 +207,39 @@ Before writing, show a summary:
 local_dir=~/.claude/projects/-Users-user-Task-Management/memory
 shared_dir="$TM/.context/auto-memory/task-management"
 
-# Mirror MEMORY.md and MEMORY-ARCHIVE.md (force overwrite, not append-merge)
+# REMOVED = the entry files THIS cleanup deleted (user-confirmed in Phase 3).
+# ONLY these may be deleted from shared. Edit per run.
+REMOVED=(feedback_notion_rest_api.md feedback_dropbox_path_change.md)   # example
+
+# Force-copy the indices (overwrite, bypasses append-merge)
 cp "$local_dir/MEMORY.md" "$shared_dir/MEMORY.md"
 [ -f "$local_dir/MEMORY-ARCHIVE.md" ] && cp "$local_dir/MEMORY-ARCHIVE.md" "$shared_dir/MEMORY-ARCHIVE.md"
 
-# Delete any shared entry files that no longer exist locally
+# 1. Delete from shared ONLY the explicitly-removed entries
+for name in "${REMOVED[@]}"; do rm -f "$shared_dir/$name"; done
+
+# 2. Reconcile UP: a shared-only entry (not in REMOVED) is a legit entry this
+#    machine is missing — pull it into local + flag it, never delete.
 for f in "$shared_dir"/*.md; do
   name=$(basename "$f")
-  [ "$name" = "MEMORY.md" ] || [ "$name" = "MEMORY-ARCHIVE.md" ] && continue
-  [ ! -f "$local_dir/$name" ] && rm "$f"
+  case "$name" in MEMORY.md|MEMORY-ARCHIVE.md) continue;; esac
+  if [ ! -f "$local_dir/$name" ]; then
+    cp "$f" "$local_dir/$name"
+    echo "PULLED shared-only entry into local — verify + add to MEMORY.md index: $name"
+  fi
 done
 
-# Copy any locally-newer entry files
+# 3. Mirror local → shared (copy locally-newer/missing entry files)
 for f in "$local_dir"/*.md; do
   name=$(basename "$f")
-  [ "$name" = "MEMORY.md" ] || [ "$name" = "MEMORY-ARCHIVE.md" ] && continue
+  case "$name" in MEMORY.md|MEMORY-ARCHIVE.md) continue;; esac
   if [ ! -f "$shared_dir/$name" ] || [ "$f" -nt "$shared_dir/$name" ]; then
     cp "$f" "$shared_dir/$name"
   fi
 done
+
+# After pulling any shared-only entries, add their index lines to local
+# MEMORY.md, then re-copy local MEMORY.md → shared so both indices match.
 
 # Commit
 cd "$TM" && git add .context/auto-memory/task-management/ && git commit -m "memory: propagate cleanup to shared auto-memory"

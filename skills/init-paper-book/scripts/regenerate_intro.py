@@ -59,15 +59,15 @@ PRESERVE_MARKER = "<!-- preserve-below: hand-written content survives regenerati
 # Add a new entry whenever a new book is scaffolded, especially if any
 # co-author sits at a different institution from the lead.
 AUTHORS: dict[str, str] = {
-    "adversarial-benchmark-detection":       "the user A. D. Burnat, Brittany I. [Collaborator] (Bath)",
-    "audit-blindspots":                      "the user A. D. Burnat, Brittany I. [Collaborator] (Bath)",
-    "audit-gaming-benchmark":                "the user A. D. Burnat, Brittany I. [Collaborator] (Bath)",
-    "cost-aware-simulation":                 "the user A. D. Burnat (Warwick Business School)",
-    "formal-verification-metric-robustness": "the user A. D. Burnat, Brittany I. [Collaborator] (Bath)",
-    "indifference-adjustments":              "Wolfgang Haidinger (Vienna, in memoriam), the user A. D. Burnat (Warwick Business School), [Supervisor] [Supervisor] (Warwick Business School), Walter J. Gutjahr (University of Vienna)",
-    "quiver-ea":                             "the user A. D. Burnat (Warwick Business School)",
-    "robust-evaluation-design":              "the user A. D. Burnat, Brittany I. [Collaborator] (Bath)",
-    "strategic-dp-auditing":                 "the user A. D. Burnat, Brittany I. [Collaborator] (Bath)",
+    "adversarial-benchmark-detection":       "the user, a co-author ([University])",
+    "audit-blindspots":                      "the user, a co-author ([University])",
+    "audit-gaming-benchmark":                "the user, a co-author ([University])",
+    "cost-aware-simulation":                 "the user ([University])",
+    "formal-verification-metric-robustness": "the user, a co-author ([University])",
+    "indifference-adjustments":              "a co-author (in memoriam), the user ([University]), a co-author ([University]), a co-author ([University])",
+    "quiver-ea":                             "the user ([University])",
+    "robust-evaluation-design":              "the user, a co-author ([University])",
+    "strategic-dp-auditing":                 "the user, a co-author ([University])",
 }
 
 # Explicit Source-field suppression (e.g. when a paper has a self-hosted
@@ -140,7 +140,7 @@ def _default_authors(meta: dict) -> str:
     correct for single-institution papers, possibly wrong for multi."""
     institution = _clean_wikilinks(str(meta.get("institution") or "")).strip()
     co_authors = [_clean_wikilinks(str(a)) for a in (meta.get("co_authors") or [])]
-    names = ["the user A. D. Burnat"] + co_authors
+    names = ["the user"] + co_authors
     line = ", ".join(names)
     return f"{line} ({institution})" if institution else line
 

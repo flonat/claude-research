@@ -1,7 +1,8 @@
 # System Audit Sub-Agent Prompts
 
-> Full prompt templates for the 6 parallel sub-agents dispatched in Phase 1.
+> Full prompt templates for the 3 parallel judgment sub-agents (SA2, SA3, SA6) dispatched in Phase 2.
 > Referenced from `SKILL.md` — do not edit prompts here without updating the parent.
+> SA1 (Inventory), SA4 (Documentation Freshness), SA5 (Ecosystem Health), and SA7 (Friends Repo Health) were retired 2026-05-23 — their checks are now deterministic and live in `.scripts/system_audit_facts.py`.
 
 ## Shared Context (prepend to all prompts)
 
@@ -21,35 +22,9 @@ Research project categories (subdirectories of the root above):
 Each category contains individual project directories.
 ```
 
-## Sub-Agent 1: Inventory Auditor
+## (Removed) Sub-Agent 1: Inventory Auditor
 
-**Prompt:**
-```
-Audit the Task Management system inventory. Check:
-
-1. **Skill count:** Count directories in skills/ that contain a SKILL.md (exclude .DS_Store, shared/). Compare against documented count in CLAUDE.md, README.md, docs/system.md, docs/components/skills.md.
-2. **Hook count:** Count .sh files in hooks/ (exclude .DS_Store). Compare against documented count in CLAUDE.md, README.md, docs/system.md, docs/components/hooks.md.
-3. **Agent count:** Count .md files in .claude/agents/. Compare against documented count.
-4. **Rule count:** Count .md files in .claude/rules/. Compare against documented count.
-5. **Symlink health:** Verify these symlinks resolve correctly:
-   - ~/.claude/skills/ → Task Management/skills/
-   - ~/.claude/agents/ → Task Management/.claude/agents/
-   - ~/.claude/rules/ → Task Management/.claude/rules/
-   - ~/.claude/hooks/ → Task Management/hooks/
-   - ~/.claude/settings.json → Task Management/.claude/settings.json
-   - ~/.claude/CLAUDE.md → Task Management/GLOBAL-CLAUDE.md
-   (Note: `statusline-command.sh` is no longer expected at ~/.claude/ — settings.json `statusLine.command` now invokes the `claude-hud` plugin directly. Do not flag its absence.)
-6. **MCP server tool count:** The MCP server in packages/mcp-desktop/server.py registers tools as `skill-<name>` and `agent-<name>`. Count the cached skills and agents it discovers (read the discovery functions in server.py). Compare against actual skill/agent counts.
-7. **Undocumented items:** Any skills/hooks/agents/rules that exist on disk but aren't listed in their respective docs file (docs/components/skills.md, docs/components/hooks.md, docs/components/agents.md, docs/components/rules.md).
-8. **MCP server alignment:** Compare MCP servers between Claude Code (.mcp.json in project root) and Claude Desktop (~/Library/Application Support/Claude/claude_desktop_config.json). Check:
-   - Servers present in both configs use the same name for the same service
-   - Servers that should be in both are not missing from either (bibliography, context7)
-   - Desktop-only servers (filesystem, skills-server) are documented
-   - No stale/removed servers remain in either config
-   - Report a side-by-side table: Server | Code | Desktop | Status
-
-Return findings as markdown with sections for each check, using checkmarks for pass and warnings for mismatches.
-```
+Inventory checks (counts, symlinks, MCP alignment) are now handled deterministically by `.scripts/system_audit_facts.py inventory`. See SKILL.md Phase 1 and the rationale in the architecture note.
 
 ## Sub-Agent 2: Bibliography & Project Hygiene
 
@@ -100,116 +75,15 @@ Project | Category | LaTeX/out | Overleaf sep. | Python env | CLAUDE.md | Git
 Only scan top-level project directories — don't recurse deeply into subdirectories.
 ```
 
-## Sub-Agent 4: Documentation Freshness
+## (Removed) Sub-Agent 4: Documentation Freshness
 
-**Prompt:**
-```
-Check documentation freshness in the Task Management system at:
-$TM/
+Documentation checks (stale counts, broken markdown links, `.context/` mtime freshness, log/plan staleness) are now handled deterministically by `.scripts/system_audit_facts.py docs`. The script resolves links against each source file's directory (fixing the false-positive class where the previous sub-agent used the wrong CWD). See SKILL.md Phase 1.
 
-Audit:
+## (Removed) Sub-Agent 5: Ecosystem Health
 
-1. **Stale counts in docs:** Check these files for numeric claims about skills, hooks, agents, rules, and compare against actual counts on disk:
-   - CLAUDE.md: skill count, hook count, agent count, rule count
-   - README.md: same counts
-   - docs/system.md: same counts, file tree accuracy
-   - docs/components/skills.md: total skill count, category counts, skill catalogue completeness
+Ecosystem checks (MCP server alignment between Code/Desktop configs, orphan tool refs, CLI tool presence) are now handled deterministically by `.scripts/system_audit_facts.py ecosystem`. The deterministic version reads the canonical `.mcp.json` + Claude Desktop config and emits aligned tables rather than re-parsing them per-run in a sub-agent. See SKILL.md Phase 1.
 
-2. **Broken internal links:** Check markdown links in CLAUDE.md, README.md, docs/system.md, docs/components/skills.md, docs/components/hooks.md, docs/components/agents.md, docs/components/rules.md — do the referenced files actually exist?
-
-3. **Outdated statuses in .context/:**
-   - current-focus.md: when was it last modified? (check file stat or git log)
-   - projects/_index.md: compare project list against actual directories in the research projects root. Any projects on disk but missing from the index? Any entries in the index for projects that don't exist?
-
-4. **Old session logs:** What's the most recent file in log/? How many logs exist? Any very old logs (>90 days) that could be archived?
-
-5. **Plan staleness:** Any plans in log/plans/ more than 30 days old that reference incomplete work?
-
-6. **GLOBAL-CLAUDE.md vs CLAUDE.md consistency:** Check that GLOBAL-CLAUDE.md (the slim pointer file) doesn't duplicate detailed content from CLAUDE.md. It should contain only identity, pointers, and global policies.
-
-Return as markdown with severity levels: OK, STALE, BROKEN.
-```
-
-## Sub-Agent 5: Ecosystem Health
-
-**Prompt:**
-```
-Check ecosystem health for the Task Management system at:
-$TM/
-
-Run these 4 checks:
-
-1. **MCP server health:** Find all mcp__*__ tool references in skills and agents:
-   grep -rohn "mcp__[A-Za-z0-9_-]*__[A-Za-z0-9_]*" skills/ .claude/agents/ --include="*.md" | sort -u
-
-   Extract server names (the part between mcp__ and the second __).
-
-   Then get configured MCP servers from both configs using jq:
-   cat .mcp.json | jq -r '.mcpServers // {} | keys[]' 2>/dev/null | sort -u
-   cat ~/Library/Application\ Support/Claude/claude_desktop_config.json | jq -r '.mcpServers // {} | keys[]' 2>/dev/null | sort -u
-
-   Also check for disabled servers:
-   cat .mcp.json | jq -r '.disabledMcpServers // [] | .[]' 2>/dev/null
-
-   Flag: CRITICAL if a referenced server is not configured anywhere (phantom tool).
-   Flag: WARNING if a server is configured but also in disabledMcpServers.
-   Known aliases: "claude_ai_vault" is a Claude.ai managed integration (not in local config — OK).
-   Known servers: bibliography, context7, claude_ai_vault, claude_ai_Gamma.
-
-2. **Staleness detection:** Find components not modified in 90+ days across ALL types:
-   find skills/ -name "SKILL.md" -not -path "*/shared/*" -mtime +90 -type f
-   find .claude/agents/ -name "*.md" -mtime +90 -type f
-   find hooks/ \( -name "*.sh" -o -name "*.py" \) -mtime +90 -type f
-   find .claude/rules/ -name "*.md" -mtime +90 -type f
-   find .scripts/ \( -name "*.py" -o -name "*.sh" \) -mtime +90 -type f
-
-   For each stale file, check if it's still referenced by other active components.
-   Flag: WARNING if stale AND referenced (may be outdated).
-   Flag: INFO if stale AND not referenced (candidate for archive).
-   Flag: OK if still within 90 days.
-
-3. **Orphan detection:** Find components with zero external references across ALL types.
-   For each skill directory in skills/:
-   - Read first 10 lines to check for "user-invocable: true" — if present, skip (exempt)
-   - Search for the skill name across all other skills, agents, hooks, rules, CLAUDE.md, and docs/
-   - If zero references found: flag as INFO (dead code, candidate for archive)
-   For each hook in hooks/:
-   - Check ALL of these wiring paths (not just .claude/settings.json):
-     1. Registered in `.claude/settings.json` (Claude Code event hook)
-     2. Invoked by another hook or by `scripts/daily-maintenance.sh` / similar launchd-driven script (cron-style hook — `grep -l <hook-filename> hooks/*.sh scripts/*.sh`)
-     3. Wired as `.git/hooks/pre-commit` or other git hook
-     4. Sourced as a library by another hook (search for `source.*<hook>` or `\. .*<hook>`)
-     5. Delegated to from a wrapper hook (e.g., `skill-observer.sh` shells out to `skill-observer.py`)
-   - Search for the hook filename across skills, agents, docs/components/hooks.md
-   - Flag as INFO only if NONE of the above paths reach it AND it's not documented as a manual utility
-   For each agent in .claude/agents/:
-   - Search for the agent name across skills, CLAUDE.md, docs/
-   - If zero references found: flag as INFO
-   For each rule in .claude/rules/:
-   - Search for the rule filename across CLAUDE.md, docs/, skills/
-   - Rules are auto-loaded so they're never truly orphaned, but flag if undocumented in docs/components/rules.md
-   For each script in .scripts/:
-   - Search for the script name across skills, hooks, CLAUDE.md, docs/
-   - If zero references found: flag as INFO
-
-4. **CLI tool availability:** Verify these tools are installed and accessible:
-   - gh (GitHub CLI)
-   - latexmk (LaTeX compilation)
-   - uv (Python package manager)
-   - jq (JSON processor)
-   - gemini (Gemini CLI for council mode)
-   - gemini (Gemini CLI for audits and council mode)
-   - node (Node.js for MCP servers)
-   For each: run "which [tool]" and "[tool] --version" (or equivalent).
-   Flag: CRITICAL if a tool referenced in CLAUDE.md as required is not installed.
-   Flag: WARNING if installed but fails to respond.
-   Flag: OK if installed and responds.
-
-Return findings as markdown with a summary table:
-| Check | OK | Warning | Critical |
-Then list each finding with severity, file path, and brief description.
-Keep output under 500 words — write details to /tmp/system-audit/sa-5.md if needed.
-```
+Staleness/orphan detection (90-day mtime sweep across skills/hooks/agents/rules/scripts) is a known-judgment domain — currently absorbed into SA6 Skill Quality. If a separate orphan-detection script becomes worthwhile, add it as another section in the facts script rather than reviving this sub-agent.
 
 ## Sub-Agent 6: Skill Quality & Cross-Component Overlap
 
@@ -266,34 +140,6 @@ Only flag genuine overlaps — a rule mentioning "use uv" and a hook enforcing "
 Keep total output under 500 words. Write details to /tmp/system-audit/sa-6.md if needed.
 ```
 
-## Sub-Agent 7: Friends Repo Health
+## (Removed) Sub-Agent 7: Friends Repo Health
 
-**Prompt:**
-```
-Quick health check of the friends starter kit at:
-$TM/public/friends-repo/
-
-This is a downstream copy of skills/rules for Santiago. Check:
-
-1. **Skill count:** Count directories in friends-repo/skills/ that contain a SKILL.md. Compare against the count stated in README.md and ADAPTATION-NEEDED.md.
-
-2. **Rule count:** Count .md files in friends-repo/rules/. Compare against the count stated in README.md.
-
-3. **Skill freshness (sample):** Pick 5 random skills from friends-repo/skills/ and diff their SKILL.md against the upstream version in $TM/skills/. Flag any with substantive upstream changes not reflected in friends-repo (ignoring anonymisation differences like "the user" → "the user").
-
-4. **Rule freshness:** For each rule in friends-repo/rules/, compare against the upstream version in $TM/.claude/rules/. Flag substantive differences (ignoring anonymisation).
-
-5. **Anonymisation spot-check:** Grep all .md files in friends-repo/ for leaked personal details:
-   - "the user" (case-sensitive, excluding "Made by the user" in README.md)
-   - "$HOME" (macOS path)
-   - "[University 1]", "[University 2]", "[University 3]", "[Teaching]" (institution names)
-   Exclude GitHub URLs containing "user" (intentional).
-
-6. **README accuracy:** Does the skill count in README.md match the actual count? Does the rule count match?
-
-7. **Install script:** Does install.sh exist and contain no macOS-specific commands (sed -i '', open, brew without apt)?
-
-Return a summary table:
-| Check | Status | Notes |
-Then list any issues found. Keep output under 300 words.
-```
+Friends-repo checks (skill/rule counts vs README, sampled freshness diff, anonymisation grep, install script presence) are now handled deterministically by `.scripts/system_audit_facts.py friends`. Anonymisation grep is exact-string matching; freshness is a file-diff sample — both are mechanical and don't benefit from LLM judgment. See SKILL.md Phase 1.

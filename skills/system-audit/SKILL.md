@@ -7,7 +7,9 @@ argument-hint: "[no arguments — runs full sweep]"
 
 # Maintenance Sweep
 
-> System-wide health check using agnix lint + 7 parallel sub-agents. Produces a consolidated report at `log/audits/system-audit-YYYY-MM-DD.md`. **Report-only — never modifies any files.**
+> System-wide health check using agnix lint + a deterministic Python facts script + 3 parallel judgment sub-agents. Produces a consolidated report at `log/audits/system-audit-YYYY-MM-DD.md`. **Report-only — never modifies any files.**
+>
+> **Architecture note (2026-05-23):** Sub-agents previously handled counts, broken-link detection, ecosystem inventory, and friends-repo file checks (SA1/SA4/SA5/SA7). They were unreliable — rolling their own counters, resolving links against the wrong CWD, recursing into the wrong directories — and produced false-positive findings that wasted triage cycles. Those four are now replaced by `.scripts/system_audit_facts.py`, which uses `count_inventory.py` as ground truth and resolves links against the source file's directory. The 3 remaining sub-agents (SA2 Bibliography, SA3 Conventions, SA6 Skill Quality) handle genuinely judgment-heavy work that can't be reduced to a script.
 
 ## When to Use
 
@@ -18,11 +20,12 @@ argument-hint: "[no arguments — runs full sweep]"
 
 ## Overview
 
-1. **Lint** — run `npx agnix .` to validate skills, hooks, agents, and CLAUDE.md
-2. **Dispatch** — launch 7 sub-agents in parallel via the Task tool
-3. **Collect** — gather each sub-agent's findings
-4. **Consolidate** — merge lint results + sub-agent findings into a single timestamped report
-5. **Present** — show key findings to the user
+1. **Lint** — run `npx agnix .` + skill-numbering lint + review-agent logger-gate lint
+2. **Facts** — run `.scripts/system_audit_facts.py all --json` (deterministic: counts, docs, ecosystem, friends repo)
+3. **Dispatch** — launch 3 judgment sub-agents in parallel via the Task tool (SA2/SA3/SA6)
+4. **Collect** — gather facts JSON + sub-agent findings
+5. **Consolidate** — merge into a single timestamped report
+6. **Present** — show key findings to the user
 
 **Python:** Always use `uv run python` or `uv pip install`. Never bare `python`, `python3`, `pip`, or `pip3`. Include this in sub-agent prompts.
 
@@ -31,9 +34,9 @@ argument-hint: "[no arguments — runs full sweep]"
 Per the global `--autonomous` / `-y` convention in `~/.claude/rules/phased-work.md` § "Autonomy flag convention". Invoke as `/system-audit --autonomous` (or `-y`). When set:
 
 - **No inter-phase pauses** — Lint → Dispatch → Collect → Consolidate → Present chain end-to-end.
-- **No `AskUserQuestion` mid-run** — sub-agent count defaults to 7 (the standard fan-out), all sub-agents launch in parallel without confirmation.
+- **No `AskUserQuestion` mid-run** — sub-agent count defaults to 3 (SA2/SA3/SA6), all sub-agents launch in parallel without confirmation.
 - **No interim "review and continue" pauses** between dispatch and consolidation.
-- **Sub-agent forbid-list still applied** — all 7 sub-agents are read-only (no edits to skills/hooks/agents/rules during the audit).
+- **Sub-agent forbid-list still applied** — all 3 sub-agents are read-only (no edits to skills/hooks/agents/rules during the audit).
 - **Report-only invariant preserved** — `--autonomous` does NOT change the skill's read-only nature; it only suppresses confirmation prompts. No fixes are ever applied.
 - **Single end-of-run report** at `log/audits/system-audit-YYYY-MM-DD.md` is the only mandatory user-facing output.
 
@@ -88,13 +91,40 @@ Reference pattern: see `paper-critic.md` line ~432 (already patched).
 
 ---
 
-## Phase 1: Dispatch Sub-Agents
+## Phase 1: Deterministic Facts
 
-Launch all 7 in a single message using parallel Task tool calls. Each sub-agent is `subagent_type: Explore`.
+Run the deterministic facts script in the main context. This replaces the four count/link/inventory sub-agents that were unreliable.
+
+```bash
+uv run python .scripts/system_audit_facts.py all --json > /tmp/system-audit/facts.json
+```
+
+What this covers (all deterministic — no LLM judgment needed):
+
+| Section | Replaces | What it checks |
+|---------|----------|---------------|
+| `inventory` | SA1 Inventory Auditor | Skill/hook/agent/rule counts vs `count_inventory.py` ground truth, symlinks, file-extension sanity |
+| `docs` | SA4 Documentation Freshness | Stale counts in CLAUDE.md/README/docs, broken markdown links (resolved against source-file dir, not CWD), `.context/` mtime freshness |
+| `ecosystem` | SA5 Ecosystem Health | MCP server registry alignment, orphan tool references, CLI tool presence |
+| `friends` | SA7 Friends Repo Health | Friends-repo skill/rule freshness vs upstream, anonymisation hygiene, install script presence |
+
+**Why this is deterministic-only, not a sub-agent:**
+
+- Counts have a single source of truth (`count_inventory.py`) — re-rolling them in an LLM produces drift.
+- Broken-link detection requires resolving relative paths against the source file's directory; sub-agents have variable CWD and produce false positives.
+- Friends-repo file checks are presence/diff operations, not judgment.
+
+If the script fails (exit code != 0), capture stderr in the report under a **Facts Script Failure** section and continue with sub-agent dispatch — the audit degrades gracefully but is no longer authoritative on the deterministic sections.
+
+---
+
+## Phase 2: Dispatch Judgment Sub-Agents
+
+Launch 3 in a single message using parallel Task tool calls. Each sub-agent is `subagent_type: Explore`.
 
 **Context overflow prevention:** Instruct each sub-agent to keep its returned output concise — summary tables and key findings only (under 500 words). If detailed findings are large, the sub-agent should write them to a temp file (e.g., `/tmp/system-audit/sa-N.md`) and return only the file path + summary.
 
-All sub-agents receive shared context (Task Management root, research projects root, category directories). Full shared context block and all 6 sub-agent prompt templates:
+All sub-agents receive shared context (Task Management root, research projects root, category directories). Full shared context block and the 3 sub-agent prompt templates:
 
 **[references/sub-agent-prompts.md](references/sub-agent-prompts.md)**
 
@@ -102,19 +132,17 @@ Sub-agents at a glance:
 
 | # | Name | What it checks |
 |---|------|---------------|
-| 1 | Inventory Auditor | Skill/hook/agent/rule counts, symlinks, MCP alignment |
 | 2 | Bibliography & Project Hygiene | .bib files, naming, MEMORY.md presence |
 | 3 | Convention Compliance | LaTeX out/, Overleaf separation, Python env, git health |
-| 4 | Documentation Freshness | Stale counts, broken links, .context/ freshness |
-| 5 | Ecosystem Health | MCP server refs, staleness, orphans, CLI tools |
 | 6 | Skill Quality & Overlap | Bloat, staleness, cross-component overlap |
-| 7 | Friends Repo Health | Skill/rule freshness vs upstream, anonymisation, install script |
+
+Sub-agent numbering retained from the old 7-agent fan-out so prompts and reports stay cross-referenceable. SA1/SA4/SA5/SA7 are now handled by `.scripts/system_audit_facts.py` in Phase 1.
 
 ---
 
-## Phase 2: Collect and Consolidate
+## Phase 3: Collect and Consolidate
 
-After all 7 sub-agents return, merge their findings into a single report.
+After the 3 sub-agents return, merge their findings + the Phase 1 facts JSON into a single report.
 
 ### Report Template
 
@@ -125,40 +153,42 @@ Write to `log/audits/system-audit-YYYY-MM-DD.md`:
 
 ## Dashboard
 
-| Area | Status | Issues |
-|------|--------|--------|
-| agnix Lint | <OK/WARN/FAIL> | <count> |
-| Inventory | <OK/WARN/FAIL> | <count> |
-| Bibliography & Projects | <OK/WARN/FAIL> | <count> |
-| Conventions | <OK/WARN/FAIL> | <count> |
-| Documentation | <OK/WARN/FAIL> | <count> |
-| Ecosystem Health | <OK/WARN/FAIL> | <count> |
-| Skill Quality & Overlap | <OK/WARN/FAIL> | <count> |
-| Friends Repo Health | <OK/WARN/FAIL> | <count> |
+| Area | Source | Status | Issues |
+|------|--------|--------|--------|
+| agnix Lint | Phase 0 | <OK/WARN/FAIL> | <count> |
+| Skill-Numbering Lint | Phase 0 | <OK/WARN/FAIL> | <count> |
+| Review-Agent Logger-Gate | Phase 0 | <OK/WARN/FAIL> | <count> |
+| Inventory | Phase 1 (facts) | <OK/WARN/FAIL> | <count> |
+| Documentation Freshness | Phase 1 (facts) | <OK/WARN/FAIL> | <count> |
+| Ecosystem Health | Phase 1 (facts) | <OK/WARN/FAIL> | <count> |
+| Friends Repo Health | Phase 1 (facts) | <OK/WARN/FAIL> | <count> |
+| Bibliography & Projects | SA2 | <OK/WARN/FAIL> | <count> |
+| Conventions | SA3 | <OK/WARN/FAIL> | <count> |
+| Skill Quality & Overlap | SA6 | <OK/WARN/FAIL> | <count> |
 
 ## agnix Lint
 <Phase 0 results: error count, warning count, any specific errors>
 
 ## Inventory Audit
-<Sub-agent 1 findings>
-
-## Bibliography & Project Hygiene
-<Sub-agent 2 findings>
-
-## Convention Compliance
-<Sub-agent 3 findings>
+<Phase 1 facts.json `inventory` section>
 
 ## Documentation Freshness
-<Sub-agent 4 findings>
+<Phase 1 facts.json `docs` section>
 
 ## Ecosystem Health
-<Sub-agent 5 findings>
-
-## Skill Quality & Cross-Component Overlap
-<Sub-agent 6 findings>
+<Phase 1 facts.json `ecosystem` section>
 
 ## Friends Repo Health
-<Sub-agent 7 findings>
+<Phase 1 facts.json `friends` section>
+
+## Bibliography & Project Hygiene
+<SA2 findings>
+
+## Convention Compliance
+<SA3 findings>
+
+## Skill Quality & Cross-Component Overlap
+<SA6 findings>
 
 ## Recommended Actions
 <Prioritised list of things to fix, grouped by effort level>
@@ -175,7 +205,7 @@ Write to `log/audits/system-audit-YYYY-MM-DD.md`:
 
 ---
 
-## Phase 3: Present
+## Phase 4: Present
 
 Show the user:
 1. The dashboard table

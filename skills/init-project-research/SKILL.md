@@ -131,6 +131,8 @@ If the directory doesn't exist, create it and proceed.
 
 **Venues:** seed `docs/venues/<venue-slug>/submission/`; conference venues also get a submission checklist.
 
+**Preprint targets** (arXiv / SSRN / OSF / institutional repos): seed the atlas topic's `outputs[*]` with `venue: arXiv` (or equivalent), `format: Preprint`, `status: Planned`, plus an optional internal target date. **Do NOT seed a vault submission file for the preprint target** — preprint posts are not venue submissions per `rules/preprint-vs-submission.md`. Vault submissions are reserved for events with reviewer pipelines (journals, conferences). A project with only a preprint target gets zero vault submission files at init.
+
 **Python tooling:** always `uv` — never bare `pip`, `python`, or `requirements.txt`.
 
 Full scaffold tree, hook details, .gitkeep placement, implementation commands: [`references/scaffold-tree.md`](references/scaffold-tree.md).

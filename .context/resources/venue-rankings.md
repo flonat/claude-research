@@ -19,7 +19,7 @@ Static CSV data for programmatic lookups:
 | File | Contents | Records |
 |------|----------|---------|
 | `.context/resources/venue-rankings/abs_ajg_2024.csv` | CABS AJG 2024 journal rankings | 1,822 journals |
-| `.context/resources/venue-rankings/wbs60.csv` | WBS 60 membership list (UK business school), AJG-enriched | 60 journals |
+| `.context/resources/venue-rankings/wbs60.csv` | WBS 60 membership list ([University]), AJG-enriched | 60 journals |
 | `.context/resources/venue-rankings/ft50.csv` | FT 50 membership list (Financial Times), AJG-enriched | 50 journals |
 | `.context/resources/venue-rankings/core_2026.csv` | CORE ICORE 2026 conference rankings (A*–C) | ~800 conferences |
 | `.context/resources/venue-rankings/scimagojr-2025.csv` | Scimago Journal Rank 2025 (SJR score, quartile, 2yr citations/doc, ISSNs) | ~30k journals |

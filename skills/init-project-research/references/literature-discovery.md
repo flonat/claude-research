@@ -3,6 +3,18 @@
 > Referenced from: `init-project-research/SKILL.md` Phase 9
 
 
+## Known failure mode (incident 2026-05-31)
+
+**Sub-agent dispatch for `/literature` and  regularly returns without writing files** because sub-agents launched via the `Agent` tool do not inherit the parent session's Bash permissions, and the underlying skills shell out to paperpile / scholarly / refpile / scout CLIs. One failure mode is honest ("I need Bash permission"); a worse one is **hallucinated success** — the sub-agent claims files exist that were never written. See `log/incidents/2026-05-31_subagent-bash-failure-and-hallucinated-success.md`.
+
+**Default execution model:** run `/literature` and  **in the main session context**, not as sub-agents. The main session has all the perms the user granted to the project.
+
+If you do dispatch as sub-agents (e.g. for parallelism on a long deep-pull):
+
+1. Apply the failure-mode contract from `rules/subagent-prompt-discipline.md` § Failure-mode contract — the sub-agent prompt MUST require honest failure reporting.
+2. After each sub-agent returns, `ls` every claimed output path. If any file is missing, treat the dispatch as failed and fall back to main-context execution. Do NOT trust the sub-agent's summary.
+3. Time-box at ~5 minutes; if the sub-agent has not produced the expected files by then, fall back.
+
 ## 9a. Literature Review
 
 Launch `/literature` targeting the project's research topic. Uses the working title, abstract, key research questions, and any references from the Atlas topic file as search seeds.

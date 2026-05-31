@@ -125,6 +125,13 @@ SCAN_PATTERNS: list[tuple[re.Pattern, str]] = [
     (re.compile(r"(\d+)\s+hook scripts?\b", re.IGNORECASE), "hooks"),
     # Heading format: ## Hooks (N scripts)
     (re.compile(r"\((\d+)\s+scripts?\)"), "hooks"),
+    # Heading format: "### Skills (N total)" — preceded by ### + "Skills"
+    # Disambiguated by the immediately-preceding "Skills"/"Agents"/etc. token,
+    # not the parenthesised number alone (which is too generic).
+    (re.compile(r"Skills?\s*\((\d+)\s+total\)", re.IGNORECASE), "skills"),
+    (re.compile(r"Agents?\s*\((\d+)\s+total\)", re.IGNORECASE), "agents"),
+    (re.compile(r"Rules?\s*\((\d+)\s+total\)", re.IGNORECASE), "rules"),
+    (re.compile(r"Hooks?\s*\((\d+)\s+total\)", re.IGNORECASE), "hooks"),
     # LaTeX longtable rows: "<Keyword> & \filepath{...} & <count> \\"
     # The Component Manifest in user-manual.tex puts the keyword in the
     # first column and the count in the last, so the standard "<num> <kw>"

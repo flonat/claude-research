@@ -12,6 +12,7 @@
 | `interview-me` | Interactive interview to formalise a research idea into a structured spec |
 | `devils-advocate` | Multi-turn debate to challenge assumptions and stress-test arguments |
 | `multi-perspective` | Parallel agents with distinct disciplinary lenses explore a question |
+| `scout-audit` | Batch novelty checks with venue and idea iteration |
 | `atlas-coherence` | Map portfolio as a network: clusters, bridges, orphans, sequencing |
 | `interdisciplinary-bridge` | Import concepts from adjacent fields to solve open problems |
 | `future-research-agenda` | Generate provocative, fundable future research directions |
