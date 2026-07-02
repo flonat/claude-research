@@ -66,20 +66,13 @@ PRESERVE_MARKER = "<!-- preserve-below: hand-written content survives regenerati
 # Add a new entry whenever a new book is scaffolded, especially if any
 # co-author sits at a different institution from the lead.
 AUTHORS: dict[str, str] = {
-    "adversarial-benchmark-detection":       "the user, a co-author ([University])",
-    "audit-blindspots":                      "the user, a co-author ([University])",
-    "audit-gaming-benchmark":                "the user, a co-author ([University])",
-    "cost-aware-simulation":                 "the user ([University])",
-    "formal-verification-metric-robustness": "the user, a co-author ([University])",
-    "indifference-adjustments":              "a co-author (in memoriam), the user ([University]), a co-author ([University]), a co-author ([University])",
-    "quiver-ea":                             "the user ([University])",
-    "robust-evaluation-design":              "the user, a co-author ([University])",
-    "strategic-dp-auditing":                 "the user, a co-author ([University])",
+    # Map a project slug to a hand-curated author line (example only).
+    "example-project": "First Author, Second Author (Institution)",
 }
 
 # Explicit Source-field suppression (e.g. when a paper has a self-hosted
 # PDF instead of an Overleaf link and we don't want a Source row).
-DROP_SOURCE: set[str] = {"quiver-ea"}
+DROP_SOURCE: set[str] = set()
 
 # Status prefixes that count as terminal (drop the Source/Overleaf row).
 TERMINAL_STATUS_PREFIXES = ("Accepted", "In Press", "Camera-ready", "Published", "Withdrawn")

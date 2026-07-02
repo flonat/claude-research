@@ -42,7 +42,7 @@ def strip_private(text: str) -> str:
 
 
 def find_slug(book_dir: Path) -> str:
-    """Resolve the deploy slug: project directory name (e.g., quiver-ea)."""
+    """Resolve the deploy slug: project directory name (e.g., example-project-i)."""
     # book_dir is paper-<venue>/book/, parent of parent is project dir
     return book_dir.parent.parent.name
 

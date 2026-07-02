@@ -42,5 +42,5 @@ For LLM projects, also add:
 ## Templates and reference implementations
 
 - Templates: `Task Management/templates/slurm/{compute,devel,hmem,gpu,array}.sbatch` — all use `--account=wbs`.
-- Reference projects with working HPC setups: `Projects/[your-project]/hpc/`.
+- Reference projects with working HPC setups: `Projects/NLP/{example-project-a,benchmark-gaming-llm-safety}/hpc/`.
 - Full HPC guide: Task Management `docs/guides/hpc.md` (access via 2FA, SSH multiplex, partition choice, per-project workflow).

@@ -6,7 +6,7 @@ Used by /paper-book Phase 4.4 after a successful deploy to wire the
 `atlas.user.com` topic pages can render it.
 
 Usage:
-    python3 update_atlas_book_url.py --slug quiver-ea --url https://books.user.com/quiver-ea/
+    python3 update_atlas_book_url.py --slug example-project-i --url https://books.user.com/example-project-i/
 """
 
 from __future__ import annotations

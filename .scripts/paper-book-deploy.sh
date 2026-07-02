@@ -9,7 +9,7 @@
 #   paper-book-deploy.sh <book-dir> [public|private|both]
 #
 # Defaults to "both". Examples:
-#   paper-book-deploy.sh /Volumes/SSD/Dropbox/Research/OR/quiver-ea/paper-acm-gecco/book
+#   paper-book-deploy.sh /Volumes/SSD/Dropbox/Research/OR/example-project-i/paper-acm-gecco/book
 #   paper-book-deploy.sh ./book public        # public only
 #   paper-book-deploy.sh ./book private       # private only
 #
