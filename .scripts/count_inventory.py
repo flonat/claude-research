@@ -134,7 +134,7 @@ EXCLUDE_LINE_PATTERNS = [
     re.compile(r"hugo|sant.anna|clo-author", re.IGNORECASE),  # external refs
     re.compile(r"driven by \d+ hooks", re.IGNORECASE),  # agent-memory row: "4 hooks" = agentmem hooks, NOT the global hook count (false-positive guard)
     re.compile(r"^\s*\|.*category", re.IGNORECASE),  # table rows with category subtotals
-    re.compile(r"Research & Writing|Task Management & Code|Publishing & Submission|Utilities", re.IGNORECASE),  # skill category subtotal lines (literal '& Code'; the old '.*Code' greedily matched architecture.md's 'Task Management folder … claude-code-private' and wrongly excluded its count line)
+    re.compile(r"Research & Writing|Task Management & Code|Publishing & Submission|Utilities", re.IGNORECASE),  # skill category subtotal lines (literal '& Code'; an earlier greedy '.*Code' pattern matched an unrelated docs line ending in 'Code' and wrongly excluded its count line)
     # NOTE: shell-comment exclusion (lines starting with '#' inside ``` code
     # fences) is handled in scan() with fence-state tracking — NOT here — so that
     # markdown headers like '### Skills (191 total)' are scanned, not silently
