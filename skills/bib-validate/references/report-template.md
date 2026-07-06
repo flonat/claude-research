@@ -70,10 +70,10 @@
 
 | Action | Key | Result |
 |--------|-----|--------|
-| Staged for import | `doe2021` | `paperpile-stage-YYYY-MM-DD-HHMM.bib` |
+| Staged for import | `\CiteTodo{doe2021}` | `.paperpile-import/doe2021.bib` |
 | Metadata corrected | `smith2020` | Updated year: 2019 → 2020 |
 
-**Post-fix:** Import `paperpile-stage-*.bib` into Paperpile to complete the sync.
+**Post-fix:** Import the `.bib` under `.paperpile-import/` into Paperpile, then drop the minted export back into `.paperpile-import/`; the `\CiteTodo` is swapped to the canonical key and the active `.bib` rebuilt.
 
 ## Limitations
 

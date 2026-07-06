@@ -43,8 +43,15 @@ class CLIBackend(ABC):
         args = self.build_args(prompt, model=model)
         logger.info("Running %s: %s", self.name, " ".join(args[:4]) + "...")
 
-        # Clean environment: unset CLAUDECODE to allow nested claude calls
-        env = {k: v for k, v in os.environ.items() if k != "CLAUDECODE"}
+        # Clean environment:
+        # - CLAUDECODE: allow nested claude calls
+        # - ANTHROPIC_API_KEY: an env-exported key silently routes the claude
+        #   CLI to that API account instead of the Max-subscription OAuth
+        #   (2026-07-02 incident: creditless key -> "Credit balance is too
+        #   low" and the council leg died). Subscription auth is the intended
+        #   path for all subscription-funded backends.
+        _strip = {"CLAUDECODE", "ANTHROPIC_API_KEY"}
+        env = {k: v for k, v in os.environ.items() if k not in _strip}
 
         t0 = perf_counter()
         try:

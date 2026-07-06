@@ -1,6 +1,6 @@
 ---
 name: bib-parse
-description: "Extract citations from a PDF and generate a validated .bib file. Reads the PDF, identifies all referenced works, constructs BibTeX entries with metadata verification, then runs /bib-validate."
+description: "Use when you need to extract citations from a PDF and generate a validated .bib file. Reads the PDF, identifies all referenced works, constructs BibTeX entries with metadata verification, then runs /bib-validate."
 allowed-tools: Read, Glob, Grep, Write, Bash(mkdir*), Bash(ls*), Bash(uv*), WebFetch, WebSearch, Skill(split-pdf), Skill(bib-validate), Bash(paperpile*)
 argument-hint: <path-to-pdf>
 ---
@@ -35,7 +35,7 @@ A `.bib` file, located by context:
 - **PDF inside a research project** (e.g. `articles/`, `paper-*/`, project root) — write to the same directory as the input PDF, named `references.bib` (per project convention). If `references.bib` already exists, ask before overwriting — offer to merge or use a different name (e.g., `extracted-refs.bib`).
 - **Standalone PDF** (ad-hoc extraction with no project home — e.g. an upload in `~/.claude/uploads/`) — write to `~/Research-Vault/parsed-bibs/<slug>.bib`, where `<slug>` describes the source (e.g. `kasberger-algorithmic-cooperation-geb-2026.bib`). This is the standing location for one-off parses (established 2026-06-14). Create the folder if absent.
 
-Any staged Paperpile-import file (`paperpile-stage-YYYY-MM-DD-HHMM.bib`, Phase 4.1) is written next to the output `.bib`.
+Any staged Paperpile-import entry (Phase 4.1) is written into a `.bib` under `.paperpile-import/` next to the output `.bib`.
 
 ---
 
@@ -207,8 +207,8 @@ Follow the filing sequence from [`shared/reference-resolution.md`](../shared/ref
    | 1 | Smith2020-xy | Title... | Smith, J. | 2020 | NEW — staging for import |
    | 2 | Doe2019-ab | Title... | Doe, J. | 2019 | ALREADY IN PAPERPILE (skipped) |
 
-2. **Stage as BibTeX** via `paperpile write-bib` — output: `paperpile-stage-YYYY-MM-DD-HHMM.bib` in the project root.
-3. **Remind user** — "Import the staged `.bib` file into Paperpile to complete the sync."
+2. **Stage under `.paperpile-import/`** — write each new entry's BibTeX into a `.bib` under `.paperpile-import/` (Paperpile CLI is read-only; `write-bib --citekeys` only exports entries already in the library). Mark any draft cite `\CiteTodo{...}` until imported.
+3. **Remind user** — "Import the staged `.bib` under `.paperpile-import/` into Paperpile to complete the sync."
 
 **Graceful degradation:** if the `paperpile` CLI is unavailable, skip this sub-step. The `.bib` file from Phase 3.3 is still the primary output.
 

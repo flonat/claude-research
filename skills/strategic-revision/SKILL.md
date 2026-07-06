@@ -49,8 +49,8 @@ Search for the reviews PDF in this order. Use the first match; if multiple PDFs 
 
 ```
 correspondence/referee-reviews/{venue}-round{n}/
-├── reviews-original.pdf              (copy of input PDF — source NEVER moved)
-├── rebuttal.md                       (empty — for response draft)
+├── {venue}-round{n}-reviews.pdf      (copy of input PDF — source NEVER moved; taxonomy name per rules/submission-file-archive.md, 2026-07-03)
+├── {venue}-round{n}-rebuttal.md      (empty — for response draft)
 ├── reviews/                          (individual reviewer files)
 │   ├── reviewer-1.md
 │   └── ...
@@ -64,9 +64,11 @@ correspondence/referee-reviews/{venue}-round{n}/
     └── revision_dag_analysis.json    (computational output — parallel batches, critical path, bottlenecks)
 ```
 
-**Source PDF preservation:** The original PDF is only ever **copied** to `reviews-original.pdf`. Never move, rename, or delete the source.
+**Source PDF preservation:** The original PDF is only ever **copied** to `{venue}-round{n}-reviews.pdf`. Never move, rename, or delete the source.
 
 **Principle:** `correspondence/` holds exchanges with reviewers. Internal review work goes in `docs/{venue}/internal-reviews/`.
+
+**Submission-history stamp:** ingesting a reviews PDF is a submission event — append a `history:` row (`event: reviews-in`, `round: r{n}`, `files:` pointing at `{venue}-round{n}-reviews.pdf`) to the paper's vault submission entry per `rules/submission-file-archive.md` § history. When the revision is later resubmitted, that resubmission appends its own `response-sent` + `submitted` rows (usually via `/session-close` sync).
 
 **No-overwrite rule:** If outputs already exist, version them (`comment-tracker-v2.md`, `REVISION_MASTER_PLAN-v2.md`). Always flag before writing.
 

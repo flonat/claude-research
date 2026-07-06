@@ -192,6 +192,20 @@ def read_book_index_title(slug):
                 return m.group(1).strip()
     return None
 
+# "Last updated" date = most recent chapter-file edit, formatted exactly like
+# the web cover at books.user.com/<slug> ("5 Jun 2026"), so the PDF
+# frontispiece and the web cover never show different dates.
+import datetime as _dt
+# Chapter files only — exclude hidden dotfiles (e.g. .audit-report-*.md that
+# /audit-paper-book leaves behind); pathlib.glob matches them but the web
+# cover's registered-chapter set does not, so including them would desync the
+# two dates.
+_mtimes = [p.stat().st_mtime for p in book_dir.glob("*.md") if not p.name.startswith(".")]
+last_updated = None
+if _mtimes:
+    _d = _dt.date.fromtimestamp(max(_mtimes))
+    last_updated = f"{_d.day} {_d.strftime('%b %Y')}"
+
 atlas_topic = read_book_index_atlas_topic(slug)
 atlas_meta  = read_atlas_meta(atlas_topic)
 overrides   = read_myst_overrides(book_dir)
@@ -337,7 +351,10 @@ if id_bits:
         "    {\\footnotesize " + " \\\\\n".join(id_bits) + "\\par}",
         "    \\vskip 1em",
     ]
-tp += ["    {\\footnotesize \\@date \\par}"]
+if last_updated:
+    tp += [f"    {{\\footnotesize Last updated {last_updated}\\par}}"]
+else:
+    tp += ["    {\\footnotesize \\@date \\par}"]
 
 pub_block = (
     "\n% --- custom title page (replaces book-class \\maketitle) ---\n"

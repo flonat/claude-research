@@ -29,6 +29,8 @@ For **every** candidate reference — however it was found (Paperpile search, sc
 
 A DOI-less candidate can't be DOI-verified: fall back to the author+title `search-library` retry in trap 2 below, and flag it `% NEW (no DOI — membership unconfirmed)` rather than a clean `NEW`.
 
+**A DOI-bearing candidate can still be a false `NEW` if the *held* copy is DOI-less.** `lookup-by-doi` matches the candidate's DOI against DOIs *stored in the library* — but arXiv/preprint items are frequently filed **without** the `10.48550/arXiv.*` DOI, so the lookup returns null even though the paper is held. (Incident 2026-07-04: `Hubinger2024-it` "Sleeper Agents", held with `journal = {arXiv [cs.CR]}` and no DOI, was mis-staged `NEW` because the arXiv-DOI lookup couldn't match a DOI-less library item — caught by the user, not the gate.) **For every arXiv/preprint candidate whose `lookup-by-doi` returns null, run a title + first-author `search-library` backstop before tagging `NEW`** (batch ≥6 via one Bash sub-agent, as above). A title hit → held: reconcile to its citekey. This is the mirror of the DOI-less-*candidate* case above — there the *candidate* lacks a DOI; here the *library item* does.
+
 ## Key Reconciliation (when a reference matches an existing Paperpile item)
 
 ### Use the helper — never hand-roll the matcher
@@ -85,11 +87,11 @@ Based on where a reference is found, assign one of these statuses:
 
 When a skill needs to add a reference, follow this sequence:
 
-### 1. Stage as BibTeX
+### 1. Stage under `.paperpile-import/`
 
-Call `paperpile write-bib` with full metadata to generate a `.bib` file. The user imports this into Paperpile manually (Paperpile's BibTeX import handles deduplication).
+Write the entry's BibTeX into a `.bib` file under a `.paperpile-import/` directory in the project (create it if absent). If the reference is cited in a draft, use a build-blocking `\CiteTodo{slug}{title; authors; year; DOI}` placeholder instead of a guessed key. The user imports the staged `.bib` into Paperpile manually — the CLI is **read-only** for the library (no import command; `paperpile write-bib --citekeys` only *exports* entries already in the library). After import, the user drops the minted Paperpile export (carrying the canonical key) back into `.paperpile-import/`; the `\CiteTodo` is then swapped to that key and the active `.bib` rebuilt. See `rules/paperpile-citations.md`.
 
-**Naming convention:** `paperpile-stage-YYYY-MM-DD-HHMM.bib` — written to the project's root directory. The `paperpile-stage-` prefix distinguishes staging files from project bibliographies (`references.bib`). Timestamp prevents collisions across multiple runs.
+**Convention:** stage under `.paperpile-import/` (the staging dir, excluded from the active bib by `rebuild_paperpile_bib.py`) — NOT a `paperpile-stage-*.bib` in the project root (the old convention, superseded).
 
 ### 2. Report to user
 

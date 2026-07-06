@@ -18,13 +18,17 @@ class BackendSpec:
 
 
 BACKENDS: dict[str, BackendSpec] = {
-    "gemini": BackendSpec(
-        name="gemini",
-        command="gemini",
+    # Successor to the retired Gemini CLI backend (individual tiers moved to
+    # Antigravity on 2026-06-18). agy serves Claude/GPT-OSS models too, so the
+    # default is pinned to a Gemini model to guarantee this backend is the
+    # Gemini perspective in a council. Discover names with `agy models`.
+    "agy": BackendSpec(
+        name="agy",
+        command="agy",
         headless_flag="-p",
-        model_flag="-m",
-        default_model="gemini-2.5-pro",
-        output_flag="-o text",
+        model_flag="--model",
+        default_model="Gemini 3.1 Pro (High)",
+        output_flag="",
     ),
     "codex": BackendSpec(
         name="codex",
@@ -44,7 +48,7 @@ BACKENDS: dict[str, BackendSpec] = {
     ),
 }
 
-DEFAULT_COUNCIL_BACKENDS: list[str] = ["gemini", "codex", "claude"]
+DEFAULT_COUNCIL_BACKENDS: list[str] = ["agy", "codex", "claude"]
 DEFAULT_CHAIRMAN: str = "claude"
 
 # Subprocess timeout in seconds per stage

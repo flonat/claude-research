@@ -12,6 +12,7 @@ A claim is unverified when:
 - The venue policy (page limit, double-blind status, formatting rule, deadline) has NOT been read from the official CFP
 - The statistic has NOT been computed from a known data source or quoted from a paper just read
 - The author affiliation, journal impact factor, or institutional fact has NOT been checked against a structured source
+- A **self-authored mathematical result** — a comparative static (∂/∂x sign), a monotonicity or limit claim, existence of a threshold, a closed form — has NOT been actually derived or checked (solving the recurrence, taking the derivative, evaluating the limit), but only asserted from intuition
 
 ## What to do instead
 
@@ -20,8 +21,13 @@ A claim is unverified when:
 | "EAAMO is double-blind" | "EAAMO is `[UNVERIFIED — check 2026 CFP]` likely double-blind" |
 | "Smith (2024) showed X" | "Smith (2024) `[UNVERIFIED]` reportedly showed X" |
 | "ICML 2026 page limit is 9 pages" | "ICML 2026 page limit `[UNVERIFIED — last seen 8pp main + refs in 2025]`" |
+| "so `$\partial C/\partial\lambda < 0$` and a threshold `$\lambda^\star$` arises" | derive it first (solve the recurrence, sign the derivative); if not done, `[UNVERIFIED]` / state as conjecture |
 
 The `[UNVERIFIED]` flag is preserved through edits until the user or a sub-agent runs verification (e.g., `/bib-validate --verify-doi`, reading the official CFP, or querying a structured source).
+
+## Self-authored mathematical results
+
+A derived claim you *write into a paper* is subject to this rule exactly as a citation is. A comparative static, monotonicity/limit claim, threshold-existence claim, or closed form counts as **unverified until you have actually derived or checked it** — solved the recurrence, taken the derivative, evaluated the limit — not merely asserted it from intuition. **Clean LaTeX compilation is not verification** (it checks syntax, not truth), and neither is user approval of the prose. Until checked, mark `[UNVERIFIED]` or state the result explicitly as a conjecture. Watch in particular the **transient-vs-stationary conflation**: a learning/adjustment *rate* governs how fast a system reaches its fixed point, not where the fixed point is — so if the rate is meant to be the operative variable, the quantity must be evaluated on a finite horizon, not at the stationary limit. This is `mark-unverified` applied to your own mathematics, and the write-time complement to `paper-code-consistency.md` (which is review-time and code-focused). Trigger incident: `2026-07-03` paper-philtech Appendix A shipped "$C(\lambda)$ decreasing in $\lambda$" when the stationary $v^\infty=\phi(e)$ is $\lambda$-independent (caught by `/review-cluster`).
 
 ## When This Applies
 

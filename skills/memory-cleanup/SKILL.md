@@ -176,7 +176,7 @@ Before writing, show a summary:
 
 ### Phase 4: Propagate to Shared Auto-Memory
 
-**Why:** `scripts/sync-push-memory.sh` append-merges `MEMORY.md` and has no deletion logic. Without this phase, the next `/full-commit` would pull deleted entries and stale files back into local from the shared copy.
+**Why:** `scripts/sync-push-memory.sh` append-merges `MEMORY.md`. Deletions propagate via **tombstones**: each shared dir carries a git-tracked `.tombstones` file (one filename per line, `#` comments allowed) that both sync scripts honour since 2026-07-03 — tombstoned entries are removed from both sides on every sync, so other machines self-clean instead of resurrecting deleted entries. This phase mirrors the cleanup to shared AND writes the tombstones.
 
 **When to run:** Whenever this skill deletes files or shortens `MEMORY.md` (not needed for pure additions). If only adding entries, the normal append-merge sync handles it.
 
@@ -188,8 +188,8 @@ Before writing, show a summary:
 
 2. Mirror local → shared for each location:
    - **MEMORY.md and MEMORY-ARCHIVE.md:** force-copy from local to shared (overwrites, bypasses append-merge)
-   - **Deletions:** delete from shared **only the entries this cleanup explicitly removed** (the user-confirmed removal set from Phase 3). Track those filenames as you go.
-   - **Reconcile UP:** any entry present in shared but NOT in local, and NOT in the removal set, is a legit entry this machine never pulled (shared aggregates across machines/sessions). **Pull it into local + flag it for indexing — never delete it.**
+   - **Deletions:** delete from shared **only the entries this cleanup explicitly removed** (the user-confirmed removal set from Phase 3). Track those filenames as you go, and **append each to `$shared_dir/.tombstones`** with a dated `#` comment — this is what makes the deletion stick on other machines.
+   - **Reconcile UP:** any entry present in shared but NOT in local, NOT in the removal set, **and NOT listed in `.tombstones`** (a tombstoned name is a confirmed prior deletion, not a missing entry — re-delete it, don't pull it), is a legit entry this machine never pulled (shared aggregates across machines/sessions). **Pull it into local + flag it for indexing — never delete it.**
    - **Mirror entry files:** copy any local entry file that's newer/missing into shared.
 
 > ⚠️ **Do NOT infer deletion from a local/shared set difference.** The naive
@@ -215,14 +215,23 @@ REMOVED=(feedback_notion_rest_api.md feedback_dropbox_path_change.md)   # exampl
 cp "$local_dir/MEMORY.md" "$shared_dir/MEMORY.md"
 [ -f "$local_dir/MEMORY-ARCHIVE.md" ] && cp "$local_dir/MEMORY-ARCHIVE.md" "$shared_dir/MEMORY-ARCHIVE.md"
 
-# 1. Delete from shared ONLY the explicitly-removed entries
-for name in "${REMOVED[@]}"; do rm -f "$shared_dir/$name"; done
+# 1. Delete from shared ONLY the explicitly-removed entries + tombstone them
+#    (the tombstone makes the deletion propagate: both sync scripts remove
+#    tombstoned files from local AND shared on every push/pull)
+for name in "${REMOVED[@]}"; do
+  rm -f "$shared_dir/$name"
+  echo "$name  # removed $(date +%Y-%m-%d) by /memory-cleanup" >> "$shared_dir/.tombstones"
+done
 
-# 2. Reconcile UP: a shared-only entry (not in REMOVED) is a legit entry this
-#    machine is missing — pull it into local + flag it, never delete.
+# 2. Reconcile UP: a shared-only entry (not in REMOVED, not tombstoned) is a
+#    legit entry this machine is missing — pull it into local + flag it,
+#    never delete. A TOMBSTONED shared-only entry is a zombie: re-delete it.
 for f in "$shared_dir"/*.md; do
   name=$(basename "$f")
   case "$name" in MEMORY.md|MEMORY-ARCHIVE.md) continue;; esac
+  if [ -f "$shared_dir/.tombstones" ] && grep -q "^$name" "$shared_dir/.tombstones"; then
+    rm -f "$f"; echo "re-deleted tombstoned zombie: $name"; continue
+  fi
   if [ ! -f "$local_dir/$name" ]; then
     cp "$f" "$local_dir/$name"
     echo "PULLED shared-only entry into local — verify + add to MEMORY.md index: $name"

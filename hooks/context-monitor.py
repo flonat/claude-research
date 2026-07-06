@@ -101,9 +101,13 @@ def main():
     save_state(sdir, state)
 
     if message:
+        # Non-blocking systemMessage: emit JSON on stdout and exit 0. Exit 2 on
+        # a PostToolUse hook is a BLOCKING error (harness feeds stderr back) —
+        # since we write to stdout not stderr, exit 2 surfaced as a spurious
+        # "hook blocking error … No stderr output" every time a threshold fired.
         output = {"systemMessage": f"[Context Monitor] {message}"}
         print(json.dumps(output))
-        sys.exit(2)  # Exit code 2 = message visible in transcript
+        sys.exit(0)
     else:
         # Silent — no output needed
         print(json.dumps({}))

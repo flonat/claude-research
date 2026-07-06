@@ -8,9 +8,9 @@ After assembling and validating the `.bib`, sync new references to Paperpile. Fo
 
 For each new entry not marked **ALREADY IN PAPERPILE** from Phase 1:
 
-1. **Stage as BibTeX** — call `paperpile write-bib` with full metadata to generate a `.bib` staging file.
+1. **Stage under `.paperpile-import/`** — write the new entry's BibTeX into a `.bib` under `.paperpile-import/` (Paperpile CLI is read-only; `write-bib --citekeys` only exports entries already in the library). Use a `\CiteTodo{...}` placeholder for any draft cite until imported.
 2. **Report results** — show a summary table of what was staged for import.
-3. **Remind user** — "Import the staged `.bib` file into Paperpile to complete the sync."
+3. **Remind user** — "Import the staged `.bib` under `.paperpile-import/` into Paperpile to complete the sync."
 
 For entries already in Paperpile with better metadata than what was assembled, call `paperpile export-bib` and use those entries instead.
 

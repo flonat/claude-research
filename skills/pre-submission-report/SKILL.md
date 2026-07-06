@@ -109,6 +109,10 @@ Use when (a) the paper is near submission and you want a comprehensive scan, or 
 | 11 | **anonymity / double-blind checker** | Apply paper-side checks P1-P8 from `_shared/double-blind-anonymity-checklist.md`; verify `[review]` mode if double-blind venue | Pass/fail + leak list |
 | 12 | **page-limit + LaTeX validator** | Verify page count under venue limit; check for compile warnings; check `out/` is current | Page count + warning summary |
 
+**Conditional — math verification (theory papers):**
+
+If the paper contains formal environments (`grep -lE '\\begin\{(theorem|proposition|lemma|corollary)\}'` matches), run `/verify-math` (via the Skill tool) on the model section(s) **in addition to** the domain-reviewer agent (#5). The two are complementary, not redundant: domain-reviewer (#5) reads the conceptual layer (rung R0), while `/verify-math` machine-checks the algebra/analytics across the rest of the spectrum (R1 numerical falsification · R2 symbolic/CAS · R3 Lean). This runs as an **orchestrator skill, not a sub-agent** — the computational rungs need Bash + sympy/lean, which sub-agents can't reliably get at runtime (same Bash-grant fragility that motivates orchestrator-side stamping below); the orchestrator always has Bash. It is read-only with respect to project files (writes only its own report) and self-stamps its INDEX.md row. Fold its aggregate verdict into consolidation: **any `FALSIFIED` obligation is a P0 blocker** (a machine-falsified theorem outranks any reviewer concern); an `INCONCLUSIVE` obligation is P1. When both run, tell domain-reviewer (#5) in its prompt that the algebra is being verified separately so it focuses on assumption completeness / citation fidelity / backward logic — see the domain-reviewer "Math R0 Mode" preset.
+
 **Conditional follow-ups (run after parallel fan-out, opt-in):**
 
 | Trigger | Skill |
@@ -135,8 +139,8 @@ findings = consolidate_p0_p1_p2(parallel_tasks)
 Sub-agents run concurrently — total wall-clock is bounded by the slowest (typically novelty-scout at ~2-3 min via OpenAlex).
 
 **Consolidation:** the orchestrator merges findings from all 13 sub-agents into a single P0/P1/P2 fix list:
-- **P0 (block submission):** anonymity leaks (#11), fabricated citations (#1, #2), compilation errors (#12), over-page-limit (#12), code-paper mismatches (#8), prose-replication divergence (#9)
-- **P1 (must fix):** unresolved DOIs (#1), claim-verify failures (#2), novelty threats (#3), critic-report Major issues (#4), domain-review math errors (#5), reproducibility issues (#10), referee2-reviewer concerns (#6)
+- **P0 (block submission):** anonymity leaks (#11), fabricated citations (#1, #2), compilation errors (#12), over-page-limit (#12), code-paper mismatches (#8), prose-replication divergence (#9), **any `FALSIFIED` math obligation (`/verify-math`, theory papers)**
+- **P1 (must fix):** unresolved DOIs (#1), claim-verify failures (#2), novelty threats (#3), critic-report Major issues (#4), domain-review math errors (#5), reproducibility issues (#10), referee2-reviewer concerns (#6), **`INCONCLUSIVE` math obligations (`/verify-math`)**
 - **P2 (should consider):** blindspot virtues + minor vices (#7), AI-detect hot zones (#13), critic-report Moderate/Minor issues (#4), novelty positioning (#3)
 
 **Code-bearing detection:** if the project has non-tex / non-bib files outside `paper-*/` and `notes/` (typical signal: `code/`, `data/`, `scripts/`, `analysis/`, `src/` directories), enable code-side sub-agents (#8 code-paper-auditor, #9 artifact-coherence-auditor, #10 reproducibility-auditor) and queue `/anonymous-artifact` as a conditional follow-up.

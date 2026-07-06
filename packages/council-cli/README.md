@@ -18,7 +18,7 @@ Install the CLI tools you want to use:
 
 | Backend | Install | Auth |
 |---------|---------|------|
-| **Gemini CLI** | `npm install -g @google/gemini-cli` | `gemini` (Google account) |
+| **Antigravity CLI** | `brew install --cask antigravity-cli` | `agy` (Google account OAuth; individual tiers moved here from Gemini CLI on 2026-06-18) |
 | **Codex CLI** | `npm install -g @openai/codex` | `codex login` (ChatGPT Plus) |
 | **Claude Code** | `npm install -g @anthropic-ai/claude-code` | `claude` (Claude Pro) |
 
@@ -46,7 +46,7 @@ python -m council_cli \
 echo "Review this research design for causal identification issues" | python -m council_cli
 
 # Select specific backends
-python -m council_cli --backends gemini,claude "Best approach for time-series forecasting?"
+python -m council_cli --backends agy,claude "Best approach for time-series forecasting?"
 
 # Change chairman
 python -m council_cli --chairman codex "Evaluate this argument..."
@@ -59,7 +59,7 @@ import asyncio
 from council_cli import CouncilRunner
 
 runner = CouncilRunner(
-    backends=["gemini", "codex", "claude"],
+    backends=["agy", "codex", "claude"],
     chairman="claude",
 )
 

@@ -23,8 +23,8 @@ and return a short summary. Do NOT do any of the following:
 - Do NOT run `latexmk` or any build command.
 - Do NOT edit `.context/`, `MEMORY.md`, `CLAUDE.md`, or any project
   documentation.
-- Do NOT add entries to Paperpile (`paperpile write-bib`); the
-  orchestrator's fix-mode handles Paperpile sync.
+- Do NOT stage entries under `.paperpile-import/` or write `\CiteTodo`
+  placeholders; the orchestrator's fix-mode handles Paperpile staging/sync.
 - Do NOT create files outside the assigned /tmp output path.
 
 Return only your batch's verification results. The orchestrator

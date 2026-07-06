@@ -61,14 +61,15 @@ Phase 4: after the `.bib` is assembled, verify every DOI resolves. Batch reduces
 
 ## Paperpile sync after assembly (Phase 6c)
 
-Stage new entries for manual import — Paperpile CLI is read-only for writes:
+Stage genuinely-new entries under `.paperpile-import/` for manual import — the Paperpile CLI is read-only for the library (no import command). Write each entry's BibTeX into a `.bib` there and use a `\CiteTodo{...}` placeholder for any draft cite until imported. See `rules/paperpile-citations.md`.
+
+`paperpile write-bib` only **exports** entries already in the library, by citekey:
 
 ```bash
-paperpile write-bib --path /tmp/literature-staging.bib \
-    --title "..." --author "..." --year 2024 --doi "10.xxxx/yyyy"
+paperpile write-bib --citekeys Key1-ab,Key2-cd --output-path exported.bib
 ```
 
-Then report the staged file path and remind the user to drag into Paperpile.
+Then report the staged path and remind the user to import into Paperpile.
 
 For entries already in Paperpile with richer metadata:
 

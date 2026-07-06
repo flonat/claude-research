@@ -117,6 +117,7 @@ SCAN_FILES = [
     "docs/components/agents.md",
     "docs/components/packages.md",
     "docs/system.md",
+    "docs/architecture.md",
     "docs/guides/installation.md",
     ".context/projects/_index.md",
     "skills/shared/skill-index.md",
@@ -133,13 +134,18 @@ EXCLUDE_LINE_PATTERNS = [
     re.compile(r"hugo|sant.anna|clo-author", re.IGNORECASE),  # external refs
     re.compile(r"driven by \d+ hooks", re.IGNORECASE),  # agent-memory row: "4 hooks" = agentmem hooks, NOT the global hook count (false-positive guard)
     re.compile(r"^\s*\|.*category", re.IGNORECASE),  # table rows with category subtotals
-    re.compile(r"Research & Writing|Task Management.*Code|Publishing & Submission|Utilities", re.IGNORECASE),  # skill category subtotal lines
-    re.compile(r"^\s*#"),  # comment-only lines in code blocks
+    re.compile(r"Research & Writing|Task Management & Code|Publishing & Submission|Utilities", re.IGNORECASE),  # skill category subtotal lines (literal '& Code'; the old '.*Code' greedily matched architecture.md's 'Task Management folder … claude-code-private' and wrongly excluded its count line)
+    # NOTE: shell-comment exclusion (lines starting with '#' inside ``` code
+    # fences) is handled in scan() with fence-state tracking — NOT here — so that
+    # markdown headers like '### Skills (191 total)' are scanned, not silently
+    # dropped. The old blanket r"^\s*#" excluded every header and hid header counts.
     re.compile(r"Referee.2 agent performs"),  # prose about what an agent does
     re.compile(r"Referee.2 agent .+never"),  # prose about agent behavior
     re.compile(r"Referee.2 Agent", re.IGNORECASE),  # section title "The Referee~2 Agent"
     re.compile(r"Trail of Bits|linters? for agent", re.IGNORECASE),  # external tool counts
     re.compile(r"BasicTeX|TeX Live|scheme-full", re.IGNORECASE),  # "~80 packages" = TeX packages, not packages/
+    re.compile(r"Absolute Dropbox path", re.IGNORECASE),  # architecture.md portability table: "8 agents / 12 skills use absolute paths" = subset metric, NOT the global total
+    re.compile(r"Path-Scoped Rules|Always-Load(?:ed)? Rules", re.IGNORECASE),  # SUBSET headers: "### Path-Scoped Rules (21 rules)" is 21-of-60, NOT the total (only visible since headers became scannable)
 ]
 
 
@@ -206,7 +212,17 @@ def scan(root: Path, truth: dict[str, int]) -> list[Mismatch]:
             continue
 
         lines = fpath.read_text(encoding="utf-8").splitlines()
+        in_fence = False
         for line_idx, line in enumerate(lines, start=1):
+            stripped = line.lstrip()
+            if stripped.startswith("```") or stripped.startswith("~~~"):
+                in_fence = not in_fence
+                continue
+            # Shell comments inside a ``` code fence are not doc counts — skip.
+            # Markdown headers ('### Skills (191 total)') are NOT in a fence, so
+            # they stay scanned (that's the fix for the hidden header-count bug).
+            if in_fence and stripped.startswith("#"):
+                continue
             if _is_excluded(line):
                 continue
 

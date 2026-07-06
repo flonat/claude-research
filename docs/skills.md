@@ -12,8 +12,8 @@ Skills are structured instruction sets (`SKILL.md` files) that turn Claude into 
 | `beamer-deck` | Use when you need to create an academic Beamer presentation with original theme and multi-agent review |
 | `bib-coverage` | Use when you need to compare a project .bib against a Paperpile label to find uncited papers or unfiled entries |
 | `bib-filter` | Use when you need to filter a .bib file to only entries actually cited in a .tex project |
-| `bib-parse` | Extract citations from a PDF and generate a validated .bib file. Reads the PDF, identifies all referenced works, constructs BibTeX entries with metadata verification, then runs /bib-validate |
-| `bib-validate` | Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Fix mode auto-adds missing entries to Paperpile |
+| `bib-parse` | Use when you need to extract citations from a PDF and generate a validated .bib file. Reads the PDF, identifies all referenced works, constructs BibTeX entries with metadata verification, then runs /bib-validate |
+| `bib-validate` | Use when you need to validate a paper's bibliography — cross-references \\cite{} keys against .bib files or embedded \\bibitem entries, finds missing/unused/typo'd keys, and checks every key against the Paperpile library via the local resolver. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Fix mode rekeys drifted keys to canonical and stages missing entries for Paperpile |
 | `causal-design` | Use when you need to design or audit an identification strategy for an observational study |
 | `code-archaeology` | Use when you need to review and understand old code, data, or analysis files |
 | `devils-advocate` | Use when you need to challenge research assumptions or stress-test arguments |

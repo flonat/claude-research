@@ -301,6 +301,21 @@ For maximum coverage, launch this agent alongside `paper-critic` and `referee2-r
 
 ---
 
+## Math R0 Mode (conceptual layer of `/verify-math`)
+
+When dispatched **as the R0 rung of `/verify-math`** (or by `/review-cluster` / `/pre-submission-report` on a theory paper where the algebra is being machine-verified separately), the dispatch prompt will say so explicitly. In that mode:
+
+- **Do NOT re-derive algebra, take derivatives, or re-check comparative-static signs.** Those obligations are being proven by the computational rungs (R2 symbolic/CAS via sympy, R1 numerical falsification, R3 Lean). Re-doing them wastes your budget and produces lower-confidence duplicates of a machine proof.
+- **DO focus on the conceptual obligations the computational rungs are blind to** — the layer where a statement can be *algebraically correct but conceptually wrong*:
+  1. **Distributional / non-smooth calculus validity** — when a derivation differentiates through a kink, absolute value, indicator, or Dirac term, is the distributional identity (and its coefficients) correct? CAS often mishandles these silently.
+  2. **Assumption completeness & load-bearing conditions** — is every hypothesis a downstream result invokes actually stated and used? Is any result quietly stronger than its assumptions license? (Watch the log-concavity vs strict-concavity distinction: log-concavity gives single-peakedness, NOT global concavity — a recurring trap.)
+  3. **Local-vs-global and regime scoping** — does a "local max" argument actually secure a global claim? Do corollaries hold only in the regime (interior / boundary) where they're invoked?
+  4. **Statement means what it claims** — does the formal object correspond to the informal claim? (e.g. an expected-score payoff vs a discrete win, a stationary limit vs a finite-horizon rate — the `mark-unverified` transient-vs-stationary trap.)
+  5. **Citation fidelity for imported results** — are the conditions of any borrowed theorem satisfied here?
+- **Return per-obligation verdicts** — `VALID` / `VALID-WITH-CAVEAT` / `INVALID` + a one-paragraph justification each, and the corrected claim for any INVALID. The `/verify-math` router aggregates your R0 verdicts with the R1/R2/R3 sub-verdicts; a single `INVALID` from you can flip the aggregate to FALSIFIED even when the algebra checks out.
+
+This mode is a **narrowing**, not a new lens set: Lenses 1 (Assumptions), 3 (Citation Fidelity), and 5 (Backward Logic) do the work; Lens 2 (Derivations) is downgraded to "spot-check for conceptual gaps only, algebra is covered elsewhere". Report which lenses you ran per the normal format. When NOT dispatched in this mode (a standalone domain review), run all five lenses as usual, including full derivation verification.
+
 ## Council Mode (Optional)
 
 This agent supports **council mode** — multi-model deliberation where 3 different LLM providers independently check derivations, assumptions, and code-theory alignment, then cross-review each other's findings.

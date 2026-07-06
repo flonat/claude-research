@@ -6,13 +6,18 @@ After producing the validation report, automatically fix resolvable issues using
 
 ## Auto-Fix Actions
 
-1. **`DRIFT` entries** (in .bib but not in Paperpile):
-   - Stage as BibTeX via `paperpile write-bib` (output: `paperpile-stage-YYYY-MM-DD-HHMM.bib` in the project root).
+1. **`DRIFT` entries** (same paper IS in Paperpile, under a different citekey — locally-minted lookalike keys):
+   - Run the verified rekey chain from Task-Management `scripts/bib/`:
+     1. `rekey_to_canonical.py <bib> --apply` — remaps `\cite` keys in the `.tex` (pass `--extra-map OLD=NEW` for user-confirmed SUGGESTED/AMBIGUOUS cases; refuses on unresolved cited keys without `--force`)
+     2. `rebuild_paperpile_bib.py <bib>` — regenerates the `.bib` from canonical Paperpile exports (generated-not-edited, per `rules/paperpile-citations.md`)
+     3. `citation_lint.py <project>` — verify all cited keys canonical & present
+     4. `latexmk` compile check — 0 undefined citations
+   - Live-surface discipline applies (`rules/reconcile-before-rewriting.md`): fresh-Read baseline, dry-run mapping table shown before `--apply`.
 
-2. **`MISSING` entries** (cited in .tex but not found anywhere):
+2. **`NOT_FOUND` entries** (genuinely absent from the library — legacy alias: `MISSING`):
    - Search via the resolution order (Paperpile → `scholarly` CLI → Crossref → web).
-   - If found, export correct BibTeX and add the entry to the `.bib` file.
-   - Stage for Paperpile import via `paperpile write-bib`.
+   - If found, stage the entry as a `.bib` under `.paperpile-import/` and replace its draft cite with a build-blocking `\CiteTodo{slug}{title; authors; year; DOI}` — never a guessed key.
+   - The Paperpile CLI is read-only (no import command). The user imports the staged `.bib` manually; after import they drop the minted export back into `.paperpile-import/` and the `\CiteTodo` is swapped to the canonical key. See `rules/paperpile-citations.md`.
 
 3. **Metadata issues** (DOI mismatch, stale preprint, missing fields):
    - Export correct BibTeX from Paperpile (`paperpile export-bib`) or the `scholarly` CLI (`scholarly scholarly-search "<title>" --json`) for entries with metadata problems.

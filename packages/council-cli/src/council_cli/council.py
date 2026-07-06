@@ -27,12 +27,12 @@ logger = logging.getLogger(__name__)
 
 def _get_backend(name: str) -> CLIBackend:
     """Instantiate a backend by name."""
+    from council_cli.backends.antigravity import AntigravityBackend
     from council_cli.backends.claude import ClaudeBackend
     from council_cli.backends.codex import CodexBackend
-    from council_cli.backends.gemini import GeminiBackend
 
     registry: dict[str, type[CLIBackend]] = {
-        "gemini": GeminiBackend,
+        "agy": AntigravityBackend,
         "codex": CodexBackend,
         "claude": ClaudeBackend,
     }

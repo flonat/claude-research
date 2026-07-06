@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 class Assessment(BaseModel):
     """One council member's individual assessment (Stage 1)."""
 
-    backend: str        # "gemini", "codex", "claude"
+    backend: str        # "agy", "codex", "claude"
     model: str          # model name/ID used by the backend
     text: str           # raw text response
     label: str = ""     # anonymised label, e.g. "Assessment A"

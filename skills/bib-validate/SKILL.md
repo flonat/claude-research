@@ -1,13 +1,13 @@
 ---
 name: bib-validate
-description: "Cross-reference \\cite{} keys against .bib files or embedded \\bibitem entries. Finds missing, unused, and typo'd citation keys. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Fix mode auto-adds missing entries to Paperpile."
-allowed-tools: Read, Glob, Grep, Task, Write, Bash(mkdir*), Bash(ls*), Bash(rm*), Bash(paperpile*)
+description: "Use when you need to validate a paper's bibliography — cross-references \\cite{} keys against .bib files or embedded \\bibitem entries, finds missing/unused/typo'd keys, and checks every key against the Paperpile library via the local resolver. Deep verification mode spawns parallel agents for DOI/metadata validation at scale. Fix mode rekeys drifted keys to canonical and stages missing entries for Paperpile."
+allowed-tools: Read, Glob, Grep, Task, Write, Bash(mkdir*), Bash(ls*), Bash(rm*), Bash(paperpile*), Bash(python3*), Bash(latexmk*)
 argument-hint: "[project-path or tex-file] [--verify-doi] [--fix]"
 ---
 
 # Bibliography Validation
 
-**LIBRARY-FIRST RULE: ALWAYS cross-reference cited keys against Paperpile (`paperpile search-library`) during validation.** This catches drift between the `.bib` file and the reference manager. See the Reference Manager Cross-Reference section.
+**LIBRARY-FIRST RULE: ALWAYS cross-reference all `.bib` keys against Paperpile during validation** — via ONE dry-run of `scripts/bib/rekey_to_canonical.py` (Task-Management; matches the local library JSON in ~5s), NOT per-key `paperpile search-library` loops or lookup sub-agents. This catches key drift between the `.bib` file and the reference manager. See the Reference Manager Cross-Reference section.
 
 ## Output Path
 
@@ -27,7 +27,7 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 |---|---|
 | `/bib-validate` | Standard: cross-reference \cite{} ↔ .bib, library check, preprint staleness |
 | `/bib-validate --verify-doi` | **Adds DOI resolution**: each `@article`/`@inproceedings` entry gets its DOI checked via `scholarly scholarly-verify-dois`. Bib entries with no DOI or unresolvable DOIs are flagged. Use before submission to catch fabricated/hallucinated entries. |
-| `/bib-validate --fix` | Auto-fixes resolvable issues in the project `.bib` and stages missing entries as a `paperpile-stage-*.bib` for manual Paperpile import. The Paperpile CLI is read-only — it cannot write to the library, so additions are staged, not auto-inserted. |
+| `/bib-validate --fix` | Auto-fixes resolvable issues in the project `.bib`; genuinely-missing entries are staged under `.paperpile-import/` with their draft cites marked `\CiteTodo{...}` (build-blocking) for manual Paperpile import. The Paperpile CLI is read-only — it cannot write to the library, so additions are staged, not auto-inserted. |
 | Combine: `--verify-doi --fix` | Verify, then fix unverified entries by re-fetching from Crossref |
 
 ## When to Use
@@ -170,9 +170,13 @@ Common typo patterns:
 
 ## Reference Manager Cross-Reference
 
-After the disk-based cross-reference, check each cited key against Paperpile. Produces a status table (HEALTHY / DRIFT / EXPORT_GAP / MISSING).
+After the disk-based cross-reference, check every `.bib` key against the Paperpile library with ONE dry-run of the canonical resolver:
 
-Full steps, MCP calls, and status categories: [`references/ref-manager-crossref.md`](references/ref-manager-crossref.md)
+```bash
+python3 "$(cat ~/.config/task-mgmt/path)/scripts/bib/rekey_to_canonical.py" <project.bib>
+```
+
+Produces the full status table (HEALTHY / DRIFT / SUGGESTED / AMBIGUOUS / NOT_FOUND) in ~5s with no per-key CLI calls. Fallback lookups, status semantics, and staleness caveat: [`references/ref-manager-crossref.md`](references/ref-manager-crossref.md)
 
 ## Quality Checks on .bib Entries
 
@@ -246,7 +250,7 @@ For high-stakes submissions. Trigger: "council bib-validate", "thorough bib chec
 
 ## Fix Mode
 
-After producing the validation report, automatically fix resolvable issues in the project `.bib` (DRIFT → correct the BibTeX; MISSING → search + add to the `.bib`, then stage for Paperpile import via `paperpile write-bib`; MIGRATE → stage updated entry; metadata → correct BibTeX). Library additions are *staged* as a `paperpile-stage-*.bib` for manual import — the Paperpile CLI is read-only.
+After producing the validation report, automatically fix resolvable issues. **DRIFT (paper in library under a different key) → the verified rekey chain:** `rekey_to_canonical.py --apply` (remaps `\cite` keys in `.tex`; `--extra-map` for confirmed SUGGESTED/AMBIGUOUS cases) → `rebuild_paperpile_bib.py <bib>` (regenerates the `.bib` from canonical Paperpile exports) → `citation_lint.py` → `latexmk` compile check. NOT_FOUND → search, then stage the entry as a `.bib` under `.paperpile-import/` and replace its draft cite with `\CiteTodo{slug}{title; authors; year; DOI}` (build-blocking until imported); metadata → correct BibTeX. Library additions are *staged* under `.paperpile-import/` for manual import — the Paperpile CLI is read-only (no import command; `paperpile write-bib --citekeys` only exports entries already in the library).
 
 Full auto-fix actions, post-fix maintenance, and skip conditions: [`references/fix-mode.md`](references/fix-mode.md)
 
