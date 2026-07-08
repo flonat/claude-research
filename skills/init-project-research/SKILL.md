@@ -135,6 +135,8 @@ If the directory doesn't exist, create it and proceed.
 
 **Preprint targets** (arXiv / SSRN / OSF / institutional repos): seed the atlas topic's `outputs[*]` with `venue: arXiv` (or equivalent), `format: Preprint`, `status: Planned`, plus an optional internal target date. **Do NOT seed a vault submission file for the preprint target** — preprint posts are not venue submissions per `rules/preprint-vs-submission.md`. Vault submissions are reserved for events with reviewer pipelines (journals, conferences). A project with only a preprint target gets zero vault submission files at init.
 
+**Conference/journal targets:** seed each `outputs[*]` with `venue: '[[Name]]'` (slug must resolve to a `~/Research-Vault/venues/` file) + `format` + `status` + `paper_title` (kept in sync with the registry `canonical_title`). When you seed a **near-term Conference/Workshop** target at a submission-active status (or with a known edition), also set `cycle: <Venue> <edition-year>` (e.g. `cycle: NeurIPS 2026`) per `rules/atlas-status-vocabulary.md` § submission-join completeness — journals get no cycle. Idea-stage targets may omit `cycle` until an edition is committed.
+
 **Python tooling:** always `uv` — never bare `pip`, `python`, or `requirements.txt`.
 
 Full scaffold tree, hook details, .gitkeep placement, implementation commands: [`references/scaffold-tree.md`](references/scaffold-tree.md).
