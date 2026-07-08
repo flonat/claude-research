@@ -1,0 +1,31 @@
+# rules.dropboxignore — keep session/cache junk out of a Dropbox-synced replication package.
+# Complements (does NOT replace) .gitignore. Copy to the package root when the project syncs via Dropbox.
+# Adapted from Yusaku Horiuchi's replication-package-guide (R) + Python/general additions.
+
+# R / RStudio local + session files
+**/.Rproj.user/
+**/.Rhistory
+**/.RData
+**/.Ruserdata
+**/Rplots.pdf
+**/renv/library/
+**/renv/staging/
+
+# Python caches + envs
+**/__pycache__/
+**/*.pyc
+**/.ipynb_checkpoints/
+**/.venv/
+**/.uv-cache/
+
+# generic build/cache leftovers
+**/*_cache/
+**/*_files/
+**/.pytest_cache/
+**/.mypy_cache/
+
+# OS + temp files
+**/.DS_Store
+**/*.tmp
+**/*.temp
+**/*.bak

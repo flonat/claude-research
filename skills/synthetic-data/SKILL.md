@@ -87,7 +87,7 @@ Generate a self-contained script that:
 
 ### Step 4: Execute
 
-**For large Monte Carlo sweeps** (10k+ simulations, multi-condition grids, or long-running bootstrap): run on your HPC cluster instead of locally. Drop the generation script into `hpc/` with `submit.sbatch` (compute partition) or `sweep.sbatch` (array over seeds/conditions) — templates at Task Management `templates/slurm/`, guide at [`docs/guides/hpc.md`](../../docs/guides/hpc.md). All SLURM templates log `git-sha.txt` to `OUT_DIR` so synthetic datasets remain traceable to the DGP code version.
+**For large Monte Carlo sweeps** (10k+ simulations, multi-condition grids, or long-running bootstrap): run on [HPC cluster] instead of locally. Drop the generation script into `hpc/` with `submit.sbatch` (compute partition) or `sweep.sbatch` (array over seeds/conditions) — templates at Task Management `templates/slurm/`, guide at [`docs/guides/hpc.md`](../../docs/guides/hpc.md). All SLURM templates log `git-sha.txt` to `OUT_DIR` so synthetic datasets remain traceable to the DGP code version.
 
 Run the script and verify:
 

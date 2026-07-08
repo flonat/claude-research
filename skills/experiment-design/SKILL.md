@@ -60,7 +60,7 @@ Read `references/power-analysis-recipes.md` for language-specific code patterns.
 3. **Execute and report** — produce a sample size table showing N for power = {0.80, 0.90, 0.95}
 4. **Write to project** — save script to `code/power_analysis.R` (or `.py`), results to `output/power_analysis_results.md`
 
-**HPC escalation:** If the power analysis uses Monte Carlo simulation (e.g., `DeclareDesign` with >10k replications, or a multi-design sweep), move execution to your HPC cluster — drop the simulation script into `hpc/` with `templates/slurm/array.sbatch` (array over seeds/designs). The SHA-logging snippet in the template pins results to the DGP version. See [`docs/guides/hpc.md`](../../docs/guides/hpc.md).
+**HPC escalation:** If the power analysis uses Monte Carlo simulation (e.g., `DeclareDesign` with >10k replications, or a multi-design sweep), move execution to [HPC cluster] — drop the simulation script into `hpc/` with `templates/slurm/array.sbatch` (array over seeds/designs). The SHA-logging snippet in the template pins results to the DGP version. See [`docs/guides/hpc.md`](../../docs/guides/hpc.md).
 
 ### Effect Size Guidance
 

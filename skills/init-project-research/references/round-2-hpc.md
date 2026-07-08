@@ -6,7 +6,7 @@ Only ask this question for **Experimental, Computational, or Mixed** projects. T
 
 ## Question
 
-"Will this need your HPC cluster (GPU, long sweeps, large state spaces)? — Yes / No / Later."
+"Will this need [HPC cluster] (GPU, long sweeps, large state spaces)? — Yes / No / Later."
 
 ## Behaviour by answer
 
