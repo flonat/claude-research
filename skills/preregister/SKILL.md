@@ -192,7 +192,7 @@ data_collection_status: not_yet_started | pilot_only | started
 - **Computational audits drift fast.** If the LLM under test is `gpt-4o-2024-11-20`, lock that string into the prereg. A prereg that says "GPT-4" is meaningless six months later.
 - **The file is the local record, not the registration.** The OSF / AsPredicted server timestamp is what matters legally; the markdown is for the project's records. Don't claim "preregistered" until the URL is back.
 - **Amendments are normal but must be explicit.** If anything changes after submission, write `YYYY-MM-DD-{slug}-amendment.md` next to the original. Editing the original in-place destroys the trail.
-- **Don't conflate this with a vault submission.** A prereg post is not a venue submission — it lives in `outputs[*]` on the atlas topic, not in `~/Research-Vault/submissions/` (same logic as `preprint-vs-submission.md`).
+- **Don't conflate this with a vault submission.** A prereg post is not a venue submission — it lives in `outputs[*]` on the atlas topic, not in `~/vault/submissions/` (same logic as `preprint-vs-submission.md`).
 - **Don't run `/proofread` over the prereg.** The voice is intentionally terse and template-driven; copy-editing it the way you would a paper is wasted effort.
 
 ## When to skip

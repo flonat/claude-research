@@ -2,14 +2,14 @@
 
 ## Vault paths
 
-The Research Vault (`~/Research-Vault`) is the canonical store for atlas data. Themes are stored in `~/Research-Vault/themes/{slug}.md` and topics as markdown files at `~/Research-Vault/atlas/{theme}/{slug}.md`. Frontmatter values use Obsidian wiki-link format (`[[...]]`) — strip brackets when parsing.
+The Research Vault (`~/vault`) is the canonical store for atlas data. Themes are stored in `~/vault/themes/{slug}.md` and topics as markdown files at `~/vault/atlas/{theme}/{slug}.md`. Frontmatter values use Obsidian wiki-link format (`[[...]]`) — strip brackets when parsing.
 
 ## Theme → Vault Path Mapping
 
 When creating an atlas topic file, use Obsidian wiki-link format (`[[...]]`) for relational fields (theme, connected_topics, co_authors, venue) to match existing vault files and enable Obsidian linking.
 
 ```yaml
-theme: '[[Theme Name]]'  # Must match a theme in ~/Research-Vault/themes/
+theme: '[[Theme Name]]'  # Must match a theme in ~/vault/themes/
 ```
 
 ## YAML Frontmatter Template
@@ -64,7 +64,7 @@ type: topic
 
 ## Methods Controlled Vocabulary (40 canonical)
 
-`methods:` values MUST be drawn from `VALID_METHODS` in `packages/atlas-vault/schema.py` (the source of truth) — anything else fails the `validate-topic-frontmatter` hook. Full list with scope notes + a plain-English quick-reference card: `~/Research-Vault/reports/portfolio/2026-05-31-atlas-methods-taxonomy.md`. The 9 families:
+`methods:` values MUST be drawn from `VALID_METHODS` in `packages/atlas-vault/schema.py` (the source of truth) — anything else fails the `validate-topic-frontmatter` hook. Full list with scope notes + a plain-English quick-reference card: `~/vault/reports/portfolio/2026-05-31-atlas-methods-taxonomy.md`. The 9 families:
 
 - **A. Formal/Strategic/Logical:** Analytical Modelling / Formal Theory · Game Theory · Mechanism Design · Social Choice Theory · Decision Theory · Information Theory · Algorithms & Complexity · Formal Methods, Logic & Argumentation
 - **B. Optimisation/MCDM/Preference:** Mathematical Optimisation · Multi-Objective Optimisation · Multi-Criteria Decision Analysis · Preference Elicitation & Learning
@@ -80,7 +80,7 @@ Subject-domain labels (Category D, Information Economics, …) are NOT methods �
 
 ## File Naming
 
-- Topic file: `kebab-case-slug.md` in `~/Research-Vault/atlas/{theme-dir}/`
+- Topic file: `kebab-case-slug.md` in `~/vault/atlas/{theme-dir}/`
 - Theme directories: `operations-research/`, `behavioural-decision-science/`, `ai-safety-governance/`, `human-ai-interaction/`, `mechanism-design/`, `nlp-computational-ai/`, `political-science/`, `organisation-strategy/`, `environmental-economics/`, `industrial-organisation/`
 - Atlas tooling (schema.py, generate_recap.py): `$TM/packages/atlas-vault/`
 

@@ -73,7 +73,7 @@ echo
 echo "─── update atlas frontmatter (book_url) ───"
 python3 "$TM/.scripts/update_atlas_book_url.py" \
     --slug "$SLUG" \
-    --url "https://books.user.com/$SLUG/"
+    --url "https://books.example.com/$SLUG/"
 
 echo
 echo "─── regen root index ───"
@@ -87,18 +87,18 @@ CF_TOKEN="$(op read "op://Research/Claude Code/CLOUDFLARE_API_TOKEN")"
 curl -sf -X POST "https://api.cloudflare.com/client/v4/zones/4ac4b9388b993f5c83e44ffd81857eac/purge_cache" \
     -H "Authorization: Bearer $CF_TOKEN" \
     -H "Content-Type: application/json" \
-    --data '{"hosts":["books.user.com"]}' \
+    --data '{"hosts":["books.example.com"]}' \
     | python3 -c "import sys,json; print('  purge:', json.load(sys.stdin).get('success'))"
 
 echo
 echo "─── smoke test ───"
 echo -n "  public  → "
-curl -s -o /dev/null -w "%{http_code}\n" --resolve books.user.com:443:104.21.22.163 \
-    "https://books.user.com/$SLUG/"
+curl -s -o /dev/null -w "%{http_code}\n" --resolve books.example.com:443:104.21.22.163 \
+    "https://books.example.com/$SLUG/"
 echo -n "  private → "
 curl -s -o /dev/null -w "%{http_code} (302 = Access-protected as expected)\n" \
-    --resolve books.user.com:443:104.21.22.163 \
-    "https://books.user.com/private/$SLUG/"
+    --resolve books.example.com:443:104.21.22.163 \
+    "https://books.example.com/private/$SLUG/"
 
 echo
-echo "✓ deployed: https://books.user.com/$SLUG/  +  /private/$SLUG/"
+echo "✓ deployed: https://books.example.com/$SLUG/  +  /private/$SLUG/"

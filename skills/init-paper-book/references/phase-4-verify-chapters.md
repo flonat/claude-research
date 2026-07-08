@@ -20,7 +20,7 @@ CLI:
 
 ```bash
 uv run python ~/.claude/skills/init-paper-book/references/verify_chapters.py \
-    --book-dir ~/Research-Vault/books/<slug>/ \
+    --book-dir ~/vault/books/<slug>/ \
     --paper-tex <full-path-to-main.tex> \
     --bib <full-path-to-references.bib> \
     --first-author-lastname <e.g. smith> \
@@ -50,6 +50,6 @@ This is narrower than full verification and more reliable — single dimension (
 
 Phase 5 runs ONLY if (a) 4.A exit code is 0 AND (b) 4.B returns empty lists across all chapters.
 
-On any block: write merged report to `~/Research-Vault/books/<slug>/PHASE-4-VERIFIER.md` with sections `## Missing citation keys`, `## Numeric drift`, `## Out-of-scope (self-cite)`, `## Out-of-scope (semantic)`, `## Accessibility — block tier`. Print 5-line summary. EXIT. User fixes chapters and re-invokes with `--resume-phase 4`.
+On any block: write merged report to `~/vault/books/<slug>/PHASE-4-VERIFIER.md` with sections `## Missing citation keys`, `## Numeric drift`, `## Out-of-scope (self-cite)`, `## Out-of-scope (semantic)`, `## Accessibility — block tier`. Print 5-line summary. EXIT. User fixes chapters and re-invokes with `--resume-phase 4`.
 
 On pass: write clean PHASE-4-VERIFIER.md and proceed to Phase 5.

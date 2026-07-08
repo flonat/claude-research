@@ -1,6 +1,6 @@
 # Report Format
 
-Canonical audit report written to `~/Research-Vault/books/<slug>/.audit-report-YYYY-MM-DD.md`. Produced in every run regardless of `--apply` (when `--apply` is omitted, the report is the only output; when set, it logs what was changed and what's still pending).
+Canonical audit report written to `~/vault/books/<slug>/.audit-report-YYYY-MM-DD.md`. Produced in every run regardless of `--apply` (when `--apply` is omitted, the report is the only output; when set, it logs what was changed and what's still pending).
 
 ## Template
 
@@ -61,7 +61,7 @@ Canonical audit report written to `~/Research-Vault/books/<slug>/.audit-report-Y
 
 | Chapter | Line | Hand-constructed URL | Suggested replacement |
 |---|---|---|---|
-| `results.md` | 87 | `[Wells2021](https://atlas.user.com/paper/Wells2021-fb)` | `` {cite:t}`Wells2021-fb` `` |
+| `results.md` | 87 | `[Wells2021](https://atlas.example.com/paper/Wells2021-fb)` | `` {cite:t}`Wells2021-fb` `` |
 
 ## New content (no echo in book)
 

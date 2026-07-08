@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the root index.html for books.user.com.
+"""Generate the root index.html for books.example.com.
 
 Walks the atlas, finds every topic with a `book_url:` field set, and renders
 a minimal index page styled with the shared `user-theme.css`.
@@ -24,7 +24,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-VAULT = Path.home() / "Research-Vault" / "atlas"
+VAULT = Path.home() / "vault" / "atlas"
 
 
 def parse_frontmatter(text: str) -> dict[str, str]:
@@ -80,7 +80,7 @@ def render(books: list[dict[str, str]]) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>books.user.com — paper companions</title>
+<title>books.example.com — paper companions</title>
 <link rel="stylesheet" href="/shared/user-theme.css">
 <style>
   body {{ margin: 0; }}
@@ -154,11 +154,11 @@ def render(books: list[dict[str, str]]) -> str:
 
   <header class="fn-header">
     <a class="fn-header-brand" href="/">
-      <span style="font-weight:600;letter-spacing:-0.01em;">📖 books.user.com</span>
+      <span style="font-weight:600;letter-spacing:-0.01em;">📖 books.example.com</span>
     </a>
     <nav class="fn-header-nav">
-      <a class="fn-header-link" href="https://atlas.user.com/" target="_blank" rel="noopener">Atlas ↗</a>
-      <a class="fn-header-link" href="https://vault.user.com/" target="_blank" rel="noopener">Vault ↗</a>
+      <a class="fn-header-link" href="https://atlas.example.com/" target="_blank" rel="noopener">Atlas ↗</a>
+      <a class="fn-header-link" href="https://vault.example.com/" target="_blank" rel="noopener">Vault ↗</a>
     </nav>
   </header>
 
@@ -176,7 +176,7 @@ def render(books: list[dict[str, str]]) -> str:
 
   <footer class="fn-footer">
     <span>Generated {now} UTC · {len(books)} {"book" if len(books) == 1 else "books"} live</span>
-    <a href="https://atlas.user.com/">atlas.user.com</a>
+    <a href="https://atlas.example.com/">atlas.example.com</a>
   </footer>
 
 </div>
@@ -243,7 +243,7 @@ def main() -> None:
         cmd = ["rsync", "-avz", str(args.out), "vps:/opt/user/data/books/index.html"]
         print("$", " ".join(cmd))
         subprocess.run(cmd, check=True)
-        print("Synced to books.user.com")
+        print("Synced to books.example.com")
 
 
 if __name__ == "__main__":

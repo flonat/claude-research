@@ -1,6 +1,6 @@
 # Phase 2: Accessibility Check
 
-For every chapter `.md` in `~/Research-Vault/books/<slug>/`, run the accessibility floor checks (parallel to `/init-paper-book` Phase 3.5):
+For every chapter `.md` in `~/vault/books/<slug>/`, run the accessibility floor checks (parallel to `/init-paper-book` Phase 3.5):
 
 - **Acronym expansion.** Regex `\b[A-Z]{2,}\b` extracts every acronym use. For each, verify it appears in expanded form (`<full phrase> (ACRONYM)`) before or at first use within the chapter. Common-acronyms baseline list (skip if expanded once): `DM, GP, BO, MOBO, ABM, EI, EHVI, MCDM, VOI, MAP, DOI, URL`.
 - **Equation-prose pairing.** For every `$$...$$` display equation, check that the next paragraph (or 2 sentences) contains prose explaining what the equation says. Flag equations with no following prose.

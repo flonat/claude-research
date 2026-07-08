@@ -6,7 +6,7 @@ Implementation of the read-only checks documented in:
   - skills/audit-paper-book/references/phase-2-accessibility.md
 
 Walks every book in the registry (or one named slug) and produces a
-per-book audit report at `~/Research-Vault/books/<slug>/.audit-report-<date>.md`.
+per-book audit report at `~/vault/books/<slug>/.audit-report-<date>.md`.
 
 Reads atlas + book registry for paths — never hardcoded.
 
@@ -25,7 +25,7 @@ from pathlib import Path
 
 import yaml
 
-VAULT = Path.home() / "Research-Vault"
+VAULT = Path.home() / "vault"
 BOOKS_ROOT = VAULT / "books"
 ATLAS_ROOT = VAULT / "atlas"
 REGISTRY = BOOKS_ROOT / "index.yaml"

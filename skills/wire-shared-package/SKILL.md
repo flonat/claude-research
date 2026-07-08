@@ -137,7 +137,7 @@ For each downstream project that has an Atlas topic file, add a `## Shared Infra
 **Finding the right topic file:** Search Atlas by `project_path` frontmatter field:
 
 ```bash
-grep -rl "project_path.*{project-folder}" ~/Research-Vault/atlas/
+grep -rl "project_path.*{project-folder}" ~/vault/atlas/
 ```
 
 ## Phase 5: Update Shared Package Documentation
@@ -170,7 +170,7 @@ After completing all phases:
 4. Every downstream project's Atlas topic has a `## Shared Infrastructure` section
 5. The shared package's documentation lists all downstream projects
 
-Quick check: `grep -rl "{package-name}" ~/Research-Vault/atlas/` should return all expected topic files.
+Quick check: `grep -rl "{package-name}" ~/vault/atlas/` should return all expected topic files.
 
 ## Defaults
 

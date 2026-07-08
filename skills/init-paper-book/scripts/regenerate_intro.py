@@ -15,7 +15,7 @@ Usage
     regenerate_intro.py [SLUG] [--apply]
 
     SLUG          — book slug (must match its directory name under
-                    ~/Research-Vault/books/). Omit or pass 'all' to
+                    ~/vault/books/). Omit or pass 'all' to
                     process every registered book.
     --apply       — write changes to disk. Without this flag, prints the
                     regenerated intro to stdout (dry-run).
@@ -49,7 +49,7 @@ from pathlib import Path
 
 import yaml
 
-VAULT = Path.home() / "Research-Vault"
+VAULT = Path.home() / "vault"
 BOOKS_ROOT = VAULT / "books"
 ATLAS_ROOT = VAULT / "atlas"
 REGISTRY = BOOKS_ROOT / "index.yaml"
@@ -206,7 +206,7 @@ def build_intro(slug: str, entry: dict) -> str:
     lines = [
         "Authors", f": {authors_line}", "",
         "Venue", f": {venue_line}", "",
-        "Topic", f": [{topic_title} ↗](https://atlas.user.com/topic/{slug})",
+        "Topic", f": [{topic_title} ↗](https://atlas.example.com/topic/{slug})",
     ]
 
     is_terminal = any(str(status).startswith(p) for p in TERMINAL_STATUS_PREFIXES)

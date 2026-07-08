@@ -2,7 +2,7 @@
 
 ```bash
 # Append to registry
-cat >> ~/Research-Vault/books/index.yaml <<EOF
+cat >> ~/vault/books/index.yaml <<EOF
 
 ${SLUG}:
   title: "<book title — paper title or descriptive variant>"
@@ -35,7 +35,7 @@ done
 # Update atlas topic frontmatter with book_url
 python3 ~/Task-Management/.scripts/update_atlas_book_url.py \
   --slug "$SLUG" \
-  --url "https://books.user.com/${SLUG}/"
+  --url "https://books.example.com/${SLUG}/"
 ```
 
 ## Visual smoke-test via Playwright (MANDATORY)

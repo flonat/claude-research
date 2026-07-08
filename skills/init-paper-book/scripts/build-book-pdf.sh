@@ -10,7 +10,7 @@
 #   5. `latexmk -xelatex` → copy to <book>/exports/<slug>.pdf
 #
 # Usage: build-book-pdf.sh <slug>
-#   <slug> must match a directory under ~/Research-Vault/books/ containing a
+#   <slug> must match a directory under ~/vault/books/ containing a
 #   myst.yml with a `format: tex` export.
 #
 # Exit codes: 0 success, 1 usage/precondition, 2 build error.
@@ -23,7 +23,7 @@ if [[ -z "$SLUG" ]]; then
   exit 1
 fi
 
-BOOK_DIR="$HOME/Research-Vault/books/$SLUG"
+BOOK_DIR="$HOME/vault/books/$SLUG"
 if [[ ! -d "$BOOK_DIR" ]]; then
   echo "error: book directory not found: $BOOK_DIR" >&2
   exit 1
@@ -33,7 +33,7 @@ if [[ ! -f "$BOOK_DIR/myst.yml" ]]; then
   python3 - "$SLUG" "$BOOK_DIR" <<'PY'
 import re, sys, pathlib
 slug, book_dir = sys.argv[1], pathlib.Path(sys.argv[2])
-idx = (pathlib.Path.home() / "Research-Vault" / "books" / "index.yaml").read_text()
+idx = (pathlib.Path.home() / "vault" / "books" / "index.yaml").read_text()
 # Find the slug's block; collect title + chapters
 title, bib, chapters = None, "references.bib", []
 in_block, in_chapters = False, False
@@ -110,7 +110,7 @@ import re, sys, pathlib
 main_tex   = pathlib.Path(sys.argv[1])
 book_dir   = pathlib.Path(sys.argv[2])
 slug       = sys.argv[3]
-vault_root = pathlib.Path.home() / "Research-Vault"
+vault_root = pathlib.Path.home() / "vault"
 
 # ---- read atlas topic for canonical publication metadata --------------------
 def read_book_index_atlas_topic(slug):
@@ -193,7 +193,7 @@ def read_book_index_title(slug):
     return None
 
 # "Last updated" date = most recent chapter-file edit, formatted exactly like
-# the web cover at books.user.com/<slug> ("5 Jun 2026"), so the PDF
+# the web cover at books.example.com/<slug> ("5 Jun 2026"), so the PDF
 # frontispiece and the web cover never show different dates.
 import datetime as _dt
 # Chapter files only — exclude hidden dotfiles (e.g. .audit-report-*.md that
@@ -275,7 +275,7 @@ s = re.sub(
 )
 
 # Compose a custom frontispiece title page from atlas meta + myst overrides.
-# Mirrors the web cover at books.user.com/<slug>: a "Reading Companion"
+# Mirrors the web cover at books.example.com/<slug>: a "Reading Companion"
 # eyebrow, the book title, a "Companion to <paper>" line, author, the
 # venue/status/institution row, and publication IDs at the foot — all on
 # page 1 (the book-class default \maketitle would otherwise be bare).

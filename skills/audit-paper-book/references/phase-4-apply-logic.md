@@ -1,16 +1,16 @@
 # Phase 4: Apply (only with --apply) or Report
 
-Without `--apply`, write the report to `~/Research-Vault/books/<slug>/.audit-report-YYYY-MM-DD.md` and stop.
+Without `--apply`, write the report to `~/vault/books/<slug>/.audit-report-YYYY-MM-DD.md` and stop.
 
 With `--apply`:
 
 ```bash
 # Bib: copy new entries from paper to book
-cp "$PAPER_BIB" ~/Research-Vault/books/"$SLUG"/references.bib
+cp "$PAPER_BIB" ~/vault/books/"$SLUG"/references.bib
 
 # Figures: copy added figures + replace changed ones
 for fig in $figs_paper_only $figs_changed; do
-    cp "$fig" ~/Research-Vault/books/"$SLUG"/figures/
+    cp "$fig" ~/vault/books/"$SLUG"/figures/
 done
 
 # Overleaf-link masthead: add / remove / update the Overleaf-source line in intro.md.
@@ -61,7 +61,7 @@ done
 #      or `Venue` → report; user must add (we don't fabricate field
 #      values).
 #  (d) Hand-constructed citation URL in chapter prose. Any
-#      `](https?://atlas.user.com/paper/<Key>)` or `](/paper/<Key>)`
+#      `](https?://atlas.example.com/paper/<Key>)` or `](/paper/<Key>)`
 #      inside a non-references chapter → report with chapter:line and
 #      the suggested replacement `{cite:t}\`<Key>\``. Not auto-applied
 #      because cite:t vs cite:p selection requires context judgement.

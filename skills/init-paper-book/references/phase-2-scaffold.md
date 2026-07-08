@@ -1,8 +1,8 @@
 # Phase 2: Scaffold
 
 ```bash
-mkdir -p ~/Research-Vault/books/"$SLUG"/figures
-cp "$BIB" ~/Research-Vault/books/"$SLUG"/references.bib
+mkdir -p ~/vault/books/"$SLUG"/figures
+cp "$BIB" ~/vault/books/"$SLUG"/references.bib
 
 # Copy ONLY paper-cited figures. Inspect tex for \includegraphics{...} paths,
 # resolve them, then copy or convert as needed:
@@ -15,7 +15,7 @@ grep -oE '\\includegraphics(\[[^]]*\])?\{[^}]+\}' "$PAPER_TEX" \
       # Resolve to absolute path (project_path-relative or absolute)
       [[ "$fig" == /* ]] && src="$fig" || src="$PROJECT_PATH/$fig"
       base=$(basename "$fig" | sed 's/\.[^.]*$//')  # strip extension
-      out=~/Research-Vault/books/"$SLUG"/figures/"$base"
+      out=~/vault/books/"$SLUG"/figures/"$base"
       # Search for png anywhere — paper tex includes might omit extension or
       # point to PDF while a PNG twin lives elsewhere in the project tree.
       png_src=$(find "$PROJECT_PATH" -name "${base}.png" -type f 2>/dev/null | head -1)

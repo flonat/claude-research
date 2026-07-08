@@ -2,7 +2,7 @@
 
 **Paper-tex resolution.** The audit needs to know which `.tex` file is the canonical paper. Resolution order:
 
-1. **Registry override.** If the book's entry in `~/Research-Vault/books/index.yaml` has a `paper_tex:` field, it's used as a path relative to the project root (e.g. `paper-acm-gecco/paper/gecco2026.tex`). Set this once at `/init-paper-book` setup when the paper's tex isn't named `main.tex` (common with ACM templates that name files after the venue).
+1. **Registry override.** If the book's entry in `~/vault/books/index.yaml` has a `paper_tex:` field, it's used as a path relative to the project root (e.g. `paper-acm-gecco/paper/gecco2026.tex`). Set this once at `/init-paper-book` setup when the paper's tex isn't named `main.tex` (common with ACM templates that name files after the venue).
 2. **Canonical layout.** First `paper-*/paper/main.tex` under the project (the Overleaf symlink convention).
 3. **Backup fallback.** First `paper-*/backup/main.tex` (for when the Overleaf symlink is temporarily down).
 
@@ -13,7 +13,7 @@ Build four diffs.
 **Bibliography diff:**
 ```bash
 PAPER_BIB="$PAPER_DIR/.../references.bib"
-BOOK_BIB=~/Research-Vault/books/"$SLUG"/references.bib
+BOOK_BIB=~/vault/books/"$SLUG"/references.bib
 diff <(grep -oE "@\w+\{[^,]+," "$PAPER_BIB" | sort) \
      <(grep -oE "@\w+\{[^,]+," "$BOOK_BIB" | sort)
 # Capture: bib_added, bib_removed, bib_unchanged
@@ -22,7 +22,7 @@ diff <(grep -oE "@\w+\{[^,]+," "$PAPER_BIB" | sort) \
 **Figures diff:**
 - Walk `\includegraphics{...}` paths in paper tex.
 - Resolve to `<project>/figures/...png` or `<project>/output/figures/...png`.
-- Compare against `~/Research-Vault/books/<slug>/figures/`.
+- Compare against `~/vault/books/<slug>/figures/`.
 - Capture: figs_paper_only, figs_book_only, figs_changed (mtime / size differs).
 
 **Numeric drift:**
@@ -32,7 +32,7 @@ diff <(grep -oE "@\w+\{[^,]+," "$PAPER_BIB" | sort) \
 
 **Section structure drift:**
 - Extract `\section{...}` and `\subsection{...}` from paper tex.
-- Compare against the chapter outline declared in `~/Research-Vault/books/index.yaml` for this slug.
+- Compare against the chapter outline declared in `~/vault/books/index.yaml` for this slug.
 - Capture: paper_sections_added, paper_sections_renamed, book_chapters_orphaned.
 
 **Overleaf-link drift (status transitions):**
@@ -67,9 +67,9 @@ This rebuilds `intro.md` from the atlas topic and re-appends anything below the 
 The canonical intro masthead is a definition list (atlas has `def_list` enabled). The old blockquote pattern (`> **Paper.** ...\n> **Authors.** ...`) is deprecated because it duplicates the H1 the template already supplies and wraps awkwardly on narrow screens. For each book under audit, check:
 
 - **Blockquote masthead present.** If `intro.md` starts with a `> **Paper.**` (or `> **Authors.**` / `> **Venue.**`) block, **propose migration** to the definition-list pattern below. This is the deprecation flagged in `/init-paper-book` Rule 12 + Intro-masthead-format section — Phase 3 `--apply` auto-migrates by regenerating via the shared script.
-- **Redundant H1 in chapter body.** If any chapter file `~/Research-Vault/books/<slug>/<ch>.md` contains a top-level `^# ` heading anywhere in the body (the template already renders `<h1 class="page-title">` from `index.yaml`), **propose stripping** that line. This catches both legacy books and chapters that were hand-edited.
+- **Redundant H1 in chapter body.** If any chapter file `~/vault/books/<slug>/<ch>.md` contains a top-level `^# ` heading anywhere in the body (the template already renders `<h1 class="page-title">` from `index.yaml`), **propose stripping** that line. This catches both legacy books and chapters that were hand-edited.
 - **Required masthead fields.** Verify `intro.md` masthead has at minimum `Authors`, `Venue`, and `Topic`. Optional fields: `Preprint`, `Source` (Overleaf — handled by the Overleaf-link rule above), `Status`. Missing required field → **report**, not auto-applied.
-- **Missing `Topic` field.** If `intro.md` masthead lacks a `Topic` definition linking to `https://atlas.user.com/topic/<slug>`, **propose addition**. This is the canonical bridge between book and atlas portfolio.
+- **Missing `Topic` field.** If `intro.md` masthead lacks a `Topic` definition linking to `https://atlas.example.com/topic/<slug>`, **propose addition**. This is the canonical bridge between book and atlas portfolio.
 - **Intro body drift from atlas Description.** The intro chapter's prose under `## About this paper` (and *above* the `<!-- preserve-below ... -->` marker if present) should mirror the atlas topic's `## Description` body. If they have drifted, **report** and offer regeneration. Atlas is the source of truth — book intros are derived above the marker, hand-written below it.
 - **Preserve marker integrity.** The canonical preserve-marker string is exactly (one line, no leading/trailing whitespace):
 
@@ -111,7 +111,7 @@ Status
 
 **Citation-URL drift:**
 
-Inline citations must use `{cite:t}\`Key\`` and let atlas's converter route them. The converter prefers `/book/<slug>/references#ref-Key` for keys in the local `references.bib` and falls back to `https://atlas.user.com/paper/Key` for keys only in the global library — so hand-constructed citation URLs bypass the fallback and may 404 for grey-literature entries.
+Inline citations must use `{cite:t}\`Key\`` and let atlas's converter route them. The converter prefers `/book/<slug>/references#ref-Key` for keys in the local `references.bib` and falls back to `https://atlas.example.com/paper/Key` for keys only in the global library — so hand-constructed citation URLs bypass the fallback and may 404 for grey-literature entries.
 
 - **Hand-constructed `/paper/<key>` link present in chapter.** Regex `\]\(https?://[^)]*atlas\.user\.com/paper/[A-Za-z0-9_-]+\)` or `\]\(/paper/[A-Za-z0-9_-]+\)` in any non-references chapter → **propose conversion** to `{cite:t}\`Key\``.
 - **Hand-constructed `[Key](Key)` self-link.** Markdown citations that point at the key as a non-URL → **report**, suggest `{cite:t}\`Key\``.

@@ -33,7 +33,7 @@ Formalize a lemma/theorem in Lean 4 + mathlib and let the kernel check it. A `la
 
 ## Toolchain (pre-seeded — do not re-download)
 
-- **Machine:** Mac Mini (`FB-Mac-mini-M4`). Check `hostname`; if on the MacBook, run via `ssh mini`.
+- **Machine:** Mac Mini (`[server]`). Check `hostname`; if on the MacBook, run via `ssh mini`.
 - **Project:** `~/lean-verify/mathlib_verify/` — Lean `4.31.0`, mathlib `v4.31.0` (cache-backed, ~7.2 GB `.lake`). Health check: `cd ~/lean-verify/mathlib_verify && lake build MathlibVerify.SmokeTest`.
 - Refresh mathlib later: `lake update && lake exe cache get`.
 

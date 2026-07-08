@@ -53,10 +53,10 @@ For NEW books, use `/init-paper-book`. This skill never creates a book that does
 SLUG="<resolved-slug>"
 
 # 1. Book must exist in vault
-[[ -d ~/Research-Vault/books/"$SLUG" ]] || die "No book at vault. Use /init-paper-book."
+[[ -d ~/vault/books/"$SLUG" ]] || die "No book at vault. Use /init-paper-book."
 
 # 2. Registry entry must exist
-grep -q "^${SLUG}:" ~/Research-Vault/books/index.yaml \
+grep -q "^${SLUG}:" ~/vault/books/index.yaml \
     || die "${SLUG} not in books/index.yaml. Add a registry entry first."
 
 # 3. Atlas topic + project_path must resolve.
@@ -68,14 +68,14 @@ ATLAS_TOPIC_REF=$(awk -v slug="$SLUG" '
     $0 ~ "^"slug":" {in_block=1; next}
     in_block && /^[a-z]/ {in_block=0}
     in_block && /^[[:space:]]+atlas_topic:/ {gsub(/[",'\'']/, ""); print $2; exit}
-' ~/Research-Vault/books/index.yaml)
+' ~/vault/books/index.yaml)
 ATLAS_TOPIC_LEAF="${ATLAS_TOPIC_REF##*/}"
 [[ "$ATLAS_TOPIC_LEAF" == "$SLUG" ]] \
     || die "SLUG DRIFT: book '${SLUG}' points at atlas topic '${ATLAS_TOPIC_LEAF}'. Rename one side so they match (Hard Rule 4). See /init-paper-book SKILL.md."
 
-ATLAS_TOPIC=$(find ~/Research-Vault/atlas -name "${SLUG}.md" -type f | head -1)
+ATLAS_TOPIC=$(find ~/vault/atlas -name "${SLUG}.md" -type f | head -1)
 [[ -n "$ATLAS_TOPIC" ]] \
-    || die "No atlas topic file at ~/Research-Vault/atlas/*/${SLUG}.md. Either rename the book to match an existing atlas topic, or create the missing topic via /init-project-research."
+    || die "No atlas topic file at ~/vault/atlas/*/${SLUG}.md. Either rename the book to match an existing atlas topic, or create the missing topic via /init-project-research."
 PROJECT_PATH=$(grep -E "^project_path:" "$ATLAS_TOPIC" | cut -d' ' -f2- | tr -d "'\"")
 RR=$(cat ~/.config/task-mgmt/research-root)
 [[ -d "$RR/$PROJECT_PATH" ]] || die "project_path in atlas does not resolve."
@@ -116,7 +116,7 @@ See [`references/phase-2-accessibility.md`](references/phase-2-accessibility.md)
 
 ### Deterministic implementation — `scripts/batch_audit.py`
 
-Phase 1 + Phase 2's deterministic checks are implemented in `scripts/batch_audit.py`. It reads the book registry, resolves each book's `paper_tex` via the atlas topic's `project_path`, and produces a per-book report at `~/Research-Vault/books/<slug>/.audit-report-<date>.md`.
+Phase 1 + Phase 2's deterministic checks are implemented in `scripts/batch_audit.py`. It reads the book registry, resolves each book's `paper_tex` via the atlas topic's `project_path`, and produces a per-book report at `~/vault/books/<slug>/.audit-report-<date>.md`.
 
 ```bash
 # Audit all 9 books
@@ -163,7 +163,7 @@ Each drift item lands in one of six buckets:
 
 ### Phase 4: Apply (only with --apply) or report
 
-See [`references/phase-4-apply-logic.md`](references/phase-4-apply-logic.md) for apply logic (bib copy, figure replacement, masthead updates, format-convention migrations). Write the audit report to `~/Research-Vault/books/<slug>/.audit-report-YYYY-MM-DD.md` so the user has a record of what was applied + what's still pending.
+See [`references/phase-4-apply-logic.md`](references/phase-4-apply-logic.md) for apply logic (bib copy, figure replacement, masthead updates, format-convention migrations). Write the audit report to `~/vault/books/<slug>/.audit-report-YYYY-MM-DD.md` so the user has a record of what was applied + what's still pending.
 
 ### Phase 5: Verify (if --apply ran OR --visual-check passed in)
 

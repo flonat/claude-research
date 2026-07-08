@@ -1,13 +1,13 @@
 ---
 name: init-paper-book
-description: "Use when you need to scaffold a NEW educational companion book for a LaTeX paper. Reads the paper, drafts 8 substantive chapters into the vault at ~/Research-Vault/books/{slug}/, copies bib + figures, registers the book, and verifies atlas serves it. Source-of-truth is the paper PDF/tex; the book is a reading companion, never a re-statement of new claims. For syncing an existing book to a paper revision, use /audit-paper-book."
+description: "Use when you need to scaffold a NEW educational companion book for a LaTeX paper. Reads the paper, drafts 8 substantive chapters into the vault at ~/vault/books/{slug}/, copies bib + figures, registers the book, and verifies atlas serves it. Source-of-truth is the paper PDF/tex; the book is a reading companion, never a re-statement of new claims. For syncing an existing book to a paper revision, use /audit-paper-book."
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Agent, Task
 argument-hint: "<project-path-or-slug> [--dry-run]"
 ---
 
 # Init Paper Book
 
-Scaffold a runnable, browsable companion to a LaTeX paper. The book lives in the vault, atlas renders it, and direct URLs at `books.user.com/<slug>/<chapter>` make it shareable. There is **no separate build pipeline** — atlas is the renderer.
+Scaffold a runnable, browsable companion to a LaTeX paper. The book lives in the vault, atlas renders it, and direct URLs at `books.example.com/<slug>/<chapter>` make it shareable. There is **no separate build pipeline** — atlas is the renderer.
 
 For syncing an existing book to a paper revision, use `/audit-paper-book` instead.
 
@@ -22,14 +22,14 @@ For syncing an existing book to a paper revision, use `/audit-paper-book` instea
 
 ### Format — catch in review
 
-5. **Vault location.** Book chapters live at `~/Research-Vault/books/<slug>/`. Never in the project tree (atlas runs under launchd and File Provider paths hang).
-6. **Registry entry.** `~/Research-Vault/books/index.yaml` must list the slug, title, atlas-topic pointer, bibliography file, and explicit chapter order.
+5. **Vault location.** Book chapters live at `~/vault/books/<slug>/`. Never in the project tree (atlas runs under launchd and File Provider paths hang).
+6. **Registry entry.** `~/vault/books/index.yaml` must list the slug, title, atlas-topic pointer, bibliography file, and explicit chapter order.
 7. **Eight chapters.** Default skeleton: `intro · background · setup · method · results · limitations · extend · appendix`. The `references` chapter is auto-appended when `bibliography:` is set.
 8. **No-index by default.** atlas's base.html injects `noindex,nofollow` for book chapters. Books are direct-link-only — no discovery surface.
 9. **Section headings descriptive, never numbered.** Use `## The selection rule`, not `## 4.5 The selection rule`. Cross-references to the paper carry the paper's own numbering inline.
 10. **Mystmd-style callouts.** Use `` ```{important} ``, `` ```{tip} ``, `` ```{note} ``, `` ```{warning} ``, `` ```{caution} ``, `` ```{seealso} ``. Atlas's directive converter handles these. Pandoc-style `::: {.callout-X}` does NOT render — convert if you find it in source material.
-11. **Figure paths are vault-relative.** `figures/<filename>` resolves to `~/Research-Vault/books/<slug>/figures/<filename>` served by atlas's `/book/<slug>/figures/{filename:path}` route.
-12. **Citations resolve in-book first.** Mystmd `{cite:t}\`Key\`` converts to `[Key](/book/<slug>/references#ref-Key)` when `Key` is present in the book's local `references.bib` (anchors to the matching `<li id="ref-Key">` card in the auto-rendered `references` chapter). For keys not in the local bib, the converter falls back to `https://atlas.user.com/paper/Key` (the global Paperpile-backed route, behind CF Access). Don't construct citation URLs by hand.
+11. **Figure paths are vault-relative.** `figures/<filename>` resolves to `~/vault/books/<slug>/figures/<filename>` served by atlas's `/book/<slug>/figures/{filename:path}` route.
+12. **Citations resolve in-book first.** Mystmd `{cite:t}\`Key\`` converts to `[Key](/book/<slug>/references#ref-Key)` when `Key` is present in the book's local `references.bib` (anchors to the matching `<li id="ref-Key">` card in the auto-rendered `references` chapter). For keys not in the local bib, the converter falls back to `https://atlas.example.com/paper/Key` (the global Paperpile-backed route, behind CF Access). Don't construct citation URLs by hand.
 13. **Affiliations from atlas.** Author affiliations come from the atlas topic's `institution:` field. Never hardcode.
 14. **Accessibility floor.** Chapters must be readable by someone with an undergraduate degree in a quantitative field (linear algebra, probability, basic optimisation/statistics — not necessarily Bayesian methods or domain-specific machinery). Concretely:
     - Introduce every non-elementary notation/term inline at first use (e.g. "Gaussian process (GP) — a distribution over functions where any finite set of evaluations is jointly Gaussian").
@@ -78,7 +78,7 @@ Per the global `--autonomous` / `-y` convention in `~/.claude/rules/phased-work.
 Hard correctness gates that still fire even with `--autonomous` (any of these aborts the run):
 
 - Pre-flight checks 1–5 (atlas, project, paper-tex, bib, vault-not-already-present)
-- Sub-agent forbid-list (Phase 3 drafters can't touch git, can't run latexmk, can't edit outside `~/Research-Vault/books/<slug>/`)
+- Sub-agent forbid-list (Phase 3 drafters can't touch git, can't run latexmk, can't edit outside `~/vault/books/<slug>/`)
 - **Phase 4 verifier failure** — any one of: numeric drift, missing citation key, claim outside paper scope, accessibility-floor violation (see Phase 4)
 - After-flight verifier (registry entry exists, atlas serves the book URL)
 
@@ -97,7 +97,7 @@ Use `--dry-run` first if you want to see the chapter plan before letting it run.
 SLUG="<resolved-slug>"
 
 # 1. Atlas topic exists
-find ~/Research-Vault/atlas -name "${SLUG}.md" -type f | head -1
+find ~/vault/atlas -name "${SLUG}.md" -type f | head -1
 [[ $? == 0 ]] || die "No atlas topic for ${SLUG}. Run /init-project-research first."
 
 # 2. Project directory exists
@@ -127,7 +127,7 @@ BIB=$(find "$PAPER_DIR" -maxdepth 3 -name "*.bib" | head -1)
 [[ -f "$BIB" ]] || warn "No .bib found — references chapter will be empty."
 
 # 5. Vault book dir doesn't already exist
-[[ -d ~/Research-Vault/books/"$SLUG" ]] && die "Book already exists. Use /audit-paper-book to sync."
+[[ -d ~/vault/books/"$SLUG" ]] && die "Book already exists. Use /audit-paper-book to sync."
 ```
 
 ## Phases
@@ -165,7 +165,7 @@ See [`references/phase-5-register.md`](references/phase-5-register.md) for regis
 
 ### Phase 6: Build PDF companion (soft-fail)
 
-See [`references/phase-6-pdf-build.md`](references/phase-6-pdf-build.md). Runs `bash scripts/build-book-pdf.sh <slug>` to produce `~/Research-Vault/books/<slug>/exports/<slug>.pdf` via a `myst build --tex` → patch → `latexmk -xelatex` pipeline. Skips silently if `mystmd` is not on PATH; warns on build error but does not block — atlas HTML rendering remains the canonical surface.
+See [`references/phase-6-pdf-build.md`](references/phase-6-pdf-build.md). Runs `bash scripts/build-book-pdf.sh <slug>` to produce `~/vault/books/<slug>/exports/<slug>.pdf` via a `myst build --tex` → patch → `latexmk -xelatex` pipeline. Skips silently if `mystmd` is not on PATH; warns on build error but does not block — atlas HTML rendering remains the canonical surface.
 
 ## Anti-patterns
 
@@ -184,7 +184,7 @@ If anything looks visually wrong (callouts not rendering, math not rendering, fi
 - Figure path wrong — should be `figures/<filename>` relative to chapter
 - Bib file missing or in wrong format — references chapter shows "No references" if `_parse_bib` returns []
 
-When the rendered output is ready, suggest committing the vault changes (`git add ~/Research-Vault/books/<slug>` from the vault repo if it's tracked) and announce: "Live at https://books.user.com/<slug>" — the landing URL renders an **editorial cover/frontispiece**: an accent spine, the title, "Companion to <paper>", authors + venue/status/institution **chips**, a numbered contents list with **per-chapter and total reading time** (auto-computed from word count in `book.get_book`, no authoring action needed), and an action row — **Start reading →** · **⤓ Download PDF** · **View atlas topic ↗**. Chapters render running prose at a serif reading measure with a scroll-progress bar and prev/next cards (all in the atlas `--fn-*` tokens, so dark mode holds). The **⤓ Download PDF** action serves the Phase-6 build at `~/Research-Vault/books/<slug>/exports/<slug>.pdf` (one-click, real xelatex typesetting), and falls back to a browser-printable `/book/<slug>/print` view when no PDF has been built — so keep Phase 6 in the loop to keep the download fresh.
+When the rendered output is ready, suggest committing the vault changes (`git add ~/vault/books/<slug>` from the vault repo if it's tracked) and announce: "Live at https://books.example.com/<slug>" — the landing URL renders an **editorial cover/frontispiece**: an accent spine, the title, "Companion to <paper>", authors + venue/status/institution **chips**, a numbered contents list with **per-chapter and total reading time** (auto-computed from word count in `book.get_book`, no authoring action needed), and an action row — **Start reading →** · **⤓ Download PDF** · **View atlas topic ↗**. Chapters render running prose at a serif reading measure with a scroll-progress bar and prev/next cards (all in the atlas `--fn-*` tokens, so dark mode holds). The **⤓ Download PDF** action serves the Phase-6 build at `~/vault/books/<slug>/exports/<slug>.pdf` (one-click, real xelatex typesetting), and falls back to a browser-printable `/book/<slug>/print` view when no PDF has been built — so keep Phase 6 in the loop to keep the download fresh.
 
 ## Logging
 

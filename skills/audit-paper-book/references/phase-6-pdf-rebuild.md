@@ -16,7 +16,7 @@ If any of these are false, log a one-liner and continue. Audit is non-destructiv
 bash ~/.claude/skills/init-paper-book/scripts/build-book-pdf.sh <slug>
 ```
 
-Output: `~/Research-Vault/books/<slug>/exports/<slug>.pdf`.
+Output: `~/vault/books/<slug>/exports/<slug>.pdf`.
 
 The script's bootstrap logic CAN write a `myst.yml` if missing — but during audit we suppress this by checking for `myst.yml` first and only invoking the script when it exists. Reasoning: scaffolding new infrastructure is `/init-paper-book`'s job, not audit's.
 

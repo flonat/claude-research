@@ -21,5 +21,5 @@ For each chapter:
 - Use markdown tables for notation + comparison + result tables. Atlas styles tables with hairline dividers + tabular nums.
 - Use $...$ and $$...$$ for math. Atlas's arithmatex extension preserves these for MathJax.
 - Cross-reference paper sections inline ("paper §4.2") rather than via book chapter numbers.
-- For citations, use mystmd-style `{cite:t}\`Key\`` — atlas converts to `/book/<slug>/references#ref-Key` when the key is in the book's local `references.bib` (the common case), or to `https://atlas.user.com/paper/Key` as a fallback for keys only in the global library.
+- For citations, use mystmd-style `{cite:t}\`Key\`` — atlas converts to `/book/<slug>/references#ref-Key` when the key is in the book's local `references.bib` (the common case), or to `https://atlas.example.com/paper/Key` as a fallback for keys only in the global library.
 - **Include the accessibility floor verbatim in every Phase 3 sub-agent prompt** (see hard rule 14). Sub-agents do not inherit project conventions — paste the floor in.

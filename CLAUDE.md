@@ -90,7 +90,7 @@ Before running any experiment sweep or simulation batch:
 
 <!-- RESEARCH-VAULT:START -->
 <!-- CUSTOMISE: Point this to your own Obsidian-style markdown vault -->
-The Research Vault (`~/Research-Vault`) stores all dynamic research data as markdown files with YAML frontmatter. The `taskflow` MCP server reads/writes these files.
+The Research Vault (`~/vault`) stores all dynamic research data as markdown files with YAML frontmatter. The `taskflow` MCP server reads/writes these files.
 
 | Directory | Content |
 |-----------|---------|
@@ -120,7 +120,7 @@ Detailed instructions in `.context/workflows/`:
 <!-- COMPONENTS:START -->
 ## Skills Available
 
-85 skills in `skills/` folder. See [`docs/skills.md`](docs/skills.md) for the full catalogue.
+108 skills in `skills/` folder. See [`docs/skills.md`](docs/skills.md) for the full catalogue.
 
 ## Agents
 
@@ -183,7 +183,7 @@ Update `.context/current-focus.md` (what we worked on, where left off, what's ne
 | `.context/` | AI context library (profile, focus, projects, workflows, preferences) |
 | `.claude/agents/` | Agent definitions (15 agents) |
 | `.claude/rules/` | Auto-loaded rules (18 rules) |
-| `skills/` | 85 skill definitions |
+| `skills/` | 108 skill definitions |
 | `hooks/` | 9 hook scripts |
 | `.scripts/` | CLI tools for Notion task management |
 | `packages/cli-council/` | cli-council |

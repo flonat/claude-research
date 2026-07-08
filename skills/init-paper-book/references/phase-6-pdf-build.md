@@ -8,7 +8,7 @@ After Phase 5 lands the registry entry, atlas reload, and smoke test, build a PD
 bash ~/.claude/skills/init-paper-book/scripts/build-book-pdf.sh <slug>
 ```
 
-Output: `~/Research-Vault/books/<slug>/exports/<slug>.pdf`.
+Output: `~/vault/books/<slug>/exports/<slug>.pdf`.
 
 The script is generic — any vault book with an `index.yaml` registry entry can be built. No per-book code needed.
 
@@ -40,7 +40,7 @@ If `mystmd` is missing, the script exits with a one-line error and the overall i
 ## Soft-fail contract
 
 - Missing `mystmd` → log warning, continue
-- Missing `myst.yml` → script auto-bootstraps one from `~/Research-Vault/books/index.yaml`
+- Missing `myst.yml` → script auto-bootstraps one from `~/vault/books/index.yaml`
 - `latexmk` non-zero exit → warn, point at the build log, continue (a partial PDF may have been written)
 - Missing or unresolved cross-references (e.g. `#sec-foo` not found) → mystmd warns at build time, doesn't block
 
@@ -49,7 +49,7 @@ The init pipeline never blocks on PDF errors. Atlas HTML rendering is canonical;
 ## Frontispiece title page
 
 The script replaces the book-class `\maketitle` with a **frontispiece** that mirrors
-the web cover at `books.user.com/<slug>`: a "Reading Companion" eyebrow, the book
+the web cover at `books.example.com/<slug>`: a "Reading Companion" eyebrow, the book
 title (with any trailing "— A Reading Companion" suffix stripped so it doesn't echo
 the eyebrow), a "Companion to <paper>" line, the author, the
 venue · status · institution row, and publication IDs (DOI / arXiv / Code) at the
@@ -60,7 +60,7 @@ Metadata reads from two sources:
 
 | Source | Fields |
 |--------|--------|
-| Atlas topic (`~/Research-Vault/atlas/<theme>/<slug>.md`) | `paper_title`, `venue`, `status` from `outputs[0]`; `institution` from the top level |
+| Atlas topic (`~/vault/atlas/<theme>/<slug>.md`) | `paper_title`, `venue`, `status` from `outputs[0]`; `institution` from the top level |
 | `<book>/myst.yml` | `subtitle`, `conference_date`, `doi`, `arxiv`, `repo`, `license` (overrides win) |
 
 The atlas topic is the canonical record. Per-book overrides in `myst.yml` fill fields atlas doesn't carry (conference dates, repo URLs, license).

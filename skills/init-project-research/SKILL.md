@@ -91,7 +91,7 @@ Pre-scaffold checks. Run before any directory creation. If any near-match is fou
 
 1. **Atlas topic search** — grep for near-matches by title, slug keywords, theme:
    ```bash
-   grep -ril "<title-keyword>" ~/Research-Vault/atlas/ 2>/dev/null
+   grep -ril "<title-keyword>" ~/vault/atlas/ 2>/dev/null
    ```
 2. **Sibling directory listing** — list siblings in the parent theme folder, flag near-duplicates (same keywords, same stem with different venue suffix, typo-distance ≤ 2):
    ```bash
@@ -135,7 +135,7 @@ If the directory doesn't exist, create it and proceed.
 
 **Preprint targets** (arXiv / SSRN / OSF / institutional repos): seed the atlas topic's `outputs[*]` with `venue: arXiv` (or equivalent), `format: Preprint`, `status: Planned`, plus an optional internal target date. **Do NOT seed a vault submission file for the preprint target** — preprint posts are not venue submissions per `rules/preprint-vs-submission.md`. Vault submissions are reserved for events with reviewer pipelines (journals, conferences). A project with only a preprint target gets zero vault submission files at init.
 
-**Conference/journal targets:** seed each `outputs[*]` with `venue: '[[Name]]'` (slug must resolve to a `~/Research-Vault/venues/` file) + `format` + `status` + `paper_title` (kept in sync with the registry `canonical_title`). When you seed a **near-term Conference/Workshop** target at a submission-active status (or with a known edition), also set `cycle: <Venue> <edition-year>` (e.g. `cycle: NeurIPS 2026`) per `rules/atlas-status-vocabulary.md` § submission-join completeness — journals get no cycle. Idea-stage targets may omit `cycle` until an edition is committed.
+**Conference/journal targets:** seed each `outputs[*]` with `venue: '[[Name]]'` (slug must resolve to a `~/vault/venues/` file) + `format` + `status` + `paper_title` (kept in sync with the registry `canonical_title`). When you seed a **near-term Conference/Workshop** target at a submission-active status (or with a known edition), also set `cycle: <Venue> <edition-year>` (e.g. `cycle: NeurIPS 2026`) per `rules/atlas-status-vocabulary.md` § submission-join completeness — journals get no cycle. Idea-stage targets may omit `cycle` until an edition is committed.
 
 **Python tooling:** always `uv` — never bare `pip`, `python`, or `requirements.txt`.
 
@@ -265,8 +265,8 @@ Per the `multi-system-completeness` rule, partial state is the dominant failure 
 | `/save-context` | Context library entries created during Phase 8 |
 | `/session-log` | Offer to create a session log after init completes |
 | `/interview-me` | To develop the research idea before scaffolding |
-| `packages/atlas-vault/generate_recap.py` | Optional after init — regenerates `RECAP.md` portfolio index. Not required for `atlas.user.com` (atlas-workspace reads vault directly via Syncthing). |
-| `/atlas-deploy` | Manual-only skill — user can run for schema validation + Mac Mini launchd restart. NOT needed for atlas.user.com to surface a new topic; that's automatic via Syncthing. |
+| `packages/atlas-vault/generate_recap.py` | Optional after init — regenerates `RECAP.md` portfolio index. Not required for `atlas.example.com` (atlas-workspace reads vault directly via Syncthing). |
+| `/atlas-deploy` | Manual-only skill — user can run for schema validation + Mac Mini launchd restart. NOT needed for atlas.example.com to surface a new topic; that's automatic via Syncthing. |
 | `/audit-project-research` | **Must mirror this scaffold.** When init adds a new directory or convention, add a matching audit phase there and update `/atlas-audit` SA1. |
 | `/atlas-audit` | **Drift trigger:** new projects change theme dir counts — see `atlas-audit/references/drift-checks.md`. SA1 structure checks must stay consistent with this scaffold. |
 | [`references/domain-profile-template.md`](references/domain-profile-template.md) | Template for economics/field-specific domain profiles — copy to project's `docs/domain-profile.md` during init for economics papers. |

@@ -17,7 +17,7 @@ Venue
 : <Venue> — <atlas outputs[0].status, used verbatim>
 
 Topic
-: [<Atlas topic title> ↗](https://atlas.user.com/topic/<atlas-slug>)
+: [<Atlas topic title> ↗](https://atlas.example.com/topic/<atlas-slug>)
 
 Source
 : [📝 Overleaf ↗](<overleaf-link from atlas>)   ← omit when status starts with Accepted / In Press / Camera-ready / Published / Withdrawn

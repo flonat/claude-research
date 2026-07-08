@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 import yaml
 
-ROOT = Path.home() / "Research-Vault"
+ROOT = Path.home() / "vault"
 VENUES = ROOT / "venues"
 SJR_CSV = Path.home() / "Task-Management/.context/resources/venue-rankings/scimagojr-2025.csv"
 

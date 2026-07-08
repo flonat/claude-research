@@ -28,7 +28,7 @@ add_section() {
 # --- Path Registry (canonical roots for all data) ---
 CONFIG_DIR="$HOME/.config/task-mgmt"
 PATH_REGISTRY=""
-for entry in path:Task-Management research-root:Research-Projects vault:Research-Vault overleaf-root:Overleaf; do
+for entry in path:Task-Management research-root:Research-Projects vault:vault overleaf-root:Overleaf; do
   file="${entry%%:*}"
   label="${entry#*:}"
   if [ -f "$CONFIG_DIR/$file" ]; then

@@ -2,11 +2,11 @@
 """Idempotently set `book_url:` in an atlas topic file's YAML frontmatter.
 
 Used by /paper-book Phase 4.4 after a successful deploy to wire the
-`books.user.com/<slug>/` link into the atlas topic so that
-`atlas.user.com` topic pages can render it.
+`books.example.com/<slug>/` link into the atlas topic so that
+`atlas.example.com` topic pages can render it.
 
 Usage:
-    python3 update_atlas_book_url.py --slug example-project-i --url https://books.user.com/example-project-i/
+    python3 update_atlas_book_url.py --slug example-project-i --url https://books.example.com/example-project-i/
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ import argparse
 import sys
 from pathlib import Path
 
-VAULT = Path.home() / "Research-Vault" / "atlas"
+VAULT = Path.home() / "vault" / "atlas"
 
 
 def find_topic(slug: str) -> Path:
