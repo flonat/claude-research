@@ -3,7 +3,7 @@
 # Run from MacBook — SSHes into Mac Mini via Tailscale.
 set -euo pipefail
 
-ssh -tt user-mini '
+ssh -tt my-mini '
   echo "1/3  Unlocking login keychain..."
   security unlock-keychain ~/Library/Keychains/login.keychain-db
 

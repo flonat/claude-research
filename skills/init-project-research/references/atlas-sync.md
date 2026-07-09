@@ -57,7 +57,7 @@ RESEARCH_ROOT="$(cat ~/.config/task-mgmt/research-root)"
 mkdir -p "$RESEARCH_ROOT/{ThemeAbbrev}/{slug}"
 ```
 
-Theme abbreviations: ASG, BDS, EnvEcon, HAI, IO, MechDes, NLP, OR, OrgStrat, PolSci. Folder name must be the kebab-case slug (same as the atlas topic filename).
+Theme abbreviations: T1, T2, T3, T4, T5, T6, T7, T8, T9, T10 (define your own theme codes). Folder name must be the kebab-case slug (same as the atlas topic filename).
 
 ## 7d. Regenerate RECAP.md
 

@@ -159,7 +159,7 @@ If the project's vault submission frontmatter or CLAUDE.md indicates a double-bl
 - **P2** no `\thanks{}`, `\acknowledgements`, funding, or grant references in body
 - **P3** body uses third-person self-reference (no "we previously showed", "in our prior work")
 - **P4** self-citations are cited in the third person with the **real bib entry kept** — do *not* flag a named self-cite entry as a violation; naming the authors in a third-person citation is correct (anonymity comes from the author block, not the bibliography). Blind the entry only if the venue's CFP explicitly requires it (rare; some security venues). See `rules/double-blind-self-citation.md`.
-- **P5** self-references use third-person *voice*: flag first-person ("we previously showed", "in our prior work [N]") near a self-cite — **not** the author names themselves ("Burnat and [Collaborator] [N] show X" is fine)
+- **P5** self-references use third-person *voice*: flag first-person ("we previously showed", "in our prior work [N]") near a self-cite — **not** the author names themselves ("[Author] and [Collaborator] [N] show X" is fine)
 - **P6** no identifying URLs (personal websites, GitHub repos with handles)
 - **P7** PDF metadata clean (`pdfinfo` shows no Author / identifying Subject)
 - **P8** figures/screenshots have no identifying watermarks

@@ -28,7 +28,7 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 1. **All 4 sub-agents are read-only.** No git, no latexmk, no edits. See `subagent-write-guard.md`.
 2. **Auto-synthesise via `/synthesise-reviews`** (unless `--no-synthesise`). Mid-draft work needs an actionable revision plan, not 4 raw reports.
 3. **Skip if paper isn't compile-ready** — run `/latex` first; review on broken builds is misleading. The skill checks compile-status before dispatching.
-4. **Cluster is for FLORIAN's own papers.** For external papers, use `peer-reviewer` agent instead.
+4. **Cluster is for the user's own papers.** For external papers, use `peer-reviewer` agent instead.
 
 ### Format — catch in review
 

@@ -25,24 +25,24 @@ paper/                        # Real directory (venue wrapper)
 
 ## Overleaf Folder Naming Convention
 
-**Naming convention:** `Paper {THEME_PREFIX} {Title Cased Slug} ({VENUE})` — venue suffix is **required**, even for single-venue papers. Examples: `Paper ASG Privacy Compliance Gaming (CCS)`, `Paper BDS Identity Belief Alignment (JBDM)`, `Paper MechDes Strategic Compliance (NeurIPS 26)`.
+**Naming convention:** `Paper {THEME_PREFIX} {Title Cased Slug} ({VENUE})` — venue suffix is **required**, even for single-venue papers. Examples: `Paper T1 Example Topic One (CCS)`, `Paper T3 Example Topic Three (JBDM)`, `Paper T2 Example Topic Two (NeurIPS 26)`.
 
 Use the venue's standard abbreviation (CCS, NeurIPS, EAAMO, FAccT, ICSE, JBDM, [Journal], …). Append a 2-digit year if it disambiguates multiple submission cycles for the same venue (`(NeurIPS 26)` vs `(NeurIPS 27)`).
 
 | Theme | Prefix |
 |-------|--------|
-| Category A | ASG |
-| Category B | BDS |
-| Category C | EnvEcon |
-| Category D | HAI |
-| Industrial Organisation | IO |
-| Mechanism Design | MechDes |
-| NLP & Computational AI | NLP |
-| Category E | OR |
-| Category F | OrgStrat |
-| Category G | PolSci |
+| Category A | T1 |
+| Category B | T2 |
+| Category C | T3 |
+| Category D | T4 |
+| Category H | T5 |
+| Category I | T6 |
+| Category J | T9 |
+| Category E | T7 |
+| Category F | T8 |
+| Category G | T10 |
 
-For multi-venue submissions, create one Overleaf folder per venue, each with its own venue suffix: `Paper ASG Privacy Compliance Gaming (CCS)`, `Paper ASG Privacy Compliance Gaming (RegGov)`.
+For multi-venue submissions, create one Overleaf folder per venue, each with its own venue suffix: `Paper T1 Example Topic One (CCS)`, `Paper T1 Example Topic One (RegGov)`.
 
 ## Commands
 
@@ -50,15 +50,15 @@ For multi-venue submissions, create one Overleaf folder per venue, each with its
 # Create the Overleaf project folder if it doesn't exist yet
 # (creating a folder in the Overleaf root automatically creates an Overleaf project)
 overleaf_root="$(cat ~/.config/task-mgmt/overleaf-root 2>/dev/null || echo ~/Apps/Overleaf)"
-mkdir -p "$overleaf_root/Paper ASG Privacy Compliance Gaming (CCS)"
+mkdir -p "$overleaf_root/Paper T1 Example Topic One (CCS)"
 
 # For each venue:
 mkdir -p paper-ccs
-ln -s "$overleaf_root/Paper ASG Privacy Compliance Gaming (CCS)" paper-ccs/paper
+ln -s "$overleaf_root/Paper T1 Example Topic One (CCS)" paper-ccs/paper
 
 # Single paper (still uses venue suffix):
 mkdir -p paper-jbdm
-ln -s "$overleaf_root/Paper BDS Identity Belief Alignment (JBDM)" paper-jbdm/paper
+ln -s "$overleaf_root/Paper T3 Example Topic Three (JBDM)" paper-jbdm/paper
 ```
 
 **Important:** Never rename or delete Overleaf folders — see `.claude/rules/overleaf-separation.md` (Overleaf Folder Lifecycle).

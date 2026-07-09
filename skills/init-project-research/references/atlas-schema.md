@@ -66,7 +66,7 @@ type: topic
 
 `methods:` values MUST be drawn from `VALID_METHODS` in `packages/atlas-vault/schema.py` (the source of truth) — anything else fails the `validate-topic-frontmatter` hook. Full list with scope notes + a plain-English quick-reference card: `~/vault/reports/portfolio/2026-05-31-atlas-methods-taxonomy.md`. The 9 families:
 
-- **A. Formal/Strategic/Logical:** Analytical Modelling / Formal Theory · Game Theory · Mechanism Design · Social Choice Theory · Decision Theory · Information Theory · Algorithms & Complexity · Formal Methods, Logic & Argumentation
+- **A. Formal/Strategic/Logical:** Analytical Modelling / Formal Theory · Game Theory · Category I · Social Choice Theory · Decision Theory · Information Theory · Algorithms & Complexity · Formal Methods, Logic & Argumentation
 - **B. Optimisation/MCDM/Preference:** Mathematical Optimisation · Multi-Objective Optimisation · Multi-Criteria Decision Analysis · Preference Elicitation & Learning
 - **C. Statistical/Bayesian/Causal:** Bayesian Inference · Statistical Modelling & Inference · Causal Inference · Econometrics
 - **D. ML & AI:** Machine Learning · Reinforcement Learning · Natural Language Processing & Language Models · Model Interpretability & Explainability · AI Evaluation & Benchmarking · Federated Learning · Adversarial Methods & Robustness
@@ -90,4 +90,4 @@ Subject-domain labels (Category D, Information Economics, …) are NOT methods �
 $RESEARCH_ROOT/{ThemeAbbrev}/{slug}/
 ```
 
-Where `$RESEARCH_ROOT` is read from `~/.config/task-mgmt/research-root`. Theme abbreviations: ASG, BDS, EnvEcon, HAI, IO, MechDes, NLP, OR, OrgStrat, PolSci. Folder name = kebab-case slug (same as atlas topic filename).
+Where `$RESEARCH_ROOT` is read from `~/.config/task-mgmt/research-root`. Theme abbreviations: T1, T2, T3, T4, T5, T6, T7, T8, T9, T10 (define your own theme codes). Folder name = kebab-case slug (same as atlas topic filename).

@@ -202,8 +202,8 @@ If the project doesn't have a clearly-named section for paper variants, append i
 ```
 Preprint variant created.
 
-Source:    paper-neurips/paper/ (Paper ASG Strategic DP Auditing (NeurIPS 26))
-Target:    <Overleaf>/Paper ASG Strategic DP Auditing (NeurIPS 26)/preprint/
+Source:    paper-neurips/paper/ (Paper T1 Example Topic Four (NeurIPS 26))
+Target:    <Overleaf>/Paper T1 Example Topic Four (NeurIPS 26)/preprint/
            (accessed locally via paper-neurips/paper/preprint/)
 Template:  your-template (LuaLaTeX, Harvard biblatex)
 Build:     out/main.pdf — XX pages, X.X MB

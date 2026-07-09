@@ -39,8 +39,8 @@ For multi-author documents, ask the user how many anonymous authors to list (e.g
 
 ```
 Potential self-citation found:
-  \citet{burnat2025mcdm} — "Multi-criteria decision making with AI"
-  Authors: Burnat, F. and Smith, J.
+  \citet{author2025example} — "Multi-criteria decision making with AI"
+  Authors: [Author], F. and Smith, J.
 
   Options:
   1. Anonymize → replace with "[Anonymous, 2025]" and comment out bib entry
@@ -64,7 +64,7 @@ Search `.py`, `.R`, `.r`, `.sh`, `.m`, `.jl`, `.js`, `.ts` for identity patterns
 
 ```
 # Author: the user          →  # Author: Anonymous
-# Email: f.burnat@warwick.ac.uk   →  (remove)
+# Email: author@university.edu   →  (remove)
 # (c) 2025 the user         →  # (c) 2025 Anonymous
 ```
 

@@ -1,6 +1,6 @@
 # Skills
 
-> 108 reusable workflow definitions available across all projects.
+> 109 reusable workflow definitions available across all projects.
 
 Skills are structured instruction sets (`SKILL.md` files) that turn Claude into a specialised tool for specific tasks — from compiling LaTeX to bootstrapping research projects.
 
@@ -100,6 +100,7 @@ Skills are structured instruction sets (`SKILL.md` files) that turn Claude into 
 | `synthesise-reviews` | Use when you need to synthesise parallel review reports into a prioritised revision plan |
 | `synthetic-data` | Use when you need to generate structurally realistic synthetic datasets for pilot testing or power analysis |
 | `system-audit` | Use when you need to run parallel audits across skills, hooks, agents, rules, and conventions |
+| `tailscale-mosh-recover` | Use when mosh hangs / fails to connect to a headless Mac mini after a Tailscale update or restart, OR when a remote-access tool (RustDesk, VNC, AnyDesk) fails to reach its public relay from an MDM-managed client. Layers — Tailscale daemon health (dual-install conflict, headless GUI-app limitation, Homebrew launchd takeover), downstream mosh-server cleanup (stale UDP bindings to old Tailscale IP), macOS resolver stuck state, and Tailscale direct-IP as relay-bypass fallback. Symptoms include `could not get canonical name for <host>`, `failed to connect to local Tailscale service`, `Tailscale.CLIError error 1`, `Connection closed by UNKNOWN port 65535`, `Failed to connect to rs-ny.rustdesk.com:21116: Please try later` |
 | `task-management` | Use when you need help with daily planning, weekly reviews, meeting actions, or vault task queries |
 | `test-iterate-loop` | Use when you need to autonomously iterate on a code project until tests pass — root-cause failures, apply minimal fixes, retry. Generic over Python/R/Julia/HPC pipelines. Triggers: 'iterate until tests pass', 'autonomous test loop', 'fix until green', 'overnight test run' |
 | `tikz` | Use when labels overlap arrows in a TikZ figure, text sits on boxes, or arrows cross each other. Audits and fixes residual TikZ visual collisions in any .tex file using mathematical gap calculations and Bézier depth formulas — no eyeballing. Downstream repair tool; the upstream defense is generating TikZ safely via /beamer-deck and tikz_rules.md |

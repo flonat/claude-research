@@ -179,7 +179,7 @@ After writing `.claude/settings.local.json`, merge global permissions from `~/.c
 
 **Nested pattern:** each paper submission is a real directory at project root (e.g., `paper-ccs/`) containing a `paper/` **symlink** to the Overleaf folder. Venue-specific files (checklists, cover letters, R&R responses) live alongside the symlink without being synced to Overleaf.
 
-**Overleaf naming:** `Paper {THEME_PREFIX} {Title Cased Slug} ({VENUE})` — theme prefix AND venue suffix both required, even for single-venue papers. Examples: `Paper ASG Privacy Compliance Gaming (CCS)`, `Paper MechDes Strategic Compliance (NeurIPS 26)`.
+**Overleaf naming:** `Paper {THEME_PREFIX} {Title Cased Slug} ({VENUE})` — theme prefix AND venue suffix both required, even for single-venue papers. Examples: `Paper T1 Example Topic One (CCS)`, `Paper T2 Example Topic Two (NeurIPS 26)`.
 
 **Create the Overleaf folder via `mkdir`** under the root from `~/.config/task-mgmt/overleaf-root`. Overleaf auto-creates a project from a new folder. Never rename or delete Overleaf folders — see `.claude/rules/overleaf-separation.md`.
 

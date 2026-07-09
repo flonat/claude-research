@@ -11,7 +11,7 @@ Usage:
     python3 gen_books_index.py [--out OUT_PATH] [--rsync]
 
     --out     write index.html to this path (default: ./index.html)
-    --rsync   after writing, rsync to vps:/opt/user/data/books/index.html
+    --rsync   after writing, rsync to vps:/opt/example/data/books/index.html
 """
 
 from __future__ import annotations
@@ -240,7 +240,7 @@ def main() -> None:
     print(f"Wrote {args.out} — {len(books)} book(s) listed")
 
     if args.rsync:
-        cmd = ["rsync", "-avz", str(args.out), "vps:/opt/user/data/books/index.html"]
+        cmd = ["rsync", "-avz", str(args.out), "vps:/opt/example/data/books/index.html"]
         print("$", " ".join(cmd))
         subprocess.run(cmd, check=True)
         print("Synced to books.example.com")

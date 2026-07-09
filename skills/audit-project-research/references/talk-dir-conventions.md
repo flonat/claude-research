@@ -46,7 +46,7 @@ The deployed copy lives separately in `Task-Management/deploy/vps/links/{slug}/`
 
 ## Reference instances
 
-- `ASG/example-project-c/paper-acm-facct/talk/` — canonical template (user-beamer `[bath]`).
+- `T1/example-project-c/paper-acm-facct/talk/` — canonical template (user-beamer `[bath]`).
 - `OR/example-project-i/paper-acm-gecco/talk/` — conference official-template variant (GECCO).
 - `OR/example-project-f/presentations/` — non-archival/seminar pattern.
 

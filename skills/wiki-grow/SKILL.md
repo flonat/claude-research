@@ -40,7 +40,7 @@ Three components, all in this repo:
 | `scripts/wiki-promote-scan.py` | Inventory scanner. Walks vault concepts + project knowledge folders + atlas/book prose. Outputs `/tmp/wiki-promote-scan.{md,json}` with corpus mention counts and the wikilink graph. |
 | `scripts/wiki-grow.py` | Orchestrator. Reads the scan, applies thresholds, copies candidates into `~/vault/concepts/<slug>.md` with auto-generated frontmatter and a draft banner. At copy time, `[[wikilinks]]` whose targets resolve to no vault file (atlas/concepts/venues/people/themes — same semantics as atlas-workspace's `dead_wikilinks()` validator) are converted to plain text; links between slugs co-promoted in the same run survive. Added 2026-06-12 after verbatim copies created 38 dead links on the wiki. |
 | `scripts/weekly-wiki-grow.sh` | Launchd-callable shell wrapper. Cron entrypoint. |
-| `~/Library/LaunchAgents/com.florian.weekly-wiki-grow.plist` | Saturday 06:45 schedule. |
+| `~/Library/LaunchAgents/com.example.weekly-wiki-grow.plist` | Saturday 06:45 schedule. |
 
 ---
 

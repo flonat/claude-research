@@ -43,9 +43,9 @@ deploy_one() {
     local v="$1"
     local target_path
     if [ "$v" = "public" ]; then
-        target_path="/opt/user/data/books/$SLUG/"
+        target_path="/opt/example/data/books/$SLUG/"
     else
-        target_path="/opt/user/data/books/private/$SLUG/"
+        target_path="/opt/example/data/books/private/$SLUG/"
     fi
     echo
     echo "─── building $v ───"
