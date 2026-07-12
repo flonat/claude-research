@@ -512,8 +512,18 @@
     },
     {
       "client": "claude",
+      "source": ".claude/commands/session-close.md",
+      "target": ".claude/commands/session-close.md"
+    },
+    {
+      "client": "claude",
       "source": "skills/session-close",
-      "target": ".claude/skills/session-close"
+      "target": ".claude/shared-skills/session-close"
+    },
+    {
+      "client": "codex",
+      "source": "skills/session-close",
+      "target": ".agents/skills/session-close"
     },
     {
       "client": "claude",

@@ -1,13 +1,18 @@
 ---
 name: session-close
 description: "Use when you need to run the end-of-session checklist (uncommitted changes, focus update, project sync). Auto-detects research projects and adds atlas consistency checks."
-allowed-tools: Bash(git*), Bash(curl*), Bash(grep*), Bash(taskflow-cli*), Read, Write, Edit, Glob, Grep, Skill, AskUserQuestion, Task
 argument-hint: "[project-name ...] or no arguments for CWD"
 ---
 
 # Closing — End-of-Session Checklist
 
-> On-demand session wrap-up. Run `/session-close` when you're done working to make sure nothing is lost. Auto-detects whether the project is a research project (atlas topic, `paper*` directories, vault submissions) and applies additional atlas consistency checks if so.
+> On-demand session wrap-up. Invoke `session-close` when you're done working to make sure nothing is lost. Auto-detects whether the project is a research project (atlas topic, `paper*` directories, vault submissions) and applies additional atlas consistency checks if so.
+
+This is a client-neutral workflow. Use the interaction and sub-agent mechanisms
+available in the current client. Ask routine questions through that client's
+question surface and use its collaboration agents when useful. If no sub-agent surface is available, execute the
+same checks sequentially in the main context. Never skip a safety gate merely
+because a client lacks a convenience tool.
 
 ## Auto-Detection
 
@@ -46,12 +51,12 @@ Mode: research / general
 
 ## Autonomy
 
-Per the global `--autonomous` / `-y` convention in `~/.claude/rules/phased-work.md` § "Autonomy flag convention". Invoke as `/session-close --autonomous` (or `-y`). When set:
+Per the global `--autonomous` / `-y` convention in `rules/phased-work.md` § "Autonomy flag convention". Invoke as `session-close --autonomous` (or `-y`). When set:
 
 | Behaviour | Default | `--autonomous` |
 |---|---|---|
 | Phase 4 safety checks (size, anonymity, DOI) | run | **still run** — flag failures, do NOT auto-bypass (safety gates aren't a Phase 5 question) |
-| Phase 5 commit `AskUserQuestion` | asks user | **skipped** — defaults to `Commit & push` if remote exists, else `Commit only` (with a one-line warning) |
+| Phase 5 commit question | asks user | **skipped** — defaults to `Commit & push` if remote exists, else `Commit only` (with a one-line warning) |
 | Git remote verification (`git remote -v`) | yes | yes (per `git-safety` rule — still verify before push) |
 | Worktree removal (Phase 6) | asks user | **still asks** — destructive, deserves explicit consent even in autonomous mode |
 | Atlas topic body gate (§19) | asks user if body < status-floor | **skipped** when body ≥ 50% of floor (surfaces as warning); **still asks** when below 50% (gap too large to ignore) |
@@ -65,8 +70,8 @@ Per the global `--autonomous` / `-y` convention in `~/.claude/rules/phased-work.
 Recommended invocations:
 
 ```
-/session-close --autonomous     # auto-commit & push, all safety gates still active
-/session-close -y               # short form
+session-close --autonomous     # auto-commit & push, all safety gates still active
+session-close -y               # short form
 ```
 
 Use this for end-of-day wrap-ups where the commit is routine. Skip the flag for sessions touching paper-* directories (where the anonymity gate is more likely to fire and you want the gate-failure conversation rather than silent stop).
@@ -83,13 +88,13 @@ Resolution order:
 1. Exact match in CWD
 2. Search `~/.config/task-mgmt/research-root` for a matching directory name (recursive, up to depth 3)
 3. Search Task Management root for a matching directory name
-4. If ambiguous, ask with `AskUserQuestion`
+4. If ambiguous, ask the user with the current client's interaction mechanism
 
 ---
 
 ## Focus File Retention Policy
 
-`.context/current-focus.md` is a **rolling 7-day window** of chronological session blocks. Every run of `/session-close` enforces this:
+`.context/current-focus.md` is a **rolling 7-day window** of chronological session blocks. Every run of `session-close` enforces this:
 
 1. **Prepend** a new `## What I Just Did (<date> <time> — <headline>)` block at the top of the chronological section (just below the masthead).
 2. **Update** the masthead `> Last updated:` line to match the new block's date/time/headline. The masthead is exactly three `>` lines — do not accumulate `> Earlier ...` lines.
@@ -108,7 +113,7 @@ Today's date comes from the shell (`date +%Y-%m-%d`). If parsing a block header'
 | **Topic next steps** (research mode, always) | Atlas topic file `## Next steps` section | Exactly 3 checkbox to-dos (incl. readings) — the next actions for the topic; refreshed each close (see Phase 3d) |
 | **Update planning state** | `.planning/state.md` | Phase progress, component status, decisions made this session |
 | **Archive session log** | `log/YYYY-MM-DD-HHMM.md` (new file) | Detailed timestamped record of the full session |
-| **Memory** (automatic) | Auto memory (`~/.claude/projects/<hash>/memory/MEMORY.md`) + project-root `MEMORY.md` | Infrastructure learnings -> auto memory; domain knowledge (notation, decisions, citations) -> project memory |
+| **Memory** (automatic) | Portable auto memory under `.context/auto-memory/` + project-root `MEMORY.md` | Infrastructure learnings -> portable memory; domain knowledge (notation, decisions, citations) -> project memory |
 | **Save to context** (only if needed) | Any file in `.context/` (profile, people, workflows) | New collaborators, preferences, workflow changes -- facts to persist beyond this session |
 
 ---
@@ -150,7 +155,7 @@ Run all checks in parallel:
    - **Practice-propagation queue.** Read `log/practice-propagation-queue.md` (auto-populated by `hooks/propagate-feedback-memory.py` whenever a `feedback_*.md` auto-memory is written). Each unchecked `- [ ]` line is a candidate for propagation into a TM guide.
    - **Session declarations.** Scan the current session for declarations of new conventions / practices -- phrases like "from now on", "papers default to", "always use X, not Y", "convention is", "never X". Match against the canonical guides (`docs/reference/conventions.md`, `docs/reference/coding-standards-*.md`, `docs/guides/*.md`, `CLAUDE.md`).
 
-**Research-only checks** (skip in general mode): see [`references/research-checks.md`](references/research-checks.md) for atlas topic, outputs drift, vault consistency, paper-dir validation, bibliography, backup freshness, git-project health, atlas topic body richness (gated update; see §19), and knowledge-compile freshness (info-only; never auto-invokes `/compile-knowledge`).
+**Research-only checks** (skip in general mode): see [`references/research-checks.md`](references/research-checks.md) for atlas topic, outputs drift, vault consistency, paper-dir validation, bibliography, backup freshness, git-project health, atlas topic body richness (gated update; see §19), and knowledge-compile freshness (info-only; never auto-invokes the `compile-knowledge` skill).
 
 **Drift report** (research mode only): if any research check failed, present a single drift summary before Phase 3. Example:
 
@@ -175,7 +180,10 @@ Three sub-steps -- run sequentially because (b) depends on (a)'s file writes and
 
 #### 3a. Parallel agents
 
-Launch **all applicable agents in parallel** (subagent_type: "general-purpose"). Wait for all to complete before 3b.
+Launch **all applicable agents in parallel** using the current client's
+sub-agent mechanism. Wait for all to complete before 3b. If that mechanism is
+unavailable, execute the same responsibilities sequentially in the main
+context and report the fallback.
 
 | Agent | When it runs | What it writes |
 |-------|-------------|---------------|
@@ -189,12 +197,15 @@ Launch **all applicable agents in parallel** (subagent_type: "general-purpose").
 | Atlas body extractor | Research mode + topic body below status-floor (see §19) | Proposed 150–400-word addition to the topic body, returned as plain markdown — applied in Phase 3c after user confirmation |
 
 **Memory updates** also happen here in the main context (fast appends -- no agent needed):
-- Auto memory (`~/.claude/projects/<hash>/memory/MEMORY.md`): infrastructure learnings, tool gotchas
+- Portable auto memory (`.context/auto-memory/`): infrastructure learnings, tool gotchas
 - Project memory (project-root `MEMORY.md`): domain corrections, key decisions (per `learn-tags` rule)
 
 #### 3b. Vault sync (main context only)
 
-**Why a top-level step:** MCP tools are permission-scoped to the main conversation -- they do not work inside sub-agents. Vault writes that need MCP must run here, after agents complete.
+**Why a top-level step:** permission-scoped external tools do not work reliably
+inside sub-agents. Vault writes that require such access must run here, after
+agents complete. Use the documented CLI or direct-file route when a connector
+is unavailable.
 
 If research mode and drift was detected (or vault submission entries changed in 3a), call `vault sync (edit vault files directly)` from the main context. Skip silently otherwise.
 
@@ -226,7 +237,7 @@ If nothing was saved: `Memory: nothing to save this session.` the user can say "
 **Atlas topic body gate** (research mode + body below status-floor; see §19). After the parallel agents return, if the Atlas body extractor produced a proposal, present it before memory review:
 
 1. Print the proposed addition in a fenced block.
-2. `AskUserQuestion`: **Accept** (recommended) / **Edit** / **Skip with reason**.
+2. Ask the user: **Accept** (recommended) / **Edit** / **Skip with reason**.
 3. **Accept** → append to the atlas topic file body, prefixed with `## Session update — <date>` (or merged into an existing session-update section).
 4. **Edit** → paste revised text → write that instead.
 5. **Skip with reason** → log `Atlas body update skipped: <reason>` in the session log. Common reasons: maintenance session / investigative session / deferring to dedicated update.
@@ -242,7 +253,7 @@ Every research-mode close records the next actions for the topic **on its atlas 
 
    ```
    ## Next steps
-   <!-- maintained by /session-close; refreshed each research close -->
+   <!-- maintained by session-close; refreshed each research close -->
    _As of YYYY-MM-DD:_
    - [ ] <to-do 1>
    - [ ] <to-do 2>
@@ -252,7 +263,7 @@ Every research-mode close records the next actions for the topic **on its atlas 
    If a `## Next steps` section already exists, **replace its body** with the new 3 (do not accumulate stale lists across closes). Otherwise append the section at the end of the topic body. This is body content, not frontmatter — no controlled-vocabulary concern. The vault is **not git**: the edit is complete once written (no commit). Runs in the main context (plain vault file, no MCP needed), or fold into the Atlas update agent's remit when that agent is already dispatched.
 3. **Under `--autonomous`** this still runs with defaults, no prompt. If the session genuinely produced no sensible next step (pure infra / maintenance close), write a single `- [ ] <one obvious next action>` and note the thinness in the summary rather than fabricating three.
 
-**Knowledge filing** (research mode only). Depends on `/compile-knowledge` having created a `knowledge/` directory in the project. If absent, skip silently -- do not create one. Otherwise, for each finding, file it into the relevant article via the `/store-insight` pattern (read `knowledge/_index.md`, append to Key Findings with session date, create new article if no match), then update `_index.md` last-updated dates.
+**Knowledge filing** (research mode only). Depends on `compile-knowledge` having created a `knowledge/` directory in the project. If absent, skip silently -- do not create one. Otherwise, for each finding, file it into the relevant article via the `store-insight` pattern (read `knowledge/_index.md`, append to Key Findings with session date, create new article if no match), then update `_index.md` last-updated dates.
 
 Report:
 ```
@@ -287,11 +298,11 @@ The DOI check can be slow (~30-60s per batch). Skip it silently if `scholarly` i
 
 ### Phase 5: Commit (only manual step)
 
-This is the **only** point where `/session-close` asks a question — UNLESS `--autonomous` / `-y` is set, in which case the question is skipped and the default is taken (see § Autonomy).
+This is the **only** point where `session-close` asks a question — UNLESS `--autonomous` / `-y` is set, in which case the question is skipped and the default is taken (see § Autonomy).
 
 1. Run `git status` (never `-uall`) and `git diff --stat`.
 2. If uncommitted changes exist:
-   - **Default mode**: ask with `AskUserQuestion`:
+   - **Default mode**: ask with the current client's interaction mechanism:
      - **Commit & push (recommended)** -- stage, commit, push
      - **Commit only** -- stage, commit, no push
      - **Skip** -- leave uncommitted
@@ -309,7 +320,7 @@ If `pwd` is inside a git worktree (not the main checkout), check whether the cur
 3. **Safety checks** (all must pass to offer removal):
    - **No uncommitted changes:** `git status --porcelain` is empty.
    - **Branch fully merged into local `main`:** `git merge-base --is-ancestor HEAD main` returns 0. Check `main` (local), not `origin/main` — merge happens locally even when push is deferred.
-4. **If all pass**, offer with `AskUserQuestion`:
+4. **If all pass**, offer the choices through the current client's interaction mechanism:
    - **Remove worktree + branch (recommended)** — runs from the main checkout, since git refuses to remove the worktree you're currently in:
      ```bash
      MAIN_REPO=$(git rev-parse --git-common-dir | xargs dirname)

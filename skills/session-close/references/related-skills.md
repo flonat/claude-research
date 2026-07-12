@@ -10,5 +10,5 @@
 | `/session-log` | Called by the Session log agent in Phase 2 |
 | `/update-project-doc` | Called by the Project docs agent in Phase 2 |
 | `/store-insight` | Used in Phase 2.75 for knowledge filing |
-| `/compile-knowledge` | Creates the `knowledge/` directory on first run |
+| `compile-knowledge` | Creates the `knowledge/` directory on first run |
 | `vault sync (edit vault files directly)` | Called after agents complete for vault sync |

@@ -815,13 +815,11 @@ assets:
       path: skills/session-close
       clients:
       - claude
+      - codex
       requires:
-      - claude-home-layout
-      - claude-tool-syntax
       - filesystem
       - shell
       - skill-routing
-      - structured-input
       - subagents
     session-health:
       path: skills/session-health

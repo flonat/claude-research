@@ -19,8 +19,8 @@ If found, read it. Extract `outputs:`, `status:`, `co_authors:`, `connected_topi
 | Slug matches | Atlas filename matches CLAUDE.md `**Slug:**` | Warning: Slug mismatch |
 | Title matches | Atlas `title:` matches project directory basename (Title Case) | Warning: Title drift |
 | `project_path` resolves | Atlas `project_path:` points to a directory that exists on disk | Warning: Stale project_path |
-| `last_worked` stamp | When this session committed work to the topic's project, stamp `last_worked` = project git mtime (`git log -1 --format=%cI -- <project>`, date portion). session-close is the **SOLE writer of `last_worked`** and NEVER writes `last_reviewed` (curation — only `/update-topic-file`). | (stamped) |
-| Topic file stale | `last_worked` newer than `last_reviewed` by >14 days | Warning -- topic file drifted from the work; run `/update-topic-file` |
+| `last_worked` stamp | When this session committed work to the topic's project, stamp `last_worked` = project git mtime (`git log -1 --format=%cI -- <project>`, date portion). session-close is the **SOLE writer of `last_worked`** and NEVER writes `last_reviewed` (curation — only the topic-update workflow). | (stamped) |
+| Topic file stale | `last_worked` newer than `last_reviewed` by >14 days | Warning -- topic file drifted from the work; run the `update-topic-file` workflow separately |
 
 ## 12. Outputs Drift Check
 
@@ -138,7 +138,7 @@ Atlas body:  OK 612 words for `Advanced` status (floor 600)
 
 2. **Phase 3c presentation.** After the parallel agents return, before memory review:
    - Print the proposed addition in a code block
-   - `AskUserQuestion` with options:
+   - Ask the user with the current client's interaction mechanism, with options:
      - **Accept (recommended)** — append the proposed text to the body (preceded by a `## Session update — YYYY-MM-DD` header if no current session-update section exists; otherwise merge under it)
      - **Edit** — let the user paste a revised version, then write it
      - **Skip with reason** — log the skip reason in the session log (`Atlas body update skipped: <reason>`). Allowed reasons include "maintenance session, no substantive work", "deferring to dedicated update later", "session was investigative — nothing to capture yet". The skip is recorded but doesn't block close.
@@ -151,16 +151,16 @@ Atlas body:  OK 612 words for `Advanced` status (floor 600)
 - `--autonomous` flag is set AND body is above 50% of floor — autonomous mode treats it as a soft warning surfaced in the final summary, not a gate. (Below 50% of floor, even autonomous mode prompts — the gap is too large to silently let pass.)
 - Body word count is already above floor — print the OK line, no gate
 
-**Why this is its own step, not just memory:** Memory persists for Claude-side context but is not the user-readable as the canonical "what is this project about" document. The atlas topic body IS that document — `atlas.example.com/topic/<slug>` renders it directly. Updates have to land there.
+**Why this is its own step, not just memory:** Portable memory persists for client context but is not human-readable as the canonical "what is this project about" document. The atlas topic body IS that document — `atlas.example.com/topic/<slug>` renders it directly. Updates have to land there.
 
 ## 18. Knowledge Compile Freshness (info-only)
 
 **Surface, do not auto-invoke.** This check tells the user when the project
-knowledge wiki was last compiled. It NEVER runs `/compile-knowledge`
+knowledge wiki was last compiled. It NEVER runs the `compile-knowledge` workflow
 itself — the user decides if and when to refresh.
 
 Source of truth: the atlas topic frontmatter field
-`knowledge_last_compiled: YYYY-MM-DD` (written by `/compile-knowledge`
+`knowledge_last_compiled: YYYY-MM-DD` (written by the `compile-knowledge` workflow
 on each run; backfilled by `scripts/backfill-knowledge-compile-dates.py`
 for projects scaffolded before the field existed).
 
@@ -170,14 +170,14 @@ Logic:
 |-------|---------|
 | `knowledge/` directory missing or empty | _nothing_ (no line printed) |
 | `knowledge/` non-empty, atlas `knowledge_last_compiled` set | `Knowledge: last compiled YYYY-MM-DD (Nd ago)` |
-| `knowledge/` non-empty, atlas field missing | `Knowledge: N articles, no compile date recorded -- run /compile-knowledge to set baseline` |
+| `knowledge/` non-empty, atlas field missing | `Knowledge: N articles, no compile date recorded -- run compile-knowledge separately to set baseline` |
 | Project has no atlas topic | _nothing_ (no surface; not a research project for this check) |
 
 Age phrasing:
 - ≤7 days: `(Nd ago, fresh)`
 - 8-30 days: `(Nd ago)`
 - 31-90 days: `(Nd ago, getting stale)`
-- &gt;90 days: `(Nd ago, stale -- consider /compile-knowledge)`
+- &gt;90 days: `(Nd ago, stale -- consider compile-knowledge)`
 
 This is **info-only**, like the bibliography and backup checks. Print it
 in the Phase 1 drift report if the project has any knowledge content;
