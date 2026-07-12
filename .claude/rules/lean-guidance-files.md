@@ -2,15 +2,16 @@
 paths:
   - "**/CLAUDE.md"
   - "**/GLOBAL-CLAUDE.md"
+  - "**/AGENTS.md"
 ---
 
-# Rule: Keep CLAUDE.md Lean
+# Rule: Keep Guidance Files Lean
 
 ## Principle
 
-**CLAUDE.md is loaded into context every session — every line costs tokens.** It should contain only instructions Claude needs on every entry. Everything else belongs in dedicated files that Claude reads on demand.
+**Client guidance files are loaded into context repeatedly—every line costs tokens and attention.** `CLAUDE.md`, `AGENTS.md`, and generated global guidance should contain only instructions needed on entry. Everything else belongs in dedicated files read on demand.
 
-## What Belongs in CLAUDE.md
+## What Belongs in Entry Guidance
 
 - Safety rules and file-protection policies
 - Folder structure (compact tree)
@@ -19,7 +20,7 @@ paths:
 - Session continuity pointers (`.context/`, `log/`)
 - One-line summaries of reference material with relative links
 
-## What Does NOT Belong in CLAUDE.md
+## What Does NOT Belong in Entry Guidance
 
 - Full assessment/submission guidelines → `docs/`
 - Detailed literature notes → `docs/literature-review/`
@@ -42,10 +43,11 @@ Full guidelines: [`docs/portfolio-guidelines.md`](docs/portfolio-guidelines.md)
 
 ## Thresholds
 
-- **CLAUDE.md > 200 lines:** Review for extractable content.
+- **Project `CLAUDE.md` or `AGENTS.md` > 200 lines or 1,500 words:** Review for extractable content.
+- **Generated global guidance > 1,500 words:** Move workflow-specific rules to an on-demand index while keeping safety summaries loaded.
 - **Any section > 15 lines of reference material** (not safety rules or conventions): Extract to `docs/` and replace with a pointer.
-- **Duplicated content:** If the same information exists in another file, keep only the pointer in CLAUDE.md.
+- **Duplicated content:** If the same information exists in another file, keep only the pointer in the entry guidance.
 
 ## Applies To
 
-All projects — research, code, infrastructure, personal. The principle is universal: CLAUDE.md is an instruction file, not a knowledge base.
+All projects and both clients. The principle is universal: an entry guidance file is an instruction router, not a knowledge base.

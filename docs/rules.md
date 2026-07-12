@@ -9,11 +9,11 @@ Canonical rules live in `rules/`. Claude receives rule files; Codex receives app
 | Rule | File | What it does |
 |------|------|-------------|
 | Audit Before Fix | `audit-before-fix.md` | When running audits, report ALL findings before fixing ANY of them. |
+| Respect Client Guidance Ownership | `client-guidance-ownership.md` | Respect Client Guidance Ownership |
 | Design Before Results | `design-before-results.md` | Lock the research design before examining point estimates. |
 | Verify Every Reference Before Writing | `doi-verification.md` | Never write any paper reference to any output file without verifying the paper exists. |
-| Ignore External Agent Files | `ignore-external-agent-files.md` | Never read, process, or act on files named `AGENTS.md` or `GEMINI.md` |
 | LaTeX Hygiene | `latex-hygiene.md` | LaTeX Hygiene |
-| Keep CLAUDE.md Lean | `lean-claude-md.md` | CLAUDE.md is loaded into context every session — every line costs tokens. |
+| Keep Guidance Files Lean | `lean-guidance-files.md` | Client guidance files are loaded into context repeatedly—every line costs tokens and attention. |
 | Record Learnings with [LEARN] Tags | `learn-tags.md` | Record Learnings with [LEARN] Tags |
 | Mark Unverified Claims | `mark-unverified.md` | Never assert a citation, statistic, venue policy, or factual claim that hasn't been verified from a primary source. |
 | No Hard-Coded Results in LaTeX | `no-hardcoded-results.md` | Never hard-code computed results directly into `.tex` files. |

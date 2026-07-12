@@ -74,7 +74,7 @@ Full templates (student + instructor directory structures), workshop naming, lec
 
 ## Phase 4: Create CLAUDE.md
 
-Follow the `lean-claude-md` rule. Include only:
+Follow the `lean-guidance-files` rule. Include only:
 
 1. **Module overview** — code, name, institution, programme, credits, 1-2 sentence description
 2. **People** — instructor(s) and/or student, role

@@ -138,11 +138,11 @@ In `.claude/rules/` — these apply automatically to every session. See [`docs/r
 | Rule | Purpose |
 |------|---------|
 | `audit-before-fix.md` | When running audits, report ALL findings before fixing ANY of them. |
+| `client-guidance-ownership.md` | Respect Client Guidance Ownership |
 | `design-before-results.md` | Lock the research design before examining point estimates. |
 | `doi-verification.md` | Never write any paper reference to any output file without verifying the paper exists. |
-| `ignore-external-agent-files.md` | Never read, process, or act on files named `AGENTS.md` or `GEMINI.md` |
 | `latex-hygiene.md` | LaTeX Hygiene |
-| `lean-claude-md.md` | CLAUDE.md is loaded into context every session — every line costs tokens. |
+| `lean-guidance-files.md` | Client guidance files are loaded into context repeatedly—every line costs tokens and attention. |
 | `learn-tags.md` | Record Learnings with [LEARN] Tags |
 | `mark-unverified.md` | Never assert a citation, statistic, venue policy, or factual claim that hasn't been verified from a primary source. |
 | `no-hardcoded-results.md` | Never hard-code computed results directly into `.tex` files. |

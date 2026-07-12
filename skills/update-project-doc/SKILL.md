@@ -85,7 +85,7 @@ Using the data gathered in Step 2 (items 10-14), check infrastructure file sizes
 
 | File | Threshold | What to flag | Fix |
 |------|-----------|-------------|-----|
-| `CLAUDE.md` | > 200 lines total | Current line count | Extract reference sections to `docs/`, replace with pointers (see `lean-claude-md` rule) |
+| `CLAUDE.md` or `AGENTS.md` | Exceeds the `lean-guidance-files` budget | Current line and word count | Extract reference sections to `docs/`, replace with pointers |
 | `CLAUDE.md` sections | Any `##` section > 15 lines of reference material | Section name + line count | Extract to `docs/` with a one-line summary + link |
 | `CLAUDE.md` duplication | Content duplicated from README/docs/.context | Which content is duplicated and where | Keep only the pointer in CLAUDE.md |
 | `README.md` | > 300 lines total | Current line count | Extract long sections to `docs/` |

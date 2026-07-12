@@ -147,7 +147,7 @@ Full scaffold tree, hook details, .gitkeep placement, implementation commands: [
 
 ### CLAUDE.md vs README.md
 
-- **CLAUDE.md** — instructions for Claude: safety rules, folder structure, conventions, symlink paths. Follow the `lean-claude-md` rule.
+- **CLAUDE.md / AGENTS.md** — client guidance: safety rules, folder structure, conventions, and symlink paths. Follow the `lean-guidance-files` rule.
 - **README.md** — human-readable overview: title, authors, abstract, status checklist, links.
 
 Both overlap on basic metadata but diverge in purpose.

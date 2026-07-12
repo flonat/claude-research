@@ -807,6 +807,11 @@
     },
     {
       "client": "claude",
+      "source": ".claude/rules/client-guidance-ownership.md",
+      "target": ".claude/rules/client-guidance-ownership.md"
+    },
+    {
+      "client": "claude",
       "source": ".claude/rules/design-before-results.md",
       "target": ".claude/rules/design-before-results.md"
     },
@@ -817,18 +822,13 @@
     },
     {
       "client": "claude",
-      "source": ".claude/rules/ignore-external-agent-files.md",
-      "target": ".claude/rules/ignore-external-agent-files.md"
-    },
-    {
-      "client": "claude",
       "source": ".claude/rules/latex-hygiene.md",
       "target": ".claude/rules/latex-hygiene.md"
     },
     {
       "client": "claude",
-      "source": ".claude/rules/lean-claude-md.md",
-      "target": ".claude/rules/lean-claude-md.md"
+      "source": ".claude/rules/lean-guidance-files.md",
+      "target": ".claude/rules/lean-guidance-files.md"
     },
     {
       "client": "claude",

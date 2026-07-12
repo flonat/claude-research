@@ -54,7 +54,7 @@ If Phase 1 gave you enough, confirm your understanding instead of asking:
 
 ## Phase 3: Create CLAUDE.md
 
-Follow the `lean-claude-md` rule. Include only:
+Follow the `lean-guidance-files` rule. Include only:
 
 1. **Project overview** — 2-3 sentences from interview/scan
 2. **People** — if collaborators/supervisors exist

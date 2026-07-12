@@ -1347,6 +1347,13 @@ assets:
       - codex
       requires:
       - filesystem
+    client-guidance-ownership.md:
+      path: rules/client-guidance-ownership.md
+      clients:
+      - claude
+      - codex
+      requires:
+      - filesystem
     design-before-results.md:
       path: rules/design-before-results.md
       clients:
@@ -1361,13 +1368,6 @@ assets:
       - codex
       requires:
       - filesystem
-    ignore-external-agent-files.md:
-      path: rules/ignore-external-agent-files.md
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
     latex-hygiene.md:
       path: rules/latex-hygiene.md
       clients:
@@ -1375,8 +1375,8 @@ assets:
       - codex
       requires:
       - filesystem
-    lean-claude-md.md:
-      path: rules/lean-claude-md.md
+    lean-guidance-files.md:
+      path: rules/lean-guidance-files.md
       clients:
       - claude
       - codex

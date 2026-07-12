@@ -126,7 +126,7 @@ Use `---` to separate major conceptual blocks within a section. Do not use betwe
 ```
 
 **Key constraints:**
-- **Max 200 lines.** Extract anything longer than 15 lines of reference material to `docs/` with a one-line pointer (see `lean-claude-md` rule).
+- **Stay within the guidance budget.** Extract reference material to `docs/` with a one-line pointer (see `lean-guidance-files`).
 - **Instructions, not knowledge.** CLAUDE.md tells Claude what to do and where to look — it doesn't store the knowledge itself.
 - **Pointer pattern:** `Full guidelines: [\`docs/file.md\`](docs/file.md)`
 
