@@ -192,7 +192,7 @@
 | Skill | Purpose |
 |-------|---------|
 | `sync-repo` | Sync docs with system state for atlas, refpile, or private repos |
-| `sync-public-repo` | Sync to public repo (claude-research), then commit public repo |
+| `sync-public-repo` | Sync to public repo (flonat-research), then commit public repo |
 | `sync-public-review` | Interactive review and editing of public sync allowlists |
 | `sync-friends-repo` | Regenerate friends-repo starter kit from private rules |
 | `sync-resources` | Pull latest from cloned resource repos |
@@ -266,14 +266,14 @@
 
 | Skill | Purpose |
 |-------|---------|
-| `minutes-debrief` | Post-meeting debrief — compare outcomes to prep intentions |
-| `minutes-prep` | Interactive meeting preparation with relationship briefs |
-| `minutes-recap` | Daily digest of meetings — decisions, action items, themes |
-| `minutes-weekly` | Weekly meeting synthesis — themes, decision arcs, stale commitments |
-| `minutes-search` | Search past meeting transcripts and voice memos |
-| `minutes-list` | List recent meetings and voice memos |
-| `minutes-verify` | Verify minutes setup — model, mic, directories |
-| `minutes-cleanup` | Manage old recordings — archive, delete, disk space |
+| `meetings-debrief` | Post-meeting debrief — compare outcomes to prep intentions |
+| `meetings-prep` | Interactive meeting preparation with relationship briefs |
+| `meetings-recap` | Daily digest of meetings — decisions, action items, themes |
+| `meetings-weekly` | Weekly meeting synthesis — themes, decision arcs, stale commitments |
+| `meetings-search` | Search past meeting transcripts and voice memos |
+| `meetings-list` | List recent meetings and voice memos |
+| `meetings-verify` | Verify minutes setup — model, mic, directories |
+| `meetings-cleanup` | Manage old recordings — archive, delete, disk space |
 
 ### Teaching (2)
 

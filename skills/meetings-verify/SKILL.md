@@ -1,17 +1,17 @@
 ---
-name: minutes-verify
+name: meetings-verify
 description: Verify that the meeting-transcribe pipeline is properly set up — whisper/ffmpeg/uv binaries, models, package venv, watcher, and folders. Use when the user says "is transcription working", "check my meeting setup", "verify minutes", "why isn't transcription working", "meeting health check".
 user_invocable: true
 ---
 
-# /minutes verify
+# /meetings-verify
 
 Run a health check on the **meeting-transcribe** pipeline (the local whisper.cpp + sherpa-onnx tool that replaced the old `minutes` transcription binary).
 
 ## How to verify
 
 ```bash
-bash "${CLAUDE_PLUGIN_ROOT}/skills/minutes-verify/scripts/verify-setup.sh"
+bash "${CLAUDE_PLUGIN_ROOT}/skills/meetings-verify/scripts/verify-setup.sh"
 ```
 
 The script prints PASS/WARN/FAIL per component. Read the output and report results.

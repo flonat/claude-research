@@ -7,4 +7,4 @@ description: Manage old recordings — find large files, archive old meetings, d
 
 # Shared skill adapter
 
-Read and follow `~/.claude/shared-skills/minutes-cleanup/SKILL.md`. Resolve bundled resources relative to `~/.claude/shared-skills/minutes-cleanup/`.
+Read and follow `~/.claude/shared-skills/meetings-cleanup/SKILL.md`. Resolve bundled resources relative to `~/.claude/shared-skills/meetings-cleanup/`.

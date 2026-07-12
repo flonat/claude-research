@@ -3,8 +3,8 @@
 The framework was previously distributed as `claude-research` and installed
 repository-owned links under `~/.claude/`. The new `flonat-research` layout is
 client-neutral, supports Claude Code and Codex explicitly, and installs
-content-addressed copies with a receipt. The existing GitHub name remains a
-temporary alias until the release migration is complete.
+content-addressed copies with a receipt. The GitHub repository was renamed on
+2026-07-12; the former URL remains a redirect for existing checkouts.
 
 ## Safe transition process
 
@@ -48,6 +48,6 @@ managed by the installer are preserved under
 retain the checkout, and run `--check` again. The installer does not modify an
 existing `~/.claude/settings.json`; merge settings manually if required.
 
-The future repository rename from `claude-research` to `flonat-research` does
-not change installed paths or receipts. GitHub redirects preserve old clone
-URLs, but new documentation will use the neutral name after the release gate.
+The repository rename from `claude-research` to `flonat-research` does not
+change installed paths or receipts. GitHub redirects preserve old clone URLs;
+new clones should use `https://github.com/flonat/flonat-research.git`.

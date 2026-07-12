@@ -1,16 +1,16 @@
 ---
-name: minutes-recap
+name: meetings-recap
 description: Generate a daily digest of today's meetings and voice memos — key decisions, action items, and themes across all recordings. Use when the user asks "recap my day", "what happened in my meetings today", "daily summary", "what did I discuss today", "any action items from today", or wants a consolidated view of the day's conversations.
 user_invocable: true
 ---
 
-# /minutes recap
+# /meetings-recap
 
 Synthesize all of today's meetings and voice memos into a single daily brief.
 
 ## How to generate the recap
 
-1. **Find today's recordings** using the `/minutes search` skill:
+1. **Find today's recordings** using the `/meetings-search` skill:
    ```bash
    minutes search "$(date +%Y-%m-%d)" --limit 50
    ```

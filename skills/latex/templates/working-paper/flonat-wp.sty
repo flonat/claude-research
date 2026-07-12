@@ -38,12 +38,16 @@
 \RequirePackage{soul}
 \RequirePackage{subcaption}
 \RequirePackage{tabularx}
-\RequirePackage{thmtools}
+% thmtools removed 2026-06-27: unused (theorems use amsthm \newtheorem below),
+% and under lualatex its patched \newtheorem double-defines theorem counters
+% (\c@proposition "already defined"), aggravated by old cleveref's kernel
+% first-aid. Re-add only alongside \declaretheorem usage, after verifying the
+% counter clash is resolved. See flonat/latex-wp commit.
 \RequirePackage{threeparttable}
 \RequirePackage{tikz}
 \RequirePackage{titlesec}
 \RequirePackage{unicode-math}
-\RequirePackage{xcolor}
+\RequirePackage[dvipsnames]{xcolor}
 
 \RequirePackage{threeparttablex}
 \let\threeparttable\ThreePartTable

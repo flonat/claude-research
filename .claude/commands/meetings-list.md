@@ -7,4 +7,4 @@ description: List recent meetings and voice memos. Use when the user asks "what 
 
 # Shared skill adapter
 
-Read and follow `~/.claude/shared-skills/minutes-list/SKILL.md`. Resolve bundled resources relative to `~/.claude/shared-skills/minutes-list/`.
+Read and follow `~/.claude/shared-skills/meetings-list/SKILL.md`. Resolve bundled resources relative to `~/.claude/shared-skills/meetings-list/`.

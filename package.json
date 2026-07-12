@@ -6,9 +6,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/flonat/claude-research.git"
+    "url": "https://github.com/flonat/flonat-research.git"
   },
-  "homepage": "https://github.com/flonat/claude-research",
+  "homepage": "https://github.com/flonat/flonat-research",
   "keywords": [
     "claude-code",
     "academic",

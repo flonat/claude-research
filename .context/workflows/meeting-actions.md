@@ -20,13 +20,13 @@
 
 | Step | Skill | When |
 |------|-------|------|
-| Prepare | `/minutes prep` | Before a call — builds relationship brief from prior meetings |
+| Prepare | `/meetings-prep` | Before a call — builds relationship brief from prior meetings |
 | Record | `/minutes record` | During meeting — `minutes record` / `minutes stop` |
 | Note | `/minutes note` | During meeting — add timestamped annotations |
-| Debrief | `/minutes debrief` | After meeting — compare outcomes to prep, track decisions |
-| Daily recap | `/minutes recap` | End of day — digest all meetings |
-| Weekly | `/minutes weekly` | End of week — themes, decision arcs, stale commitments |
-| Search | `/minutes search` | Anytime — find past discussions by topic, person, decision |
+| Debrief | `/meetings-debrief` | After meeting — compare outcomes to prep, track decisions |
+| Daily recap | `/meetings-recap` | End of day — digest all meetings |
+| Weekly | `/meetings-weekly` | End of week — themes, decision arcs, stale commitments |
+| Search | `/meetings-search` | Anytime — find past discussions by topic, person, decision |
 
 ## Extraction Rules
 
@@ -73,10 +73,10 @@ tags: [meeting-action]
 ## Processing Workflow
 
 1. **Check for new transcripts** — `minutes list` or browse `~/meetings/`
-2. **Run debrief** — `/minutes debrief` for structured analysis
+2. **Run debrief** — `/meetings-debrief` for structured analysis
 3. **Extract action items** — from YAML frontmatter `action_items:` or transcript scan
 4. **Create in vault** — add to `tasks/` directory with proper frontmatter
-5. **Check for conflicts** — `/minutes debrief` flags decision conflicts with prior meetings
+5. **Check for conflicts** — `/meetings-debrief` flags decision conflicts with prior meetings
 
 ## Special Cases
 
@@ -95,7 +95,7 @@ tags: [meeting-action]
 ## Integration
 
 - **Auto-extraction:** Minutes extracts `action_items` into YAML frontmatter (when LLM summarization is configured)
-- **Manual extraction:** Run `/minutes debrief` or use `meeting-analyst` agent for cross-meeting synthesis
+- **Manual extraction:** Run `/meetings-debrief` or use `meeting-analyst` agent for cross-meeting synthesis
 - **Vault sync:** Tasks are written directly to vault `tasks/` files
 - **Triage:** During daily review, assign priorities and dates
 

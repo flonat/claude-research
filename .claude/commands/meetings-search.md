@@ -9,4 +9,4 @@ description: Search past meeting transcripts and voice memos for specific topics
 
 # Shared skill adapter
 
-Read and follow `~/.claude/shared-skills/minutes-search/SKILL.md`. Resolve bundled resources relative to `~/.claude/shared-skills/minutes-search/`.
+Read and follow `~/.claude/shared-skills/meetings-search/SKILL.md`. Resolve bundled resources relative to `~/.claude/shared-skills/meetings-search/`.

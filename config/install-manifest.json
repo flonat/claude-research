@@ -272,6 +272,76 @@
     },
     {
       "client": "claude",
+      "source": ".claude/commands/meetings-cleanup.md",
+      "target": ".claude/commands/meetings-cleanup.md"
+    },
+    {
+      "client": "claude",
+      "source": "skills/meetings-cleanup",
+      "target": ".claude/shared-skills/meetings-cleanup"
+    },
+    {
+      "client": "codex",
+      "source": "skills/meetings-cleanup",
+      "target": ".agents/skills/meetings-cleanup"
+    },
+    {
+      "client": "claude",
+      "source": "skills/meetings-debrief",
+      "target": ".claude/skills/meetings-debrief"
+    },
+    {
+      "client": "claude",
+      "source": ".claude/commands/meetings-list.md",
+      "target": ".claude/commands/meetings-list.md"
+    },
+    {
+      "client": "claude",
+      "source": "skills/meetings-list",
+      "target": ".claude/shared-skills/meetings-list"
+    },
+    {
+      "client": "codex",
+      "source": "skills/meetings-list",
+      "target": ".agents/skills/meetings-list"
+    },
+    {
+      "client": "claude",
+      "source": "skills/meetings-prep",
+      "target": ".claude/skills/meetings-prep"
+    },
+    {
+      "client": "claude",
+      "source": "skills/meetings-recap",
+      "target": ".claude/skills/meetings-recap"
+    },
+    {
+      "client": "claude",
+      "source": ".claude/commands/meetings-search.md",
+      "target": ".claude/commands/meetings-search.md"
+    },
+    {
+      "client": "claude",
+      "source": "skills/meetings-search",
+      "target": ".claude/shared-skills/meetings-search"
+    },
+    {
+      "client": "codex",
+      "source": "skills/meetings-search",
+      "target": ".agents/skills/meetings-search"
+    },
+    {
+      "client": "claude",
+      "source": "skills/meetings-verify",
+      "target": ".claude/skills/meetings-verify"
+    },
+    {
+      "client": "claude",
+      "source": "skills/meetings-weekly",
+      "target": ".claude/skills/meetings-weekly"
+    },
+    {
+      "client": "claude",
       "source": "skills/memory-cleanup",
       "target": ".claude/skills/memory-cleanup"
     },
@@ -279,76 +349,6 @@
       "client": "claude",
       "source": "skills/method-audit",
       "target": ".claude/skills/method-audit"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/minutes-cleanup.md",
-      "target": ".claude/commands/minutes-cleanup.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/minutes-cleanup",
-      "target": ".claude/shared-skills/minutes-cleanup"
-    },
-    {
-      "client": "codex",
-      "source": "skills/minutes-cleanup",
-      "target": ".agents/skills/minutes-cleanup"
-    },
-    {
-      "client": "claude",
-      "source": "skills/minutes-debrief",
-      "target": ".claude/skills/minutes-debrief"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/minutes-list.md",
-      "target": ".claude/commands/minutes-list.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/minutes-list",
-      "target": ".claude/shared-skills/minutes-list"
-    },
-    {
-      "client": "codex",
-      "source": "skills/minutes-list",
-      "target": ".agents/skills/minutes-list"
-    },
-    {
-      "client": "claude",
-      "source": "skills/minutes-prep",
-      "target": ".claude/skills/minutes-prep"
-    },
-    {
-      "client": "claude",
-      "source": "skills/minutes-recap",
-      "target": ".claude/skills/minutes-recap"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/minutes-search.md",
-      "target": ".claude/commands/minutes-search.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/minutes-search",
-      "target": ".claude/shared-skills/minutes-search"
-    },
-    {
-      "client": "codex",
-      "source": "skills/minutes-search",
-      "target": ".agents/skills/minutes-search"
-    },
-    {
-      "client": "claude",
-      "source": "skills/minutes-verify",
-      "target": ".claude/skills/minutes-verify"
-    },
-    {
-      "client": "claude",
-      "source": "skills/minutes-weekly",
-      "target": ".claude/skills/minutes-weekly"
     },
     {
       "client": "claude",

@@ -2,8 +2,8 @@
 
 # flonat-research: a dual-client research framework
 
-> **Transition in progress:** this project is moving from the Claude-only
-> `claude-research` layout to the client-neutral `flonat-research` framework for
+> **Repository transition complete:** this project moved from the Claude-only
+> `claude-research` name to the client-neutral `flonat-research` framework for
 > both Claude Code and Codex. Existing checkouts remain supported during the
 > migration; use the [transition guide](docs/transitioning-to-flonat-research.md)
 > to replace legacy home-directory links safely and verify the new managed-copy
@@ -19,7 +19,7 @@ clients read the same project files; adapters expose only the skills and agents
 their client can execute accurately.
 
 [![npm version](https://img.shields.io/npm/v/flonat-research)](https://www.npmjs.com/package/flonat-research)
-[![GitHub release](https://img.shields.io/github/v/release/flonat/claude-research)](https://github.com/flonat/claude-research/releases)
+[![GitHub release](https://img.shields.io/github/v/release/flonat/flonat-research)](https://github.com/flonat/flonat-research/releases)
 
 ## Installation
 
@@ -36,7 +36,7 @@ This downloads the package and runs the managed-copy installer for both clients.
 #### macOS / Linux
 
 ```bash
-git clone https://github.com/flonat/claude-research.git flonat-research
+git clone https://github.com/flonat/flonat-research.git flonat-research
 cd flonat-research
 ./scripts/setup.sh --client both
 ```
@@ -44,7 +44,7 @@ cd flonat-research
 #### Windows (PowerShell)
 
 ```powershell
-git clone https://github.com/flonat/claude-research.git flonat-research
+git clone https://github.com/flonat/flonat-research.git flonat-research
 cd flonat-research
 .\scripts\setup.ps1 -Client both
 ```
@@ -90,7 +90,7 @@ Then customise `.context/profile.md`, `.context/current-focus.md`, and `CLAUDE.m
 ## Architecture
 
 <!-- ARCHITECTURE:START -->
-<!-- synced from private README — do not edit manually -->
+<!-- generated client-neutral architecture — do not edit manually -->
 ```text
 AI.md + .context/ + MEMORY.md + skills/ + agents/ + rules/
                          |
@@ -320,7 +320,7 @@ System created January 2026.
 
 ## Stars
 
-[![GitHub stars](https://img.shields.io/github/stars/flonat/claude-research?style=social)](https://star-history.com/#flonat/claude-research&Date)
+[![GitHub stars](https://img.shields.io/github/stars/flonat/flonat-research?style=social)](https://star-history.com/#flonat/flonat-research&Date)
 
 ## License
 

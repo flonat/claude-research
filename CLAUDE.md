@@ -2,6 +2,10 @@
 
 This file uses the shared `AI.md` guidance.
 
+# the configured AI coding client adapter
+
+This file uses the shared `AI.md` guidance.
+
 # flonat-research project guidance
 
 > This file is automatically read when you open this folder with the configured AI coding client.

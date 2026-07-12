@@ -1,10 +1,10 @@
 ---
-name: minutes-prep
+name: meetings-prep
 description: Interactive meeting preparation — builds a relationship brief and talking points before a call. Use when the user says "prep me for my call with", "I'm meeting with X", "prepare me for", "what should I bring up with", "meeting prep", "get ready for my call", or wants to review history with someone before a meeting.
 user_invocable: true
 ---
 
-# /minutes prep
+# /meetings-prep
 
 Interactive meeting preparation that searches your entire conversation history with someone, synthesizes a relationship brief, and produces talking points — before you walk into the room.
 
@@ -134,7 +134,7 @@ Ask via AskUserQuestion: "What's the one thing you'd regret not discussing in th
 
 ### Phase 4: Save prep file
 
-Save the prep brief to `~/.minutes/preps/` for later pickup by `/minutes debrief`:
+Save the prep brief to `~/.minutes/preps/` for later pickup by `/meetings-debrief`:
 
 ```bash
 mkdir -p ~/.minutes/preps
@@ -178,7 +178,7 @@ End with three beats:
    Examples: "Text Alex before your call that you want to finalize pricing."
    "Review the competitor grid Case sent you — it's still in your action items."
 
-3. **Next skill nudge** — "After your call, run `/minutes debrief` to capture what you decided and compare it to what you planned."
+3. **Next skill nudge** — "After your call, run `/meetings-debrief` to capture what you decided and compare it to what you planned."
 
 ## Gotchas
 
@@ -191,4 +191,4 @@ End with three beats:
 - **Don't hallucinate meeting history** — If you searched and found nothing, say so. Never invent meetings or conversations that don't appear in the search results.
 - **Prep files are sensitive** — They contain relationship intelligence. Always 0600 permissions.
 - **Multiple people in the meeting** — If the user names 2-3 people, search for each and combine the briefs. For >3, suggest picking the most important person to focus on.
-- **Stale prep files** — /minutes debrief ignores preps older than 48 hours. The user can prep the day before and still get the debrief connection.
+- **Stale prep files** — /meetings-debrief ignores preps older than 48 hours. The user can prep the day before and still get the debrief connection.

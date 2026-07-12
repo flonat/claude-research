@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 authors = [
-    { name = "the user" },
+    { name = "user contributors" },
 ]
 keywords = ["llm", "council", "multi-model", "openrouter", "anthropic", "openai", "gemini", "mistral", "peer-review", "ai"]
 classifiers = [

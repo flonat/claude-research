@@ -1,10 +1,10 @@
 ---
-name: minutes-cleanup
+name: meetings-cleanup
 description: Manage old recordings — find large files, archive old meetings, delete processed originals. Use when the user says "clean up recordings", "how much space are meetings using", "delete old recordings", "archive meetings", "manage meeting storage", or asks about disk space from minutes.
 user_invocable: true
 ---
 
-# /minutes cleanup
+# /meetings-cleanup
 
 Help the user manage disk space and organize old recordings.
 

@@ -1,16 +1,16 @@
 ---
-name: minutes-debrief
+name: meetings-debrief
 description: Post-meeting debrief — analyzes what happened, compares outcomes to your prep intentions, tracks decision evolution. Use when the user says "debrief", "what just happened in that meeting", "what did we decide", "debrief that call", "post-meeting", "what changed", or right after stopping a recording.
 user_invocable: true
 ---
 
-# /minutes debrief
+# /meetings-debrief
 
 Post-meeting analysis that reads your latest recording, compares what happened to what you planned, and surfaces decision evolution — so nothing falls through the cracks.
 
 ## How it works
 
-This is a multi-phase interactive flow. It connects to `/minutes prep` when a prep file exists, creating a before→after loop.
+This is a multi-phase interactive flow. It connects to `/meetings-prep` when a prep file exists, creating a before→after loop.
 
 ### Phase 1: Find the most recent recording
 
@@ -141,7 +141,7 @@ End with three beats:
    "Send Alex the pricing doc tonight while the conversation is fresh."
    "Update the roadmap doc with today's Q2 timeline change."
 
-3. **Next skill nudge** — "At the end of the week, run `/minutes weekly` to see how all your meetings connect and what still needs attention."
+3. **Next skill nudge** — "At the end of the week, run `/meetings-weekly` to see how all your meetings connect and what still needs attention."
 
 ### Phase 7: Update persistent relationship file
 
@@ -188,7 +188,7 @@ last_meeting: {today}
 - Keep the file under 100 lines — prune old historical decisions beyond 10 entries
 - Set permissions: `chmod 600`
 
-This file persists across sessions and is read by `/minutes prep` to build richer briefs without re-searching all meetings from scratch.
+This file persists across sessions and is read by `/meetings-prep` to build richer briefs without re-searching all meetings from scratch.
 
 ---
 

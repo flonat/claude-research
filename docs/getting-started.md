@@ -20,7 +20,7 @@ not need them to read the shared file context.
 The repository is still reachable through its transition alias:
 
 ```bash
-git clone https://github.com/flonat/claude-research.git flonat-research
+git clone https://github.com/flonat/flonat-research.git flonat-research
 cd flonat-research
 ./scripts/setup.sh --client both
 ```
@@ -29,7 +29,7 @@ Choose `claude` or `codex` instead of `both` for a single-client installation.
 On Windows PowerShell:
 
 ```powershell
-git clone https://github.com/flonat/claude-research.git flonat-research
+git clone https://github.com/flonat/flonat-research.git flonat-research
 cd flonat-research
 .\scripts\setup.ps1 -Client both
 ```

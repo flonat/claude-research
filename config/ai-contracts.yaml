@@ -1,9 +1,16 @@
 version: 1
 product:
   name: flonat-research
+  audience: public
   legacy_names:
   - claude-research
   target: public/public-repo
+disclosure:
+  hierarchy:
+  - private
+  - friends
+  - public
+  guard_required: true
 client_capabilities:
   claude:
   - bare-python-execution
@@ -478,6 +485,81 @@ assets:
       - shell
       - subagents
       - web
+    meetings-cleanup:
+      path: skills/meetings-cleanup
+      clients:
+      - claude
+      - codex
+      requires:
+      - filesystem
+      - shell
+      - skill-routing
+    meetings-debrief:
+      path: skills/meetings-debrief
+      clients:
+      - claude
+      requires:
+      - claude-tool-syntax
+      - filesystem
+      - shell
+      - skill-routing
+      - structured-input
+    meetings-list:
+      path: skills/meetings-list
+      clients:
+      - claude
+      - codex
+      requires:
+      - filesystem
+      - shell
+      - skill-routing
+    meetings-prep:
+      path: skills/meetings-prep
+      clients:
+      - claude
+      requires:
+      - claude-mcp
+      - claude-tool-syntax
+      - filesystem
+      - shell
+      - skill-routing
+      - structured-input
+    meetings-recap:
+      path: skills/meetings-recap
+      clients:
+      - claude
+      requires:
+      - claude-tool-syntax
+      - filesystem
+      - shell
+      - skill-routing
+      - structured-input
+    meetings-search:
+      path: skills/meetings-search
+      clients:
+      - claude
+      - codex
+      requires:
+      - filesystem
+      - shell
+      - skill-routing
+    meetings-verify:
+      path: skills/meetings-verify
+      clients:
+      - claude
+      requires:
+      - filesystem
+      - machine-specific-layout
+      - shell
+      - skill-routing
+    meetings-weekly:
+      path: skills/meetings-weekly
+      clients:
+      - claude
+      requires:
+      - filesystem
+      - shell
+      - skill-routing
     memory-cleanup:
       path: skills/memory-cleanup
       clients:
@@ -500,74 +582,6 @@ assets:
       - shell
       - skill-routing
       - web
-    minutes-cleanup:
-      path: skills/minutes-cleanup
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-    minutes-debrief:
-      path: skills/minutes-debrief
-      clients:
-      - claude
-      requires:
-      - claude-tool-syntax
-      - filesystem
-      - shell
-      - structured-input
-    minutes-list:
-      path: skills/minutes-list
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-    minutes-prep:
-      path: skills/minutes-prep
-      clients:
-      - claude
-      requires:
-      - claude-mcp
-      - claude-tool-syntax
-      - filesystem
-      - shell
-      - structured-input
-    minutes-recap:
-      path: skills/minutes-recap
-      clients:
-      - claude
-      requires:
-      - claude-tool-syntax
-      - filesystem
-      - shell
-      - structured-input
-    minutes-search:
-      path: skills/minutes-search
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-    minutes-verify:
-      path: skills/minutes-verify
-      clients:
-      - claude
-      requires:
-      - filesystem
-      - machine-specific-layout
-      - shell
-    minutes-weekly:
-      path: skills/minutes-weekly
-      clients:
-      - claude
-      requires:
-      - claude-tool-syntax
-      - filesystem
-      - shell
     multi-perspective:
       path: skills/multi-perspective
       clients:
