@@ -1,0 +1,21 @@
+% citation-placeholders.tex — Paperpile citation placeholder guard.
+%
+% Unresolved citations MUST use \CiteTodo{short-slug}{title; authors; year; DOI/hint}
+% NEVER a guessed \cite{author2024} key. \CiteTodo fails the build unless draft
+% mode is explicitly enabled, so a fabricated citation can never compile silently.
+%
+% Enable draft mode (renders placeholders as visible red flags instead of erroring):
+%   \draftcitationstodotrue   % in the preamble, AFTER \input{citation-placeholders}
+
+\newif\ifdraftcitationstodo
+\draftcitationstodofalse
+
+\providecommand{\CiteTodo}[2]{%
+  \ifdraftcitationstodo
+    \textbf{[UNRESOLVED CITATION: #1 --- #2]}%
+  \else
+    \PackageError{paperpile-citations}{Unresolved citation `#1': #2}{%
+      Resolve via Paperpile/refpile (paperpile export-bib). Do not invent a citekey.%
+    }%
+  \fi
+}
