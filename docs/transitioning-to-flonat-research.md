@@ -51,3 +51,13 @@ existing `~/.claude/settings.json`; merge settings manually if required.
 The repository rename from `claude-research` to `flonat-research` does not
 change installed paths or receipts. GitHub redirects preserve old clone URLs;
 new clones should use `https://github.com/flonat/flonat-research.git`.
+
+## Transition completion
+
+The client-neutral installer is now the only supported installation path.
+Private-workspace commands such as `claude-pull`, `sync-to-codex.sh`, and
+`sync-to-claude-home.sh` were migration mechanisms and are not part of this
+distribution. Existing public checkouts need only pull the renamed repository
+and run the managed-copy installer with `--update`; no client-to-client copy is
+required. Keep portable continuity in `MEMORY.md`, `.context/`, and
+`.context/ai-handoff.md`, not in either client's home directory.

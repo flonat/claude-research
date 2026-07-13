@@ -70,13 +70,13 @@ If no new permissions, skip the write.
 ### Step 4: Verify Skills Directory
 
 Check that `<skills-root>/` exists and has content:
-- If missing or empty, warn: "Skills directory missing — run `sync-to-claude-home.sh` to populate"
+- If missing or empty, warn: "Skills directory missing — run the documented managed-copy installer or deployment command"
 - If present, report file count
 
 ### Step 5: Verify Agents Directory
 
 Check that `~/.claude/agents/` exists and has content:
-- If missing or empty, warn: "Agents directory missing — run `sync-to-claude-home.sh` to populate"
+- If missing or empty, warn: "Agents directory missing — run the documented managed-copy installer or deployment command"
 - If present, report file count
 
 ### Step 6: Report

@@ -47,4 +47,4 @@ Report the handshake path, route, outcome, status, transport needed, and launch 
 
 ## Compatibility
 
-Legacy root `handoff.md` files remain readable by Claude's hook during migration, but new handoffs must use `.context/ai-handoff.md`. The legacy file is Claude-only and cannot support Codex-to-Codex or cross-client state tracking.
+Root `handoff.md` is retired and ignored. Every new or resumed handoff must use `.context/ai-handoff.md`; it is the only format that supports same-client, cross-client, and cross-machine state tracking.

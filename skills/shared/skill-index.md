@@ -194,7 +194,7 @@
 | `sync-repo` | Sync docs with system state for atlas, refpile, or private repos |
 | `sync-public-repo` | Sync to public repo (flonat-research), then commit public repo |
 | `sync-public-review` | Interactive review and editing of public sync allowlists |
-| `sync-friends-repo` | Regenerate friends-repo starter kit from private rules |
+| `sync-friends-repo` | Regenerate the friends distribution from private rules |
 | `sync-resources` | Pull latest from cloned resource repos |
 | `sync-permissions` | Sync global permissions into projects |
 | `full-commit` | Commit and push all 11 global repos with leak guard |
