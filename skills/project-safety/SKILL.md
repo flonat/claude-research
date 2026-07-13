@@ -1,7 +1,7 @@
 ---
 name: project-safety
 description: "Use when you need to set up safety rules and folder structures for a research project."
-argument-hint: [project-path]
+argument-hint: "[project-path]"
 ---
 
 # Project Safety Skill

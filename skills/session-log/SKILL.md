@@ -2,7 +2,7 @@
 name: session-log
 description: "Use when you need to create a timestamped progress log for a research session."
 allowed-tools: Read, Write, Edit, Bash(mkdir*), Bash(ls*)
-argument-hint: [project-name-or-path]
+argument-hint: "[project-name-or-path]"
 ---
 
 # Session Log Skill

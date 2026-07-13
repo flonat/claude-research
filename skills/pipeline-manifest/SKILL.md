@@ -2,7 +2,7 @@
 name: pipeline-manifest
 description: "Use when you need to map scripts to their inputs, outputs, and paper figures/tables."
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion
-argument-hint: [project-path]
+argument-hint: "[project-path]"
 ---
 
 # Pipeline Manifest
