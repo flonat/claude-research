@@ -2,7 +2,7 @@
 name: proofread
 description: "Use when you need academic proofreading of a LaTeX paper (11 check categories)."
 allowed-tools: Read, Glob, Grep
-argument-hint: [project-path or tex-file]
+argument-hint: "[project-path or tex-file]"
 ---
 
 # Academic Proofreading

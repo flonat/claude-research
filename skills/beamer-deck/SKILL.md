@@ -2,7 +2,7 @@
 name: beamer-deck
 description: "Use when you need to create an academic Beamer presentation with original theme and multi-agent review."
 allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(biber*), Bash(bibtex*), Bash(mkdir*), Bash(ls*), Bash(R*), Bash(Rscript*), Bash(python*), Read, Write, Edit, Task
-argument-hint: [topic, content-path, or project-name]
+argument-hint: "[topic, content-path, or project-name]"
 ---
 
 # Beamer Deck Skill

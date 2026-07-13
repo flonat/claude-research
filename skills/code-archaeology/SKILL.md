@@ -2,7 +2,7 @@
 name: code-archaeology
 description: "Use when you need to review and understand old code, data, or analysis files."
 allowed-tools: Bash(ls*), Bash(cp*), Bash(mkdir*), Bash(git*), Read, Write, Edit, Glob, Grep
-argument-hint: [project-path]
+argument-hint: "[project-path]"
 ---
 
 # Code Audit Skill

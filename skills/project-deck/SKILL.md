@@ -2,7 +2,7 @@
 name: project-deck
 description: "Use when you need to create a presentation deck to communicate project status."
 allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(mkdir*), Read, Write, Edit
-argument-hint: [project-name-or-path]
+argument-hint: "[project-name-or-path]"
 ---
 
 # Project Deck Skill

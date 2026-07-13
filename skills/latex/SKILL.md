@@ -2,7 +2,7 @@
 name: latex
 description: "Use when you need to compile a LaTeX document — includes autonomous error resolution, citation audit, and quality scoring."
 allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(biber*), Bash(bibtex*), Bash(mkdir*), Bash(ls*), Bash(wc*), Bash(cp*), Read, Write, Edit, Grep, Glob
-argument-hint: [tex-file-path]
+argument-hint: "[tex-file-path]"
 ---
 
 # LaTeX Document Compilation

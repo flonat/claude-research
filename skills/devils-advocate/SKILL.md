@@ -1,7 +1,7 @@
 ---
 name: devils-advocate
 description: "Use when you need to challenge research assumptions or stress-test arguments."
-argument-hint: [paper-or-argument-description]
+argument-hint: "[paper-or-argument-description]"
 ---
 
 # Devil's Advocate Skill

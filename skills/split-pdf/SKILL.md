@@ -2,7 +2,7 @@
 name: split-pdf
 description: "Use when you need to download, split, and deeply read an academic PDF that is NOT in Paperpile (for Paperpile items, prefer paperpile get-pdf-text directly)."
 allowed-tools: Bash(python*), Bash(uv*), Bash(curl*), Bash(wget*), Bash(mkdir*), Bash(ls*), Bash(rm*), Read, Write, Edit, WebSearch, WebFetch, Agent, Bash(paperpile*)
-argument-hint: [pdf-path-or-search-query]
+argument-hint: "[pdf-path-or-search-query]"
 ---
 
 # Split-PDF: Download, Split, and Deep-Read Academic Papers
