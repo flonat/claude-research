@@ -40,27 +40,6 @@ files_first_context:
 - .context/ai-handoff.md
 assets:
   skills:
-    audit-paper-book:
-      path: skills/audit-paper-book
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      - subagents
-      reason: selected by the reviewed public distribution
-    audit-project-research:
-      path: skills/audit-project-research
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      reason: selected by the reviewed public distribution
     beamer-deck:
       path: skills/beamer-deck
       clients:
@@ -95,18 +74,6 @@ assets:
       reason: selected by the reviewed public distribution
     bib-parse:
       path: skills/bib-parse
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      - subagents
-      - web
-      reason: selected by the reviewed public distribution
-    bib-validate:
-      path: skills/bib-validate
       clients:
       - claude
       - codex
@@ -252,17 +219,6 @@ assets:
       - shell
       - skill-routing
       reason: selected by the reviewed public distribution
-    gather-readings:
-      path: skills/gather-readings
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      - subagents
-      reason: selected by the reviewed public distribution
     grill-me:
       path: skills/grill-me
       clients:
@@ -290,18 +246,6 @@ assets:
       - filesystem
       - shell
       - skill-routing
-      reason: selected by the reviewed public distribution
-    init-paper-book:
-      path: skills/init-paper-book
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      - subagents
-      - web
       reason: selected by the reviewed public distribution
     init-project:
       path: skills/init-project
@@ -342,17 +286,6 @@ assets:
       - shell
       - skill-routing
       reason: reviewed client-neutral project orchestration with deterministic Claude and Codex adapters
-    init-project-research:
-      path: skills/init-project-research
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      - subagents
-      reason: selected by the reviewed public distribution
     insights-deck:
       path: skills/insights-deck
       clients:
@@ -463,18 +396,6 @@ assets:
       - shell
       - skill-routing
       reason: selected by the reviewed public distribution
-    literature:
-      path: skills/literature
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      - subagents
-      - web
-      reason: selected by the reviewed public distribution
     math-proof:
       path: skills/math-proof
       clients:
@@ -552,27 +473,8 @@ assets:
       - filesystem
       - shell
       reason: selected by the reviewed public distribution
-    meetings-verify:
-      path: skills/meetings-verify
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      reason: selected by the reviewed public distribution
     meetings-weekly:
       path: skills/meetings-weekly
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      reason: selected by the reviewed public distribution
-    memory-cleanup:
-      path: skills/memory-cleanup
       clients:
       - claude
       - codex
@@ -673,27 +575,6 @@ assets:
       - skill-routing
       - subagents
       reason: selected by the reviewed public distribution
-    preprint:
-      path: skills/preprint
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      reason: selected by the reviewed public distribution
-    preregister:
-      path: skills/preregister
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      - web
-      reason: selected by the reviewed public distribution
     project-deck:
       path: skills/project-deck
       clients:
@@ -750,16 +631,6 @@ assets:
       - skill-routing
       - subagents
       - web
-      reason: selected by the reviewed public distribution
-    rename-project-research:
-      path: skills/rename-project-research
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
       reason: selected by the reviewed public distribution
     reorg:
       path: skills/reorg
@@ -823,26 +694,6 @@ assets:
       - filesystem
       - skill-routing
       reason: selected by the reviewed public distribution
-    save-context:
-      path: skills/save-context
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - skill-routing
-      reason: selected by the reviewed public distribution
-    session-close:
-      path: skills/session-close
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      - subagents
-      reason: selected by the reviewed public distribution
     session-health:
       path: skills/session-health
       clients:
@@ -884,16 +735,6 @@ assets:
       - shell
       - skill-routing
       - web
-      reason: selected by the reviewed public distribution
-    skill-health:
-      path: skills/skill-health
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
       reason: selected by the reviewed public distribution
     skill-preflight:
       path: skills/skill-preflight
@@ -966,17 +807,6 @@ assets:
       - filesystem
       - shell
       - skill-routing
-      reason: selected by the reviewed public distribution
-    system-audit:
-      path: skills/system-audit
-      clients:
-      - claude
-      - codex
-      requires:
-      - filesystem
-      - shell
-      - skill-routing
-      - subagents
       reason: selected by the reviewed public distribution
     tailscale-mosh-recover:
       path: skills/tailscale-mosh-recover
@@ -1316,14 +1146,6 @@ assets:
       - claude-hooks
       - filesystem
       reason: selected by the reviewed public distribution
-    context-monitor.py:
-      path: hooks/context-monitor.py
-      clients:
-      - claude
-      requires:
-      - claude-hooks
-      - filesystem
-      reason: selected by the reviewed public distribution
     handoff-read.sh:
       path: hooks/handoff-read.sh
       clients:
@@ -1332,48 +1154,8 @@ assets:
       - claude-hooks
       - filesystem
       reason: selected by the reviewed public distribution
-    postcompact-restore.py:
-      path: hooks/postcompact-restore.py
-      clients:
-      - claude
-      requires:
-      - claude-hooks
-      - filesystem
-      reason: selected by the reviewed public distribution
-    precompact-autosave.py:
-      path: hooks/precompact-autosave.py
-      clients:
-      - claude
-      requires:
-      - claude-hooks
-      - filesystem
-      reason: selected by the reviewed public distribution
     promise-checker.sh:
       path: hooks/promise-checker.sh
-      clients:
-      - claude
-      requires:
-      - claude-hooks
-      - filesystem
-      reason: selected by the reviewed public distribution
-    protect-source-files.sh:
-      path: hooks/protect-source-files.sh
-      clients:
-      - claude
-      requires:
-      - claude-hooks
-      - filesystem
-      reason: selected by the reviewed public distribution
-    resume-context-loader.sh:
-      path: hooks/resume-context-loader.sh
-      clients:
-      - claude
-      requires:
-      - claude-hooks
-      - filesystem
-      reason: selected by the reviewed public distribution
-    startup-context-loader.sh:
-      path: hooks/startup-context-loader.sh
       clients:
       - claude
       requires:
@@ -1527,6 +1309,59 @@ assets:
       reason: selected by the reviewed public distribution
   mcps: {}
   clis: {}
+external_integrations:
+  council-api:
+    kind: package and CLI
+    install_state: bundled source; separate uv install
+    clients:
+    - claude
+    - codex
+    fallback: use the current client or one explicitly chosen reviewer
+  scholarly-compatible-cli:
+    kind: CLI
+    install_state: optional external
+    clients:
+    - claude
+    - codex
+    fallback: web search plus manual DOI verification
+  personal-library-cli:
+    kind: CLI or network service
+    install_state: optional external or access-controlled
+    clients:
+    - claude
+    - codex
+    fallback: validate the project bibliography directly
+  notion-mcp:
+    kind: MCP registration
+    install_state: optional Claude adapter
+    clients:
+    - claude
+    fallback: local context files, a separate CLI, or the provider UI
+  provider-model-clis:
+    kind: CLI
+    install_state: optional external
+    clients:
+    - claude
+    - codex
+    fallback: current client only
+portability_exclusions:
+  skills:
+    audit-paper-book: Requires the private Atlas book and research-root control plane.
+    audit-project-research: Requires private portfolio, history, and template scripts.
+    bib-validate: Requires the private Paperpile canonicalisation script.
+    gather-readings: Requires the private Paperpile PDF mirror and registry.
+    init-paper-book: Requires private Atlas book services and registration scripts.
+    init-project-research: Requires private Atlas, Overleaf, template, and Git-hook infrastructure.
+    literature: Pipeline mode requires the private Atlas and council/search toolchain.
+    meetings-verify: Requires the private meeting-transcription package installation.
+    memory-cleanup: Requires the private ai-context memory engine and store.
+    preprint: Requires a private Overleaf registry and template checkout.
+    preregister: Requires private Atlas topic metadata.
+    rename-project-research: Requires private Atlas and Task Management registries.
+    save-context: Writes to the private Task Management context library.
+    session-close: Requires private memory sync, portfolio, and paper-history scripts.
+    skill-health: Requires private invocation logs and health-analysis scripts.
+    system-audit: Audits the private control plane with unbundled deterministic scripts.
 documents:
   dual-client-ai-control-plane:
     path: docs/dual-client-ai-control-plane.md

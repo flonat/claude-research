@@ -194,7 +194,7 @@ This provides balance and helps the author see what's working well.
 
 ## Report Format
 
-Write the report to `reviews/<paper>/domain-reviewer/<YYYY-MM-DD-HHMM>.md` in the **project root** (the directory containing the `.tex` files, NOT the Task Management directory), where `<paper>` is the paper slug from your dispatch (e.g., `paper-jtp`). Create the `reviews/<paper>/domain-reviewer/` directory if it does not exist (`mkdir -p reviews/<paper>/domain-reviewer/`). Do NOT overwrite previous reports — each review is timestamped to the minute. Canonical report-location convention: `~/Task-Management/docs/reference/review-state-schema.md`.
+Write the report to `reviews/<paper>/domain-reviewer/<YYYY-MM-DD-HHMM>.md` in the **project root** (the directory containing the `.tex` files, NOT the Task Management directory), where `<paper>` is the paper slug from your dispatch (e.g., `paper-jtp`). Create the `reviews/<paper>/domain-reviewer/` directory if it does not exist (`mkdir -p reviews/<paper>/domain-reviewer/`). Do NOT overwrite previous reports — each review is timestamped to the minute. Canonical report-location convention: the installed shared resource `shared/review-state-schema.md`.
 
 ```markdown
 # Domain Review
@@ -354,7 +354,7 @@ This agent supports **council mode** — 3 LLM providers independently check der
 
 You do NOT run any bash command. Instead, end your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator parses this block and runs the stamping helper.
 
-**Read `~/.claude/shared-skills/_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
+**Read the installed shared resource `_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
 
 Your agent-specific values:
 

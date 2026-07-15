@@ -85,26 +85,23 @@ After you finish reading and have extracted structured notes, spawn these three 
 
 ## Phase 1: Read the paper
 
-**Default is text-first.** Extract cleaned text via `scripts/pdf-extract-clean.sh` (pymupdf4llm + pdf-clean `peer_review` profile). Fall back to visual split-PDF reading only for figure/table/equation-heavy sections.
+**Default is text-first.** Use the current client's PDF-reading capability or
+the installed `pdf` skill to extract text. Fall back to visual split-PDF reading
+only for figure/table/equation-heavy sections.
 
 Rationale: cleaned text is cheaper, deterministic, and enables downstream quote-based scoring and paragraph-level anchoring. Visual reading is reserved for content the text extraction cannot represent (figures, complex tables, mangled math).
 
 ### Reading Protocol
 
-**Step 1 — Extract cleaned text (default):**
+**Step 1 — Extract text (default):**
 
 ```bash
-TM="$(cat ~/.config/task-mgmt/path)"
-"$TM/scripts/pdf-extract-clean.sh" articles/author_2024.pdf \
-    --mode auto --out articles/author_2024.txt
+pdftotext -layout articles/author_2024.pdf articles/author_2024.txt
 ```
 
-Exit codes from the script:
-- `0` — cleaned text written to `--out` path; read that file directly with the Read tool
-- `2` — the quality heuristic (length, non-ASCII ratio, stubby-line ratio) signalled that text extraction is unreliable. Fall back to Step 2.
-- `1` — hard error (missing file, extraction failure). Report blocker to the user.
-
-Override via `PDF_READ_MODE=text|visual|auto` env var. Default is `auto`.
+Read the extracted text and sanity-check length, character quality, equations,
+and table structure. If extraction is missing or visibly unreliable, continue to
+Step 2. If `pdftotext` is unavailable, use the installed `pdf` skill instead.
 
 **Step 2 — Visual split-PDF (fallback, or for targeted figure/table sections):**
 
@@ -266,7 +263,10 @@ The user is a PhD researcher. When reviewing their work, calibrate your expectat
 
 0. **Python: ALWAYS use `uv run python` or `uv pip install`.** Never use bare `python`, `python3`, `pip`, or `pip3`. This applies to you AND to any sub-agents you spawn.
 1. **ALWAYS run the security scan first** (Phase 0) — before any substantive reading
-2. **ALWAYS read via cleaned text first** (Phase 1, Step 1) — use `scripts/pdf-extract-clean.sh`. Fall back to split-PDF visual reading only on exit code 2 or for targeted figure/table sections. Never read a full PDF directly in one multimodal pass.
+2. **ALWAYS read via extracted text first** (Phase 1, Step 1). Fall back to
+   split-PDF visual reading when extraction is unavailable or unreliable, and
+   for targeted figure/table sections. Never read a full PDF directly in one
+   multimodal pass.
 3. **ALWAYS spawn all three sub-agents in parallel** (Phase 2) — this is the architectural contract
 4. **ALWAYS validate citations** — hallucinated references are a red flag for auto-generated content
 5. **ALWAYS assess novelty thoroughly** — this is the most important dimension
@@ -305,7 +305,7 @@ This agent supports **council mode** — 3 LLM providers independently review th
 
 Write your peer review to `reviews/<scope>/peer-reviewer/<YYYY-MM-DD-HHMM>.md` (where `<scope>` is the paper directory basename or `_project` for external papers; `mkdir -p reviews/<scope>/peer-reviewer/` first). You do NOT run any bash command to stamp `reviews/INDEX.md`. Instead, end your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator (main session for direct dispatch; `review-cluster`, `pre-submission-report` for fan-out) parses this block and runs the stamping helper.
 
-**Read `~/.claude/shared-skills/_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
+**Read the installed shared resource `_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
 
 Your agent-specific values:
 
@@ -333,7 +333,7 @@ notes: Identification strategy underpowered; 3 citations hallucinated; novelty o
 
 **Exit criterion:** the directive block is the LAST thing in your response. Nothing after the closing fence.
 
-Schema for the row the orchestrator will append: `~/Task-Management/docs/reference/review-state-schema.md`.
+Schema for the row the orchestrator will append: the installed shared resource `shared/review-state-schema.md`.
 
 ---
 

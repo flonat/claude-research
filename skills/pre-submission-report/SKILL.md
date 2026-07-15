@@ -253,7 +253,7 @@ This skill is an **orchestrator** in the REVIEW-STATE.md schema. As of the 2026-
 
 When constructing prompts for any sub-agent that is a logging tool (paper-critic, referee2-reviewer, peer-reviewer, domain-reviewer, claim-verify, blindspot, fatal-error-check, code-paper-auditor, artifact-coherence-auditor, reproducibility-auditor, code-review), include this line in the sub-agent prompt:
 
-> Emit a `review-state-stamp` directive at the end of your final response per `skills/_shared/stamp-directive-spec.md`. Set `trigger: pre-submission-report` (or omit — this orchestrator overrides). Do not call the stamping helper yourself.
+> Emit a `review-state-stamp` directive at the end of your final response per the installed shared resource `_shared/stamp-directive-spec.md`. Set `trigger: pre-submission-report` (or omit — this orchestrator overrides). Do not call the stamping helper yourself.
 
 
 ### After each sub-agent returns
@@ -289,5 +289,5 @@ All sub-agent stamps land in `<project>/reviews/INDEX.md` with `Trigger=pre-subm
 
 Agents have inconsistent Bash tool grants at runtime (the 2026-05-19 harness investigation). The orchestrator always has Bash and always runs after the agents return. Moving stamping here decouples it from agent tool-surface uncertainty and fixes the burying problem (referee2-reviewer's stamping section used to live at line ~475 of a 518-line agent definition; agents reliably forgot to reach it).
 
-Schema: `~/Task-Management/docs/reference/review-state-schema.md`.
-Stamp directive format: `~/Task-Management/skills/_shared/stamp-directive-spec.md`.
+Schema: the installed shared resource `shared/review-state-schema.md`.
+Stamp directive format: the installed shared resource `_shared/stamp-directive-spec.md`.

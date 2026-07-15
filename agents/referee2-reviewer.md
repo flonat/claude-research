@@ -374,7 +374,7 @@ Report location: `[project_root]/reviews/<scope>/referee2-reviewer/<YYYY-MM-DD-H
 
 You do NOT run `bash review-state-log.sh` yourself. End your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator parses this block and runs the stamping helper. This instruction lives next to the file-writing instructions deliberately — the directive is part of the write workflow, NOT an afterthought at the end of the audit.
 
-**Read `~/.claude/shared-skills/_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
+**Read the installed shared resource `_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
 
 Your agent-specific values:
 
@@ -520,7 +520,7 @@ For maximum coverage, launch this agent alongside `paper-critic` and `domain-rev
 
 ## Council Mode (Optional)
 
-When triggered ("council referee 2", "thorough audit", "council code review"), the main session orchestrates a multi-model deliberation via `council-cli` (default, free with existing subscriptions) or `council-api` (OpenRouter, structured JSON). 3 different LLM providers independently run the full 5-audit protocol, cross-review each other's findings, and a chairman synthesises.
+When triggered ("council referee 2", "thorough audit", "council code review"), the main session orchestrates a multi-model deliberation via an explicitly configured external council backend such as `council-api`. 3 different LLM providers independently run the full 5-audit protocol, cross-review each other's findings, and a chairman synthesises.
 
 Council mode is especially valuable for referee 2 because the 5-audit protocol (code review, replication, paper critique, cross-reference, statistical) is where model diversity matters most — different architectures catch different bugs.
 

@@ -4,6 +4,10 @@
 shared source is client-neutral; installation creates managed copies for the
 selected clients and records their hashes in a receipt.
 
+Use this repository *or* `flonat-research-friends` as the managed distribution
+on a machine, not both. Their installers intentionally target some of the same
+client-home paths.
+
 ## Prerequisites
 
 - Git
@@ -45,6 +49,10 @@ The installer:
 5. preserves existing Claude settings and unmanaged files; and
 6. writes `~/.config/flonat-research/install-receipt.json`.
 
+It also installs shared skill resources beside each client’s skill tree,
+agent reference files beside both agent adapters, and reviewed rules under
+`~/.codex/rules/` for Codex. `AGENTS.md` tells Codex when to read those rules.
+
 No home-directory symlinks or junctions are created.
 
 ## Verify and update
@@ -61,6 +69,11 @@ The second install is a no-op when source and receipt are current. The former
 already reconciles managed copies. A divergent
 managed file is preserved under `~/.config/flonat-research/backups/` before it
 is reconciled. An unmanaged conflicting file stops installation.
+
+A first successful installation ends with `--check` reporting `PASS`. Restart
+the selected clients, invoke one simple bundled skill such as `proofread`, and
+confirm that it appears only once. Optional CLIs, MCP registrations, and
+credentials are separate checks and do not form part of the base receipt.
 
 For an existing Claude-only symlink installation, follow
 [the transition guide](transitioning-to-flonat-research.md) and use

@@ -1,0 +1,16 @@
+{
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": ["-cd", "-f", "-interaction=nonstopmode", "-synctex=1", "%DOC%"],
+      "env": {}
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    { "name": "latexmk (.latexmkrc)", "tools": ["latexmk"] }
+  ],
+  "latex-workshop.latex.outDir": "%DIR%/out",
+  "latex-workshop.latex.build.forceRecipeUsage": true,
+  "latex-workshop.view.pdf.viewer": "tab"
+}

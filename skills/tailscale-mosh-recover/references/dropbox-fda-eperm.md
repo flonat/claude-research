@@ -6,7 +6,7 @@
 
 - `ls -ld <dir>` — works. `ls <dir>/`, `cat`, `cp`, `head`, `Write`, `Edit` — all EPERM.
 - Same paths from the user's own SSH/Terminal login: **work fine** (same UID 501).
-- Non-Dropbox paths (`~/Task-Management`, `/tmp`) — fine.
+- Non-Dropbox paths (the local project checkout, `/tmp`) — fine.
 - Persists even with `dangerouslyDisableSandbox` → it is **NOT** the Bash sandbox.
 - Worked for hours, then broke **abruptly** mid-session.
 

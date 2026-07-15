@@ -19,7 +19,7 @@ skill-dependencies: [bib-validate, latex, retarget-journal]
 
 # Template Compliance
 
-> Compare a research project's LaTeX preamble against the working paper template (`templates/latex-wp/your-template.sty` + `your-bib-template.sty`). Classify every difference, produce a scored report, and optionally apply changes interactively.
+> Compare a research project's LaTeX preamble against the working-paper template bundled with the installed `latex` skill. Classify every difference, produce a scored report, and optionally apply changes interactively.
 
 ## When to Use
 
@@ -65,11 +65,12 @@ skill-dependencies: [bib-validate, latex, retarget-journal]
 
    If no preamble files are found, report error and exit.
 
-3. **Read the template.** The canonical location is `templates/latex-wp/` in Task Management:
-   - `$TASK_MGMT/templates/latex-wp/your-template.sty` + `your-bib-template.sty` (canonical source)
-   - Legacy fallback: `settings.tex` in the same location
+3. **Read the template.** Resolve the sibling installed skill path, then use
+   `../latex/templates/working-paper/` relative to this skill. Compare the two
+   `.sty` files there, with `settings.tex` as a legacy fallback when present.
 
-   If no template files are found, report "Template not found — cannot compare. Verify that `templates/latex-wp/` exists in Task Management." and exit.
+   If no template files are found, report "Bundled working-paper template not
+   found — reinstall or repair the `latex` skill" and exit.
 
 4. **Parse both files into semantic blocks:**
 
@@ -226,7 +227,7 @@ Run on each project individually. This skill checks one project at a time.
 
 ## Cross-References
 
-- **`templates/latex-wp/your-template.sty`** + **`your-bib-template.sty`** — the canonical template this skill compares against
+- **`../latex/templates/working-paper/`** — the bundled template this skill compares against
 - **`latex`** — used in Phase 7 to verify compilation after applying changes
 - **`audit-project-research`** — complementary: checks directory structure, this checks LaTeX preamble
 - **`bib-validate`** — complementary: checks citation keys, this checks bibliography system config

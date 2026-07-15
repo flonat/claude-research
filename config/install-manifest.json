@@ -2,33 +2,33 @@
   "entries": [
     {
       "client": "claude",
-      "source": ".claude/commands/audit-paper-book.md",
-      "target": ".claude/commands/audit-paper-book.md"
+      "source": "skills/shared",
+      "target": ".claude/shared-skills/shared"
     },
     {
       "client": "claude",
-      "source": "skills/audit-paper-book",
-      "target": ".claude/shared-skills/audit-paper-book"
+      "source": "skills/shared",
+      "target": ".claude/skills/shared"
     },
     {
       "client": "codex",
-      "source": "skills/audit-paper-book",
-      "target": ".agents/skills/audit-paper-book"
+      "source": "skills/shared",
+      "target": ".agents/skills/shared"
     },
     {
       "client": "claude",
-      "source": ".claude/commands/audit-project-research.md",
-      "target": ".claude/commands/audit-project-research.md"
+      "source": "skills/_shared",
+      "target": ".claude/shared-skills/_shared"
     },
     {
       "client": "claude",
-      "source": "skills/audit-project-research",
-      "target": ".claude/shared-skills/audit-project-research"
+      "source": "skills/_shared",
+      "target": ".claude/skills/_shared"
     },
     {
       "client": "codex",
-      "source": "skills/audit-project-research",
-      "target": ".agents/skills/audit-project-research"
+      "source": "skills/_shared",
+      "target": ".agents/skills/_shared"
     },
     {
       "client": "claude",
@@ -89,21 +89,6 @@
       "client": "codex",
       "source": "skills/bib-parse",
       "target": ".agents/skills/bib-parse"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/bib-validate.md",
-      "target": ".claude/commands/bib-validate.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/bib-validate",
-      "target": ".claude/shared-skills/bib-validate"
-    },
-    {
-      "client": "codex",
-      "source": "skills/bib-validate",
-      "target": ".agents/skills/bib-validate"
     },
     {
       "client": "claude",
@@ -302,21 +287,6 @@
     },
     {
       "client": "claude",
-      "source": ".claude/commands/gather-readings.md",
-      "target": ".claude/commands/gather-readings.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/gather-readings",
-      "target": ".claude/shared-skills/gather-readings"
-    },
-    {
-      "client": "codex",
-      "source": "skills/gather-readings",
-      "target": ".agents/skills/gather-readings"
-    },
-    {
-      "client": "claude",
       "source": ".claude/commands/grill-me.md",
       "target": ".claude/commands/grill-me.md"
     },
@@ -359,21 +329,6 @@
       "client": "codex",
       "source": "skills/ideas",
       "target": ".agents/skills/ideas"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/init-paper-book.md",
-      "target": ".claude/commands/init-paper-book.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/init-paper-book",
-      "target": ".claude/shared-skills/init-paper-book"
-    },
-    {
-      "client": "codex",
-      "source": "skills/init-paper-book",
-      "target": ".agents/skills/init-paper-book"
     },
     {
       "client": "claude",
@@ -424,21 +379,6 @@
       "client": "codex",
       "source": "skills/init-project-orchestration",
       "target": ".agents/skills/init-project-orchestration"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/init-project-research.md",
-      "target": ".claude/commands/init-project-research.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/init-project-research",
-      "target": ".claude/shared-skills/init-project-research"
-    },
-    {
-      "client": "codex",
-      "source": "skills/init-project-research",
-      "target": ".agents/skills/init-project-research"
     },
     {
       "client": "claude",
@@ -607,21 +547,6 @@
     },
     {
       "client": "claude",
-      "source": ".claude/commands/literature.md",
-      "target": ".claude/commands/literature.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/literature",
-      "target": ".claude/shared-skills/literature"
-    },
-    {
-      "client": "codex",
-      "source": "skills/literature",
-      "target": ".agents/skills/literature"
-    },
-    {
-      "client": "claude",
       "source": ".claude/commands/math-proof.md",
       "target": ".claude/commands/math-proof.md"
     },
@@ -742,21 +667,6 @@
     },
     {
       "client": "claude",
-      "source": ".claude/commands/meetings-verify.md",
-      "target": ".claude/commands/meetings-verify.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/meetings-verify",
-      "target": ".claude/shared-skills/meetings-verify"
-    },
-    {
-      "client": "codex",
-      "source": "skills/meetings-verify",
-      "target": ".agents/skills/meetings-verify"
-    },
-    {
-      "client": "claude",
       "source": ".claude/commands/meetings-weekly.md",
       "target": ".claude/commands/meetings-weekly.md"
     },
@@ -769,21 +679,6 @@
       "client": "codex",
       "source": "skills/meetings-weekly",
       "target": ".agents/skills/meetings-weekly"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/memory-cleanup.md",
-      "target": ".claude/commands/memory-cleanup.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/memory-cleanup",
-      "target": ".claude/shared-skills/memory-cleanup"
-    },
-    {
-      "client": "codex",
-      "source": "skills/memory-cleanup",
-      "target": ".agents/skills/memory-cleanup"
     },
     {
       "client": "claude",
@@ -922,36 +817,6 @@
     },
     {
       "client": "claude",
-      "source": ".claude/commands/preprint.md",
-      "target": ".claude/commands/preprint.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/preprint",
-      "target": ".claude/shared-skills/preprint"
-    },
-    {
-      "client": "codex",
-      "source": "skills/preprint",
-      "target": ".agents/skills/preprint"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/preregister.md",
-      "target": ".claude/commands/preregister.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/preregister",
-      "target": ".claude/shared-skills/preregister"
-    },
-    {
-      "client": "codex",
-      "source": "skills/preregister",
-      "target": ".agents/skills/preregister"
-    },
-    {
-      "client": "claude",
       "source": ".claude/commands/project-deck.md",
       "target": ".claude/commands/project-deck.md"
     },
@@ -1039,21 +904,6 @@
       "client": "codex",
       "source": "skills/quarto-deck",
       "target": ".agents/skills/quarto-deck"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/rename-project-research.md",
-      "target": ".claude/commands/rename-project-research.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/rename-project-research",
-      "target": ".claude/shared-skills/rename-project-research"
-    },
-    {
-      "client": "codex",
-      "source": "skills/rename-project-research",
-      "target": ".agents/skills/rename-project-research"
     },
     {
       "client": "claude",
@@ -1147,36 +997,6 @@
     },
     {
       "client": "claude",
-      "source": ".claude/commands/save-context.md",
-      "target": ".claude/commands/save-context.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/save-context",
-      "target": ".claude/shared-skills/save-context"
-    },
-    {
-      "client": "codex",
-      "source": "skills/save-context",
-      "target": ".agents/skills/save-context"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/session-close.md",
-      "target": ".claude/commands/session-close.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/session-close",
-      "target": ".claude/shared-skills/session-close"
-    },
-    {
-      "client": "codex",
-      "source": "skills/session-close",
-      "target": ".agents/skills/session-close"
-    },
-    {
-      "client": "claude",
       "source": ".claude/commands/session-health.md",
       "target": ".claude/commands/session-health.md"
     },
@@ -1224,21 +1044,6 @@
       "client": "codex",
       "source": "skills/skill-extract",
       "target": ".agents/skills/skill-extract"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/skill-health.md",
-      "target": ".claude/commands/skill-health.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/skill-health",
-      "target": ".claude/shared-skills/skill-health"
-    },
-    {
-      "client": "codex",
-      "source": "skills/skill-health",
-      "target": ".agents/skills/skill-health"
     },
     {
       "client": "claude",
@@ -1334,21 +1139,6 @@
       "client": "codex",
       "source": "skills/synthetic-data",
       "target": ".agents/skills/synthetic-data"
-    },
-    {
-      "client": "claude",
-      "source": ".claude/commands/system-audit.md",
-      "target": ".claude/commands/system-audit.md"
-    },
-    {
-      "client": "claude",
-      "source": "skills/system-audit",
-      "target": ".claude/shared-skills/system-audit"
-    },
-    {
-      "client": "codex",
-      "source": "skills/system-audit",
-      "target": ".agents/skills/system-audit"
     },
     {
       "client": "claude",
@@ -1752,8 +1542,23 @@
     },
     {
       "client": "claude",
+      "source": ".claude/agents/references",
+      "target": ".claude/agents/references"
+    },
+    {
+      "client": "codex",
+      "source": ".claude/agents/references",
+      "target": ".codex/agents/references"
+    },
+    {
+      "client": "claude",
       "source": ".claude/rules/audit-before-fix.md",
       "target": ".claude/rules/audit-before-fix.md"
+    },
+    {
+      "client": "codex",
+      "source": "rules/audit-before-fix.md",
+      "target": ".codex/rules/audit-before-fix.md"
     },
     {
       "client": "claude",
@@ -1761,9 +1566,19 @@
       "target": ".claude/rules/client-guidance-ownership.md"
     },
     {
+      "client": "codex",
+      "source": "rules/client-guidance-ownership.md",
+      "target": ".codex/rules/client-guidance-ownership.md"
+    },
+    {
       "client": "claude",
       "source": ".claude/rules/design-before-results.md",
       "target": ".claude/rules/design-before-results.md"
+    },
+    {
+      "client": "codex",
+      "source": "rules/design-before-results.md",
+      "target": ".codex/rules/design-before-results.md"
     },
     {
       "client": "claude",
@@ -1771,9 +1586,19 @@
       "target": ".claude/rules/doi-verification.md"
     },
     {
+      "client": "codex",
+      "source": "rules/doi-verification.md",
+      "target": ".codex/rules/doi-verification.md"
+    },
+    {
       "client": "claude",
       "source": ".claude/rules/latex-hygiene.md",
       "target": ".claude/rules/latex-hygiene.md"
+    },
+    {
+      "client": "codex",
+      "source": "rules/latex-hygiene.md",
+      "target": ".codex/rules/latex-hygiene.md"
     },
     {
       "client": "claude",
@@ -1781,9 +1606,19 @@
       "target": ".claude/rules/lean-guidance-files.md"
     },
     {
+      "client": "codex",
+      "source": "rules/lean-guidance-files.md",
+      "target": ".codex/rules/lean-guidance-files.md"
+    },
+    {
       "client": "claude",
       "source": ".claude/rules/learn-tags.md",
       "target": ".claude/rules/learn-tags.md"
+    },
+    {
+      "client": "codex",
+      "source": "rules/learn-tags.md",
+      "target": ".codex/rules/learn-tags.md"
     },
     {
       "client": "claude",
@@ -1791,9 +1626,19 @@
       "target": ".claude/rules/mark-unverified.md"
     },
     {
+      "client": "codex",
+      "source": "rules/mark-unverified.md",
+      "target": ".codex/rules/mark-unverified.md"
+    },
+    {
       "client": "claude",
       "source": ".claude/rules/no-hardcoded-results.md",
       "target": ".claude/rules/no-hardcoded-results.md"
+    },
+    {
+      "client": "codex",
+      "source": "rules/no-hardcoded-results.md",
+      "target": ".codex/rules/no-hardcoded-results.md"
     },
     {
       "client": "claude",
@@ -1801,9 +1646,19 @@
       "target": ".claude/rules/overleaf-separation.md"
     },
     {
+      "client": "codex",
+      "source": "rules/overleaf-separation.md",
+      "target": ".codex/rules/overleaf-separation.md"
+    },
+    {
       "client": "claude",
       "source": ".claude/rules/paper-code-consistency.md",
       "target": ".claude/rules/paper-code-consistency.md"
+    },
+    {
+      "client": "codex",
+      "source": "rules/paper-code-consistency.md",
+      "target": ".codex/rules/paper-code-consistency.md"
     },
     {
       "client": "claude",
@@ -1811,9 +1666,19 @@
       "target": ".claude/rules/plan-first.md"
     },
     {
+      "client": "codex",
+      "source": "rules/plan-first.md",
+      "target": ".codex/rules/plan-first.md"
+    },
+    {
       "client": "claude",
       "source": ".claude/rules/python-uv.md",
       "target": ".claude/rules/python-uv.md"
+    },
+    {
+      "client": "codex",
+      "source": "rules/python-uv.md",
+      "target": ".codex/rules/python-uv.md"
     },
     {
       "client": "claude",
@@ -1821,9 +1686,19 @@
       "target": ".claude/rules/read-docs-first.md"
     },
     {
+      "client": "codex",
+      "source": "rules/read-docs-first.md",
+      "target": ".codex/rules/read-docs-first.md"
+    },
+    {
       "client": "claude",
       "source": ".claude/rules/scope-discipline.md",
       "target": ".claude/rules/scope-discipline.md"
+    },
+    {
+      "client": "codex",
+      "source": "rules/scope-discipline.md",
+      "target": ".codex/rules/scope-discipline.md"
     },
     {
       "client": "claude",
@@ -1831,14 +1706,29 @@
       "target": ".claude/rules/severity-gradient.md"
     },
     {
+      "client": "codex",
+      "source": "rules/severity-gradient.md",
+      "target": ".codex/rules/severity-gradient.md"
+    },
+    {
       "client": "claude",
       "source": ".claude/rules/spec-before-quality.md",
       "target": ".claude/rules/spec-before-quality.md"
     },
     {
+      "client": "codex",
+      "source": "rules/spec-before-quality.md",
+      "target": ".codex/rules/spec-before-quality.md"
+    },
+    {
       "client": "claude",
       "source": ".claude/rules/subagent-write-guard.md",
       "target": ".claude/rules/subagent-write-guard.md"
+    },
+    {
+      "client": "codex",
+      "source": "rules/subagent-write-guard.md",
+      "target": ".codex/rules/subagent-write-guard.md"
     },
     {
       "client": "claude",
@@ -1847,43 +1737,13 @@
     },
     {
       "client": "claude",
-      "source": "hooks/context-monitor.py",
-      "target": ".claude/hooks/context-monitor.py"
-    },
-    {
-      "client": "claude",
       "source": "hooks/handoff-read.sh",
       "target": ".claude/hooks/handoff-read.sh"
     },
     {
       "client": "claude",
-      "source": "hooks/postcompact-restore.py",
-      "target": ".claude/hooks/postcompact-restore.py"
-    },
-    {
-      "client": "claude",
-      "source": "hooks/precompact-autosave.py",
-      "target": ".claude/hooks/precompact-autosave.py"
-    },
-    {
-      "client": "claude",
       "source": "hooks/promise-checker.sh",
       "target": ".claude/hooks/promise-checker.sh"
-    },
-    {
-      "client": "claude",
-      "source": "hooks/protect-source-files.sh",
-      "target": ".claude/hooks/protect-source-files.sh"
-    },
-    {
-      "client": "claude",
-      "source": "hooks/resume-context-loader.sh",
-      "target": ".claude/hooks/resume-context-loader.sh"
-    },
-    {
-      "client": "claude",
-      "source": "hooks/startup-context-loader.sh",
-      "target": ".claude/hooks/startup-context-loader.sh"
     },
     {
       "client": "claude",

@@ -414,15 +414,15 @@ Sub-agents do NOT inherit global rules — each prompt must include the standard
 
 ## Parallel Independent Review
 
-For maximum coverage, launch this agent alongside `domain-reviewer` and `referee2-reviewer` in parallel (3 Agent tool calls in one message). Each checks different dimensions. Run `fatal-error-check` first as a pre-flight gate, then `synthesise-reviews` after to produce a unified `REVISION-PLAN.md`. See `~/.claude/shared-skills/shared/council-protocol.md`.
+For maximum coverage, launch this agent alongside `domain-reviewer` and `referee2-reviewer` in parallel (3 Agent tool calls in one message). Each checks different dimensions. Run `fatal-error-check` first as a pre-flight gate, then `synthesise-reviews` after to produce a unified `REVISION-PLAN.md`. See the installed shared `council-protocol.md` resource.
 
 ---
 
 ## Council Mode
 
-When triggered ("council mode", "council review", "thorough quality check"), the main session orchestrates a multi-model deliberation via `council-cli` (default, free with existing subscriptions) or `council-api` (OpenRouter). 3 different LLM providers independently review, cross-evaluate, and a chairman synthesises.
+When triggered ("council mode", "council review", "thorough quality check"), the main session orchestrates a multi-model deliberation via an explicitly configured external council backend such as `council-api`. 3 different LLM providers independently review, cross-evaluate, and a chairman synthesises.
 
-**Do NOT launch a single paper-critic agent in council mode.** The main session reads `~/.claude/shared-skills/shared/council-protocol.md` plus the personas and prompts reference files, constructs system and user messages from this agent's instructions, and invokes the council library. Output goes through the standard CRITIC-REPORT.md format with Council Notes appended.
+**Do NOT launch a single paper-critic agent in council mode.** The main session reads the installed shared `council-protocol.md` resource plus the personas and prompts reference files, constructs system and user messages from this agent's instructions, and invokes the council library. Output goes through the standard CRITIC-REPORT.md format with Council Notes appended.
 
 **Personas + prompts reference files** (siblings of this section):
 - `references/paper-critic/council-personas.md` — Technical Rigour / Presentation / Scholarly Standards emphasis
@@ -436,7 +436,7 @@ When triggered ("council mode", "council review", "thorough quality check"), the
 
 You do NOT run any bash command. Instead, end your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator (main session for direct dispatch; `review-cluster`, `pre-submission-report`, `code-suite` for fan-out) parses this block and runs the stamping helper.
 
-**Read `~/.claude/shared-skills/_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
+**Read the installed shared resource `_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
 
 Your agent-specific values:
 

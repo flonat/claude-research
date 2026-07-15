@@ -170,7 +170,7 @@ For comprehensive pre-submission auditing, launch all three verification agents 
 
 You do NOT call `bash review-state-log.sh` yourself. Write your `.md` report at the declared path, then end your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator parses this block and runs the stamping helper. Shell access is for test reproductions and dependency checks — NOT for the stamping helper.
 
-**Read `~/.claude/shared-skills/_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
+**Read the installed shared resource `_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
 
 Your agent-specific values:
 

@@ -105,7 +105,7 @@ When run on a paper in a research project (a `paper-*/` directory exists), persi
    - **Open issues:** surviving critiques (Critical+Major+Minor) over total raised in Round 1.
    - **Trigger:** pass an orchestrator name only if invoked via `review-cluster` or `pre-submission-report`; otherwise omit.
 
-Skip stamping only for **non-paper use** (challenging a bare argument with no project context) or **single-shot mode** on a paragraph — then the report stays inline. Schema: `~/Task-Management/docs/reference/review-state-schema.md`.
+Skip stamping only for **non-paper use** (challenging a bare argument with no project context) or **single-shot mode** on a paragraph — then the report stays inline. Schema: the installed shared resource `shared/review-state-schema.md`.
 
 ## Single-Shot Mode
 

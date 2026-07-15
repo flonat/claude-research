@@ -188,7 +188,7 @@ Write the report to `reviews/<paper>/<check>/<YYYY-MM-DD-HHMM>.md` in the **proj
 
 You do NOT call any bash command. Write your `.md` report via Write, then end your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator parses this block and runs the stamping helper.
 
-**Read `~/.claude/shared-skills/_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
+**Read the installed shared resource `_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
 
 Your agent-specific values:
 

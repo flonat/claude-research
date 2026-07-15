@@ -43,9 +43,11 @@ argument-hint: "[project-path | 'all' | 'quick']"
 
 Find all directories containing a `\documentclass` in a .tex file:
 
-Search locations (read from config, detect which exist):
-- Research root from `~/.config/task-mgmt/research-root` (fallback: `~/Projects/`)
-- `$TM/docs/`
+Search locations in this order, checking that each exists:
+- an explicit path argument;
+- the current project;
+- project roots declared by the current repository or client guidance;
+- `~/Projects/` as a portable fallback for `all` mode.
 
 For each discovered project, record:
 - Project name (directory name)

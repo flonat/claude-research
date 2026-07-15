@@ -15,21 +15,15 @@ used by the `paper-critic` agent and can be called from skills such as
 
 See `skills/shared/council-protocol.md` for the full orchestration protocol.
 
-## CLI council (`packages/council-cli/`)
+## CLI reviewers
 
-Uses local CLI tools with existing subscriptions (no per-token cost). Backends are pluggable — adding a new provider follows the `BackendSpec` pattern:
+The framework does not bundle a subscription-backed council CLI. Individual
+workflows may call an installed model CLI when their availability row declares
+that dependency. Treat those executables as optional external integrations:
+preflight them before use, do not silently substitute a paid API, and fall back
+to the current client or a single explicitly chosen reviewer when unavailable.
 
-```bash
-cd packages/council-cli
-uv run python -m council_cli --check
-```
-
-Currently available backends:
-- [Gemini CLI](https://github.com/google-gemini/gemini-cli) — `npm install -g @google/gemini-cli`
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — useful for fresh context (same model, different session)
-- Additional backends can be added by implementing a `BackendSpec` in `config.py` and a thin async wrapper in `backends/`
-
-## API council (`packages/council-api/`)
+## Bundled API council (`packages/council-api/`)
 
 Uses OpenRouter for structured JSON output and programmatic integration:
 

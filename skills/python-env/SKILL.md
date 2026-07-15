@@ -47,13 +47,13 @@ uv run python main.py
 3. **Always work in a venv** — created by `uv venv` or `uv sync`
 4. **Use `uv run`** — to execute scripts within the project environment
 
-## This Project
+## Typical Project
 
-The Task Management system uses uv:
+For a project with a Python entry point:
 ```bash
-cd "Task Management"
+cd <project>
 uv sync                           # Install dependencies
-uv run python .scripts/tasks      # Run CLI tools
+uv run python scripts/task.py     # Run a project script
 ```
 
 ## On [HPC cluster] HPC

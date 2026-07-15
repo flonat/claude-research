@@ -198,7 +198,7 @@ bash <skills-root>/_shared/review-state-log.sh \
 - Open issues: (failed + never-tested) / total at run time.
 - Trigger: pass orchestrator name only if invoked as a sub-agent. Otherwise omit.
 
-Schema: `~/Task-Management/docs/reference/review-state-schema.md`.
+Schema: the installed shared resource `shared/review-state-schema.md`.
 
 ## Cross-References
 

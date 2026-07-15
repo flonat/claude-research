@@ -8,10 +8,11 @@ Claude-only MCP tool. Shell-capable Claude Code and Codex sessions use the
 MCP server. Personal-library tools such as Paperpile or RefPile are separate
 optional services and are not installed or configured by this repository.
 
-## 1. Install the scholarly package
+## 1. Install a compatible scholarly CLI (optional)
 
-Clone the separate `scholarly-mcp` repository and follow its README using
-`uv`. Do not use bare `python`, `python3`, or `pip`.
+The CLI is not bundled by `flonat-research`. Obtain a compatible package from
+its publisher or use ordinary web/library search, then follow that package’s
+README with `uv`. Do not infer a download URL from examples in this framework.
 
 Verify the CLI before configuring any client adapter:
 
@@ -21,9 +22,8 @@ scholarly scholarly-search "your topic" --json
 scholarly scholarly-verify-dois --dois 10.0000/example --json
 ```
 
-OpenAlex and other keyless providers work without private credentials. Scopus,
-Web of Science, and other subscription providers require their documented
-environment variables.
+Provider coverage and credential requirements are package-owned. Verify them
+against the installed CLI’s current help.
 
 ## 2. Claude Code and Codex
 

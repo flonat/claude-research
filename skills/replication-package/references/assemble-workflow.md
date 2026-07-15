@@ -11,7 +11,7 @@
 
 | Category | What to look for |
 |----------|-----------------|
-| **Directories** | `.claude/`, `.context/`, `log/`, `packages/mcp-desktop/`, `packages/scholarly/`, `.scripts/`, `hooks/` |
+| **Directories** | `.claude/`, `.codex/`, `.context/`, `log/`, client-specific package snapshots, private utility directories, `hooks/` |
 | **Files** | `CLAUDE.md`, `MEMORY.md`, `*.jsonl`, `.env` |
 | **Skill/agent infra** | `skills/` directory (only if it contains SKILL.md files — i.e., Claude skill infrastructure, not project code) |
 | **Git trailers** | `Co-Authored-By:` lines mentioning Claude, Anthropic, or AI assistants |
@@ -90,9 +90,8 @@ Remove these directories if they exist in the output:
 .claude/
 .context/
 log/
-packages/mcp-desktop/
-packages/scholarly/
-.scripts/
+packages/<client-specific-snapshot>/
+<private-utility-directory>/
 hooks/
 ```
 

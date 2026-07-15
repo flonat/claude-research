@@ -214,7 +214,7 @@ Write `tests/verify_replication.R` (or `.py`) that programmatically re-runs the 
 
 ## Final Report
 
-Write the report to `reviews/<paper>/code-paper-auditor/<YYYY-MM-DD-HHMM>.md` in the **project root**, where `<paper>` is the paper slug from your dispatch directive (e.g., `paper-eaamo`). Create the directory if needed (`mkdir -p reviews/<paper>/code-paper-auditor/`). Canonical report-location convention: `~/Task-Management/docs/reference/review-state-schema.md`.
+Write the report to `reviews/<paper>/code-paper-auditor/<YYYY-MM-DD-HHMM>.md` in the **project root**, where `<paper>` is the paper slug from your dispatch directive (e.g., `paper-eaamo`). Create the directory if needed (`mkdir -p reviews/<paper>/code-paper-auditor/`). Canonical report-location convention: the installed shared resource `shared/review-state-schema.md`.
 
 ```markdown
 # Code-Paper Verification Report
@@ -305,7 +305,7 @@ For maximum coverage, launch this agent alongside `paper-critic`, `domain-review
 
 You do NOT call `bash review-state-log.sh` yourself. End your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator parses this block and runs the stamping helper. Your existing Bash tool is for running the author's code (Phase 11 anchor pipeline, etc.) — NOT for the stamping helper.
 
-**Read `~/.claude/shared-skills/_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
+**Read the installed shared resource `_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
 
 Your agent-specific values:
 

@@ -194,13 +194,13 @@ Save to `reviews/<scope>/review-cluster/YYYY-MM-DD-cluster-report.md` (scope = p
 
 ## REVIEW-STATE.md propagation (orchestrator-side stamping)
 
-This skill is an **orchestrator** in the REVIEW-STATE.md schema. As of the 2026-05-19 architecture change, the orchestrator (this skill) handles all stamping; sub-agents emit directives but do not call the helper themselves. Each of the 4 sub-agents (paper-critic, domain-reviewer, claim-verify, blindspot) ends its final response with a `review-state-stamp` fenced block (see `skills/_shared/stamp-directive-spec.md`).
+This skill is an **orchestrator** in the REVIEW-STATE.md schema. As of the 2026-05-19 architecture change, the orchestrator (this skill) handles all stamping; sub-agents emit directives but do not call the helper themselves. Each of the 4 sub-agents (paper-critic, domain-reviewer, claim-verify, blindspot) ends its final response with a `review-state-stamp` fenced block (see the installed shared resource `_shared/stamp-directive-spec.md`).
 
 ### Required orchestrator behaviour
 
 When constructing the prompts for the 4 parallel sub-agents, include this line in each:
 
-> Emit a `review-state-stamp` directive at the end of your final response per `skills/_shared/stamp-directive-spec.md`. Set `trigger: review-cluster` (or omit — this orchestrator overrides). Do not call the stamping helper yourself.
+> Emit a `review-state-stamp` directive at the end of your final response per the installed shared resource `_shared/stamp-directive-spec.md`. Set `trigger: review-cluster` (or omit — this orchestrator overrides). Do not call the stamping helper yourself.
 
 ### After all 4 sub-agents return
 
@@ -238,8 +238,8 @@ All 4 stamps land in `<project>/reviews/INDEX.md` with the same orchestrator nam
 
 Agents have inconsistent Bash tool grants at runtime (the 2026-05-19 harness investigation showed paper-critic and domain-reviewer self-report Bash unavailable despite YAML grants). The orchestrator always has Bash and always runs after the agents return. Moving stamping here decouples it from agent tool-surface uncertainty.
 
-Schema: `~/Task-Management/docs/reference/review-state-schema.md`.
-Stamp directive format: `~/Task-Management/skills/_shared/stamp-directive-spec.md`.
+Schema: the installed shared resource `shared/review-state-schema.md`.
+Stamp directive format: the installed shared resource `_shared/stamp-directive-spec.md`.
 
 ## Anti-Patterns
 

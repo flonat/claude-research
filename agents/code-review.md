@@ -227,7 +227,7 @@ P0 → P1 → P2 → P3, then by confidence (descending), then by file, then by 
 
 ## Phase 5: Synthesise Report
 
-Create `reviews/<scope>/code-review/` if absent (`mkdir -p`), where `<scope>` is the paper slug (e.g., `paper-jtp`) for paper-specific reviews or `_project` for project-level code audits. Write `reviews/<scope>/code-review/<YYYY-MM-DD-HHMM>.md` in the project directory (timestamped to the minute so prior reports are preserved; canonical convention shared with `paper-critic`, `peer-reviewer`, `domain-reviewer`, `referee2-reviewer`, `proofread`, and the rest of the 18 logging tools — see `~/Task-Management/docs/reference/review-state-schema.md`).
+Create `reviews/<scope>/code-review/` if absent (`mkdir -p`), where `<scope>` is the paper slug (e.g., `paper-jtp`) for paper-specific reviews or `_project` for project-level code audits. Write `reviews/<scope>/code-review/<YYYY-MM-DD-HHMM>.md` in the project directory (timestamped to the minute so prior reports are preserved; canonical convention shared with `paper-critic`, `peer-reviewer`, `domain-reviewer`, `referee2-reviewer`, `proofread`, and the rest of the 18 logging tools — see the installed shared resource `shared/review-state-schema.md`).
 
 ### Report Format
 
@@ -329,7 +329,7 @@ For complex codebases or high-stakes replication packages, run the code review a
 
 You do NOT call `bash review-state-log.sh` yourself. Write your `.md` report at the declared path, then end your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator parses this block and runs the stamping helper. Shell access is for running or linting the author's scripts during substantive review — NOT for the stamping helper.
 
-**Read `~/.claude/shared-skills/_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
+**Read the installed shared resource `_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
 
 Your agent-specific values:
 

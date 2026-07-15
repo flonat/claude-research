@@ -34,15 +34,10 @@ Determine the download directory:
 
 Then:
 1. Use web search to find the paper
-2. If web search doesn't yield a direct PDF link, try `scholarly scholarly-search` first. Fallback to Python OpenAlex client:
-   ```python
-   import sys
-   sys.path.insert(0, ".scripts/openalex")
-   from openalex_client import OpenAlexClient
-   client = OpenAlexClient(email="user@example.edu")
-   results = client.search_works(search="paper title here", per_page=5)
-   # Check open_access.oa_url in results for direct PDF links
-   ```
+2. If web search does not yield a direct PDF link, use a separately installed
+   scholarly CLI when available (for example,
+   `scholarly scholarly-search "paper title" --json`). Otherwise search the
+   publisher, DOI landing page, arXiv, or an institutional repository directly.
 3. Use web fetch or Bash (curl/wget) to download the PDF
 4. Save it to the download directory
 5. Proceed to Step 2

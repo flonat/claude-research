@@ -74,8 +74,8 @@ Run from **each peer machine** (not the just-re-auth'd Mac mini):
 # Replace 100.x.y.z with whatever the OLD Mini Tailscale IP was
 grep -rln '100\.118\.194\.31' /opt/example /etc /root ~ 2>/dev/null
 
-# On Task-Management:
-grep -rln '100\.118\.194\.31' ~/Task-Management/scripts ~/Task-Management/docs 2>/dev/null
+# In the relevant project checkout:
+grep -rln '100\.118\.194\.31' "$PROJECT_ROOT/scripts" "$PROJECT_ROOT/docs" 2>/dev/null
 ```
 
 If grep returns hits, each one is either:

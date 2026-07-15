@@ -43,6 +43,36 @@ portable context contract. Claude hooks can surface those files automatically,
 but they are conveniences rather than a dependency. Codex reads the same files
 directly through `AGENTS.md`.
 
+## Migrate the content, not just the links
+
+The managed-copy migration above fixes deployment ownership. Review the old
+Claude-only content separately:
+
+1. Move durable shared guidance from a large hand-authored `CLAUDE.md` into
+   neutral `AI.md`, `MEMORY.md`, and `.context/` files. Keep `CLAUDE.md` and
+   `AGENTS.md` as thin client adapters.
+2. Convert reusable slash commands into neutral skill directories with an
+   explicit client/capability row. Do not copy command files directly into
+   Codex discovery roots.
+3. Keep one neutral agent body and generate Claude Markdown and Codex TOML
+   adapters. Bundle every referenced support file with the installed agent.
+4. Separate rules from hooks: rules express durable policy; hooks are optional
+   client conveniences and must not be the only place shared context exists.
+5. Separate MCP registrations from credentials. Codex workflows need a tested
+   CLI or manual fallback; neither client should receive secrets from Git.
+6. Retire old sync writers only after their callers and launch jobs point to
+   the managed installer.
+
+Use [`availability.md`](availability.md) to record a deliberate client-only or
+external dependency. A missing row is not permission to assume compatibility.
+
+## Choose one distribution
+
+`flonat-research` and `flonat-research-friends` install overlapping managed
+paths. Switching between them is a migration: keep the old checkout, run the
+new installer in `--check` mode, inspect ownership, install, then verify. Do not
+run both update loops against the same home directory.
+
 ## Transition project-local orchestration
 
 If an existing project has hand-authored `.claude/agents/` or

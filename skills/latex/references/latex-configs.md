@@ -5,16 +5,16 @@
 
 ## Canonical `.latexmkrc`
 
-**Source of truth:** `templates/latexmkrc/.latexmkrc` in Task Management.
+**Source of truth:** the bundled `../templates/build-config/.latexmkrc`
+relative to this reference file in the installed `latex` skill.
 
 It auto-detects the engine, builds to `out/`, and copies the PDF back to the source dir. Drop it into any directory with `.tex` files — including Overleaf-symlinked paper folders (the file goes into the symlink target so it syncs to Overleaf's web compiler too):
 
 ```bash
-TM=$(cat ~/.config/task-mgmt/path)
-cp "$TM/templates/latexmkrc/.latexmkrc" <target-dir>/
+cp ../templates/build-config/.latexmkrc <target-dir>/
 ```
 
-See `templates/latexmkrc/README.md` for the full spec and rationale.
+See `../templates/build-config/README.md` for the full spec and rationale.
 
 ## VS Code LaTeX Workshop Setup
 
@@ -25,11 +25,12 @@ Two gotchas to know:
 
 ### Canonical `.vscode/settings.json`
 
-**Source of truth:** `templates/latexmkrc/vscode-settings.json`.
+**Source of truth:** the bundled
+`../templates/build-config/vscode-settings.json`.
 
 ```bash
 mkdir -p .vscode
-cp "$TM/templates/latexmkrc/vscode-settings.json" .vscode/settings.json
+cp ../templates/build-config/vscode-settings.json .vscode/settings.json
 ```
 
 This config delegates everything to `latexmk` with `-cd`, so the project's `.latexmkrc` is the single authority. No engine flag in the VS Code config — auto-detection happens in `.latexmkrc`.

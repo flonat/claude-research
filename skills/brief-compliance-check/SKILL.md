@@ -174,4 +174,4 @@ bash <skills-root>/_shared/review-state-log.sh \
 - Open issues: total gaps at run time / total criteria.
 - Trigger: pass orchestrator name only if invoked as a sub-agent. Otherwise omit.
 
-Schema: `~/Task-Management/docs/reference/review-state-schema.md`.
+Schema: the installed shared resource `shared/review-state-schema.md`.

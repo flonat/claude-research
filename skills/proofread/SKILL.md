@@ -40,7 +40,7 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 1. **Locate files**: Find all `.tex` files in the project (and `.log` files for LaTeX diagnostics)
 2. **Read the document**: Read all `.tex` source files in order
 3. **Run 11 check categories** (below)
-4. **Produce report**: Write `reviews/<scope>/proofread/<YYYY-MM-DD-HHMM>.md` under the project directory (where `<scope>` is the paper slug, e.g., `paper-jtp`; create the directory if it does not exist: `mkdir -p reviews/<scope>/proofread/`). Do NOT overwrite previous reports — each review is timestamped to the minute. Canonical convention: `~/Task-Management/docs/reference/review-state-schema.md`.
+4. **Produce report**: Write `reviews/<scope>/proofread/<YYYY-MM-DD-HHMM>.md` under the project directory (where `<scope>` is the paper slug, e.g., `paper-jtp`; create the directory if it does not exist: `mkdir -p reviews/<scope>/proofread/`). Do NOT overwrite previous reports — each review is timestamped to the minute. Canonical convention: the installed shared resource `shared/review-state-schema.md`.
 
 ## Check Categories
 
@@ -289,7 +289,7 @@ bash <skills-root>/_shared/review-state-log.sh \
 - Open issues: total count across all 7 (or 11) check categories at run time.
 - Trigger: pass orchestrator name only if invoked via `pre-submission-report` or `review-cluster`. Otherwise omit.
 
-Schema: `~/Task-Management/docs/reference/review-state-schema.md`.
+Schema: the installed shared resource `shared/review-state-schema.md`.
 
 ## Cross-References
 

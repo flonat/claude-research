@@ -146,16 +146,23 @@ Check the user-manual .tex source (in docs/reference/user-manual) against curren
 
 Every `packages/<name>/` directory (each is a package — nested git repo or local) must appear in `docs/components/packages.md`, and the stated package count must match disk.
 
-This check is **automated** — the canonical counter already does both the count scan and the coverage scan:
+When the repository declares a deterministic inventory checker, run it first.
+For example:
 
 ```bash
-uv run python .scripts/count_inventory.py --check
+uv run python scripts/check_inventory.py --check
 ```
 
-- **Count drift:** the `packages` count in `CLAUDE.md`, `docs/system.md`, and `docs/components/packages.md` must equal `ls -d packages/*/ | wc -l`. Reported in the script's stale-count section.
-- **Coverage drift:** any `packages/<name>/` subdir not mentioned in `docs/components/packages.md` is listed under "package(s) … missing from docs/components/packages.md". This catches the common drift: a new package added to disk that nobody added to the catalogue.
+- Discover the actual command from project guidance, `pyproject.toml`, or the
+  repository's scripts; do not assume the example filename exists.
+- If there is no checker, compare package directories, documented rows, and
+  stated counts directly.
+- **Count drift:** stated package counts must equal the on-disk count.
+- **Coverage drift:** every package directory must have a catalogue row, and
+  every catalogue row must resolve to a package or an explicit external item.
 
-Exit 1 from the script ⇒ either stale count or uncovered package ⇒ this check is **FAIL** (or WARN for 1–3 items). The same script runs in `daily-maintenance.sh`, so this drift is also caught nightly without an explicit `docs-consistency` run.
+Any deterministic checker failure is **FAIL** (or WARN for 1–3 documentation
+items when the repository's policy permits that severity).
 
 ## Output
 

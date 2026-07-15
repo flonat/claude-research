@@ -1,284 +1,38 @@
-# Council Protocol
+# Portable Council Protocol
 
-> Shared protocol for multi-model council mode. Any review agent or skill can opt into this by providing domain-specific system prompts and output formatting. This file defines the generic orchestration flow.
->
-> **Included backend:** `council-cli` (local CLI tools, free with existing subscriptions). An optional API backend (`council-api` via OpenRouter) is available separately — see below.
+Council mode is an optional multi-model review workflow. The public distribution
+does not assume access to any private package, local model subscription, or
+machine-specific checkout.
 
-## Core Concept: Cross-Model Agentic Invocation
+## Supported backend
 
-The active client can invoke other LLM providers' CLI tools as subprocess
-reviewers. A different model reviews work produced in the active session,
-providing genuine architectural diversity. The system is **extensible**: any
-CLI tool that accepts a prompt and returns text can be wrapped as a backend
-(~20 lines of Python following the `BackendSpec` pattern in
-`packages/council-cli/`). Available backends change as subscriptions change;
-the architecture does not.
+The repository includes the source of `council-api`. Install it explicitly with
+`uv tool install ./packages/council-api`, then verify the command with
+`council-api --help`. A council run requires `OPENROUTER_API_KEY`; treat it as a
+paid external call and obtain the user's approval before running it.
 
-## What Council Mode Is
+Provider CLIs may be used only when the user has separately installed and
+authenticated them. They are optional integrations, never implicit fallbacks.
 
-Council mode coordinates this cross-model capability into a structured 3-stage deliberation:
+## Protocol
 
-1. **Stage 1: Independent Assessments** — N models (typically 3, each from a different provider) independently evaluate the same artifact using the same instructions
-2. **Stage 2: Anonymised Peer Review** — each model evaluates the others' assessments without knowing which model produced which
-3. **Stage 3: Chairman Synthesis** — a chairman model reads everything and produces the final report
+1. Run the consumer's local hard gates before spending on model calls.
+2. Build one system prompt and one artifact/context file for every reviewer.
+3. Obtain independent assessments from at least two distinct models.
+4. Ask each model to review the anonymised assessments.
+5. Ask a chairman model to synthesise agreements, disputes, and priorities.
+6. Preserve the consumer's normal report format and append council metadata.
 
-The key insight: genuine model diversity (different architectures, training data, biases) surfaces issues that any single model — or even multiple instances of the same model — would miss.
-
-## Infrastructure
-
-### CLI Backend: `council-cli` (Included)
-
-Package: `packages/council-cli/`
-
-- `CouncilRunner` — orchestrator that invokes CLI backends via subprocess
-- Pluggable backends: `GeminiBackend`, `CodexBackend`, `ClaudeBackend`. New backends follow the same `BackendSpec` pattern.
-- `CouncilResult` — Pydantic models for text-based results
-- CLI — `uv run python -m council_cli` for standalone use
-- Uses existing subscriptions — no per-token API costs
-- **Backend availability changes with auth/subscription state — never assume it from this doc; run the preflight step below.** (Known state 2026-07-02, see auto-memory `cli-council-backend-state`: claude OK with `ANTHROPIC_API_KEY` unset; gemini blocked pending Antigravity migration; codex subscribed but locally unstable.)
-- **Best for:** Ad-hoc reviews, research tasks, quick multi-perspective opinions
-
-### API Backend: `council-api` (Optional, Separate Install)
-
-> Not included in this repo. Install separately: `pip install council-api` or clone from GitHub.
-
-- `LLMClient` — generic async OpenRouter client with JSON/text chat and retry logic
-- `CouncilService` — 3-stage orchestration engine with customisable Stage 2/3 prompts
-- `CouncilResult` — Pydantic models for structured JSON results
-- CLI — `uv run python -m council_api` for standalone use
-- Requires `OPENROUTER_API_KEY` in the environment
-- **Best for:** Automated pipelines, structured JSON output, programmatic integration
-
-### Choosing a Backend
-
-| Factor | `council-cli` (included) | `council-api` (separate) |
-|--------|--------------------------|--------------------------|
-| Cost | Subscription-included | Per-token (OpenRouter) |
-| Output format | Free-form text | Structured JSON |
-| Reliability | Variable (CLI output parsing) | High (API contracts) |
-| Speed | Slower (subprocess overhead) | Fast (parallel async HTTP) |
-| Model control | Whatever CLIs support | Full OpenRouter catalogue |
-| Offline | Partially (Claude -p works offline) | No |
-
-**Default:** Use `council-cli` (included and free). Use `council-api` only if you need structured JSON output or are running in an automated pipeline.
-
-## When to Use
-
-- Pre-submission quality checks (high stakes)
-- When thoroughness matters more than speed
-- When the user explicitly requests "council mode", "council review", or "thorough review"
-- Never the default — standard single-reviewer mode remains the default for all consumers
-
-## Parallel Independent Review
-
-Beyond multi-model council mode, review workers can also be launched **in
-parallel** within one client session for maximum coverage from different
-perspectives:
-
-1. **Pre-flight:** Launch `fatal-error-check` first (haiku model, ~15-30 seconds). If it returns FAIL, fix the fatal errors before proceeding.
-2. **Parallel launch:** If the pre-flight passes, launch all three review
-   workers simultaneously in one parallel fresh-context delegation batch:
-   - `paper-critic` — adversarial LaTeX audit (grammar, notation, citation, tone, LaTeX, TikZ)
-   - `domain-reviewer` — substantive correctness (assumptions, derivations, citations, code-theory, backward logic)
-   - `referee2-reviewer` — full Reviewer 2 audit (identification, methods, robustness, presentation, scholarly rigour)
-3. **Synthesise:** Once all three agents return, run `synthesise-reviews` to cross-reference issues, apply consensus escalation, and produce a unified `REVISION-PLAN.md`.
-
-This pattern maximises coverage by combining complementary review perspectives. Each agent has different check dimensions and catches different classes of issues. Parallel launch saves time compared to sequential runs.
-
-**When to use parallel review vs council mode:**
-
-| Scenario | Use |
-|----------|-----|
-| Maximum coverage from different review perspectives | Parallel independent review |
-| Model diversity (different LLM architectures finding different issues) | Council mode |
-| Both perspectives AND model diversity | Parallel review first, then council mode on the most Critical workstream |
-| Quick pre-submission check | Fatal-error-check only |
-
-## Prerequisites for a Consumer
-
-An agent or skill that supports council mode must provide:
-
-| What | Where | Purpose |
-|------|-------|---------|
-| **System prompt builder** | Consumer's `references/council-personas.md` | How to construct the system prompt sent to all models |
-| **Output formatter** | Consumer's `references/council-prompts.md` | Stage 3 chairman prompt template + output format |
-| **Council mode section** | Consumer's agent/skill body | Short section noting support + pointer to reference files |
-| **Trigger phrases** | Consumer's frontmatter description/examples | How the user activates council mode |
-
-## Orchestration Protocol
-
-The **main session** orchestrates council mode. Review agents cannot orchestrate themselves (they lack Bash). When council mode is triggered:
-
-### Pre-flight
-
-0. **Verify backends BEFORE Stage 1** (real incident 2026-07-02: all three CLI backends failed at full cost — `log/incidents/2026-07-02_council-backend-failures.md` in the PRIMA project):
-   - Run `uv run python -m council_cli --check`, then smoke-test each backend with its known-good invocation: claude → `env -u ANTHROPIC_API_KEY claude -p "OK"` (env-exported API keys silently hijack subscription auth); agy (Antigravity CLI, replaced the retired gemini backend 2026-07-03) → `agy -p "OK"` — CAUTION: unauthenticated agy exits 0 with NO output in non-TTY contexts, so an empty response means "run `agy` once interactively to OAuth", not "backend fine"; codex → allow ≥120 s even for trivial prompts.
-   - Size `--timeout` to the payload: ≥600 s per call for contexts over ~20k tokens.
-   - Proceed only with ≥2 live backends; otherwise report which backend is down and why (one line each) instead of running a degraded council silently.
-   - CLI billing/quota error strings identify the *account that answered*, not the user's subscription state — retest with the env key unset before diagnosing.
-0b. **Spend boundary:** escalating from `council-cli` (subscription-funded) to `council-api` (per-token OpenRouter) substitutes a PAID product — it requires explicit user approval, never a silent fallback.
-1. Run the consumer's standard pre-checks and hard gates
-2. If any gate fails, report immediately — do not invoke the council (save cost)
-3. Collect all source material (file contents, logs, rubrics) into a system prompt and user message
-4. Read the consumer's reference files for prompt construction guidance
-
-### Stage 1: Independent Assessments
-
-The main session invokes the `council-api` package (via CLI or Python script). The library:
-
-1. Sends the system prompt + user message to N different LLM models via OpenRouter
-2. Each model independently produces a JSON assessment
-3. All calls are parallel (async)
-4. Failed models are logged and skipped — the council proceeds with available responses
-5. **Minimum viable council:** ≥2 of N models must succeed. If only 1 succeeds, skip peer review (Stage 2) and return the single assessment with a degradation warning. If all fail, report the error — do not produce output
-
-**Default models:** `anthropic/claude-sonnet-4.5`, `openai/gpt-5`, `google/gemini-2.5-pro`
-
-### Stage 2: Anonymised Peer Review
-
-The library automatically:
-
-1. Labels Stage 1 assessments as "Assessment A", "Assessment B", etc. (anonymised)
-2. Sends all assessments to each model for cross-evaluation
-3. Each model evaluates the others' work, identifies agreements/disagreements, and provides a ranking
-4. Rankings are parsed and aggregated
-
-**Model:** Same models as Stage 1 (each reviews the others' work).
-
-### Stage 3: Chairman Synthesis
-
-The library:
-
-1. Sends all assessments and peer reviews to the chairman model
-2. The chairman considers all inputs and produces a single synthesised response
-3. The response follows the consumer's required output schema
-
-**Default chairman:** `anthropic/claude-sonnet-4.5`
-
-### Write Output
-
-The main session receives the `CouncilResult` JSON and formats it into the consumer's standard output (e.g., `CRITIC-REPORT.md` for paper-critic). The report uses the consumer's standard format with two sections appended:
-
-```markdown
-## Council Notes
-
-### Agreement Summary
-- [N] issues confirmed by all reviewers
-- [N] issues confirmed by majority
-- [N] issues from single reviewer (validated in cross-review)
-- [N] disputed issues (marked [DISPUTED])
-
-### Aggregate Rankings
-| Assessment | Model | Avg Rank | Rankings Count |
-|------------|-------|----------|----------------|
-| Assessment A | [model name] | X.X | N |
-| Assessment B | [model name] | X.X | N |
-| Assessment C | [model name] | X.X | N |
-
-## Council Metadata
-- **Mode:** Council ([N] models + peer review + chairman)
-- **Models:** [list of model IDs used]
-- **Chairman:** [chairman model ID]
-- **Timing:** Stage 1: Xms, Stage 2: Xms, Stage 3: Xms, Total: Xms
-- **Date:** YYYY-MM-DD
-```
-
-These sections are appended **after** the consumer's standard report content. Downstream consumers (e.g., fixer agent) that parse only the standard sections are unaffected.
-
-## CLI Invocation
-
-### Option A: CLI Backend (`council-cli` — Included)
-
-For ad-hoc reviews using existing subscriptions (no API cost):
+Example:
 
 ```bash
-cd "packages/council-cli"
-uv run python -m council_cli \
-    --prompt-file /tmp/council-prompt.txt \
-    --context-file /tmp/council-context.txt \
-    --output /tmp/council-result.json \
-    --output-md /tmp/council-report.md \
-    --chairman claude \
-    --timeout 180
+council-api \
+  --system-prompt-file /tmp/council-system.txt \
+  --user-message-file /tmp/council-context.txt \
+  --models "anthropic/claude-sonnet-4.5,openai/gpt-5,google/gemini-2.5-pro" \
+  --chairman "anthropic/claude-sonnet-4.5" \
+  --output /tmp/council-result.json
 ```
 
-- Write the paper content / review instructions to `--context-file`, and the specific question to `--prompt-file`
-- Output is free-form text — the markdown report (`--output-md`) is usually more useful than JSON
-- The chairman backend defaults to `claude` for compatibility with the
-  historical CLI-council configuration; this is independent of which client
-  runs the orchestration.
-
-### Option B: API Backend (`council-api` — Separate Install)
-
-> Requires separate installation: `pip install council-api` and an `OPENROUTER_API_KEY`.
-
-For structured JSON output and automated pipelines:
-
-```bash
-uv run python -m council_api \
-    --system-prompt-file /tmp/council-system.txt \
-    --user-message-file /tmp/council-user.txt \
-    --models "anthropic/claude-sonnet-4.5,openai/gpt-5,google/gemini-2.5-pro" \
-    --chairman "anthropic/claude-sonnet-4.5" \
-    --output /tmp/council-result.json
-```
-
-For advanced cases (custom Stage 2/3 prompts), write a small Python script that imports `council_api` and calls `CouncilService.run_council()` with `stage2_system` and `stage3_prompt_builder` parameters.
-
-## Issue Resolution Rules (Chairman)
-
-The consumer's chairman prompt should instruct the chairman to apply these rules:
-
-| Situation | Action |
-|-----------|--------|
-| Issue confirmed by 2+ models | Retain at the **highest** agreed severity |
-| Issue from 1 model, validated in peer review | Retain at the original severity |
-| Issue from 1 model, disputed in peer review | Retain with `[DISPUTED]` tag; chairman makes final severity call |
-| Issue found only in peer review (missed initially) | Add as a new finding |
-| Conflicting severity assessments | Chairman decides; notes the range in the issue description |
-
-**Scoring:** The chairman produces an independent score informed by all inputs — not a mechanical average.
-
-## Model Configuration
-
-| Parameter | Built-in Default | Override |
-|-----------|-----------------|---------|
-| Stage 1 models | `anthropic/claude-sonnet-4.5`, `openai/gpt-5`, `google/gemini-2.5-pro` | `--models` CLI flag or user config |
-| Chairman model | `anthropic/claude-sonnet-4.5` | `--chairman` CLI flag or user config |
-| Max tokens | 4096 | `--max-tokens` CLI flag |
-
-**User defaults** persist to `~/.config/council-api/config.json` and override built-in defaults. Manage via `council-api models --set-defaults` / `--set-chairman` / `--reset`, or interactively with `council-api models --pricing` to review options first.
-
-The library's `config.py` contains the full model registry (17 models across Anthropic, OpenAI, Google) with tiers and live pricing.
-
-## Cost Considerations
-
-Council mode costs significantly more than standard mode because it calls N models for Stage 1, N models for Stage 2, and 1 model for Stage 3 (total: 2N+1 API calls). With 3 models:
-
-- **Standard mode:** 1 fresh-context worker call (uses the active client's
-  included execution surface)
-- **Council mode:** 7 OpenRouter API calls (3 + 3 + 1)
-
-Pricing depends on the models chosen. Check OpenRouter for current rates. Use council mode when thoroughness justifies the cost — typically pre-submission or high-stakes reviews.
-
-## Persona Support (Optional)
-
-Each consumer can define **personas** in `references/council-personas.md` — distinct reviewer emphases that are prepended to the system prompt. Since council mode already uses different LLM providers (which bring natural perspective diversity), personas are optional but can add further differentiation.
-
-Current approach: the same system prompt goes to all models. Personas are documented as reference material describing what each model *tends to focus on* based on its architecture. Future extension: per-model system prompt variants via the library's API.
-
-## Consumers
-
-| Consumer | CLI (`council-cli`) | API (`council-api`) | Notes |
-|----------|---------------------|---------------------|-------|
-| `paper-critic` | Supported | Implemented | First consumer — Technical Rigour, Presentation, Scholarly Standards personas |
-| `referee2-reviewer` | Supported | Supported | 5-audit protocol + council cross-review — highest-value consumer |
-| `domain-reviewer` | Supported | — | Math/assumption checking — different models catch different derivation gaps |
-| `proposal-reviewer` | Supported | — | Feasibility and novelty — different models have different domain knowledge |
-| `peer-reviewer` | Supported | — | Full paper review — the canonical use case for multi-model deliberation |
-| `multi-perspective` | Supported | — | Replaces single-provider workers with genuine model diversity |
-| `literature` | Implemented | — | Phase 2b (search) and Phase 7 (synthesis) — see skill definition |
-| `devils-advocate` | Supported | — | Round 1/2/3 played by different models for genuine adversarial tension |
-| `proofread` | Supported | — | Lower value — most useful for notation consistency and citation voice balance |
-| `code-review` | Supported | — | Most valuable for domain correctness and cross-language verification |
-| `bib-validate` | Supported | — | Different models have different bibliographic knowledge — catches metadata mismatches |
+If fewer than two independent assessments succeed, stop and report a degraded
+run. Never substitute a paid backend silently.

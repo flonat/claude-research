@@ -10,10 +10,10 @@ has an explicit client list, with no implicit `both` default.
 
 | Surface | Shipped | Claude | Codex |
 |---|---:|---:|---:|
-| Skills | 109 | 109 | 106 |
+| Skills | 93 | 93 | 90 |
 | Agents | 15 | 15 | 14 |
 | Rules | 18 | 18 | 18 |
-| Hooks | 9 | 9 | 0 |
+| Hooks | 3 | 3 | 0 |
 | Mcps | 0 | 0 | 0 |
 | Clis | 0 | 0 | 0 |
 
@@ -21,13 +21,10 @@ has an explicit client list, with no implicit `both` default.
 
 | Asset | Claude | Codex | Requirements | Why / fallback |
 |---|:---:|:---:|---|---|
-| `audit-paper-book` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
-| `audit-project-research` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `beamer-deck` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `bib-coverage` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `bib-filter` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `bib-parse` | Yes | Yes | filesystem, shell, skill-routing, subagents, web | selected by the reviewed public distribution |
-| `bib-validate` | Yes | Yes | filesystem, shell, skill-routing, subagents, web | selected by the reviewed public distribution |
 | `brief-compliance-check` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `camera-ready` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `causal-design` | Yes | Yes | filesystem, skill-routing, subagents | selected by the reviewed public distribution |
@@ -41,16 +38,13 @@ has an explicit client list, with no implicit `both` default.
 | `docs-consistency` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `docx` | Yes | Yes | filesystem, shell, skill-routing, web | selected by the reviewed public distribution |
 | `experiment-design` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
-| `gather-readings` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `grill-me` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `handoff` | Yes | Yes | filesystem | selected by the reviewed public distribution |
 | `ideas` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
-| `init-paper-book` | Yes | Yes | filesystem, shell, skill-routing, subagents, web | selected by the reviewed public distribution |
 | `init-project` | Yes | No | claude-tool-syntax, filesystem, shell | Hand-maintained public scaffolder uses AskUserQuestion and remains Claude-only. |
 | `init-project-course` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `init-project-light` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `init-project-orchestration` | Yes | Yes | filesystem, shell, skill-routing | reviewed client-neutral project orchestration with deterministic Claude and Codex adapters |
-| `init-project-research` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `insights-deck` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `interview-me` | Yes | Yes | filesystem, skill-routing | selected by the reviewed public distribution |
 | `knowledge-lint` | Yes | Yes | filesystem, skill-routing | selected by the reviewed public distribution |
@@ -62,7 +56,6 @@ has an explicit client list, with no implicit `both` default.
 | `latex-scaffold` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `latex-template` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `lean-check` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
-| `literature` | Yes | Yes | filesystem, shell, skill-routing, subagents, web | selected by the reviewed public distribution |
 | `math-proof` | Yes | Yes | filesystem, skill-routing | selected by the reviewed public distribution |
 | `mcp-builder` | Yes | Yes | filesystem, shell, subagents, web | selected by the reviewed public distribution |
 | `meetings-cleanup` | Yes | Yes | filesystem, shell | selected by the reviewed public distribution |
@@ -71,9 +64,7 @@ has an explicit client list, with no implicit `both` default.
 | `meetings-prep` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `meetings-recap` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `meetings-search` | Yes | Yes | filesystem, shell | selected by the reviewed public distribution |
-| `meetings-verify` | Yes | Yes | filesystem, shell | selected by the reviewed public distribution |
 | `meetings-weekly` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
-| `memory-cleanup` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `method-audit` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `multi-perspective` | Yes | Yes | filesystem, skill-routing, subagents | selected by the reviewed public distribution |
 | `numerical-check` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
@@ -83,28 +74,22 @@ has an explicit client list, with no implicit `both` default.
 | `postmortem` | Yes | Yes | filesystem, skill-routing | selected by the reviewed public distribution |
 | `pre-commit-audit` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `pre-submission-report` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
-| `preprint` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
-| `preregister` | Yes | Yes | filesystem, shell, skill-routing, web | selected by the reviewed public distribution |
 | `project-deck` | Yes | Yes | filesystem, shell | selected by the reviewed public distribution |
 | `project-safety` | Yes | Yes | filesystem | selected by the reviewed public distribution |
 | `proof-readability` | Yes | Yes | filesystem, skill-routing | selected by the reviewed public distribution |
 | `proofread` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `python-env` | Yes | Yes | filesystem, shell | selected by the reviewed public distribution |
 | `quarto-deck` | Yes | Yes | filesystem, shell, skill-routing, subagents, web | selected by the reviewed public distribution |
-| `rename-project-research` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `reorg` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `replication-audit` | Yes | Yes | filesystem, shell, skill-routing, subagents, web | selected by the reviewed public distribution |
 | `replication-package` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `retarget-journal` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `review-cluster` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `review-response` | Yes | Yes | filesystem, skill-routing | selected by the reviewed public distribution |
-| `save-context` | Yes | Yes | filesystem, skill-routing | selected by the reviewed public distribution |
-| `session-close` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `session-health` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `session-log` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `skill-creator` | Yes | No | claude-client-instruction, filesystem, shell, subagents, web | selected by the reviewed public distribution |
 | `skill-extract` | Yes | Yes | filesystem, shell, skill-routing, web | selected by the reviewed public distribution |
-| `skill-health` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `skill-preflight` | Yes | Yes | filesystem, skill-routing | selected by the reviewed public distribution |
 | `split-pdf` | Yes | Yes | filesystem, shell, skill-routing, subagents, web | selected by the reviewed public distribution |
 | `strategic-revision` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
@@ -112,7 +97,6 @@ has an explicit client list, with no implicit `both` default.
 | `sync-permissions` | Yes | No | claude-home-layout, filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `synthesise-reviews` | Yes | Yes | filesystem, skill-routing, subagents | selected by the reviewed public distribution |
 | `synthetic-data` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
-| `system-audit` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `tailscale-mosh-recover` | Yes | Yes | filesystem, shell, skill-routing, web | selected by the reviewed public distribution |
 | `task-management` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `test-iterate-loop` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
@@ -179,14 +163,8 @@ has an explicit client list, with no implicit `both` default.
 | Asset | Claude | Codex | Requirements | Why / fallback |
 |---|:---:|:---:|---|---|
 | `block-destructive-git.sh` | Yes | No | claude-hooks, filesystem | selected by the reviewed public distribution |
-| `context-monitor.py` | Yes | No | claude-hooks, filesystem | selected by the reviewed public distribution |
 | `handoff-read.sh` | Yes | No | claude-hooks, filesystem | selected by the reviewed public distribution |
-| `postcompact-restore.py` | Yes | No | claude-hooks, filesystem | selected by the reviewed public distribution |
-| `precompact-autosave.py` | Yes | No | claude-hooks, filesystem | selected by the reviewed public distribution |
 | `promise-checker.sh` | Yes | No | claude-hooks, filesystem | selected by the reviewed public distribution |
-| `protect-source-files.sh` | Yes | No | claude-hooks, filesystem | selected by the reviewed public distribution |
-| `resume-context-loader.sh` | Yes | No | claude-hooks, filesystem | selected by the reviewed public distribution |
-| `startup-context-loader.sh` | Yes | No | claude-hooks, filesystem | selected by the reviewed public distribution |
 
 ## MCP registrations and CLIs
 
@@ -194,6 +172,39 @@ This downstream framework does not install credentials or private MCP registrati
 MCP servers are optional client adapters and are documented separately. Skills that
 need an external capability must name a portable CLI or a clearly documented manual
 fallback; installing the framework does not silently install those third-party services.
+
+| Integration | Kind | Install state | Claude | Codex | Fallback |
+|---|---|---|:---:|:---:|---|
+| `council-api` | package and CLI | bundled source; separate uv install | Yes | Yes | use the current client or one explicitly chosen reviewer |
+| `notion-mcp` | MCP registration | optional Claude adapter | Yes | No | local context files, a separate CLI, or the provider UI |
+| `personal-library-cli` | CLI or network service | optional external or access-controlled | Yes | Yes | validate the project bibliography directly |
+| `provider-model-clis` | CLI | optional external | Yes | Yes | current client only |
+| `scholarly-compatible-cli` | CLI | optional external | Yes | Yes | web search plus manual DOI verification |
+
+## Withheld for portability
+
+These canonical assets are intentionally not shipped by this product. They depend
+on an upstream private control plane or an unbundled runtime; an installer check
+must not present them as available.
+
+| Surface | Asset | Reason |
+|---|---|---|
+| skills | `audit-paper-book` | Requires the private Atlas book and research-root control plane. |
+| skills | `audit-project-research` | Requires private portfolio, history, and template scripts. |
+| skills | `bib-validate` | Requires the private Paperpile canonicalisation script. |
+| skills | `gather-readings` | Requires the private Paperpile PDF mirror and registry. |
+| skills | `init-paper-book` | Requires private Atlas book services and registration scripts. |
+| skills | `init-project-research` | Requires private Atlas, Overleaf, template, and Git-hook infrastructure. |
+| skills | `literature` | Pipeline mode requires the private Atlas and council/search toolchain. |
+| skills | `meetings-verify` | Requires the private meeting-transcription package installation. |
+| skills | `memory-cleanup` | Requires the private ai-context memory engine and store. |
+| skills | `preprint` | Requires a private Overleaf registry and template checkout. |
+| skills | `preregister` | Requires private Atlas topic metadata. |
+| skills | `rename-project-research` | Requires private Atlas and Task Management registries. |
+| skills | `save-context` | Writes to the private Task Management context library. |
+| skills | `session-close` | Requires private memory sync, portfolio, and paper-history scripts. |
+| skills | `skill-health` | Requires private invocation logs and health-analysis scripts. |
+| skills | `system-audit` | Audits the private control plane with unbundled deterministic scripts. |
 
 ## Interpreting an unavailable entry
 

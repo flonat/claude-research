@@ -278,7 +278,12 @@ Create `reviews/<scope>/multi-perspective/` if it does not exist (`mkdir -p`), w
 
 ## Council Mode Enhancement
 
-Standard mode spawns Claude sub-agents with different personas — all sharing one underlying model. Council mode upgrades this to genuine model diversity: each perspective is assigned to a different LLM provider via `council-cli` (Phase 3), models blind-review each other's perspectives (Phase 3.3), and a chairman synthesises weighted by peer scores (Phase 4). **Trigger:** "council multi-perspective" / "thorough multi-perspective". Full orchestration + invocation: [`../shared/council-protocol.md`](../shared/council-protocol.md).
+Standard mode spawns fresh-context workers with different personas. Council
+mode upgrades this to genuine model diversity through an explicitly configured
+external council backend: models blind-review each other's perspectives and a
+chairman synthesises weighted by peer scores. **Trigger:** "council
+multi-perspective" / "thorough multi-perspective". Full orchestration and
+invocation: [`../shared/council-protocol.md`](../shared/council-protocol.md).
 
 **Value:** High — the natural fit for council mode. Multi-perspective analysis is about cognitive diversity, so genuinely different models beat persona-differentiated instances of one model: a strict upgrade.
 

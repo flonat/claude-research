@@ -49,7 +49,7 @@ Stage 3: Chairman Synthesis (single model)
 ## Installation
 
 ```bash
-pip install "council-api @ git+https://github.com/user/council-api.git"
+uv tool install "council-api @ git+https://github.com/flonat/council-api.git"
 ```
 
 Requires Python 3.11+.

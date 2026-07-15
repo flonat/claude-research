@@ -119,18 +119,18 @@ If the proposal is a `.tex`, `.md`, or `.docx` file, skip this phase.
 
 ### Reading Protocol
 
-**PDFs: text-first by default.** Extract cleaned text via the shared helper, fall back to visual reading only when text extraction fails the quality heuristic or for figure/table/equation sections:
+**PDFs: text-first by default.** Use the current client's PDF-reading capability,
+the installed `pdf` skill, or `pdftotext`; fall back to visual reading when the
+extraction is unavailable or unreliable, and for figure/table/equation sections:
 
 ```bash
-TM="$(cat ~/.config/task-mgmt/path)"
-"$TM/scripts/pdf-extract-clean.sh" proposal.pdf --mode auto --out proposal.txt
+pdftotext -layout proposal.pdf proposal.txt
 ```
 
-- Exit 0: read `proposal.txt` with the Read tool
-- Exit 2: fall back to split-PDF visual reading (4-page chunks, 3 at a time, pause-and-confirm)
-- Exit 1: hard error — report to user
-
-Override via `PDF_READ_MODE=text|visual|auto` env var.
+- On success, read `proposal.txt` and sanity-check extraction quality.
+- On a missing tool or poor extraction, use the installed `pdf` skill or
+  split-PDF visual reading (4-page chunks, 3 at a time, pause-and-confirm).
+- On an unreadable or missing source, report the blocker to the user.
 
 - **Short PDFs (<15 pages):** text extraction usually suffices; skip splitting
 - **Long PDFs (>15 pages):** text-first with targeted visual fallback for figure/table sections
@@ -229,7 +229,7 @@ This agent supports **council mode** — 3 LLM providers independently assess th
 
 You do NOT run any bash command. Instead, end your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator (main session for direct dispatch; any fan-out skill for chained use) parses this block and runs the stamping helper.
 
-**Read `~/.claude/shared-skills/_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
+**Read the installed shared resource `_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
 
 Your agent-specific values:
 

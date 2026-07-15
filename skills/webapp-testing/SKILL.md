@@ -17,7 +17,34 @@ and interaction that does not need custom Python, use `$playwright-cli`.
 **Helper Scripts Available**:
 - `scripts/with_server.py` - Manages server lifecycle (supports multiple servers)
 
-**Always run scripts with `--help` first** to see usage. DO NOT read the source until you try running the script first and find that a customized solution is abslutely necessary. These scripts can be very large and thus pollute your context window. They exist to be called directly as black-box scripts rather than ingested into your context window.
+**Always run helper scripts with `--help` first** to see usage. DO NOT read the source until you try running the helper and find that a customized solution is absolutely necessary. These scripts can be very large and thus pollute your context window. They exist to be called directly as black-box scripts rather than ingested into your context window.
+
+## Dependency Preflight
+
+Before writing a native Playwright script, verify the selected project environment:
+
+```bash
+uv run python -c "from importlib.metadata import version; print(version('playwright'))"
+```
+
+If the import fails:
+
+1. For a one-off page inspection without custom assertions, use the declared
+   `$playwright-cli` fallback.
+2. For repeatable assertions or managed server testing, ask before installing
+   dependencies. After approval, install into the project's development
+   environment rather than adding a browser runtime to production dependencies:
+
+   ```bash
+   uv pip install --python <project>/.venv/bin/python playwright
+   uv run python -m playwright install chromium
+   ```
+
+3. Re-run the import preflight, then continue with native Python Playwright.
+
+If the project already declares a Playwright dev extra, prefer syncing that
+extra over an ad-hoc environment install. Never use bare `pip` or a
+machine-global Python environment.
 
 ## Decision Tree: Choosing Your Approach
 

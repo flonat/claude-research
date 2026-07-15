@@ -134,7 +134,7 @@ If any of these four categories is completely absent = **FAIL** with "Missing se
 
 ## Report Format
 
-Write the report to `reviews/<scope>/fatal-error-check/<YYYY-MM-DD-HHMM>.md` in the **project root**, where `<scope>` is the paper slug from your dispatch context (e.g. `paper-eaamo`). Create the directory if it does not exist (`mkdir -p reviews/<scope>/fatal-error-check/`). Canonical report-location convention: `~/Task-Management/docs/reference/review-state-schema.md`.
+Write the report to `reviews/<scope>/fatal-error-check/<YYYY-MM-DD-HHMM>.md` in the **project root**, where `<scope>` is the paper slug from your dispatch context (e.g. `paper-eaamo`). Create the directory if it does not exist (`mkdir -p reviews/<scope>/fatal-error-check/`). Canonical report-location convention: the installed shared resource `shared/review-state-schema.md`.
 
 ```markdown
 # Fatal Error Check
@@ -198,7 +198,7 @@ For maximum coverage during full review, launch all three review agents simultan
 
 You do NOT call any bash command. Write your `.md` report via Write, then end your final response with a `review-state-stamp` fenced block in **strict YAML format** (no JSON). The orchestrator parses this block and runs the stamping helper.
 
-**Read `~/.claude/shared-skills/_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
+**Read the installed shared resource `_shared/stamp-directive-spec.md` for the full format, BAD examples, and field rules.**
 
 Your agent-specific values:
 

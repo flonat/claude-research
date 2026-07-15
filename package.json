@@ -41,8 +41,6 @@
     ".claude/settings.json",
     ".codex/agents/",
     ".context/",
-    ".scripts/",
-    ".mcp-server-biblio/",
     "packages/",
     "config/",
     "docs/",

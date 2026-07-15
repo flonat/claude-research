@@ -99,8 +99,9 @@ Target submission formats like WINE's are satisfied by plain `\documentclass[11p
 Multi-system completeness — all of these, then verify:
 
 1. **Vault submission file** `submissions/<topic>-<venue>-<year>.md`: `status: Submitted`,
-   `submitted_date`, **`notification_date`** (without it the inbox deadlines adapter never emits
-   the notification item — real gap found 2026-07-02), conference dates, `double_blind`,
+   `submitted_date`, and exactly one attention date: **`notification_date`** for a real CFP
+   decision date or **`follow_up_date`** for an operational journal check-in. Set conference
+   dates, `double_blind`,
    `paper_id`, and a body **concurrency clause**: which venue notifies first and the withdrawal
    obligation. Link the primary submission entry.
 2. **Atlas topic** `outputs[]`: new venue entry, `status: Submitted` (output-ladder canon only),
@@ -147,5 +148,5 @@ Multi-system completeness — all of these, then verify:
 
 The fork is done when: fork compiles clean at/under budget with 0 warnings; anonymity + render
 checks pass; source project untouched (`ls -lt` mtimes); after submission, vault + atlas agree
-(`Submitted`, same dates), schema validates, the inbox shows the notification item, and the
+(`Submitted`, same dates), schema validates, the inbox shows the notification or follow-up item, and the
 submitted-PDF archive is filed with a pointer.
