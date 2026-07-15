@@ -996,6 +996,8 @@ assets:
       - codex
       requires:
       - filesystem
+      - shell
+      - skill-routing
       reason: selected by the reviewed public distribution
     test-iterate-loop:
       path: skills/test-iterate-loop

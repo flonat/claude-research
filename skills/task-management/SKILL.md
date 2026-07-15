@@ -1,14 +1,22 @@
 ---
 name: task-management
-description: "Use when you need help with daily planning, weekly reviews, meeting actions, or vault task queries."
-allowed-tools: Read, Write, Edit, AskUserQuestion
+description: "Use for daily planning, weekly reviews, meeting actions, or read/write queries over the Research Vault and research portfolio: tasks, topics, papers, outputs, submissions, venues, people, institutions, and deadlines. Triggers include 'do I have any topics for this venue?', 'which institution-X projects target venue Y?', and 'what is recorded for this paper?'. For venue suitability or recommendations rather than recorded state, query the portfolio first, then use the installed venue-recommendation workflow."
+allowed-tools: Read, Write, Edit, AskUserQuestion, Bash(taskflow-cli *)
 ---
 
 # the user's Task Management System
 
-## MCP Pre-Check
+## Portable vault pre-check
 
-Before any vault-dependent workflow, probe taskflow MCP availability with a lightweight search. If unavailable, skip vault queries and offer local-only fallbacks per [`shared/mcp-degradation.md`](../shared/mcp-degradation.md).
+Before any vault-dependent workflow, probe the portable CLI once:
+
+```bash
+taskflow-cli list-topics --limit 1 --json
+```
+
+`taskflow-cli` is the default route in both clients. A Taskflow MCP registration is an optional Claude adapter; its absence never means that the vault is unavailable. If the CLI probe fails, report the failure and follow [`shared/mcp-degradation.md`](../shared/mcp-degradation.md).
+
+For the boundary between stored portfolio facts, venue recommendations, venue policy, and interface audits, follow [`shared/research-query-routing.md`](../shared/research-query-routing.md).
 
 ## System Overview
 
@@ -106,6 +114,26 @@ For paper-related queries:
 1. **Query Research Pipeline database** for paper status
 2. **Stages**: Idea → Literature Review → Drafting → Submitted → R&R → Published
 3. **Link tasks to papers** via Project property
+
+### Research portfolio lookup
+
+For questions such as “Do I have any topics associated with institution X that record venue Y?”:
+
+1. Treat “do I have,” “which of my,” and “what is recorded” as stored-state queries, not venue recommendations.
+2. Query the complete relevant inventories with `--json` and a sufficient `--limit`:
+   - `taskflow-cli list-topics` for topic status, theme, and institution;
+   - `taskflow-cli list-papers` for output venue and output status;
+   - `taskflow-cli list-submissions` for active and historical venue events;
+   - `taskflow-cli list-venues` for the canonical venue identity;
+   - `taskflow-cli list-people` when collaborator or supervisor metadata defines the requested association.
+3. Filter on structured metadata such as `institution`, not words appearing in titles.
+4. Join topics to outputs by topic slug and submissions by their paper/topic wikilink. Resolve venue aliases through the venue inventory.
+5. Report three categories separately:
+   - **explicit potential venue** — recorded as an Idea/planned output;
+   - **active or previous output** — a concrete Drafting/Submitted/Accepted/Rejected/Published-style output or submission event;
+   - **inferred suitability** — plausible from the topic, but not recorded in the vault.
+6. Invoke the installed venue-recommendation workflow only when the user asks for suitability, recommendations, or acceptance assessment. Never present recommendation inference as stored portfolio state.
+
 
 ## the user's Preferences
 

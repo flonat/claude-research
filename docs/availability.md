@@ -114,7 +114,7 @@ has an explicit client list, with no implicit `both` default.
 | `synthetic-data` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `system-audit` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `tailscale-mosh-recover` | Yes | Yes | filesystem, shell, skill-routing, web | selected by the reviewed public distribution |
-| `task-management` | Yes | Yes | filesystem | selected by the reviewed public distribution |
+| `task-management` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `test-iterate-loop` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `tikz` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
 | `update-focus` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
