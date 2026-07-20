@@ -21,13 +21,14 @@
 | `bridges` | Find cross-project connections: shared methods, overlapping papers, conceptual bridges via Paperpile vector search + atlas metadata |
 | `idea-pivot` | Structured reframe for a below-threshold research idea (nested: research/) |
 
-### Literature (19)
+### Literature (20)
 
 | Skill | Purpose |
 |-------|---------|
 | `literature` | Academic search, citation verification, .bib management, end-to-end literature pipeline (Phase 3b: SciSciNet enrichment) |
 | `journals-biz` | Build Scopus ISSN boolean queries filtered by business/economics journal rankings (AJG/CABS, FT50). First in the `journals-*` family — see `log/ideas.md` for sibling proposals |
 | `split-pdf` | Deep-read academic papers via 4-page chunks with structured notes |
+| `paper-reading` | Read, visually inspect, explain, critique, and teach one academic article end to end; persist a lightweight Research Vault dossier |
 | `gather-readings` | Copy PDFs from Paperpile into project articles/ folder for corpus analysis |
 | `theory-mapper` | Map theoretical landscape across a corpus of papers |
 | `method-audit` | Compare data collection methods and spot biases across papers |
@@ -278,7 +279,7 @@
 | `grade-assignment` | Grade banded-rubric student submissions (e.g., PB130 Mixed Methods Poster) with two-tier output (instructor + student feedback), parallel isolated review, and calibration pass |
 | `course-reading-list` | Parse a syllabus, extract topics + learning outcomes, search scholarly + Paperpile per section, produce Markdown reading list with summaries and discussion questions |
 
-**Total: 198 skills across 18 categories.**
+**Total: 199 skills across 18 categories.**
 
 ## Shared References (not skills — cross-cutting protocols)
 

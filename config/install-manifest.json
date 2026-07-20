@@ -6,6 +6,11 @@
       "target": ".claude/shared-skills/shared"
     },
     {
+      "client": "claude",
+      "source": "skills/shared",
+      "target": ".claude/skills/shared"
+    },
+    {
       "client": "codex",
       "source": "skills/shared",
       "target": ".agents/skills/shared"
@@ -14,6 +19,11 @@
       "client": "claude",
       "source": "skills/_shared",
       "target": ".claude/shared-skills/_shared"
+    },
+    {
+      "client": "claude",
+      "source": "skills/_shared",
+      "target": ".claude/skills/_shared"
     },
     {
       "client": "codex",

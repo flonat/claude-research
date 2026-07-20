@@ -140,4 +140,4 @@ Create a `custom.css` file alongside the Markdown:
 }
 ```
 
-For colour palette starting points, see [`skills/shared/palettes.md`](../shared/palettes.md).
+For colour palette starting points, see [`skills/shared/palettes.md`](../../shared/palettes.md).
