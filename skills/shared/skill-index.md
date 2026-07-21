@@ -52,6 +52,7 @@
 |-------|---------|
 | `proofread` | 7-category LaTeX proofreading scorecard (report only) |
 | `journal-voice` | Extract writing patterns and editorial voice from a target journal |
+| `academic-writing-polish` | Polish academic prose with separate accuracy/style stages and a protected-element preservation gate |
 | `review-response` | Systematic reviewer response drafting with classification, strategy, and tone checks |
 | `voice-analyzer` | Analyze writing samples to create a portable voice profile and style guide |
 | `voice-editor` | Edit content to match a voice profile (6-pass workflow, 4 editing modes) |
@@ -93,7 +94,7 @@
 | `latex-health-check` | Compile all projects, auto-fix, check cross-project consistency |
 | `latex-template` | Compare preamble against working paper template (report + apply) |
 | `latex-scaffold` | Convert Markdown draft into buildable LaTeX project (md→tex) |
-| `bib-validate` | Cross-reference `\cite{}` keys against .bib files + Paperpile library; deep mode flags likely-fabricated entries (LLM hallucination detection) (report only) |
+| `bib-validate` | Validate bibliography inventory, identity/DOI, retraction/update, and version status; emit a typed bibliography-component receipt |
 | `bib-parse` | Extract citations from a PDF, generate validated `.bib`, stage for Paperpile import. Phase 1.5 skeleton-confirmation gate for ≥10 references |
 | `bib-filter` | Filter a .bib file to only entries actually cited in a .tex project |
 | `bib-coverage` | Compare project `.bib` against a Paperpile project/topic folder to find uncited papers and unfiled references |
@@ -108,7 +109,7 @@
 | `camera-ready` | Convert an accepted anonymous submission to camera-ready + implement accepted reviews (de-anonymise, copyright, section numbers, optional appendix moves, QA) |
 | `venue-fork` | Fork a paper into a second-venue submission variant — CFP concurrency check, new Overleaf project, doc-class conversion, page-budget refit to appendices, writeback |
 | `anonymous-artifact` | Push the in-tree `github-repo/` artifact to a private GitHub repo, mint an anonymous.4open.science URL (semi-automated), and write back to vault submission, paper LaTeX, and atlas. Three-layer sanitization. |
-| `pre-submission-report` | All quality checks in one dated report |
+| `pre-submission-report` | All quality checks in one dated report; citation-only mode composes bib-validate + claim-verify receipts without rerunning checks |
 | `retarget-journal` | Switch paper to different journal (rename, reformat, rekey) |
 | `strategic-revision` | Two-mode DAG planning: `--internal` turns review findings into an executable plan; `--external` turns genuine venue comments into an R&R plan, rebuttal scaffold, and strategy |
 | `synthesise-reviews` | Synthesise parallel review reports into a prioritised revision plan |
@@ -279,7 +280,7 @@
 | `grade-assignment` | Grade banded-rubric student submissions (e.g., PB130 Mixed Methods Poster) with two-tier output (instructor + student feedback), parallel isolated review, and calibration pass |
 | `course-reading-list` | Parse a syllabus, extract topics + learning outcomes, search scholarly + Paperpile per section, produce Markdown reading list with summaries and discussion questions |
 
-**Total: 199 skills across 18 categories.**
+**Total: 200 skills across 18 categories.**
 
 ## Shared References (not skills — cross-cutting protocols)
 

@@ -1,8 +1,8 @@
 ---
 name: pre-submission-report
-description: "Use when you need all quality checks run before submission, producing a single dated report."
-allowed-tools: Bash(latexmk*, mkdir*, ls*, wc*), Read, Write, Edit, Glob, Grep, Task, Skill
-argument-hint: "[path/to/main.tex or no arguments to auto-detect]"
+description: "Use when you need all quality checks run before submission, producing a single dated report. Also provides a citation-integrity-only mode that composes bib-validate and claim-verify without repeating their checks."
+allowed-tools: Bash(latexmk*, mkdir*, ls*, wc*), Bash(uv:*), Read, Write, Edit, Glob, Grep, Task, Skill
+argument-hint: "[path/to/main.tex or no arguments to auto-detect] [--parallel|--citation-integrity-only]"
 agent-dependencies: [artifact-coherence-auditor, blindspot, claim-verify, code-paper-auditor, domain-reviewer, paper-critic, referee2-reviewer, reproducibility-auditor]
 skill-dependencies: [latex, verify-math]
 ---
@@ -17,6 +17,7 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 
 - **Source slug:** `pre-submission-report`
 - **Write reports to:** `reviews/<paper-slug>/pre-submission-report/<YYYY-MM-DD-HHMM>.md` inside the project, where `<paper-slug>` is the paper directory name being reviewed (e.g., `paper-jtp` if reviewing `paper-jtp/main.tex`). Path is relative to the research project root, not the Task-Management repo.
+- **Citation-integrity companion:** when citation integrity runs, write `<YYYY-MM-DD-HHMM>.citation-integrity.json` beside the report. It is a typed companion, not a second report or INDEX row.
 - **Never** at project root (`./CRITIC-REPORT.md`-style filenames are forbidden — pre-rule layout).
 - **Idempotency:** if the minute-based timestamp file exists, append a same-run descriptor (`{timestamp}-r2.md`, `{timestamp}-revision.md`) — never overwrite.
 - **Index update:** if `reviews/INDEX.md` exists, write a one-line entry under "Latest per source" pointing at the new file. Otherwise `review-recap` will rebuild the index next time it runs.
@@ -37,6 +38,22 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 
 **Python:** Always use `uv run python` or `uv pip install`. Never bare `python`, `python3`, `pip`, or `pip3`. Include this in any sub-agent prompts.
 
+## Citation-Integrity-Only Mode
+
+When invoked with `--citation-integrity-only`, do not run compilation, general quality review, novelty, code, anonymity, or style checks. Read [`../shared/citation-integrity-receipt.md`](../shared/citation-integrity-receipt.md) and perform only this composition workflow:
+
+1. Enumerate every in-scope manuscript `.tex` file and every loaded external `.bib` file. Exclude `out/`, generated files, and `reviews/`.
+2. Resolve the current client's installed skills root. Use `shared/scripts/assemble_integrity_receipt.py manifest` to write a unique `/tmp/citation-integrity-<paper>-<timestamp>.json` with scope `full-manuscript` (or the user's explicit bounded scope).
+3. Invoke `bib-validate --verify-doi --citation-integrity-manifest <manifest>`. It performs the bibliography checks once and returns its timestamped Markdown report plus `.citation-integrity.json` component.
+4. Launch the fresh-context `claim-verify` agent once. Supply the exact same manifest path and explicitly forbid bibliography identity, DOI, retraction, and version checks. It returns its timestamped Markdown report plus `.citation-integrity.json` component.
+5. Run the assembler's `validate` command on both components. If either component is missing or invalid, write the pre-submission Markdown report with overall `INCOMPLETE` and stop; do not infer data from prose reports.
+6. Run `assemble` with the two explicit component paths. Write the full JSON to `reviews/<paper-slug>/pre-submission-report/<timestamp>.citation-integrity.json` and a temporary Markdown rendering under `/tmp/`. Copy that rendering into the main pre-submission report, along with links to both source reports.
+7. Delete no artifacts. The assembler refuses to merge scope/hash mismatches and refuses to overwrite existing outputs.
+
+Never discover and combine the "latest" component reports implicitly. Reuse is allowed only when the user explicitly supplies both paths and the assembler confirms identical scope, ruleset, and artifact hashes.
+
+This mode is an orchestrator only: it does not parse citations, resolve metadata, read sources, judge claims, or change component severities. `bib-validate` and `claim-verify` remain useful individually; each reports its own `PASS|WARN|FAIL` component verdict while correctly marking the combined result `INCOMPLETE`.
+
 ## Steps
 
 ### 1. Locate the Paper
@@ -51,7 +68,7 @@ If no argument provided, search for the main `.tex` file:
 Run these checks first. If any fail, stop and report — do not proceed to quality checks.
 
 1. **Placeholder scan** — grep the `.tex` file(s) for `TODO`, `FIXME`, `XXX`, `TBD`, `[INSERT`, `PLACEHOLDER`, `Lorem ipsum`. Any match is a FAIL.
-2. **Citation integrity** — extract citation keys from the manuscript and bibliography entries from the `.bib` files, then cross-reference them directly. Every `\cite{}` key must resolve to a `.bib` entry. Any missing key is a FAIL. Use an installed bibliography validator for additional checks when available.
+2. **Bibliography integrity** — create/reuse the frozen artifact manifest, then invoke `bib-validate --verify-doi --citation-integrity-manifest <path>` exactly once. Every `\cite{}` key must resolve to a `.bib` entry. Any missing key is a FAIL. Retain this report and component for Step 3; never rerun the bibliography check in the same pre-submission invocation.
 3. **Section completeness** — check that all standard sections exist and are non-empty (Abstract, Introduction, and at least one body section before Conclusion/References). An empty or missing section is a FAIL.
 4. **Broken references** — grep for `??` in the compiled PDF output or `.log` file (undefined `\ref{}` or `\cite{}`). Any `??` in output is a FAIL.
 5. **Anonymity gate (only if the venue is double-blind)** — load `_shared/double-blind-anonymity-checklist.md` and run **all** P1–P8 paper-side checks. Any FAIL is a hard stop. In particular: P4 (self-citation bib must be blinded if cited paper's author list overlaps the submission's) and P5 (body text must not name authors of self-cited works) — these are the CCS 2026 #1328 desk-reject triggers and require the submission's author list to be loaded from the vault submission frontmatter or prompted from the user. If the artifact has been minted via `anonymous-artifact`, also confirm A1–A9 ran clean for that artifact (state file at `<project>/.anonymous-artifact-state.json`). Skip this entire step only when the user explicitly says "single-blind" or "non-blind".
@@ -79,12 +96,12 @@ Two modes:
 Run these in order — each depends on a clean state from the previous:
 
 1. **Compilation** — invoke `latex` on the main `.tex` file. Record pass/fail and any remaining warnings.
-2. **Citation audit** — resolve citation keys and DOI metadata directly. Record missing, unused, suspect, and unresolved-DOI keys. If a dedicated bibliography validator is installed, use its DOI-verification mode as an additional check.
+2. **Citation audit** — reuse the `bib-validate` report and component produced by Integrity Gate step 2. Record missing, unused, suspect, unresolved-DOI, retraction/update, and version findings; do not invoke the skill a second time.
 3. **Adversarial review** — launch `paper-critic` agent (via fresh-context sub-agent mechanism). Capture the CRITIC-REPORT.md score and findings.
 
-#### 3b. Parallel 7-audit fan-out (`--parallel` flag)
+#### 3b. Parallel comprehensive fan-out (`--parallel` flag)
 
-Use when (a) the paper is near submission and you want a comprehensive scan, or (b) the user explicitly asks for the "full pre-submission swarm". Dispatches **7 read-only sub-agents in parallel** via the fresh-context sub-agent mechanism, then consolidates findings.
+Use when (a) the paper is near submission and you want a comprehensive scan, or (b) the user explicitly asks for the "full pre-submission swarm". Runs **13 independent checks** through their canonical skills/agents, dispatching the read-only agent checks in parallel, then consolidates findings.
 
 **Hard rules for parallel mode:**
 1. **All sub-agents are read-only with respect to project files under review** — see `subagent-write-guard.md` rule. They do NOT modify the paper, bib, code, or any other artefact under review; the orchestrator (this skill) decides what to fix. **They DO write their own per-agent reports** to `reviews/<paper-slug>/<check>/<YYYY-MM-DD-HHMM>.md` per each agent's "Log to REVIEW-STATE.md (final step)" instruction (where `<paper-slug>` is the paper being reviewed and `<check>` is the agent name, e.g., `paper-critic`, `referee2-reviewer`) — this is the durable record + the INDEX.md stamp that `review-recap` reads. The "read-only" scope is the artefact under review, NOT a prohibition on writing the review report itself.
@@ -93,14 +110,14 @@ Use when (a) the paper is near submission and you want a comprehensive scan, or 
 4. **No edit phase auto-runs** — the user reviews the consolidated report and approves which fixes to apply.
 5. **Evidence contract + spot-verify** (per [`_shared/audit-integrity.md`](../_shared/audit-integrity.md) Rule 2). Each sub-agent's dispatch prompt MUST require **every finding to cite `path:line` (or `§`) AND quote the exact text/code verbatim** — unanchored findings are inadmissible. Before consolidating (rule 3), the orchestrator **spot-verifies a random sample** of returned findings (≥3, or 20%, weighted to P0/P1): open the cited location, confirm the quote is there and the claim follows. Any miss ⇒ widen to that agent's full set and **drop** what can't be grounded. Record `Integrity: N sampled, M dropped` in the consolidated report.
 
-**The 7 sub-agents:**
+Before starting citation checks, create the frozen artifact manifest described in Citation-Integrity-Only Mode. Pass it unchanged to rows 1 and 2, validate their components, and assemble the full citation-integrity companion. Do not dispatch a shadow `bib-verifier`; row 1 is the existing `bib-validate` result retained from Integrity Gate step 2.
 
-**Always dispatched (13 sub-agents):**
+**Always run (13 checks):**
 
 | # | Agent | Scope | Output |
 |---|---|---|---|
-| 1 | **bib-verifier** | DOI resolution plus authoritative metadata verification of every bibliography entry; use an installed bibliography validator when available and flag fabricated or unresolvable entries | List of unverified keys + suggested fixes |
-| 2 | **claim-verifier** | Launch `claim-verify` agent — checks every cited claim against the source paper (citation fidelity, not just key existence) | Per-claim verdicts |
+| 1 | **bibliography component** | Reuse the one `bib-validate --verify-doi --citation-integrity-manifest <path>` invocation from Integrity Gate step 2; DOI/metadata, retraction/update, version, and citation-inventory checks | Bib report + validated component JSON |
+| 2 | **claim-verifier** | Launch `claim-verify` agent once with the same manifest — checks every cited claim against the source paper and performs no bibliography checks | Claim report + validated component JSON |
 | 3 | **novelty-reviewer** | Run `scholarly scholarly-search "<paper title>" --source openalex`; report score + threats not yet cited | Novelty score + missing-related-work list |
 | 4 | **paper-critic** | Launch `paper-critic` agent — general adversarial CRITIC-REPORT (specialist mode for venue-calibrated review) | Scored CRITIC-REPORT.md |
 | 5 | **domain-reviewer** | Launch `domain-reviewer` agent — math/derivations/assumptions/code-theory alignment | DOMAIN-REVIEW.md |
@@ -131,19 +148,21 @@ The conditional follow-ups are NOT in the parallel batch — they're sequential 
 ```python
 # Pseudocode for orchestration — see fresh-context sub-agent mechanism docs for actual API
 parallel_tasks = [
-    Agent("bib-verifier", subagent_type="general-purpose",
-          prompt=f"Read {paper_path}/references.bib. Run scholarly scholarly-verify-dois on all DOI-bearing entries (batch ≤50). Report unresolvable DOIs, missing DOIs, suspected fabricated entries. READ-ONLY. {forbid_list}"),
+    Agent("claim-verify",
+          prompt=f"Audit claim fidelity in {paper_path}. Use artifact manifest {manifest_path} unchanged. Do not re-run bibliography checks. READ-ONLY except declared report + sidecar. {forbid_list}"),
     Agent("novelty-reviewer", ...),
-    # ... 5 more
+    # ... remaining agent checks
 ]
+# Run bibliography work once through its canonical skill, outside the agent fan-out.
+bib_component = Skill("bib-validate", f"--verify-doi --citation-integrity-manifest {manifest_path}")
 # Wait all → consolidate
-findings = consolidate_p0_p1_p2(parallel_tasks)
+findings = consolidate_p0_p1_p2([bib_component, *parallel_tasks])
 ```
 
 Sub-agents run concurrently — total wall-clock is bounded by the slowest (typically novelty-reviewer at ~2-3 min via OpenAlex).
 
-**Consolidation:** the orchestrator merges findings from all 13 sub-agents into a single P0/P1/P2 fix list:
-- **P0 (block submission):** anonymity leaks (#11), fabricated citations (#1, #2), compilation errors (#12), over-page-limit (#12), code-paper mismatches (#8), prose-replication divergence (#9), **any `FALSIFIED` math obligation (`verify-math`, theory papers)**
+**Consolidation:** the orchestrator merges findings from all 13 checks into a single P0/P1/P2 fix list:
+- **P0 (block submission):** anonymity leaks (#11), fabricated bibliography records (#1), materially false or load-bearing unverifiable claims (#2), compilation errors (#12), over-page-limit (#12), code-paper mismatches (#8), prose-replication divergence (#9), **any `FALSIFIED` math obligation (`verify-math`, theory papers)**
 - **P1 (must fix):** unresolved DOIs (#1), claim-verify failures (#2), novelty threats (#3), critic-report Major issues (#4), domain-review math errors (#5), reproducibility issues (#10), referee2-reviewer concerns (#6), **`INCONCLUSIVE` math obligations (`verify-math`)**
 - **P2 (should consider):** blindspot virtues + minor vices (#7), AI-detect hot zones (#13), critic-report Moderate/Minor issues (#4), novelty positioning (#3)
 
@@ -151,13 +170,13 @@ Sub-agents run concurrently — total wall-clock is bounded by the slowest (typi
 
 **Edit phase (separate, opt-in):** if the user approves any P0/P1 fixes, dispatch a *second* round of edit-agents with **explicit scoped permissions per file** — see `subagent-write-guard.md` for the forbid-list pattern. The orchestrator confirms each edit-agent's scope before dispatch.
 
-**Why parallel:** the 13 audits are independent — sequential is ~10x slower for the same coverage. Reviewer-pool collision risk is zero (read-only sub-agents).
+**Why parallel:** the independent agent audits can overlap safely because they are read-only. The bibliography component remains an orchestrator-run skill so DOI/metadata work is never duplicated by a shadow agent.
 
 **Skip parallel mode if:** paper is in early drafting (use the sequential 3-audit instead — faster feedback for incomplete drafts), or sub-agents fail repeatedly (fall back to sequential).
 
 ### 4. Aggregate Report
 
-Save to `log/audits/quality-reports/YYYY-MM-DD_<project-name>.md`:
+Save to the canonical `reviews/<paper-slug>/pre-submission-report/<YYYY-MM-DD-HHMM>.md` path declared above:
 
 ```markdown
 # Pre-Submission Quality Report
@@ -196,6 +215,10 @@ Verdict uses the quality scoring framework:
 
 ## Citations
 
+- **Citation-integrity receipt:** PASS / WARN / FAIL / INCOMPLETE
+- **Receipt companion:** `<same-stem>.citation-integrity.json`
+- **Bibliography component:** PASS / WARN / FAIL
+- **Claims component:** PASS / WARN / FAIL / NOT RUN
 - **Missing keys:** <count> — <list>
 - **Unused keys:** <count> — <list>
 - **Suspect entries:** <count> — <list>
@@ -233,6 +256,7 @@ Display the report path and the summary table to the user. If the recommendation
 
 - If compilation fails after `latex`, still run the remaining checks. Mark compilation as FAIL in the report.
 - If `paper-critic` agent fails, note it in the report and base the overall score on compilation + citations only.
+- If either citation component is missing, invalid, or hash-incompatible, mark citation integrity `INCOMPLETE`; never promote the surviving component to a full PASS.
 - Always produce the report file, even if some checks failed.
 
 ## Integration
@@ -240,11 +264,13 @@ Display the report path and the summary table to the user. If the recommendation
 | Skill/Agent | Role in this workflow |
 |-------------|---------------------|
 | `latex` | Compilation + auto-fix |
-| Installed bibliography validator | Optional citation-metadata and self-citation checks beyond the direct key cross-reference |
+| `bib-validate` | Bibliography component: citation inventory, identity/DOI, retraction/update, and version status |
+| `claim-verify` agent | Claims component: claim attachment, strength/scope, source access, and quotation fidelity |
+| `assemble_integrity_receipt.py` | Mechanical validation, exact-hash compatibility check, verdict derivation, and receipt rendering; performs no research checks |
 | `paper-critic` agent | Adversarial content review |
 | `quality-scoring.md` | Verdict thresholds |
 | `_shared/double-blind-anonymity-checklist.md` | P1–P8 / A1–A9 anonymity gate (double-blind venues only) |
-| `_shared/audit-integrity.md` | Fan-out integrity contract — each of the 13 review agents must cite `path:line` + verbatim evidence (Rule 2); the orchestrator spot-verifies before including a finding in the report |
+| `_shared/audit-integrity.md` | Fan-out integrity contract — each agent-produced finding must cite `path:line` + verbatim evidence (Rule 2); the orchestrator spot-verifies before including it in the report |
 
 ## REVIEW-STATE.md propagation (orchestrator-side stamping)
 

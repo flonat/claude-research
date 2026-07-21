@@ -60,7 +60,7 @@ Skills are client-neutral instruction sets (`SKILL.md` files). The contract expo
 | `playwright-cli` | Use when you need to automate browser interactions, test web pages and work with Playwright tests |
 | `postmortem` | Use when you need a structured post-mortem after incidents, mistakes, or stuck sessions |
 | `pre-commit-audit` | Use when you need a fast pre-commit safety scan: file size, anonymity (author / affiliation strings in tex/bib), and hardcoded secrets. Triggers: 'audit before commit', 'check before push', 'pre-commit scan', 'safety check' |
-| `pre-submission-report` | Use when you need all quality checks run before submission, producing a single dated report |
+| `pre-submission-report` | Use when you need all quality checks run before submission, producing a single dated report. Also provides a citation-integrity-only mode that composes bib-validate and claim-verify without repeating their checks |
 | `project-deck` | Use when you need to create a presentation deck to communicate project status |
 | `project-safety` | Use when you need to set up safety rules and folder structures for a research project |
 | `proof-readability` | Use when you need to improve the readability and exposition of mathematical proofs already verified as correct, without changing their mathematical content — polish or edit a proof, lemma, or appendix; after a proof has been written and verified; or on "make this proof readable", "polish this proof", "improve the exposition", readability pass" |
