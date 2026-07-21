@@ -3,7 +3,6 @@ name: compile-knowledge
 description: "Use when you need to compile raw inputs (literature, meeting notes, session logs, code findings) into a per-project knowledge wiki. Supports --autonomous / -y for end-to-end runs without prompts (used by the Saturday wiki-grow cron)."
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash(mkdir*), Agent
 argument-hint: "[project-path] [--autonomous|-y] (no args = CWD)"
-skill-dependencies: [audit-project-research]
 ---
 
 # Compile Knowledge
@@ -19,7 +18,7 @@ skill-dependencies: [audit-project-research]
 
 ## When NOT to Use
 
-- For structural project audits — use `audit-project-research`
+- For structural project audits — use an installed research-project audit workflow
 - For atlas topic metadata — that stays in the vault
 - For session-specific notes — those go in `log/`
 

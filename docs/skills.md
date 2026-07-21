@@ -11,7 +11,7 @@ Skills are client-neutral instruction sets (`SKILL.md` files). The contract expo
 | `beamer-deck` | Use when you need to create an academic Beamer presentation with original theme and multi-agent review |
 | `bib-coverage` | Use when you need to compare a project .bib against a Paperpile project/topic folder to find uncited papers or unfiled entries |
 | `bib-filter` | Use when you need to filter a .bib file to only entries actually cited in a .tex project |
-| `bib-parse` | Use when you need to extract citations from a PDF and generate a validated .bib file. Reads the PDF, identifies all referenced works, constructs BibTeX entries with metadata verification, then runs bib-validate |
+| `bib-parse` | Use when you need to extract citations from a PDF and generate a validated .bib file. Reads the PDF, identifies referenced works, constructs BibTeX entries, and verifies metadata |
 | `brief-compliance-check` | Use when you need to check a LaTeX submission against a PDF assessment brief |
 | `camera-ready` | Convert an accepted anonymous-submission LaTeX paper (AAAI/AIES/ACM-style) to camera-ready and implement the accepted reviews. Use when a paper is accepted with no rebuttal and you need to de-anonymize, add copyright, turn on section numbering, implement each reviewer's minor revisions, optionally move proofs to a non-counted appendix, and QA. Not for R&R/revise-and-resubmit (use strategic-revision) or for preprints (use preprint) |
 | `causal-design` | Use when you need to design or audit an identification strategy for an observational study |

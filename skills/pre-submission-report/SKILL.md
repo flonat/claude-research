@@ -4,7 +4,7 @@ description: "Use when you need all quality checks run before submission, produc
 allowed-tools: Bash(latexmk*, mkdir*, ls*, wc*), Read, Write, Edit, Glob, Grep, Task, Skill
 argument-hint: "[path/to/main.tex or no arguments to auto-detect]"
 agent-dependencies: [artifact-coherence-auditor, blindspot, claim-verify, code-paper-auditor, domain-reviewer, paper-critic, referee2-reviewer, reproducibility-auditor]
-skill-dependencies: [ai-detect, bib-validate, latex, verify-math]
+skill-dependencies: [latex, verify-math]
 ---
 
 # Pre-Submission Report
@@ -51,7 +51,7 @@ If no argument provided, search for the main `.tex` file:
 Run these checks first. If any fail, stop and report — do not proceed to quality checks.
 
 1. **Placeholder scan** — grep the `.tex` file(s) for `TODO`, `FIXME`, `XXX`, `TBD`, `[INSERT`, `PLACEHOLDER`, `Lorem ipsum`. Any match is a FAIL.
-2. **Citation integrity** — invoke `bib-validate` in verify mode. Every `\cite{}` key must resolve to a `.bib` entry. Any missing key is a FAIL.
+2. **Citation integrity** — extract citation keys from the manuscript and bibliography entries from the `.bib` files, then cross-reference them directly. Every `\cite{}` key must resolve to a `.bib` entry. Any missing key is a FAIL. Use an installed bibliography validator for additional checks when available.
 3. **Section completeness** — check that all standard sections exist and are non-empty (Abstract, Introduction, and at least one body section before Conclusion/References). An empty or missing section is a FAIL.
 4. **Broken references** — grep for `??` in the compiled PDF output or `.log` file (undefined `\ref{}` or `\cite{}`). Any `??` in output is a FAIL.
 5. **Anonymity gate (only if the venue is double-blind)** — load `_shared/double-blind-anonymity-checklist.md` and run **all** P1–P8 paper-side checks. Any FAIL is a hard stop. In particular: P4 (self-citation bib must be blinded if cited paper's author list overlaps the submission's) and P5 (body text must not name authors of self-cited works) — these are the CCS 2026 #1328 desk-reject triggers and require the submission's author list to be loaded from the vault submission frontmatter or prompted from the user. If the artifact has been minted via `anonymous-artifact`, also confirm A1–A9 ran clean for that artifact (state file at `<project>/.anonymous-artifact-state.json`). Skip this entire step only when the user explicitly says "single-blind" or "non-blind".
@@ -79,7 +79,7 @@ Two modes:
 Run these in order — each depends on a clean state from the previous:
 
 1. **Compilation** — invoke `latex` on the main `.tex` file. Record pass/fail and any remaining warnings.
-2. **Citation audit** — invoke `bib-validate --verify-doi` (DOI resolution mode catches fabricated entries). Record missing, unused, suspect, and unresolved-DOI keys.
+2. **Citation audit** — resolve citation keys and DOI metadata directly. Record missing, unused, suspect, and unresolved-DOI keys. If a dedicated bibliography validator is installed, use its DOI-verification mode as an additional check.
 3. **Adversarial review** — launch `paper-critic` agent (via fresh-context sub-agent mechanism). Capture the CRITIC-REPORT.md score and findings.
 
 #### 3b. Parallel 7-audit fan-out (`--parallel` flag)
@@ -99,7 +99,7 @@ Use when (a) the paper is near submission and you want a comprehensive scan, or 
 
 | # | Agent | Scope | Output |
 |---|---|---|---|
-| 1 | **bib-verifier** | DOI resolution + Crossref/S2 verification of every bib entry via `bib-validate --verify-doi` mode; flag fabricated/unresolvable | List of unverified keys + suggested fixes |
+| 1 | **bib-verifier** | DOI resolution plus authoritative metadata verification of every bibliography entry; use an installed bibliography validator when available and flag fabricated or unresolvable entries | List of unverified keys + suggested fixes |
 | 2 | **claim-verifier** | Launch `claim-verify` agent — checks every cited claim against the source paper (citation fidelity, not just key existence) | Per-claim verdicts |
 | 3 | **novelty-reviewer** | Run `scholarly scholarly-search "<paper title>" --source openalex`; report score + threats not yet cited | Novelty score + missing-related-work list |
 | 4 | **paper-critic** | Launch `paper-critic` agent — general adversarial CRITIC-REPORT (specialist mode for venue-calibrated review) | Scored CRITIC-REPORT.md |
@@ -111,6 +111,7 @@ Use when (a) the paper is near submission and you want a comprehensive scan, or 
 | 10 | **reproducibility-auditor** | Launch `reproducibility-auditor` agent — workflow rerunnability (hidden deps, absolute paths, env assumptions) | Reproducibility report |
 | 11 | **anonymity / double-blind checker** | Apply paper-side checks P1-P8 from `_shared/double-blind-anonymity-checklist.md`; verify `[review]` mode if double-blind venue | Pass/fail + leak list |
 | 12 | **page-limit + LaTeX validator** | Verify page count under venue limit; check for compile warnings; check `out/` is current | Page count + warning summary |
+| 13 | **AI-detection** | If an AI-detection workflow is installed and configured, run it and flag hot zones for an optional humanizing pass; otherwise report `SKIPPED (unavailable)` and perform a manual prose-pattern review | Per-segment scores + hot-zone count, or explicit skip reason |
 
 **Conditional — math verification (theory papers):**
 
@@ -239,7 +240,7 @@ Display the report path and the summary table to the user. If the recommendation
 | Skill/Agent | Role in this workflow |
 |-------------|---------------------|
 | `latex` | Compilation + auto-fix |
-| `bib-validate` | Citation cross-reference + self-citation deanonymization scan |
+| Installed bibliography validator | Optional citation-metadata and self-citation checks beyond the direct key cross-reference |
 | `paper-critic` agent | Adversarial content review |
 | `quality-scoring.md` | Verdict thresholds |
 | `_shared/double-blind-anonymity-checklist.md` | P1–P8 / A1–A9 anonymity gate (double-blind venues only) |

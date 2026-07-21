@@ -3,7 +3,7 @@ name: latex
 description: "Use when you need to compile a LaTeX document — includes autonomous error resolution, citation audit, and quality scoring."
 allowed-tools: Bash(latexmk*), Bash(xelatex*), Bash(pdflatex*), Bash(biber*), Bash(bibtex*), Bash(mkdir*), Bash(ls*), Bash(wc*), Bash(cp*), Read, Write, Edit, Grep, Glob
 argument-hint: [tex-file-path]
-skill-dependencies: [bib-validate]
+skill-dependencies: []
 ---
 
 # LaTeX Document Compilation
@@ -38,13 +38,13 @@ Start at 100, deduct per issue found, apply verdict. Include the Score Block in 
 ## Critical Rules
 
 1. **Build artifacts go to `out/`, PDF stays in the source directory.** Ensure `.latexmkrc` exists with `$out_dir = 'out'` and an `END {}` block to copy the PDF back (see pre-flight below). For VS Code builds, `.latexmkrc` in subdirectories is **not picked up** — see "VS Code Integration" section for the required `.vscode/settings.json` config.
-2. **NEVER write BibTeX entries from memory.** Always verify against web sources (CrossRef, Google Scholar, DOI lookup) before writing. See the `literature` skill.
+2. **NEVER write BibTeX entries from memory.** Verify against authoritative metadata sources such as Crossref or the DOI resolver before writing. Use an installed literature-search workflow when one is configured.
 3. **Check document class before adding packages.** Some classes load packages internally (e.g., `elsarticle` loads `natbib` — adding `\usepackage{natbib}` causes errors).
 4. **Maximum 5 fix iterations.** If the document still has errors after 5 auto-fix cycles, stop and report the unresolved errors to the user.
 5. **Never silently swallow errors.** Every fix must be reported: what was wrong, what was changed, and which file was edited.
 6. **Preserve user intent.** Auto-fixes should be minimal and conservative. Add packages or overrides — never remove user content.
 7. **Citation audit requires clean compilation.** Only run the `\cite{}` vs `.bib` cross-check after zero errors.
-8. **Run `bib-validate` when new citations were added.** The citation audit only checks key cross-references. When `.bib` entries were added or modified since the last validation, also run `bib-validate` for full metadata quality checks (preprint staleness, DOI presence, required fields, author formatting). This is mandatory.
+8. **Validate new bibliography entries.** The built-in citation audit checks key cross-references. When `.bib` entries were added or modified, also check DOI resolution, required fields, author formatting, and whether a preprint has a published version. If a dedicated bibliography validator is installed, use it for this extended check; otherwise perform and report the direct checks.
 
 ---
 
@@ -347,9 +347,9 @@ See [`references/templates.md`](references/templates.md) for working paper templ
 
 | Situation | Delegate to |
 |-----------|-------------|
-| Need to find or verify a bibliography entry | `literature` |
+| Need to find or verify a bibliography entry | Installed scholarly-search workflow, or direct authoritative metadata lookup |
 | Full academic proofreading after clean compilation | `proofread` |
-| Detailed `.bib` validation beyond cite-key matching | `bib-validate` |
+| Detailed `.bib` validation beyond cite-key matching | Installed bibliography validator, when available |
 | Beamer presentations specifically | `beamer-deck` (which uses this skill internally for compilation) |
 | Fleet-wide compilation health check | `latex-health-check` (project discovery, 3 iterations per project, cross-project checks) |
 

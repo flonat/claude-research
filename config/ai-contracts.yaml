@@ -21,6 +21,7 @@ client_capabilities:
   - claude-tool-syntax
   - external-codex-delegation
   - filesystem
+  - mail-access
   - machine-specific-layout
   - shell
   - skill-routing
@@ -29,6 +30,7 @@ client_capabilities:
   - web
   codex:
   - filesystem
+  - mail-access
   - shell
   - skill-routing
   - structured-input
@@ -70,7 +72,6 @@ assets:
       requires:
       - filesystem
       - shell
-      - skill-routing
       reason: selected by the reviewed public distribution
     bib-parse:
       path: skills/bib-parse

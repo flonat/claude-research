@@ -14,7 +14,7 @@ allowed-tools:
   - AskUserQuestion
   - Skill
 argument-hint: "[project-path] [--apply]"
-skill-dependencies: [bib-validate, latex, retarget-journal]
+skill-dependencies: [latex, retarget-journal]
 ---
 
 # Template Compliance
@@ -191,7 +191,7 @@ After applying changes:
 - **Does not rewrite `main.tex` structure.** Only checks `\input{settings}` and bibliography commands.
 - **Does not check content quality.** The separate `proofread` workflow covers
   prose quality when that additional review is wanted.
-- **Does not manage `.bib` files.** Use `bib-validate` for bibliography key issues.
+- **Does not manage `.bib` files.** Use an installed bibliography validator, or perform direct cite-key and metadata checks.
 - **Does not handle journal-specific formatting.** Use `retarget-journal` for that.
 - **Does not compare across projects.** Checks one project at a time against the template.
 
@@ -230,7 +230,7 @@ Run on each project individually. This skill checks one project at a time.
 - **`../latex/templates/working-paper/`** — the bundled template this skill compares against
 - **`latex`** — used in Phase 7 to verify compilation after applying changes
 - **`audit-project-research`** — complementary: checks directory structure, this checks LaTeX preamble
-- **`bib-validate`** — complementary: checks citation keys, this checks bibliography system config
+- **Installed bibliography validator** — optional complement for citation keys and metadata; this skill checks bibliography system configuration
 - **`init-project-research`** — creates projects from the template; this skill
   verifies ongoing compliance
 - **`retarget-journal`** — handles journal-specific formatting (different concern)

@@ -4,7 +4,7 @@ description: "Use when you need to design or audit an identification strategy fo
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Task
 argument-hint: "[project-path or tex-file] [--mode design|audit]"
 agent-dependencies: [domain-reviewer]
-skill-dependencies: [data-analysis, experiment-design, literature, proofread]
+skill-dependencies: [data-analysis, experiment-design, proofread]
 ---
 
 # Causal Design
@@ -43,7 +43,7 @@ Default: **Design**. If the user points to an existing paper or estimation scrip
 
 - Experimental design (RCTs, surveys, factorial) -- use `experiment-design`
 - Running the analysis or generating results -- use `data-analysis`
-- Literature search or citation gathering -- use `literature`
+- Literature search or citation gathering -- use an installed literature workflow or scholarly search
 - Proofreading or compiling the paper -- use `proofread`, `latex`
 
 ## Shared References

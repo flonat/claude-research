@@ -3,7 +3,7 @@ name: proofread
 description: "Use when you need academic proofreading of a LaTeX paper (11 check categories)."
 allowed-tools: Read, Glob, Grep
 argument-hint: [project-path or tex-file]
-skill-dependencies: [bib-validate, devils-advocate]
+skill-dependencies: [devils-advocate]
 ---
 
 # Academic Proofreading
@@ -33,7 +33,7 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 
 - **Formal audits** — use the Referee 2 agent for systematic verification
 - **Argument quality** — use `devils-advocate` for logical scrutiny
-- **Citation completeness** — use `bib-validate` for bibliography cross-referencing (though this skill flags obvious citation format issues)
+- **Citation completeness** — use an installed bibliography validator or direct cite-key cross-referencing (this skill flags only obvious citation-format issues)
 
 ## Workflow
 
@@ -173,7 +173,7 @@ For every citation that looks like a preprint or working paper, check whether a 
 
 - **Detection signals**: URL contains `arxiv.org`, `ssrn.com`, `nber.org`; journal field says "Working Paper", "mimeo"; entry type is `@techreport` or `@unpublished`
 - **Action**: note the stale citation and suggest the published venue/year
-- **This is a lighter version of `bib-validate`'s preprint check** — only flag obvious cases visible from the `.bib` or `\bibitem` entries. For thorough preprint checking, recommend running `bib-validate` separately.
+- **This is a light preprint check** — flag only obvious cases visible from the `.bib` or `\bibitem` entries. For thorough checking, recommend a configured bibliography validator or authoritative metadata lookup.
 
 ## Severity Levels
 
@@ -293,7 +293,7 @@ Schema: the installed shared resource `shared/review-state-schema.md`.
 
 ## Cross-References
 
-- **`bib-validate`** — For thorough bibliography cross-referencing
+- **Installed bibliography validator** — For thorough bibliography cross-referencing and metadata checks
 - **`latex`** — For compilation and error resolution (run before proofreading to ensure the document compiles cleanly)
 - **Referee 2 agent** — For formal code + paper auditing
 - **`devils-advocate`** — For argument quality and logical scrutiny

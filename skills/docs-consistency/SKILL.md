@@ -3,12 +3,11 @@ name: docs-consistency
 description: "Review user-facing documentation for accuracy, consistency, and completeness across private, public, nested repos, and the user manual. Use when docs feel stale, after major changes, or before sharing. (Replaces `repo-doc-audit`)"
 allowed-tools: Read, Glob, Grep, Bash(ls*), Bash(wc*), Bash(find*), Bash(git log*), Bash(diff*), Bash(cat*), Write
 argument-hint: "[scope] — all (default), private, public, cross-check, user-manual"
-skill-dependencies: [external-audit, repo-doc-audit, sync-repo]
 ---
 
 # Docs Review
 
-> Cross-cutting documentation review that checks **consistency, accuracy, and completeness** across the entire documentation ecosystem. Unlike `repo-doc-audit` (per-repo quality) or `sync-repo` (mechanical freshness), this skill verifies that docs **agree with each other** and with reality.
+> Cross-cutting documentation review that checks **consistency, accuracy, and completeness** across the entire documentation ecosystem. It verifies that docs agree with each other and with reality; installed per-repository audit or sync workflows can deepen the check but are not required.
 
 ## When to Use
 
@@ -20,9 +19,9 @@ skill-dependencies: [external-audit, repo-doc-audit, sync-repo]
 
 ## When NOT to Use
 
-- For per-repo doc quality audit — use `repo-doc-audit <target>`
-- For mechanical count/freshness sync — use `sync-repo <target>`
-- For code architecture audit — use `external-audit <target>`
+- For per-repo prose quality — use an installed repository-documentation audit if available
+- For mechanical count/freshness sync — use the repository's documented sync command
+- For code architecture — use an installed external/code audit workflow
 
 ## Argument Parsing
 
@@ -215,22 +214,22 @@ Write report to `log/audits/docs-consistency-YYYY-MM-DD.md`:
 
 Present the dashboard + top-5 issues. Ask:
 - **Fix now** — apply fixes (count updates, catalogue additions, stale reference removal)
-- **Run sync** — run `sync-repo private` + `bash scripts/sync-to-public.sh` to fix mechanical issues
+- **Run sync** — use each repository's documented sync/render command to fix mechanical issues
 - **Done** — report saved
 
 ## Anti-Patterns
 
 - Do NOT modify any files during the review — report only until explicitly asked to fix
 - Do NOT check `log/`, `MEMORY.md`, or `.context/current-focus.md` — these are session artifacts, not documentation
-- Do NOT duplicate what `repo-doc-audit` does — skip prose quality, readability, audience-appropriateness
+- Do not duplicate a separately requested per-repository prose audit; focus on cross-surface consistency
 - Do NOT check code or configuration — this is documentation-only
 
 ## Cross-References
 
 | Skill | Relationship |
 |-------|-------------|
-| `repo-doc-audit <target>` | Per-repo doc quality (prose, structure, audience). Run for deeper single-repo review. |
-| `sync-repo private` | Mechanical sync (counts, file trees). Fixes what this skill reports. |
+| Installed repository-documentation audit | Per-repo prose, structure, and audience quality. |
+| Repository sync/render command | Mechanical sync of counts, file trees, and generated artifacts. |
 | `sync-public-repo` | Syncs private → public. Fixes cross-consistency issues. |
 | `system-audit` | Broader infrastructure health. Sub-agent 4 overlaps on count checks. |
 | `update-project-doc` | Updates project-level docs (CLAUDE.md, README). Different scope. |

@@ -23,7 +23,7 @@ has an explicit client list, with no implicit `both` default.
 |---|:---:|:---:|---|---|
 | `beamer-deck` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `bib-coverage` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
-| `bib-filter` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |
+| `bib-filter` | Yes | Yes | filesystem, shell | selected by the reviewed public distribution |
 | `bib-parse` | Yes | Yes | filesystem, shell, skill-routing, subagents, web | selected by the reviewed public distribution |
 | `brief-compliance-check` | Yes | Yes | filesystem, shell, skill-routing, subagents | selected by the reviewed public distribution |
 | `camera-ready` | Yes | Yes | filesystem, shell, skill-routing | selected by the reviewed public distribution |

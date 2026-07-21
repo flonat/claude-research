@@ -3,7 +3,7 @@ name: method-audit
 description: "Use when you need to extract and compare data collection methods across empirical papers."
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(uv*), Bash(uv:*), Task, WebSearch, WebFetch, Bash(paperpile*)
 argument-hint: "[topic, .bib file, or paper directory]"
-skill-dependencies: [causal-design, split-pdf, theory-mapper]
+skill-dependencies: [causal-design, split-pdf]
 ---
 
 # Method Audit
@@ -31,20 +31,20 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 
 ## When NOT to Use
 
-- **Theoretical papers** — use `theory-mapper` instead
+- **Theoretical papers** — use an installed theoretical-comparison workflow instead
 - **Single-paper deep read** — use `split-pdf`
 - **Your own research design** — use `causal-design` or `experiment-design`
 - **Code review** — use the `code-review` agent
 
 ## Input
 
-Same as `theory-mapper`: a `.bib` file, PDF directory, topic description, or list of papers. If ambiguous, ask.
+A `.bib` file, PDF directory, topic description, or list of papers. If ambiguous, ask.
 
 ## Workflow
 
 ### Phase 1: Corpus Assembly
 
-Assemble 10-20 empirical papers using the same approach as `theory-mapper` Phase 1. Prioritise papers with empirical content (filter out pure theory, editorials, commentaries).
+Assemble 10-20 empirical papers from the supplied bibliography or directory, or through configured scholarly-search tools. Prioritise papers with empirical content and filter out pure theory, editorials, and commentaries.
 
 ### Phase 2: Method Extraction
 
@@ -162,7 +162,7 @@ Write to `METHOD-AUDIT.md` in the project directory.
 
 | Skill | When to use instead/alongside |
 |-------|-------------------------------|
-| `theory-mapper` | For theoretical rather than methodological comparison |
+| Installed theoretical-comparison workflow | For theoretical rather than methodological comparison |
 | `causal-design` | To design your own identification strategy |
 | `experiment-design` | To design experiments or surveys |
 | `replication-audit` | To check which findings have been replicated |

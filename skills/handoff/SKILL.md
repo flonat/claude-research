@@ -1,7 +1,6 @@
 ---
 name: handoff
 description: "Create, receive, or update a persistent project handoff between AI sessions. Supports Claude-to-Claude, Codex-to-Codex, Claude-to-Codex, and Codex-to-Claude through the same `.context/ai-handoff.md` protocol. Use for 'handoff', 'continue in a new session', 'hand this to Claude', 'hand this to Codex', or cross-machine continuation."
-skill-dependencies: [sync-ai-infra]
 ---
 
 # Project Handoff
@@ -42,7 +41,7 @@ When `.context/ai-handoff.md` targets the current client or `either`:
 
 - Same machine: start the receiving client in the project root.
 - Dropbox project: let the project sync, then verify the recorded branch/commit and file ownership.
-- Git project on another machine: verify the remote, commit/push only with normal authorization, pull there, and run `$sync-ai-infra` on that machine before starting the receiving client.
+- Git project on another machine: verify the remote, commit/push only with normal authorization, pull there, and run that distribution's documented client installer or sync command before starting the receiving client.
 
 Report the handshake path, route, outcome, status, transport needed, and launch command. A completed handshake stays as a short audit trail until the next handoff reconciles it.
 

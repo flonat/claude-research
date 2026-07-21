@@ -3,7 +3,6 @@ name: bib-filter
 description: "Use when you need to filter a .bib file to only entries actually cited in a .tex project."
 allowed-tools: Read, Glob, Grep, Write, Bash(ls*), Bash(wc*)
 argument-hint: "[path-to-tex-or-project-dir]"
-skill-dependencies: [bib-validate]
 ---
 
 # Bibliography Filter
@@ -75,12 +74,12 @@ Filtered: M entries written to filtered.bib
 Removed: N-M unused entries
 ```
 
-If any cited keys are **not found** in the `.bib`, list them as warnings (these are missing references — suggest running `bib-validate`).
+If any cited keys are **not found** in the `.bib`, list them as warnings and recommend the configured bibliography validator or manual reconciliation.
 
 ### Step 5: Suggest next steps
 
 - "Replace `references.bib` with `filtered.bib`?" — ask before overwriting
-- If missing keys were found: "Run `bib-validate` to resolve M missing citation keys"
+- If missing keys were found: "Resolve M missing citation keys with the configured bibliography validator or reference manager"
 
 ## Edge Cases
 

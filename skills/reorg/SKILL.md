@@ -1,7 +1,7 @@
 ---
 name: reorg
 description: "Use when you need content-aware file reorganisation or deduplication driven by a LOCAL model (Ollama on the Mac Mini) that actually reads each file's contents, not just its name — proposes a folder structure or finds exact/near duplicates, always dry-runs first, and executes only on approval with a full undo. Triggers: 'reorganise this folder', 'tidy up Downloads with the local model', 'reorg', 'find duplicate files', 'dedup this folder', 'sort these files by reading them'."
-skill-dependencies: [rename-project-research]
+skill-dependencies: []
 ---
 
 # reorg — local-model file reorganiser
@@ -18,9 +18,10 @@ is reversible.
 - "Find duplicates" / "dedup this folder" (exact + near-duplicate via embeddings).
 - General clutter (Downloads, Desktop, a messy project subfolder).
 
-For research-project *structural* changes use `rename-project-research` or
-`init-project-research`; for meeting `to-sort/` inboxes the `process-to-sort` rule already
-handles it. This skill is general-purpose file tidying.
+For research-project *structural* changes use an installed project-renaming or
+project-initialization workflow; if none is available, use a normal reviewed `git mv`
+plan with explicit backlink and configuration checks. For meeting `to-sort/` inboxes,
+use the project's inbox-processing workflow. This skill is general-purpose file tidying.
 
 ## How to invoke the CLI
 

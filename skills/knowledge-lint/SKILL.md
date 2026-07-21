@@ -3,7 +3,7 @@ name: knowledge-lint
 description: "Use when you need to check compiled knowledge for contradictions, uncited claims, missing connections, stale articles, and orphaned concepts."
 allowed-tools: Read, Glob, Grep, Write, Agent
 argument-hint: "[project-path] or no arguments for CWD"
-skill-dependencies: [audit-project-research, bib-validate, compile-knowledge]
+skill-dependencies: [compile-knowledge]
 ---
 
 # Knowledge Lint
@@ -32,8 +32,8 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 ## When NOT to Use
 
 - If no `knowledge/` directory exists — run `compile-knowledge` first
-- For structural project audits — use `audit-project-research`
-- For bibliography validation — use `bib-validate`
+- For structural project audits — use an installed research-project audit workflow
+- For bibliography validation — use the configured bibliography validator
 
 ---
 

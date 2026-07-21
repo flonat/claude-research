@@ -3,7 +3,7 @@ name: replication-audit
 description: "Use when you need to audit which findings in a literature have been replicated or failed."
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(uv*), Bash(uv:*), Task, WebSearch, WebFetch, Bash(paperpile*)
 argument-hint: "[topic, .bib file, or paper directory]"
-skill-dependencies: [literature, method-audit]
+skill-dependencies: [method-audit]
 ---
 
 # Replication Audit
@@ -35,7 +35,7 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 
 - **Your own results** — use the `referee2-reviewer` agent
 - **Methodological comparison** — use `method-audit`
-- **Finding papers** — use `literature` first
+- **Finding papers** — use an installed scholarly-search workflow first
 
 ## Input
 
@@ -206,5 +206,5 @@ Schema: the installed shared resource `shared/review-state-schema.md`.
 |-------|-------------------------------|
 | `method-audit` | For broader methodological comparison (not replication-specific) |
 | `weakness-scanner` | For logical and argumentative weaknesses (not replication status) |
-| `literature` | To find the replication studies identified in this audit |
+| Installed scholarly-search workflow | To find the replication studies identified in this audit |
 | `split-pdf` | To deep-read any replication study found |

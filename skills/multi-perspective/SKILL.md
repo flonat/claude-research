@@ -3,7 +3,7 @@ name: multi-perspective
 description: "Use when you need to explore a research question from multiple independent perspectives."
 allowed-tools: Read, Write, Edit, Glob, Grep, Task, AskUserQuestion
 argument-hint: "[research question, hypothesis, or design choice]"
-skill-dependencies: [devils-advocate, literature, proofread]
+skill-dependencies: [devils-advocate, proofread]
 ---
 
 # Multi-Perspective Exploration
@@ -35,7 +35,7 @@ Per `rules/review-artefact-routing.md` (auto-loads in research projects (path-sc
 ## When NOT to Use
 
 - **Quick feedback** — use `devils-advocate` (single-perspective adversarial)
-- **Literature search** — use `literature` (discovery, not deliberation)
+- **Literature search** — use an installed scholarly-search workflow (discovery, not deliberation)
 - **Generating new questions** — use `a dedicated discovery workflow` (this skill evaluates, not generates)
 - **Paper proofreading** — use `proofread` or `paper-critic` agent
 
@@ -292,7 +292,7 @@ invocation: [`../shared/council-protocol.md`](../shared/council-protocol.md).
 | Skill | When to use instead/alongside |
 |-------|-------------------------------|
 | `devils-advocate` | Quick single-perspective adversarial feedback |
-| `literature` | Find the papers that perspectives reference |
+| Installed scholarly-search workflow | Find the papers that perspectives reference |
 | `interview-me` | Develop the research idea through structured conversation |
 | Referee 2 agent | Formal paper audit with code verification |
 | `references/computational-many-analysts.md` | When combining qualitative perspectives with quantitative many-analysts |
